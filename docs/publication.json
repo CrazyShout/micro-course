@@ -22,8 +22,8 @@
     },
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
-      "bytes": 7000698,
-      "sha256": "b685e41b3ea96a14faded25f4334c0ac8ab119caf1d5fa57be913bba1bff9e84"
+      "bytes": 7148154,
+      "sha256": "275afa7bac081242da80c4e1421ca3b3cf437d2fed63361e31a2987462a44cbf"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -222,8 +222,8 @@
     },
     {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
-      "bytes": 3045375,
-      "sha256": "9df62ee62a1e6e32ef106c791d415621dbca1bceb8bf82396f4d9a5cddc59340"
+      "bytes": 3180543,
+      "sha256": "3810270b34018ea78f0f957afcaf29c22de66fb2a83ea1923b812e6a0100059b"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -342,18 +342,23 @@
     },
     {
       "path": "cards.html",
-      "bytes": 16837,
-      "sha256": "842950ebea794444274fdb86adf1597b737d2c88139a46fb9cbf702f4a87decd"
+      "bytes": 17000,
+      "sha256": "9ff40dd25bcc4b463d85a03b42999210cfdd3398978416919f78c415dae0d6f1"
+    },
+    {
+      "path": "deck-introductions.json",
+      "bytes": 6410,
+      "sha256": "60b1eb6012340c0a8b78bee1c0d38579a0c4152533bc8a3527654a74ff1f651c"
     },
     {
       "path": "guide.html",
-      "bytes": 3028,
-      "sha256": "b2b22aa2329703675c905800c7fdcac95e6acb477363b2e9525b61f1ffb67ab6"
+      "bytes": 8302,
+      "sha256": "10c697f23a461ac1128f46a4570ebcd1b0d4835c2b30a497ee96dcca93b70c6a"
     },
     {
       "path": "index.html",
-      "bytes": 2093,
-      "sha256": "4f7443759b4b02b525f50baf29fbb9ee2d87146258d3884b33a0f60dbf1db293"
+      "bytes": 2108,
+      "sha256": "b856e4fecad181992038c7149c037dbacd71cadf77f03ae6f6123f87ae3ff58f"
     },
     {
       "path": "learning-data.js",
@@ -377,13 +382,13 @@
     },
     {
       "path": "learning.js",
-      "bytes": 9827,
-      "sha256": "ff42e64c118debda8df0bb34c5c8f5e5c01eb5258d702ca4fb5841aa530382a6"
+      "bytes": 9994,
+      "sha256": "dc23969918a3f01d0c4f762b3d06f40ae1f217806260823282dd59d30c56504f"
     },
     {
       "path": "reader-data.js",
-      "bytes": 1578678,
-      "sha256": "2dd6a49db456fc2829b42a6d6b77b69f9dd59dbfdc99dfe28a5006b1a4542c44"
+      "bytes": 1723072,
+      "sha256": "e639f7dc78ae84e419082524263683dff67067bd17dfabebaca6b227114c949d"
     },
     {
       "path": "vendor/katex/LICENSE",

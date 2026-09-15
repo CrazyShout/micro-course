@@ -49,11 +49,20 @@ def main():
     assert len(linked)==len(set(linked)) and set(linked)==set(cards)
     for card in cards.values():
         assert 'remote' not in card and card['learning_context']
+        assert card.get('microcourse_links'),card['id']
+        for link in card['microcourse_links']:
+            assert link['id'] in lessons and link['url']=='https://crazyshout.github.io/micro-course/?lesson='+link['id']
         for lid in card['learning_context']['lesson_ids']:assert lid in lessons
         for ref in card['sources']:assert 'path' not in ref and (ref['href'] is None or ref['href'].startswith('https://'))
         for image in card['media']:
             rel=card['course']+'/media/'+image;local_link(rel);images.add(rel)
     assert len(images)==manifest['images']
+    introductions=json.loads((site/'deck-introductions.json').read_text())
+    assert set(introductions['courses'])==set(manifest['courses'])
+    for course,intro in introductions['courses'].items():
+        assert len(intro['short_description'])<=256
+        assert intro['guide_url'].endswith('guide.html?course='+course)
+        assert 'id="'+course+'"' in (site/'guide.html').read_text()
     for course,counts in manifest['courses'].items():
         assert sum(c['course']==course for c in cards.values())==counts['cards']
         assert sum(l['course']==course for l in lessons.values())==counts['lessons']

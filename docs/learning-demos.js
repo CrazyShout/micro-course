@@ -1,7 +1,25 @@
 'use strict';
 window.mountLearningDemo=function(host,type){
   host.className='demo';const fmt=(x,n=4)=>Number(x.toFixed(n)).toString();
-  if(type==='kmeans'){
+  if(type==='bayes'){
+    host.innerHTML='<h3>动手看：同一个词，换个人群会怎样？</h3><p class="small">假设 1000 条短信；垃圾中 60% 含 free，正常中 10% 含 free。只改变垃圾短信的先验比例。<br>Keep likelihoods fixed; change only the spam prior.</p><label for="bayes-prior">垃圾比例 / Spam prior: <strong id="bayes-prior-value"></strong></label><input id="bayes-prior" type="range" min="1" max="90" step="1" value="20"><div class="mix-legend"><span>■ 垃圾 / Spam</span><span>■ 正常 / Legitimate</span></div><div id="bayes-picture"></div><div class="demo-output" id="bayes-output" aria-live="polite"></div>';
+    const draw=()=>{
+      const prior=+host.querySelector('#bayes-prior').value,spam=10*prior,ham=1000-spam,spamFree=6*prior,hamFree=100-prior,total=spamFree+hamFree,posterior=spamFree/total;
+      host.querySelector('#bayes-prior-value').textContent=prior+'%';
+      const bar=(ratio,label)=>'<div class="mix-bar" role="img" aria-label="'+label+'"><span style="width:'+ratio*100+'%"></span><span style="width:'+(1-ratio)*100+'%"></span></div>';
+      host.querySelector('#bayes-picture').innerHTML='<p>筛选前 / Before: '+spam+' 垃圾 + '+ham+' 正常 = 1000</p>'+bar(prior/100,'筛选前垃圾占 '+prior+'%')+'<p>只看含 free / After: '+spamFree+' 垃圾 + '+hamFree+' 正常 = '+total+'</p>'+bar(posterior,'含 free 的短信中垃圾占 '+fmt(posterior*100,2)+'%');
+      host.querySelector('#bayes-output').innerHTML='<p>P(spam | free) = '+spamFree+' / '+total+' = <strong>'+fmt(posterior*100,2)+'%</strong></p><p>分母变成“含 free 的短信”，不再是全部 1000 条。<br>The denominator is the matching messages, not the full population.</p><p class="small">先猜：把先验从 20% 调到 10%，后验会上升还是下降？滑块只改变此演示，下面例题仍用正文的初始条件。<br>The slider changes this demo only; the worked example keeps its original assumptions.</p>';
+    };host.querySelector('#bayes-prior').oninput=draw;draw();
+  }else if(type==='tcp'){
+    let step=0;const names=['0 等待数据 / Waiting','1 收到第一段 / First segment','2 第三段先到 / Gap remains','3 第二段补齐 / Gap filled'];
+    const received=[[],[0],[0,2],[0,1,2]],acks=[1000,1500,1500,2500];
+    host.innerHTML='<h3>动手看：后面的数据到了，ACK 为什么不前进？</h3><p class="small">已按序收到字节 999；每段 500 byte，接收端缓存失序段。展示事件后的累计 ACK 值，忽略延迟确认、序号回绕与 SYN/FIN。<br>Buffered out-of-order data; cumulative ACK values after each event.</p><div class="demo-controls"><label for="tcp-step">事件 / Event</label><select id="tcp-step">'+names.map((name,i)=>'<option value="'+i+'">'+name+'</option>').join('')+'</select><button id="tcp-next">下一步 / Next</button><button id="tcp-reset">重置 / Reset</button></div><div id="tcp-picture" class="segment-grid"></div><div id="tcp-output" class="demo-output" aria-live="polite"></div>';
+    const draw=()=>{
+      host.querySelector('#tcp-picture').innerHTML=[0,1,2].map(i=>'<div class="segment '+(received[step].includes(i)?'received':'missing')+'"><strong>'+ (1000+i*500)+'–'+(1499+i*500)+'</strong><br>'+(received[step].includes(i)?'已收到 / Received':'未收到 / Missing')+'</div>').join('');
+      host.querySelector('#tcp-output').innerHTML='<p>累计 ACK / Cumulative ACK = <strong>'+acks[step]+'</strong></p><p>'+['下一期待字节是 1000。 / Byte 1000 is expected next.','连续前缀已到 1499，下一期待 1500。 / The contiguous prefix ends at 1499.','2000–2499 已缓存，但 1500–1999 仍缺失；ACK 停在 1500。 / Later bytes are buffered, but the gap blocks ACK progress.','缺口补齐，先前缓存的第三段也接上了；ACK 直接前进到 2500。 / Filling the gap joins the buffered segment; ACK advances to 2500.'][step]+'</p>';
+      host.querySelector('#tcp-step').value=step;host.querySelector('#tcp-next').disabled=step===3;
+    };host.querySelector('#tcp-step').onchange=e=>{step=+e.target.value;draw()};host.querySelector('#tcp-next').onclick=()=>{step++;draw()};host.querySelector('#tcp-reset').onclick=()=>{step=0;draw()};draw();
+  }else if(type==='kmeans'){
     let step=0;const names=['1 看数据','2 放初始中心','3 分配给最近中心','4 按组取均值','5 再分配：已不变'];
     host.innerHTML='<h3>动手看：一次 k-means 迭代</h3><div class="demo-controls"><label for="km-step">步骤</label><select id="km-step">'+names.map((n,i)=>'<option value="'+i+'">'+n+'</option>').join('')+'</select><button id="km-next">下一步</button><button id="km-reset">重置</button></div><div id="km-picture"></div><div class="demo-output" id="km-output" aria-live="polite"></div>';
     const draw=()=>{const centers=step>=3?[1,9]:[0,10],pts=[0,2,8,10],x=v=>42+v*44;let svg='<svg viewBox="0 0 524 166" role="img" aria-label="四个数据点与两个簇中心；圆点是样本，菱形是中心"><line x1="42" y1="72" x2="482" y2="72" stroke="#a1b6af"/>';

@@ -87,9 +87,10 @@ EXPLAIN: P(free|spam) 问的是“已经知道是垃圾短信，其中多少有 
 
 想象 1,000 条短信，其中 20% 是垃圾。若垃圾中 60% 有 free，正常中 10% 有 free，那么看见 free 的人群包括 120 条垃圾和 80 条正常。后验就是在这 200 条中再数垃圾比例。贝叶斯公式中的分子是目标类别贡献的人数比例，分母是所有类别贡献之和。
 
-连续变量要用密度：某一点的密度可以大于 1，概率则来自区间积分。独立表示联合概率可拆；条件独立只在已知某个条件之后拆，这正是朴素贝叶斯将使用的假设。
+把人数换成比例就是 $P(c\mid x)=P(x\mid c)P(c)/\sum_k P(x\mid k)P(k)$，分母须大于零。先验像筛选前的底数，似然决定每类留下多少，后验才是筛选后的占比。连续特征将似然换成密度；密度可以大于 1，区间下的面积才是概率。
 SYMBOLS: $P(c)$ | 先验 prior；$P(x\mid c)$ | 似然 likelihood；$P(x)$ | 证据 evidence；$P(c\mid x)$ | 后验 posterior
 RECAP_EN: Bayes' rule changes the conditioning population. Multiply the prior by the likelihood, then normalize over all possible classes.
+DEMO: bayes
 WORKED_Q: 上述 1,000 条短信中，看到 free 后垃圾概率是多少？ || In the 1,000-message population above, what is the probability of spam given free?
 WORKED_A: 垃圾且有 free：1000×0.2×0.6=120；正常且有 free：1000×0.8×0.1=80。后验为 120/(120+80)=0.6。 || There are 120 spam messages and 80 legitimate messages containing free. The posterior is 120/200=0.6.
 PRACTICE_Q: 其他条件不变，垃圾先验变为 0.1，后验是多少？ || Keeping both likelihoods unchanged, what is the posterior if the spam prior becomes 0.1?
@@ -107,7 +108,7 @@ EXPLAIN: 生成式分类器分别学习类别比例和每类会生成什么样�
 
 这里 log 指自然对数，是指数函数 exp 的反函数。它严格递增，所以不会改变最大值的位置；log(ab)=log(a)+log(b) 把乘积变成和。导数描述参数微小增加时函数怎样变化，例如 log p 的导数是 1/p。寻找内部最优点时令导数为零，但还要检查边界和它是否真是最大值。
 
-若 n 次独立伯努利观测中有 k 次成功，似然为 p^k(1-p)^(n-k)。取对数后，乘积变成 k log p+(n-k)log(1-p)。对 p 求导并令零，得到 k/p-(n-k)/(1-p)=0，解为 p=k/n；k=0 或 n 时最优位于边界。
+若 n>0 次独立同分布的伯努利观测中有 k 次成功，这串观测的似然为 $p^k(1-p)^{n-k}$。取对数得到 $k\log p+(n-k)\log(1-p)$。对 p 求导并令零，得到 $k/p-(n-k)/(1-p)=0$，解为 p=k/n；k=0 或 n 时最优位于边界。若只记录成功总数，还会多一个与 p 无关的组合系数，不改变这个估计。
 
 高斯模型中，对数似然含平方偏差和；均值 MLE 是平均数，方差 MLE 用 n 作分母。统计学常见的 n-1 是估计总体方差时的无偏修正，二者目标不同。分类时比较 log prior+log likelihood，避免小概率连乘下溢。
 RECAP_EN: Maximum likelihood chooses parameters that best explain fixed observations under a specified model. Taking logs preserves the maximizer and turns products into sums.
@@ -126,9 +127,9 @@ PREREQ: ml03,ml06
 GOAL: 能区分完整逐类协方差、对角 Gaussian NB 和共享协方差。
 EXPLAIN: 一维高斯描述围绕均值的散布；二维高斯还要描述两个特征是一起变大、反向变化，还是缺少线性关联。协方差矩阵的对角线是各自方差，非对角线描述共同变化，等密度线可形成倾斜椭圆。
 
-高斯密度中的 $(x-\mu)^T\Sigma^{-1}(x-\mu)$ 是按散布方向校正的距离：沿高方差方向偏离一些不太稀奇，沿低方差方向同样偏离则更可疑。行列式项校正密度占据的体积，不能在不同协方差的类别之间随意删掉。
+当协方差 $\Sigma$ 正定时，高斯密度中的 $(x-\mu)^T\Sigma^{-1}(x-\mu)$ 是按散布方向校正的平方距离。以 $\Sigma=\operatorname{diag}(4,1)$ 为例，偏移 (2,0) 与 (0,1) 的该距离都为 1：前一方向本来更分散，偏移两格才相当于后一方向偏移一格。行列式项校正密度占据的体积，比较不同协方差的类别时不能随意删掉。
 
-Gaussian NB 假设给定类别后特征独立，因此采用对角协方差。当前课堂 GaussianBayes 则每类拟合完整协方差，并不共享；LDA 才使用共享协方差。参数更丰富不一定泛化更好，少量样本时估计会不稳定，加 alpha I 可避免某些方向的方差接近零。
+Gaussian NB 假设给定类别后特征独立，因此采用对角协方差。当前 GaussianBayes 每类拟合完整协方差；LDA 使用共享协方差。课堂代码的 `cov(Xc, rowvar=False)` 默认用每类样本数 Nc-1 作分母，不是上一节用 Nc 的 MLE。少量样本会使估计不稳；加正的 alpha I 可抬高各方向方差，避免奇异矩阵。
 RECAP_EN: Covariance describes both scale and joint variation. Gaussian NB uses diagonal class-conditional covariance; the current full Gaussian classifier estimates a separate full covariance for each class.
 WORKED_Q: 两个特征时，一类完整协方差有几个独立参数？对角模型呢？ || With two features, how many independent covariance parameters does one full model need, compared with a diagonal model?
 WORKED_A: 完整对称矩阵有两个方差和一个协方差，共 3 个；对角模型为 2 个。这还没计入均值和类别先验。 || A symmetric full covariance needs two variances and one covariance: three parameters. A diagonal covariance needs two, excluding means and class priors.
@@ -145,7 +146,7 @@ PREREQ: ml02,ml06
 GOAL: 能从数据表示选择 Bernoulli 或 Multinomial NB，并算出平滑概率。
 EXPLAIN: 固定词表为 free、meeting、win。短信 free free win 的词频向量是 (2,0,1)，出现标记则是 (1,0,1)。这两种表示问的问题不同：Bernoulli NB 关注每个词是否出现，Multinomial NB 关注文档中各词元分配了多少次。
 
-朴素假设是在给定类别之后把特征证据组合，常转成对数求和。Bernoulli 模型还计算未出现词的贡献；多项式分数则用次数乘 log 词概率。平滑给未见事件留一点质量，但分母必须随观测模型改变：伯努利加 2alpha，多项式加 alpha 乘词表大小。
+“朴素”把给定类别后的证据作简化分解，不是说词在现实中从不相关。Bernoulli NB 假设各词是否出现条件独立，还计入未出现词的贡献；Multinomial NB 将词元按同一类的词概率分配，类分数是次数乘 log 词概率再求和。给定总词数时，各词的计数本身并不彼此独立。平滑给未见事件留一点质量：伯努利分母加 2alpha，多项式分母加 alpha 乘词表大小。
 
 词表和 IDF 都应只在训练部分拟合。TF-IDF 降低普遍常见词的影响，但它是加权特征，不是严格的整数多项式计数；有效的经验组合与严格生成假设应区分。稀疏矩阵只存非零词项，让大词表计算更省空间。
 RECAP_EN: Choose the observation model after choosing the representation. Bernoulli NB models presence and absence; Multinomial NB models token counts. Fit text transformations on training data only.
@@ -221,9 +222,9 @@ BRIDGE: 逻辑回归惩罚概率判断，SVM 则把“离边界多远”放到�
 CARDS: M143-M146,M154-M156,M159-M164
 PREREQ: ml04,ml10
 GOAL: 能用几何距离解释间隔，并判断松弛变量的含义。
-EXPLAIN: 决策边界是 w^T x+b=0。把 w 和 b 同乘正数不会移动边界，所以原始分数大小不是几何距离。点到边界的距离需要除以 ||w||。硬间隔 SVM 将最近点的带标签分数固定为 1，再最小化 $\frac12\|w\|^2$，等价于最大化单侧间隔 $1/\|w\|$。
+EXPLAIN: 设标签 y 为 -1 或 +1，决策边界是 $w^Tx+b=0$，w 非零。把 w 和 b 同乘正数不会移动边界，所以分数大小不是距离；点到边界的距离为 $|w^Tx+b|/\|w\|$。硬间隔要求两类可被线性完全分开，并规范分数使 $y_i(w^Tx_i+b)\ge1$。再最小化 $\frac12\|w\|^2$，相当于把两类之间最窄的“走廊”拓宽，单侧间隔是 $1/\|w\|$。
 
-若数据有重叠或异常点，强行全部分开可能做不到。软间隔允许 $y_i f(x_i)\ge1-\xi_i$，并惩罚松弛量。固定模型后，最小可行松弛为 max(0,1-yf)，就是 hinge loss。0<xi<1 可以仍分类正确，只是进入了间隔；xi>1 才对应带标签分数为负的最小松弛情况。
+若数据有重叠，软间隔改为最小化 $\frac12\|w\|^2+C\sum_i\xi_i$，约束是 $y_i f(x_i)\ge1-\xi_i$ 和 $\xi_i\ge0$，这里 C>0。固定模型后，最小松弛为 $\max(0,1-yf)$，即 hinge loss。此时 0<xi<1 表示分类正确但进入走廊；xi=1 在决策边界上；xi>1 才表示误分类。
 
 C 大表示在给定系数约定下更重视违约代价，不是学习率。SVM 分数也不是概率；若需要概率应另有校准过程。
 RECAP_EN: SVM controls geometric margin after fixing score scale. Soft-margin slack allows margin violations, and minimizing slack yields hinge loss. Decision scores are not probabilities.
@@ -242,9 +243,9 @@ PREREQ: ml12
 GOAL: 能从拉格朗日函数推出 w 的样本展开，并避免 KKT 逆命题错误。
 EXPLAIN: 把硬间隔约束写成 $g_i=1-y_i(w^Tx_i+b)\le0$。最小化问题的拉格朗日函数为 $L=\frac12\|w\|^2+\sum_i\alpha_i g_i$，其中 alpha_i≥0。对任一可行 w,b，乘子项非正，所以先对 w,b 求下确界得到原问题最优值的下界；再最大化这个下界就是对偶。
 
-对 w 求导得 $w=\sum_i\alpha_i y_i x_i$，对 b 求导得 $\sum_i\alpha_i y_i=0$。于是边界由训练样本的加权组合描述。互补松弛 $\alpha_i g_i=0$ 告诉我们：严格不活跃的约束必须有零乘子；零乘子却不保证约束严格不活跃。
+对 w 求导得 $w=\sum_i\alpha_i y_i x_i$，对 b 求导得 $\sum_i\alpha_i y_i=0$。代回后，对偶目标是最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_j y_i y_j x_i^Tx_j$，同时满足这些约束。乘子像约束的“价格”；不挤压最优解的约束不必付价。互补松弛 $\alpha_i g_i=0$ 表示：g_i<0 时 alpha_i=0；反向却不一定成立。
 
-软间隔加上线性松弛惩罚后得到 0≤alpha_i≤C。0<alpha_i<C 的点落在间隔边界，可用于求 b；alpha_i=C 可以在间隔内，甚至仍正确分类。强对偶需要相应条件，不能仅因为“写出了对偶”就默认所有最优值可取得。
+软间隔加上线性松弛惩罚后得到 0≤alpha_i≤C。0<alpha_i<C 的点落在间隔边界，可用于求 b；alpha_i=C 也可能仍正确分类。硬间隔在线性可分时可放大分离超平面，使约束严格满足；结合凸性可用强对偶说明最优值相等。这是本问题的条件，不能推广为任意优化问题都成立。
 RECAP_EN: The dual maximizes a lower bound on the primal objective. Stationarity expresses w as a weighted sample sum; complementary slackness is an implication, not a reversible test for every constraint.
 WORKED_Q: 前节两点的最优 w=1、b=0，求两个硬间隔乘子。 || For the previous two-point optimum w=1, b=0, find the hard-margin multipliers.
 WORKED_A: sum alpha_i y_i=0 得 alpha1=alpha2=a；w=sum alpha_i y_i x_i=2a=1，因此两者都是 1/2。代入对偶目标为 1-1/2=1/2，与原始目标相同。 || The bias condition gives equal multipliers a. Since w=2a=1, both equal 1/2. The dual and primal objectives both equal 1/2.
@@ -263,7 +264,7 @@ EXPLAIN: 在原空间画不直的边界，变成更丰富的特征后可能是�
 
 对二维齐次二次核，$(x^Tz)^2=x_1^2z_1^2+2x_1x_2z_1z_2+x_2^2z_2^2$，所以 phi(x)=(x1²,√2 x1x2,x2²)。中间的 √2 保证内积系数正确。RBF 核根据平方距离给相似度，gamma 大时相似度随距离下降更快，边界可以更局部。
 
-不是所有看起来像“相似度”的函数都能当标准核；任意有限样本的 Gram 矩阵需半正定。核方法还可能需要 N×N 的矩阵，避免显式高维特征不等于免除大样本计算成本。
+不是所有“相似度”都能当实值标准核：函数应对称，任意有限样本的 Gram 矩阵 K 都须半正定，即任意系数 a 满足 $a^TKa\ge0$。只在一批数据上通过检查还不是对所有输入的证明。核方法还可能需要 N×N 的矩阵，避免显式高维特征不等于免除大样本成本。
 RECAP_EN: A kernel computes an inner product in a feature space without explicitly constructing every feature. Validity requires positive semidefinite Gram matrices, and computational costs still depend on sample count.
 WORKED_Q: x=(1,2)、z=(3,4)，二次核是多少？ || Compute the homogeneous quadratic kernel for x=(1,2) and z=(3,4).
 WORKED_A: 原内积 11，平方为 121。映射后内积为 1×9+(2√2)(12√2)+4×16=9+48+64=121。 || The original dot product is 11, so the kernel is 121. The feature-space dot product is 9+48+64=121 as well.
@@ -318,7 +319,7 @@ PREREQ: ml07,ml08,ml10,ml16
 GOAL: 能用英文连续解释任务、模型、假设、决策规则和局限。
 EXPLAIN: 一个完整解释可以按五句话展开：解决什么任务；用什么表示；模型假设什么；怎样训练和预测；什么情况下会失败。公式应嵌在这条论证中，而不是突然背出来。比如朴素贝叶斯的 fast 来自可分解的统计量，局限也正来自条件独立等建模假设。
 
-预测概率和决策要分开。如果把正常短信判成垃圾的代价为 C_FP，把垃圾漏掉的代价为 C_FN，预测垃圾的期望损失为 C_FP(1-p)，预测正常为 C_FN p。比较二者得到阈值 p>C_FP/(C_FP+C_FN)。这个推导需要 p 是相关场景下可用的后验估计。
+预测概率和决策要分开。设 p 是垃圾短信后验，误封正常短信的代价为 C_FP，漏掉垃圾的代价为 C_FN；两者非负、和为正，正确判断代价均为零。预测垃圾的风险为 $C_{FP}(1-p)$，预测正常为 $C_{FN}p$。比较得阈值 $p>C_{FP}/(C_{FP}+C_{FN})$。换代价是在换决策规则，不是在重新证明 p 已校准。
 
 高置信度不自动表示校准良好；零协方差也不自动表示独立。遇到追问时给出假设或反例，比用“通常都这样”更可靠。这里是表达练习，未宣称学校 QE 采用某个固定问答模板。
 RECAP_EN: Naive Bayes combines class priors with factorized class-conditional evidence. It is efficient, but dependence violations and poor probability calibration can affect decisions. A decision threshold should reflect the costs of errors.
@@ -374,11 +375,11 @@ PREREQ: ml19
 GOAL: 能比较平方损失、epsilon 不敏感损失与 RANSAC 的假设。
 EXPLAIN: 残差从 1 增到 10，平方损失从 1 增到 100，梯度幅度也变大。一个远离主体的数据点可能明显拉动拟合结果。换损失是在改变错误代价；RANSAC 则先反复用小子集拟合候选模型，再寻找符合容差的内点集合。
 
-若每次独立抽取 s 个点、内点比例为 w，理想全内点抽样概率是 w^s。K 次都失败的概率为 $(1-w^s)^K$，希望成功率至少 p，就要求此值≤1-p。这个公式需要抽样独立等理想假设，也没有保证内点阈值选得合理。
+先把“抽到全内点”与“拟合出好模型”分开。理想模型假设样本内每次取点独立、内点概率为 w，于是 s 个点全为内点的概率是 $w^s$；K 次独立尝试全失败的概率为 $(1-w^s)^K$。实际从有限数据中无放回取子集时，单次概率应为 $\binom{I}{s}/\binom{N}{s}$，I 是内点数，$w^s$ 是常用近似。全内点也可能几何退化，阈值仍须合理。
 
 模型对输入非线性不代表对参数非线性，例如 b+a1 x+a2 x² 仍可线性求系数。核岭回归与 SVR 延续了这些区别；SVR 的 epsilon 不敏感损失是 max(0,|r|-epsilon)。
 RECAP_EN: Robust fitting changes how residuals or consensus sets influence a model. RANSAC's success calculation depends on an idealized sampling model, not merely on running many iterations.
-WORKED_Q: w=0.5、s=2、p=0.99，至少几次 RANSAC 尝试？ || With w=0.5, s=2, and target success probability 0.99, how many RANSAC trials are required?
+WORKED_Q: 按独立取点的理想模型，w=0.5、s=2，至少一次抽到全内点的概率要达到 0.99，需几次尝试？ || Under the independent-draw model, with w=0.5 and s=2, how many trials give at least 0.99 probability of drawing an all-inlier sample?
 WORKED_A: 每次成功概率 0.25；要求 0.75^K≤0.01，K≥log(0.01)/log(0.75)≈16.008，向上取整为 17。 || Each trial succeeds with probability 0.25. Solving 0.75^K≤0.01 gives K≥16.008, hence 17 trials.
 PRACTICE_Q: epsilon=0.2，残差 -0.5 的不敏感损失是多少？ || What is epsilon-insensitive loss for residual -0.5 and epsilon=0.2?
 HINT: 先取绝对值再扣容差。 || Take the absolute value, then subtract the tolerance.
@@ -393,7 +394,7 @@ PREREQ: ml03,ml19
 GOAL: 能从平方距离目标推导均值更新，解释下降与全局最优的区别。
 EXPLAIN: 分类有标签，聚类需要自己定义怎样算“同一组”。k-means 让每个点只属于一个组，并选择组中心，使点到自己中心的平方距离总和尽量小：$J=\sum_i\|x_i-\mu_{z_i}\|^2$。
 
-同时选所有分组和中心很难，但固定其中一半后问题简单。中心固定时，每个点选最近中心，自己的那一项不会增大；分组固定时，对每组中心求导，得到中心等于组内平均值。因此交替两步都不会增大同一目标。
+同时选所有分组和中心很难，但固定其中一半后问题简单。中心固定时，每个点选最近中心；分组固定时，对非空组中心求导，中心就是组内平均值。因此两步都不会增大同一目标。距离平局要有固定规则；空簇没有均值，需保留旧中心或按明确规则重置，不能除以零。
 
 以 0、2 这一组为例，中心 c 的损失是 $c^2+(2-c)^2=2(c-1)^2+2$，显然 c=1 最好。这个等式把“取均值”从口令变成可见的最小化理由。算法仍受初始化影响，可能停在局部解；增加 k 往往降低训练损失，不能据此无限增加簇数。
 SYMBOLS: x_i | 第 i 个点；z_i | 它的簇编号；mu_k | 第 k 个簇的中心；J | 簇内平方距离总和，不是概率
@@ -412,9 +413,9 @@ BRIDGE: 点在两组边缘时，硬分配太绝对；GMM 用责任度表示软�
 CARDS: M217-M226
 PREREQ: ml07,ml21
 GOAL: 能计算责任度与加权均值，并区分密度值和归属概率。
-EXPLAIN: GMM 假设每个点先选一个隐含成分，再从对应高斯生成。由于不知道成分标签，不能直接按组统计。E 步用当前混合权重与高斯密度计算每个点来自各成分的后验，这叫责任度；同一点的责任度在成分间和为一。
+EXPLAIN: 想象两台机器都生产零件，但记录里没写每件来自哪台。GMM 假设先按混合权重选择成分，再从该成分的高斯分布生成观测；不知道成分标签，就不能直接按组统计。E 步计算“这一件有多大可能来自每台机器”：$r_{ik}=\pi_k\mathcal N(x_i;\mu_k,\Sigma_k)/\sum_j\pi_j\mathcal N(x_i;\mu_j,\Sigma_j)$。这叫责任度，对每个点跨成分求和为一。
 
-M 步把责任度当分数权重重新统计：$N_k=\sum_i r_{ik}$，$\pi_k=N_k/N$，$\mu_k=\sum_i r_{ik}x_i/N_k$；协方差也做同样的加权平方偏差。一个点可以部分影响多个成分，因此像 k-means 的软版本，但模型还学习方差与混合比例。
+M 步把责任度当分数权重重新统计：$N_k=\sum_i r_{ik}$，$\pi_k=N_k/N$，$\mu_k=\sum_i r_{ik}x_i/N_k$；协方差围绕新均值计算加权偏差的外积。若 N_k 为零或太小，需要处理失效成分。一个点可部分影响多个成分，有点像软分组，但 GMM 还学习方差与混合比例，不等同于直接把 k-means 的标签变软。
 
 精确 EM 的单调性来自对似然下界的交替处理，不等于全局最优。无约束高斯成分可能压到某个数据点并令方差趋零，使似然异常增大；正则、初始化和有效样本量检查都很重要。
 RECAP_EN: EM alternates posterior responsibilities and weighted parameter estimation. Responsibilities sum to one per observation; mixture densities themselves are not class probabilities.
@@ -433,7 +434,7 @@ PREREQ: ml04,ml19
 GOAL: 能解释中心化、最大方差方向和低秩重构之间的联系。
 EXPLAIN: 先把每列减去训练均值，PCA 才是在解释围绕数据中心的变化。选择单位方向 v 后，每个点的投影是 x_i^T v，投影方差为 $v^T S v$，其中 S 是中心化样本协方差。限制 ||v||=1，避免仅靠把方向放大就增加方差。
 
-对实对称 S 取正交特征向量基，若 v 是这些方向的组合，则方差是特征值的加权平均，权重非负且和为一。因此最大值是最大特征值，取相应特征向量即可。继续在正交补中选择后续方向。PCA 得分不是原始特征子集，而是新坐标。
+特征向量满足 $Sv=\lambda v$：S 作用后仍沿原方向，lambda 表示该方向的方差。可以把 PCA 想成旋转坐标尺，先沿数据云最舒展的方向读数。实对称 S 有正交特征向量基；任意单位方向的方差是特征值的加权平均，因此最大方差取最大特征值对应方向，再依次取与前面正交的方向。单点得分是 $v^T(x-\mu)$，是新坐标，不是挑出某一原始特征。
 
 中心化 X 的 SVD 为 UΣV^T，V 的列就是 PCA 方向，协方差特征值与奇异值平方相差样本分母因子。保留前 k 项给出平方重构误差意义下的低秩近似。去相关不保证独立，也不保证保留了对标签最有用的信息。
 RECAP_EN: PCA selects orthogonal directions maximizing centered variance, equivalently minimizing squared reconstruction error. SVD computes these directions; explained variance is not predictive accuracy.
@@ -450,11 +451,11 @@ BRIDGE: PCA 通过线性投影提取特征；神经网络通过多层可学习�
 CARDS: M241-M254
 PREREQ: ml03,ml10
 GOAL: 能区分前向、反向、更新，并手算局部导数如何相乘与相加。
-EXPLAIN: 一个线性层将 X 变成 XW+b，再经过非线性激活。连续线性层仍能合并成单个线性变换，所以需要非线性才能表达更复杂关系。网络输出还需匹配任务：分类常连接概率与交叉熵，回归可用连续输出与平方损失。
+EXPLAIN: 常叫“线性层”的 $XW+b$ 严格说是仿射变换，因为含偏置。若中间没有非线性，连续两层仍可合并：$(XW_1+b_1)W_2+b_2=X(W_1W_2)+(b_1W_2+b_2)$。加层并未跳出仿射函数族；加入 ReLU，即 $\max(0,z)$ 这样的非线性，才改变表达能力。输出还需匹配任务：分类常用交叉熵，回归可用平方损失。
 
 前向传播计算中间值与最终损失；反向传播应用链式法则，计算每个参数如何影响损失；优化器再使用这些梯度更新参数。这三步各司其职，反向传播本身不是一种学习率策略。
 
-把大公式拆成小节点，每个节点只需知道自己的局部导数。上游梯度乘局部导数就得到下游变量的贡献；同一变量沿多条路径影响损失时，贡献相加。矩阵层还应验维度：若 G 是输出梯度，dW=X^T G，dX=G W^T，db 按样本求和。
+把大公式拆成小节点。对标量节点 u=g(v)，已知损失对节点输出的梯度 dL/du，乘 du/dv 才得到它对输入的贡献 dL/dv；这沿前向计算的反方向传递。同一变量有多条影响路径时，贡献相加。矩阵层中若 G=dL/dY，Y=XW+b，则 $dW=X^TG$、$dX=GW^T$，db 按样本行求和；G 应已含损失取和或均值的系数。
 RECAP_EN: Backpropagation applies the chain rule efficiently on a computation graph. Multiply along each path and sum contributions at shared variables; the optimizer performs a separate parameter update.
 WORKED_Q: f=(x+y)z，x=-2、y=5、z=-4，求 f 与三个偏导。 || For f=(x+y)z at x=-2,y=5,z=-4, compute f and its three partial derivatives.
 WORKED_A: 先 u=x+y=3，f=uz=-12。df/du=z=-4，du/dx=du/dy=1，所以 df/dx=df/dy=-4；df/dz=u=3。 || u=3 and f=-12. The gradient through u is -4, giving df/dx=df/dy=-4; df/dz=3.
@@ -490,11 +491,11 @@ PREREQ: ml24,ml25
 GOAL: 能区分优化器状态、数据统计与训练/评估模式。
 EXPLAIN: mini-batch SGD 每步用一部分样本估计梯度；一个 epoch 表示看完一遍训练集，不等于一次更新。Momentum 累积方向，Adam 还维护梯度及平方梯度的移动平均，并做初期偏差修正。它们改变更新规则，不会自动消除数据泄漏或错误标签。
 
-正则化控制学习偏好。Inverted dropout 以保留概率 q 留下激活，保留时除以 q，使平均激活不变；评估时不再随机丢弃。BatchNorm 的训练统计与评估时使用的运行统计可能不同，LayerNorm 的归一化维度又不同，因此相同权重在不同模式下也可能有不同输出。
+正则化控制学习偏好。Inverted dropout 以保留概率 q>0 留下激活，保留时除以 q，使这一激活的期望不变；经过后续非线性，整网输出的期望不一定不变。评估时不再随机丢弃。常见 BatchNorm 训练时按通道汇集批内统计，评估时用运行统计；LayerNorm 通常对每个样本/token 的指定特征维归一化，不依赖其他样本的批统计。
 
 先用小子集检查是否能过拟合，再扩大实验。检查学习率、梯度、模式切换和增强是否保留标签含义。Early stopping 根据验证表现决定何时停，学习率计划决定怎样迈步，职责不同。AdamW 的衰减与在 Adam 损失中加入 L2 也不应机械等同。
 RECAP_EN: Optimizers maintain update state; normalization layers and dropout maintain or use different training behavior. Debug a small subset and keep evaluation separate from parameter fitting and model selection.
-WORKED_Q: N=1000、batch size=100，无丢弃尾批，一 epoch 更新几次？ || With N=1000, batch size 100, and no dropped final batch, how many updates are in one epoch?
+WORKED_Q: N=1000、batch size=100，每批执行一次参数更新、不做梯度累积，一 epoch 更新几次？ || With N=1000, batch size 100, and one optimizer update per batch without gradient accumulation, how many updates occur per epoch?
 WORKED_A: 1000/100=10 次。训练 5 epoch 则为 50 次更新，不是 5 次。 || Ten updates per epoch, hence fifty updates over five epochs.
 PRACTICE_Q: 激活 3，dropout 保留概率 q=0.75，保留时输出多少，期望多少？ || For activation 3 and retention probability 0.75, what is the retained output and its expectation?
 HINT: 保留时除以 q，丢弃时为零。 || Divide by q when retained, otherwise output zero.
@@ -528,9 +529,9 @@ PREREQ: ml06,ml24,ml26
 GOAL: 能分别说明 GAN 的对抗训练与扩散的加噪/去噪过程。
 EXPLAIN: 生成器可以把简单随机 z 映射为图像 G(z)，因此能采样，却未必能高效给某张图计算精确概率密度。GAN 训练判别器区分真实与生成样本，再训练生成器改变这种判断；双方改变彼此面对的目标，所以不能把两个损失都当作固定函数的普通下降。
 
-扩散使用指定的前向加噪过程。训练可直接采样 $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$，让网络学习与去噪相关的预测。bar-alpha 是各步 alpha 的乘积；越小意味着原信号保留越少。采样则从噪声出发使用学到的反向模型，不是拿到新图的真实噪声后简单减掉。
+标准高斯扩散训练可直接采样 $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$，其中 $\epsilon\sim\mathcal N(0,I)$ 与 x0 独立，bar-alpha 是各步 alpha 的乘积。可以理解为逐渐让信号被噪声淹没；两个系数的平方相加为 1，这是加噪的尺度安排，不是将两幅图按普通百分比混合。网络常学习预测 epsilon；生成时从噪声出发反复使用预测，不是掌握了新图的真实噪声再直接相减。
 
-给定 x0 和 xt 的特定前向后验可为高斯；仅给 xt 的反向分布不能仅凭加了高斯噪声就宣称精确高斯。GAN 的模式坍塌和扩散的引导取舍也提醒我们：质量、覆盖与条件符合度是不同维度。
+在这个前向模型中，给定 x0、xt 的一步后验可为高斯；只给 xt 的真实反向分布一般不能据此断言精确高斯。文字等条件可影响去噪预测：无条件预测 epsilon_u 与条件预测 epsilon_c 的差表示条件带来的调整，引导强度控制采用多少调整。质量、多样性与条件符合度须分别评价。
 RECAP_EN: Sampling and density evaluation are distinct. GANs learn through a changing adversarial objective; diffusion trains a denoising-related model under a specified forward noise process and uses a learned reverse process for sampling.
 WORKED_Q: bar-alpha=0.36，x0=2，epsilon=1，xt 是多少？ || For bar-alpha=0.36, x0=2, and epsilon=1, compute xt.
 WORKED_A: 信号系数 √0.36=0.6，噪声系数 √0.64=0.8，所以 xt=0.6×2+0.8×1=2。数值恰好相同不意味着没有噪声。 || xt=0.6*2+0.8*1=2. Its accidental equality to x0 does not mean that no noise was added.
@@ -545,9 +546,9 @@ BRIDGE: Transformer 的注意力是一种信息组合运算，可用于判别或
 CARDS: M295-M302
 PREREQ: ml03,ml11,ml24
 GOAL: 能区分 query/key/value，手算注意力加权，并核对矩阵维度。
-EXPLAIN: 对每个 token，query 表示它用什么条件寻找信息，key 表示其他 token 如何被匹配，value 则是实际被组合的内容。先用 QK^T 得到两两分数，再按每个 query 的行做 softmax，最后乘 V。权重是概率式归一化系数，输出通常是特征，不一定是概率。
+EXPLAIN: 把 token 暂时看作一个词块或图像小块。像查资料一样，query 是查询条件，key 是可匹配的索引，value 是取回后要组合的内容；它们都是学出来的向量，不是人工填写的文字。标准注意力为 $\operatorname{softmax}(QK^T/\sqrt{d_k})V$：对每个 query 的行归一化，再加权组合 values。权重和为一，输出仍通常是特征，不是类别概率。
 
-若 X 为 n×D，WQ、WK 为 D×dk，WV 为 D×dv，则 QK^T 为 n×n，输出为 n×dv；投影矩阵处理特征维，而不是把 token 数当输入特征宽度。除以 √dk 是标准缩放约定。位置机制补充内容本身缺少的空间或顺序信息。
+若 X 为 n×D，WQ、WK 为 D×dk，WV 为 D×dv，则 QK^T 为 n×n，输出为 n×dv。投影处理特征维，不是 token 数。在独立、单位方差分量的直观模型下，内积分数方差随 dk 增长；除以 √dk 可抑制分数过大导致 softmax 过于尖锐。位置机制再补充顺序；自回归生成还需因果遮罩，阻止读取未来位置。
 
 多头让模型在不同投影下组合关系；前馈块处理各 token 的特征。稠密注意力仍有两两交互成本。鲁棒性问题则问输入小改动是否改变决策：随机噪声与为了诱发错误而优化的扰动不同，任何结论都需说明威胁模型。
 RECAP_EN: Queries and keys produce matching weights; values supply the mixed information. Normalize over keys for each query and check feature dimensions separately from token count.

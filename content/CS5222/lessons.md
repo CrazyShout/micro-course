@@ -73,9 +73,9 @@ EXPLAIN: 一条路径的持续单流吞吐量受最慢环节约束。在无其�
 RECAP_EN: Capacity is an upper bound, throughput is achieved delivery rate, and queueing depends on traffic timing as well as average load. High throughput can coexist with long response delay.
 WORKED_Q: 平均 1000 byte，每秒 100 包，1 Mbps 链路，负载是多少？ || For 1,000-byte average packets at 100 packets/s on a 1 Mbps link, compute load.
 WORKED_A: 输入 8000×100=800000 bit/s，rho=0.8。不能据此说每个包只等待发送时间的 20%。 || Input load is 800,000 bit/s, so rho=0.8. This does not specify a per-packet waiting time.
-PRACTICE_Q: 服务器 20 Mbps、客户端 10 Mbps，十条流均分 50 Mbps 核心链路，单流理想速率？ || With server 20 Mbps, client 10 Mbps, and ten flows equally sharing a 50 Mbps core, what is the ideal per-flow rate?
+PRACTICE_Q: 十对服务器—客户端各传一条流；每对各有独立的 20 Mbps 服务器接入和 10 Mbps 客户端接入，仅共享并均分 50 Mbps 核心链路。单流理想速率是多少？ || Ten server-client pairs each carry one flow, with separate 20 Mbps server and 10 Mbps client access links. Only the 50 Mbps core is shared equally. What is the ideal per-flow rate?
 HINT: 比较端点限制与核心份额。 || Compare endpoint rates and the core share.
-PRACTICE_A: 单流理想速率为 min(20,10,50/10)=5 Mbps。 || The ideal rate is 5 Mbps.
+PRACTICE_A: 每条流的三处上限为 20、10、5 Mbps，因此取最小值 5 Mbps。若十条流还共享同一条 20 Mbps 服务器接入，公平份额将受 20/10=2 Mbps 限制；那是不同题设。 || The three per-flow limits are 20, 10, and 5 Mbps, so the ideal rate is 5 Mbps. If all ten also shared one 20 Mbps server link, equal shares would instead be limited to 2 Mbps.
 TRANSFER_Q: 同一路径下载大文件很快，交互请求仍很慢，有矛盾吗？ || Is it contradictory for a path to transfer large files quickly but respond slowly to interactive requests?
 TRANSFER_A: 不矛盾；长传输重视持续吞吐量，交互可能被传播、排队和多次 RTT 主导。 || No. Large transfers depend strongly on sustained throughput, while interaction may be dominated by propagation, queueing, and multiple round trips.
 BRIDGE: 要说明开销和协议功能来自哪里，需要分层与封装。
@@ -88,7 +88,7 @@ EXPLAIN: 应用层定义消息含义；传输层联系进程；网络层跨网�
 
 可以把它看成不同层次的地址与约定：应用问“请求什么”，端口问“哪个进程”，IP 问“目的接口/网络在哪里”，本地链路地址问“这一跳交给谁”。普通路由器转发无需理解最终网页内容，但要处理所在链路帧与 IP 信息。
 
-基础网络尽力而为，不承诺一定送达；高层可以补可靠交付。加密保护内容机密性，认证建立身份或完整性证据，源 IP 字段本身不能代替身份认证。分层是职责模型，不意味着所有现实设备严格只处理某一层。
+基础 IP 网络尽力而为，不承诺一定送达；高层可以补可靠交付。加密主要回答“旁人能否读懂”，认证回答“身份或消息来源是否可信”，完整性验证回答“内容是否被改过”；具体机制可组合提供这些属性，单有加密不自动具备全部属性。源 IP 不能代替身份认证。分层是职责模型，不意味着现实设备严格只处理某一层。
 RECAP_EN: Each layer adds control information for a distinct service. End-to-end applications depend on lower-layer delivery, but reachability and source addresses do not by themselves establish authentication or confidentiality.
 WORKED_Q: 1000 byte 应用数据，三层各加 20 byte 首部，载荷效率是多少？ || A 1,000-byte payload receives three 20-byte headers. What is payload efficiency?
 WORKED_A: 总大小 1060 byte，效率 1000/1060≈94.34%，忽略尾部和其他开销。 || Total size is 1,060 bytes, giving about 94.34% payload efficiency, excluding trailers and other overhead.
@@ -124,7 +124,7 @@ PREREQ: net03,net06
 GOAL: 能画出 TCP 建连、基础页面、附属对象与缓存命中的依赖。
 EXPLAIN: 浏览器先得到基础 HTML，才知道其中还引用哪些对象。非持久 HTTP 在简化模型中每个对象新建 TCP 连接：一个 RTT 建连，一个 RTT 请求与首批响应，再加对象发送时间。这个 2RTT 是课堂模型，需要忽略 DNS、TLS、慢启动等项才可直接使用。
 
-持久连接复用 TCP；没有流水线时仍需逐个请求等待，流水线和并行连接则改变依赖和批次。先画时间轴，再数可以同时发生的请求，避免把“每个对象两 RTT”套到所有场景。
+持久连接像保留一条已接通的电话线，省去的是反复接通的成本；没有流水线时仍逐个请求等待。流水线和并行连接又会改变批次。先画“基础页完成 → 得知两个对象 → 发起对象请求”，再数哪些可以同时发生，避免把“每个对象两 RTT”套到所有场景。
 
 Cookie 让无状态请求携带可关联的状态标记；缓存减少重复传输。条件 GET 在验证未修改时可收到 304，减少响应正文，但验证往返仍存在。缓存命中率只能用于明确区分本地与远端时延的模型。这里的 HTTP/1.x 时序不能无条件外推为所有现代版本行为。
 RECAP_EN: HTTP completion time follows dependency order. Persistent connections, parallelism, and caching change different costs; a 304 response saves body transfer but still requires validation communication.
@@ -162,7 +162,7 @@ PREREQ: net06,net07
 GOAL: 能区分本地解析器、根、TLD、权威服务器及递归/迭代。
 EXPLAIN: 用户通常把名字交给本地递归解析器，而不是亲自向所有层级查询。解析器可向根询问下一步，再找 TLD，再找该域的权威服务器，直到获得所需记录。根服务器不需要保存互联网所有主机地址，它提供委派方向。
 
-递归请求是“请替我完成解析并回答”；迭代回答可说“去问这个服务器”。这是交互方式，不是服务器名称的同义词。A/AAAA、NS、MX、CNAME 等记录承担不同用途，域名也不等于一台唯一机器。
+递归请求是“请替我完成解析并回答”；迭代回答可说“去问这个服务器”。这是交互方式，不是服务器名称的同义词。A/AAAA 给 IPv4/IPv6 地址，NS 指定域的权威服务器，MX 指向邮件交换服务器，CNAME 建立别名。一个名称可以对应多个地址，也可能经过别名链，所以域名不等于一台唯一机器。
 
 缓存让后续解析跳过已知步骤，TTL 控制记录可被缓存使用多久。它不会保证记录全球同时刷新。计算 DNS 时间要列出哪些缓存为空、哪些交互串行、每一步 RTT 如何定义。原图与不同文件页码在关联卡片中保留。
 RECAP_EN: A recursive resolver follows delegations and caches records. Root, TLD, and authoritative roles are distinct; resolution delay depends on the actual cache state and dependency chain.
@@ -223,6 +223,7 @@ EXPLAIN: 客户端—服务器分发 N 份大小 F 的文件，服务器至少�
 
 实现消息协议时，TCP 给的是字节流，一次 send 不保证对应一次 recv。应用要定义长度前缀或分隔符、编码与最大长度，并缓冲不完整消息。UDP 保留数据报边界，但仍要处理丢失等问题。
 RECAP_EN: Distribution lower bounds follow server upload, receiver download, and aggregate upload constraints. TCP applications must frame messages independently of send/receive call boundaries.
+SYMBOLS: F | 一份文件大小，bit；N | 接收者数量；u_s | 服务器上传速率；u_i | 第 i 个对等节点上传速率；d_min | 最慢接收者下载速率；速率单位 | 所有速率统一为 bit/s
 WORKED_Q: F=1 Gbit、N=10、us=100 Mbps、每个 ui=10 Mbps、dmin=50 Mbps，求两种理想下界。 || For F=1 Gbit, N=10, us=100 Mbps, each ui=10 Mbps, and dmin=50 Mbps, find client-server and P2P lower bounds.
 WORKED_A: 客户端—服务器 max(100,20)=100 s；P2P max(10,20,10000/200)=50 s。这里 Gbit/Mbps 按十进制换算。 || Client-server requires at least 100 s; P2P requires at least max(10,20,50)=50 s, using decimal units.
 PRACTICE_Q: TCP 先收到字符 AB，再收到 C\nD\n，若按换行定界，共得到哪些完整消息？ || TCP delivers AB followed by C\nD\n. With newline framing, which complete messages are reconstructed?
@@ -238,9 +239,9 @@ PREREQ: net03,net05,net06
 GOAL: 能解释每个机制解决的失败场景，并比较停等、GBN 与 SR。
 EXPLAIN: 校验和帮助检测损坏，却不保证检测一切错误，也不负责重传。ACK 告诉发送者接收进展；如果 ACK 丢了，发送者可能重发已送达数据，所以接收者还需要序号识别重复。数据或 ACK 完全丢失时，定时器让发送者最终再尝试。
 
-停等每发一包就等确认。理想利用率为发送时间除以一个发送等待周期：$U=(L/R)/(RTT+L/R)$，忽略 ACK 发送等成本。长 RTT 下链路大部分时间空闲；窗口允许多个包在途，提高利用率。
+停等每发一包就等确认。这里 RTT 专指往返传播时间，另忽略处理、排队与 ACK 发送时间；一个周期是发送数据所需的 L/R 加往返传播，所以 $U=(L/R)/(RTT+L/R)$。若题目给的是“开始发送到收到 ACK”的完整周期，就不能再加一遍 L/R。窗口允许多个包在途，减少长距离链路上“发一下、等很久”的空档。
 
-GBN 接收方在基础模型中丢弃乱序包并重复累计确认，超时重传从最早未确认到当前窗口末尾。SR 缓存乱序、分别确认，只重传相应缺失包；因此状态与序号空间要求不同。序号循环使用必须避免把旧副本误认成新包，常见 SR 约束是序号空间至少为窗口的两倍。
+基础 GBN 丢弃失序包并重复累计确认；超时时重传从最早未确认包开始、所有已发送但未确认的包，不包含窗口内尚未发送的位置。SR 缓存失序包、分别确认，仅对相应未确认包触发重传。常见等长发送/接收窗口的 SR 要求序号空间至少为窗口的两倍，并假定旧副本不会无限存活；这不是对任意长期旧包都安全的保证。
 RECAP_EN: Checksums, ACKs, sequence numbers, and timers address different failure modes. Pipelining fills the path; GBN and SR trade retransmission work against receiver state and sequence-space requirements.
 WORKED_Q: R=1 Gbps、L=8000 bit、RTT=30 ms，理想停等利用率与吞吐量是多少？ || For R=1 Gbps, L=8000 bits, and RTT=30 ms, find ideal stop-and-wait utilization and throughput.
 WORKED_A: 发送时间 0.008 ms；U=0.008/30.008≈0.0002666，即 0.02666%；吞吐量约 0.2666 Mbps。 || Serialization is 0.008 ms. Utilization is about 0.0002666, or 0.02666%, giving roughly 0.2666 Mbps throughput.
@@ -255,12 +256,13 @@ BRIDGE: TCP 将这些思想用于可靠有序字节流，并加入连接与流�
 CARDS: N167-N177
 PREREQ: net13
 GOAL: 能从字节范围推 ACK，并解释流量控制、定时器与握手。
-EXPLAIN: TCP 数据序号按字节计数。累计 ACK 表示下一期待的字节号，不是最近见过的最大序号。即使后面字节已缓存，只要前面有缺口，累计 ACK 仍停在缺口起点；有序字节流通常不能先把缺口后的部分交给应用。
+EXPLAIN: TCP 数据序号按字节计数。把接收想成按页拼好一本书：即使第 3 页先到了，第 2 页的缺口仍存在。累计 ACK 表示下一期待的字节号，不是最近见过的最大序号。后面的字节可以缓存，但只要前面有缺口，累计 ACK 就停在缺口起点，有序字节流也不能把这段后的内容提前交给应用。
 
 RTT 会波动，重传超时既要参考平滑均值，也要留给波动的余量。对有歧义的重传样本还需谨慎测量。课程数值题可能采用指定更新顺序，不能混用不同公式约定。
 
 流量控制用接收窗口 rwnd 保护接收端缓冲；拥塞窗口 cwnd 保护网络，发送者受两者较小值约束，还要扣除已在途数据。握手同步连接状态与初始序号，关闭两个方向可以分开完成。教材简化模型用于理解，具体实现细节需单独确认。
 RECAP_EN: TCP acknowledges a contiguous byte prefix by naming the next expected byte. Receiver flow control and network congestion control impose separate limits on outstanding data.
+DEMO: tcp
 WORKED_Q: 已按序收到至字节 999，接着收到 seq=1000、长 500 byte 的数据段，ACK 是多少？ || Bytes through 999 are contiguous, then a segment starts at 1000 with 500 data bytes. What ACK follows?
 WORKED_A: 新段覆盖 1000–1499，下一期待 1500，ACK=1500；假设没有 SYN/FIN 等额外序号消耗。 || The segment covers bytes 1000–1499, so ACK=1500, assuming no extra SYN/FIN sequence-space consumption.
 PRACTICE_Q: cwnd=12 kB、rwnd=8 kB，已有 5 kB 在途，简化模型还允许发送多少？ || With cwnd=12 kB, rwnd=8 kB, and 5 kB in flight, how much more may be sent under the simplified rule?
@@ -297,7 +299,7 @@ EXPLAIN: 转发是按已有表把当前分组送到下一接口；路由是形�
 
 IPv4 前缀 /p 表示前 p 位固定，其余位可变化；普通子网常保留网络与广播地址，但 /31、/32 等需要不同规则。DHCP 可分配地址并提供网关与 DNS 等配置；NAT 可改写地址与端口并记录映射状态。
 
-IPv4 分片把原数据载荷切成适配 MTU 的片段。每片有自己的 IP 首部；除末片外，数据长度需为 8 byte 的倍数，因为 offset 以 8 byte 为单位。IPv6 的分片规则不同，不能把路由器 IPv4 分片操作照搬过去。
+MTU 是本条链路能装下的最大 IP 数据报大小，包含 IP 首部。允许 IPv4 分片时，把原载荷切片，每片另有首部；除末片外，数据长度须为 8 byte 的倍数，因为 offset 按原载荷中的 8 byte 块计位置。MF=1 表示后面还有片，0 表示最后一片。基本 IPv4 在最终目的端重组；IPv6 路由器不执行这种分片，需由源端采用相应机制。
 RECAP_EN: Forwarding applies a table; routing builds it. Prefixes aggregate destinations, while MTU constrains datagram size. IPv4 fragment offsets count eight-byte blocks of original payload.
 WORKED_Q: 4000 byte IPv4 数据报，20 byte 首部，MTU=1500，可分片且无选项，给出分片。 || Fragment a 4000-byte IPv4 datagram with a 20-byte header over MTU 1500, with fragmentation allowed and no options.
 WORKED_A: 原载荷 3980；前两片各 1480 byte 数据，最后 1020。总长为 1500、1500、1040；offset 为 0、185、370；MF 为 1、1、0。 || Payload is 3980 bytes. Data lengths are 1480,1480,1020; total lengths 1500,1500,1040; offsets 0,185,370; MF bits 1,1,0.
@@ -335,7 +337,7 @@ EXPLAIN: 链路层把数据交给本段邻居。差错检测增加冗余，判�
 
 CRC 把位串当二元多项式，用 XOR 做除法而不是十进制减法。生成式最高次数为 r 时，数据后补 r 个零再求余，将 r 位余数接回原数据。接收端检查整串能否被生成式整除；检出能力依赖生成式和错误模式，不等于能纠正任意 r 个错位。
 
-共享介质还需要决定谁在何时发。时隙 ALOHA 中 N 个节点独立以 p 发送，一槽恰好一人成功的概率是 $Np(1-p)^{N-1}$。它将成功、空闲、碰撞分开：多发可能增加自己尝试，也可能让大家一起碰撞。
+共享介质还要决定谁在何时发。理想时隙 ALOHA 中，N 个有包待发的节点独立以 p 在槽首发送，一槽只容一包且碰撞均失败，则成功概率为 $Np(1-p)^{N-1}$。像多人同时抢答，太少人尝试会空场，太多人一起说又听不清；这个类比对应空闲、成功、碰撞三种结果，不适用于所有真实无线接收机制。
 RECAP_EN: Error detection protects content; medium access coordinates senders. CRC uses binary polynomial arithmetic, while ALOHA success requires exactly one independent transmission in a slot.
 WORKED_Q: 数据 1101，生成式 1011，求 CRC 码字。 || Encode data 1101 with CRC generator 1011.
 WORKED_A: r=3；1101000 XOR 1011000 得 0110000，再 XOR 0101100 得 0011100，再 XOR 0010110 得 0001010，再 XOR 0001011 得 0000001。余数 001，码字 1101001。 || Degree r=3. XOR long division of 1101000 by 1011 yields remainder 001, so the transmitted codeword is 1101001.
@@ -367,13 +369,14 @@ BRIDGE: 最后用完整网页访问串起 DHCP、ARP、DNS、TCP 与 HTTP，并�
 
 @@ net20 | 端到端串联：从空缓存到拿到网页 | From empty caches to a fetched page
 CARDS: N260-N279
-PREREQ: net09,net14,net16,net18,net19
+PREREQ: net09,net14,net16,net18
+RELATED: net19
 GOAL: 能从主机初始配置追到网页响应，并说明每步需要什么证据。
-EXPLAIN: 在 IPv4 以太网、用 DHCP 获取配置、缓存为空、访问远端明文 HTTP 的教学场景中，先取得地址、掩码、默认网关与 DNS 配置。若下一跳在本地链路，ARP 帮助从其 IPv4 地址获得链路地址。去远端服务器时，本地帧通常交给网关 MAC，而 IP 目的仍是远端主机。
+EXPLAIN: 在 IPv4 以太网、用 DHCP 获取配置、缓存为空、访问远端明文 HTTP 的教学场景中，先取得地址、掩码、默认网关与 DNS 配置。接着为 DNS 查询找到本地下一跳：DNS 服务器在同一子网，就 ARP 查它；在远端，就 ARP 查网关。ARP 用已知 IPv4 地址获得本地链路地址，不是在全网寻找远端主机。
 
-DNS 获得目的地址后建立 TCP 连接，再发送 HTTP 请求与接收响应。每经过路由器，本地链路帧重新组织，IP 目的在无 NAT 等改写的基本模型下仍指向最终主机。ARP 广播限定在本地广播域，普通路由器不把它广播到远端子网。
+DNS 返回网站地址后，主机向远端网站建立 TCP 连接，再交换 HTTP 请求与响应；若网关 MAC 已缓存，便不必重复 ARP。第一跳帧发给网关，而 IP 目的仍是网站主机。每经过路由器，链路帧重新组织；无 NAT 等改写时，IP 目的仍指向最终主机。先想清“最终找谁”和“这一步交给谁”，就不会混淆两种地址。
 
-抓包要区分帧长度、IP 长度、TCP 有效载荷和应用消息；将请求与对应响应关联后再测 RTT。旧实验里的 SSL/TLS 名称与报文字段按实际版本解释。留言板项目还需消息定界、部分接收、编码、错误响应和断连测试；这些是预习方法，不能伪造服务器交互结果。
+抓包先区分帧、IP 数据报、TCP 载荷与应用消息。HTTP 请求到响应的间隔还含服务器处理等成本，不能直接叫纯网络 RTT；TCP 的 ACK 时间样本也可能含接收端延迟确认，重传还会造成配对歧义。旧 SSL/TLS 字段按实际版本解释。编程项目需另测消息定界、部分接收与断连；这里的教学链条不代表已经运行了真实实验。
 RECAP_EN: A complete fetch combines configuration, local next-hop resolution, DNS, transport setup, and application exchange. Link-layer destinations change hop by hop, while end-to-end roles remain distinct.
 WORKED_Q: A 向远端 B 发 IP 包，本地以太网第一跳的目的 IP 和目的 MAC 各指向谁？假设经默认网关、无 NAT。 || A sends to remote B through its default gateway, without NAT. Whom do the destination IP and first-hop destination MAC identify?
 WORKED_A: IP 目的为 B，帧的 MAC 目的为网关在 A 所在链路的接口。A 通常 ARP 查询网关地址，不是直接查询远端 B 的 MAC。 || Destination IP identifies B; destination MAC identifies the gateway's local interface. A resolves the gateway's MAC, not remote B's MAC.

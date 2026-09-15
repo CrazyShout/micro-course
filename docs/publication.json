@@ -362,23 +362,23 @@
     },
     {
       "path": "learning-data.js",
-      "bytes": 691748,
-      "sha256": "8bb0eaf2f2024bf4ca57a5b573e8cdb409dcbb061d210d226dd36a7df8b7e528"
+      "bytes": 700851,
+      "sha256": "fa9c68225a99cbb91583f9bd2d1b9a85abf8c4ea11ce98412a2696477133ea15"
     },
     {
       "path": "learning-demos.js",
-      "bytes": 6015,
-      "sha256": "04a7658c2ef394b4f5ad324f1bbdedcc3920a40baa394ab76ef9b3e7400a671c"
+      "bytes": 10249,
+      "sha256": "50c1cb27e8376c8e8823fb2f005a9cb7173f87a1b13d8fe05dc1bfcea440ba96"
     },
     {
       "path": "learning-index.js",
-      "bytes": 73658,
-      "sha256": "2518a46622a1c4be8282d554c1e5c8ad5c6932fca45c28f19baad5c3aa195bd2"
+      "bytes": 73478,
+      "sha256": "db11355b67a7209ca6eb648f939d04291726ea766add2b214e830917329cfefc"
     },
     {
       "path": "learning.css",
-      "bytes": 7732,
-      "sha256": "21fa9cfccd6f0f95f8a03099965c7fd4e9378d1ef475c50d3c65017e9748e4bf"
+      "bytes": 8448,
+      "sha256": "7451af332be13d08b890d5cfd3ad10e66084a2d070a4beb178ed7066e350ab2a"
     },
     {
       "path": "learning.js",
@@ -387,8 +387,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1723072,
-      "sha256": "e639f7dc78ae84e419082524263683dff67067bd17dfabebaca6b227114c949d"
+      "bytes": 1722892,
+      "sha256": "7f667cd57e2febf7eb1ab85a1a7df1a9038037f6746a4449e20bfdbe056cbd75"
     },
     {
       "path": "vendor/katex/LICENSE",

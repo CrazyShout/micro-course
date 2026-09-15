@@ -49,6 +49,12 @@ def main():
     assert len(linked)==len(set(linked)) and set(linked)==set(cards)
     for card in cards.values():
         assert 'remote' not in card and card['learning_context']
+        for field in ['question_en','question_zh','answer_en','answer_zh']:
+            assert card.get(field,'').strip(),(card['id'],field)
+            assert card.get(field+'_html','').strip(),(card['id'],field+'_html')
+            assert re.search('[\u3400-\u9fff]',card[field]) if field.endswith('zh') else len(re.findall('[A-Za-z]+',card[field]))>3
+        for ref in card['sources']:
+            assert reader.get('source_labels',{}).get(ref['provenance']),('Missing bilingual provenance',ref['provenance'])
         assert card.get('microcourse_links'),card['id']
         for link in card['microcourse_links']:
             assert link['id'] in lessons and link['url']=='https://crazyshout.github.io/micro-course/?lesson='+link['id']

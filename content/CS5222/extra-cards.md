@@ -638,7 +638,7 @@ A_ZH: 第一段覆盖 127–206，因此第二段从 207 开始，端口仍为 3
 
 @@ N241 | x07-tutorials | historical | XNT6:2; XNT6S:17-20; XRTO:2
 Q_EN: Start EstimatedRTT=100 ms, DevRTT=5 ms; samples are 106,120,140 ms, alpha=1/8 and beta=1/4. Update EstimatedRTT first, use its NEW value for DevRTT, then RTO=EstimatedRTT+4DevRTT, ignoring timer bounds. Find the three RTOs. Is this tutorial convention identical to RFC 6298?
-Q_ZH: 初始 EstimatedRTT=100 ms、DevRTT=5 ms，样本为 106、120、140 ms，alpha=1/8、beta=1/4。先更新 EstimatedRTT，再用其新值更新 DevRTT，取 RTO=EstimatedRTT+4DevRTT，忽略定时器下界。求三次 RTO。这一教程约定与 RFC 6298 完全相同吗？
+Q_ZH: 初始 EstimatedRTT=100 ms、DevRTT=5 ms，样本为 106、120、140 ms，alpha=1/8、beta=1/4。先更新 EstimatedRTT，再用其新值更新 DevRTT，取 RTO=EstimatedRTT+4DevRTT，忽略定时器上下界。求三次 RTO。这一教程约定与 RFC 6298 完全相同吗？
 A_EN: The tutorial updates EstimatedRTT first and uses that new value in DevRTT; RTO=EstimatedRTT+4DevRTT gives 121,135.1875,164.0234 ms. For example the final estimate/deviation are 107.7617/14.0654 ms. RFC 6298 updates variation using the OLD SRTT and also includes timer granularity and a recommended minimum. State the course convention when solving this exercise; do not call it the exact RFC algorithm.
 A_ZH: 例解先更新 EstimatedRTT，再用新值更新 DevRTT；按 RTO=EstimatedRTT+4DevRTT 得到 121、135.1875、164.0234 ms。最终估计值与偏差为 107.7617、14.0654 ms。RFC 6298 用旧 SRTT 更新偏差，还考虑时钟粒度和建议的最小超时值。解本题时注明课程约定，不能称其为完全相同的 RFC 算法。
 

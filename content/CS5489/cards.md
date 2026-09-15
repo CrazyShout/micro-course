@@ -232,7 +232,7 @@ A_ZH: 按顺序处理输入矩阵的列。对当前 $v_k$，减去它在此前�
 Q_EN: Orthonormalize $v_1=(1,1)$ and $v_2=(1,0)$ by hand.
 Q_ZH: 手算将 $v_1=(1,1)$、$v_2=(1,0)$ 正交归一化。
 A_EN: First, $e_1=(1,1)/\sqrt2$. Then $e_1^Tv_2=1/\sqrt2$, so $r_2=(1,0)-(1/2,1/2)=(1/2,-1/2)$. Its norm is $1/\sqrt2$, giving $e_2=(1,-1)/\sqrt2$. Check $e_1^Te_2=0$ and both norms equal 1. The two output vectors span the same plane as the inputs.
-A_ZH: 先得 $e_1=(1,1)/\sqrt2$。因为 $e_1^Tv_2=1/\sqrt2$，所以 $r_2=(1,0)-(1/2,1/2)=(1/2,-1/2)$。其范数为 $1/\sqrt2$，故 $e_2=(1,-1)/\sqrt2$。检查两者内积为 0，范数均为 1；输出向量与输入张成相同平面。
+A_ZH: 先得 $e_1=(1,1)/\sqrt2$。因为 $e_1^Tv_2=1/\sqrt2$，所以 $r_2=(1,0)-(1/2,1/2)=(1/2,-1/2)$。其范数为 $1/\sqrt2$，故 $e_2=(1,-1)/\sqrt2$。检查 $e_1^Te_2=0$，范数均为 1；输出向量与输入张成相同平面。
 
 @@ M040 | 04-tutorial | classroom | T1:37-45
 Q_EN: What should `myGS(V)` return for the tutorial's test matrix, and how do I check it?
@@ -274,7 +274,7 @@ A_ZH: $P(y=c\mid x)=\frac{p(x\mid y=c)P(y=c)}{p(x)}$。先验 $P(y=c)$ 是看到
 Q_EN: Spam has prior 0.2; “free” appears in 0.6 of spam and 0.1 of normal messages. What is the spam posterior after seeing “free”?
 Q_ZH: 垃圾短信先验为 0.2，free 在垃圾短信和正常短信中出现的概率分别为 0.6、0.1。看到 free 后垃圾短信的后验是多少？
 A_EN: The spam joint score is $0.6\times0.2=0.12$; the normal score is $0.1\times0.8=0.08$. Evidence is $0.12+0.08=0.20$, so the posterior is $0.12/0.20=0.60$. The word increases the spam probability from 20% to 60%, but it does not make spam certain. The posterior still reflects the base rate.
-A_ZH: 垃圾短信联合分数为 $0.6\times0.2=0.12$，正常短信分数为 $0.1\times0.8=0.08$。证据为两者相加的 0.20，故后验为 $0.12/0.20=0.60$。这个词使垃圾短信概率从 20% 升到 60%，但并不代表一定是垃圾短信；后验仍受基础发生率影响。
+A_ZH: 垃圾短信联合分数为 $0.6\times0.2=0.12$，正常短信分数为 $0.1\times0.8=0.08$。证据为 $0.12+0.08=0.20$，故后验为 $0.12/0.20=0.60$。这个词使垃圾短信概率从 20% 升到 60%，但并不代表一定是垃圾短信；后验仍受基础发生率影响。
 
 @@ M047 | 05-probability | learn | P2:134-136;B2:3
 Q_EN: How do independence and conditional independence differ?
@@ -489,8 +489,8 @@ A_ZH: 若两个词在某类的出现概率为 $(0.8,0.3)$，文档向量为 $(1,
 @@ M081 | 08-text | learn | B2:72,80-81
 Q_EN: Why smooth Bernoulli word probabilities, and what is the formula?
 Q_ZH: 为什么要对伯努利词概率做平滑？公式是什么？
-A_EN: An unseen word in a class gives an unsmoothed estimate of zero, making any document containing it impossible under that class. Use $\hat\theta_{cj}=\frac{N_{cj}+\alpha}{N_c+2\alpha}$, where $N_{cj}$ counts class-$c$ documents containing word $j$. The denominator has $2\alpha$ because the outcome is binary. $\alpha=1$ is Laplace smoothing; other positive values give additive smoothing.
-A_ZH: 某词在一个类别中未出现时，不平滑估计为 0，会让任何包含该词的文档在该类下都变得“不可能”。可用 $\hat\theta_{cj}=\frac{N_{cj}+\alpha}{N_c+2\alpha}$，其中 $N_{cj}$ 是该类包含该词的文档数。分母加 $2\alpha$ 因为有出现/不出现两种结果。$\alpha=1$ 称拉普拉斯平滑，其他正值是加性平滑。
+A_EN: An unseen word in a class gives an unsmoothed estimate of zero, making any document containing it impossible under that class. Use $\hat\theta_{cj}=\frac{N_{cj}+\alpha}{N_c+2\alpha}$, where $N_{cj}$ counts class-$c$ documents containing word $j$, and $N_c$ is the total number of class-$c$ documents. The denominator has $2\alpha$ because the outcome is binary. $\alpha=1$ is Laplace smoothing; other positive values give additive smoothing.
+A_ZH: 某词在一个类别中未出现时，不平滑估计为 0，会让任何包含该词的文档在该类下都变得“不可能”。可用 $\hat\theta_{cj}=\frac{N_{cj}+\alpha}{N_c+2\alpha}$，其中 $N_{cj}$ 是类别 $c$ 中包含词 $j$ 的文档数，$N_c$ 是类别 $c$ 的总文档数。分母加 $2\alpha$ 因为有出现/不出现两种结果。$\alpha=1$ 称拉普拉斯平滑，其他正值是加性平滑。
 
 @@ M082 | 08-text | worked | B2:80-81
 Q_EN: A word appears in none of 10 class documents. What is its Bernoulli estimate with $\alpha=1$?
@@ -743,7 +743,7 @@ A_ZH: 两个分数为 $2(2)+0-3=1$ 与 $0+1-3=-2$，因此分别预测 +1、-1�
 Q_EN: How does logistic regression turn a linear score into a class probability?
 Q_ZH: 逻辑回归怎样把线性分数变成类别概率？
 A_EN: Use the sigmoid $\sigma(z)=1/(1+e^{-z})$. Let $p(y=+1\mid x)=\sigma(w^Tx+b)$ and $p(y=-1\mid x)=1-p(y=+1\mid x)$. The mapping lies between 0 and 1, equals 0.5 at score zero, and increases with the score. Despite its name, logistic regression is used here for classification.
-A_ZH: 使用 sigmoid 函数 $\sigma(z)=1/(1+e^{-z})$。令 $p(y=+1\mid x)=\sigma(w^Tx+b)$，另一类概率为其补数。输出位于 0 与 1 之间，分数为零时为 0.5，并随分数增大而增大。虽然名字含 regression，本课用它做分类。
+A_ZH: 使用 sigmoid 函数 $\sigma(z)=1/(1+e^{-z})$。令 $p(y=+1\mid x)=\sigma(w^Tx+b)$，另一类概率为补数 $p(y=-1\mid x)=1-p(y=+1\mid x)$。输出位于 0 与 1 之间，分数为零时为 0.5，并随分数增大而增大。虽然名字含 regression，本课用它做分类。
 MEDIA: Lecture3a-cell-34.png
 
 @@ M124 | 12-logistic | learn | L3A:32-44
@@ -762,7 +762,7 @@ A_ZH: $y=+1$ 时概率为 $\sigma(f(x))$；$y=-1$ 时利用 $1-\sigma(f(x))=\sig
 Q_EN: How does maximum likelihood produce the logistic loss?
 Q_ZH: 最大似然怎样导出逻辑损失？
 A_EN: The negative log probability of the true label is $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$, with $z=yf(x)$. Minimize the sum of this loss over training examples. At $z=0$, the loss is $\log2\approx0.6931$; at $z=2$, it is about 0.1269; at $z=-2$, about 2.1269. Confident errors receive much larger penalties than confident correct predictions.
-A_ZH: 真实标签概率的负对数为 $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$，其中 $z=yf(x)$，训练时最小化各样本损失之和。$z=0$ 时约为 0.6931，$z=2$ 时约为 0.1269，$z=-2$ 时约为 2.1269。自信但错误的预测会受到更大惩罚。
+A_ZH: 真实标签概率的负对数为 $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$，其中 $z=yf(x)$，训练时最小化各样本损失之和。$z=0$ 时为 $\log2\approx0.6931$，$z=2$ 时约为 0.1269，$z=-2$ 时约为 2.1269。自信但错误的预测会受到更大惩罚。
 MEDIA: Lecture3a-cell-48.png
 
 @@ M127 | 12-logistic | learn | L3A:38-45
@@ -914,8 +914,8 @@ A_ZH: 包括原始可行性 $g_i(x)\ge0$、对偶可行性 $\lambda_i\ge0$、驻
 @@ M151 | 13-svm | check | L3B:38,41,44;SVM:2,4
 Q_EN: Does a zero multiplier prove that a constraint is strictly inactive?
 Q_ZH: 乘子等于零，能否证明约束严格不活跃？
-A_EN: No. Complementary slackness implies $g_i>0\Rightarrow\lambda_i=0$ and $\lambda_i>0\Rightarrow g_i=0$, but the converse implications need not hold. For $\min x^2$ subject to $x\ge0$, the optimum is $x=0$ with multiplier 0: the constraint is active despite a zero multiplier. This clarifies the lecture's simplified active/inactive descriptions.
-A_ZH: 不能。互补松弛可推出 $g_i>0\Rightarrow\lambda_i=0$、$\lambda_i>0\Rightarrow g_i=0$，但反向不一定成立。最小化 $x^2$、约束 $x\ge0$ 时，最优为 $x=0$，乘子也为 0，但约束仍是活跃的。这补清了课件中活跃/不活跃描述的简写。
+A_EN: No. Under the lecture convention $g_i(x)\ge0$ with nonnegative multipliers, complementary slackness implies $g_i>0\Rightarrow\lambda_i=0$ and $\lambda_i>0\Rightarrow g_i=0$, but the converse implications need not hold. For $\min x^2$ subject to $x\ge0$, the optimum is $x=0$ with multiplier 0: the constraint is active despite a zero multiplier. This clarifies the lecture's simplified active/inactive descriptions.
+A_ZH: 不能。按课件的 $g_i(x)\ge0$ 和非负乘子约定，互补松弛可推出 $g_i>0\Rightarrow\lambda_i=0$、$\lambda_i>0\Rightarrow g_i=0$，但反向不一定成立。最小化 $x^2$、约束 $x\ge0$ 时，最优为 $x=0$，乘子也为 0，但约束仍是活跃的。这补清了课件中活跃/不活跃描述的简写。
 
 @@ M152 | 13-svm | check | L3B:39-40;SVM:2;CVX:5.2.3
 Q_EN: What is the distinction between weak and strong duality?
@@ -969,7 +969,7 @@ MEDIA: Lecture3b-cell-57-output-1.png
 
 @@ M160 | 13-svm | worked | L3B:36,42-43
 Q_EN: Solve the one-dimensional hard-margin problem for $(x,y)=(-1,-1)$ and $(1,+1)$.
-Q_ZH: 对一维样本 $(-1,-1)$、$(1,+1)$，求硬间隔 SVM。
+Q_ZH: 对一维样本 $(x,y)=(-1,-1)$、$(1,+1)$，求硬间隔 SVM。
 A_EN: The constraints are $w-b\ge1$ and $w+b\ge1$, implying $w\ge1+|b|$. Minimum norm occurs at $w=1,b=0$. The one-sided margin is 1 and objective is 0.5. In the dual, $\alpha_1=\alpha_2=0.5$ gives $w=\sum_i\alpha_i y_i x_i=1$ and dual objective 0.5, matching the primal.
 A_ZH: 约束为 $w-b\ge1$、$w+b\ge1$，因此 $w\ge1+|b|$。最小范数解为 $w=1,b=0$，单侧间隔为 1，目标值为 0.5。对偶中取 $\alpha_1=\alpha_2=0.5$，得到 $w=\sum_i\alpha_i y_i x_i=1$，对偶值也为 0.5，与原问题相同。
 

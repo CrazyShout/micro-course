@@ -495,7 +495,7 @@ A_ZH: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$，其中 $n=0,\ldots,120$。�
 
 
 @@ N079 | 07-exercises | classroom | NT2:1;HT2:1
-Q_EN: Tutorial 2 (2026A) Q1: voice is encoded at 128 kbps into 64-byte packets, sent at 4 Mbps with 8 ms propagation. When can playback of the first encoded bit start if the receiver waits for the complete packet?
+Q_EN: Tutorial 2 (2026A) Q1: voice is encoded at 128 kbps into 64-byte packets, sent at 4 Mbps with 8 ms propagation. Measured from the start of packetization, when can playback of the first encoded bit start if the receiver waits for the complete packet?
 Q_ZH: 本学期 Tutorial 2 Q1：语音以 128 kbps 编码，组成 64 字节分组，以 4 Mbps 发送，传播 8 毫秒。若接收端等完整分组到齐后播放，最早编码的比特从开始组包到可播放需多久？
 A_EN: Packetization needs $512/128000=4$ ms; transmission needs $512/(4\times10^6)=0.128$ ms; propagation is 8 ms. Total is 12.128 ms under the whole-packet playback model. The phrase “a bit” is ambiguous: the earliest encoded bit waits about the full packetization interval, while a typical bit's average assembly wait is about half, 2 ms. Under the question’s whole-packet playback convention, the intended option is D.
 A_ZH: 组包需 $512/128000=4$ 毫秒，发送需 $512/(4\times10^6)=0.128$ 毫秒，传播为 8 毫秒。按完整分组到达后播放的模型，总共 12.128 毫秒。原题“某个比特”略有歧义：最早编码的比特约等待完整组包时间，而任意典型比特的平均组包等待约为一半，即 2 毫秒。 按题目完整分组播放的约定，预期选项为 D。

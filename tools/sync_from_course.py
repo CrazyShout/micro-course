@@ -90,7 +90,7 @@ def main():
         (out/'learning.js').write_text(js)
         cards=(source/'index.html').read_text().replace('learning.html','index.html').replace('href="README.md"','href="guide.html"')
         old=next(line for line in cards.splitlines() if line.startswith('function sourceHTML(c)'))
-        new="function sourceHTML(c){return c.sources.map(s=>{const label=s.href?'<a target=\"_blank\" rel=\"noopener\" href=\"'+escape(s.href)+'\">'+escape(s.name)+'</a>':'<span>'+escape(s.name)+'</span>';return '<li>'+label+' · '+escape(s.unit+' '+s.locator)+'<br>'+escape(s.provenance)+'</li>'}).join('')}"
+        new="function sourceHTML(c){return c.sources.map(s=>{const label=s.href?'<a target=\"_blank\" rel=\"noopener\" href=\"'+escape(s.href)+'\">'+escape(s.name)+'</a>':'<span>'+escape(s.name)+'</span>';return '<li>'+label+' · '+escape(sourceUnit(s.unit)+' '+s.locator)+'<br>'+escape(sourceLabel(s.provenance))+'</li>'}).join('')}"
         cards=replace_once(cards,old,new).replace('codexing-marked-v1','micro-course-marked-v1')
         (out/'cards.html').write_text(cards)
         write_js(out/'learning-data.js','LEARNING_DATA',learning)

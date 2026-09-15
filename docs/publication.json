@@ -22,8 +22,8 @@
     },
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
-      "bytes": 7148154,
-      "sha256": "275afa7bac081242da80c4e1421ca3b3cf437d2fed63361e31a2987462a44cbf"
+      "bytes": 7193210,
+      "sha256": "6eb346709c55e58d1c506636de2286425592f17bca916fe0f14f14565ce6c347"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -222,8 +222,8 @@
     },
     {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
-      "bytes": 3180543,
-      "sha256": "3810270b34018ea78f0f957afcaf29c22de66fb2a83ea1923b812e6a0100059b"
+      "bytes": 3246079,
+      "sha256": "2e6d34b007825bb314f4367d46460d729ba83823b98fbd0cdbfb74264102e228"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -342,8 +342,8 @@
     },
     {
       "path": "cards.html",
-      "bytes": 17000,
-      "sha256": "9ff40dd25bcc4b463d85a03b42999210cfdd3398978416919f78c415dae0d6f1"
+      "bytes": 18368,
+      "sha256": "4499971b8f754bc9cc08e7b1f0e44a9ed54357df78a18e786cc5029c18d357bd"
     },
     {
       "path": "deck-introductions.json",
@@ -362,8 +362,8 @@
     },
     {
       "path": "learning-data.js",
-      "bytes": 700851,
-      "sha256": "fa9c68225a99cbb91583f9bd2d1b9a85abf8c4ea11ce98412a2696477133ea15"
+      "bytes": 700953,
+      "sha256": "04ad5120cbc150a197be2e1755b8946df46a49039e0c69a22aa23190c263da99"
     },
     {
       "path": "learning-demos.js",
@@ -387,8 +387,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1722892,
-      "sha256": "7f667cd57e2febf7eb1ab85a1a7df1a9038037f6746a4449e20bfdbe056cbd75"
+      "bytes": 1727090,
+      "sha256": "d178385ce64a023385b657eb1019803badec707bc4f7b25bc8df1c771e854ca1"
     },
     {
       "path": "vendor/katex/LICENSE",

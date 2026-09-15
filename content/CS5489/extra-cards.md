@@ -808,7 +808,7 @@ A_ZH: 对间隔约束引入非负乘子，再对 w、b 最小化拉格朗日函�
 Q_EN: For compatible real matrices P, R and B, prove $(P^{-1}+B^TR^{-1}B)^{-1}B^TR^{-1}=PB^T(BPB^T+R)^{-1}$. Which inverses must exist?
 Q_ZH: 对维度相容的实矩阵 P、R、B，证明 $(P^{-1}+B^TR^{-1}B)^{-1}B^TR^{-1}=PB^T(BPB^T+R)^{-1}$。需要哪些逆矩阵存在？
 A_EN: Put $A=P^{-1}+B^TR^{-1}B$ and $S=BPB^T+R$. Direct multiplication gives $APB^T=B^TR^{-1}S$. If P, R, A and S are invertible, multiply by $A^{-1}$ and $S^{-1}$ to obtain $A^{-1}B^TR^{-1}=PB^TS^{-1}$. Positive-definite P and R suffice. Invertibility of P and R alone does not guarantee the other inverses exist.
-A_ZH: 令 $A=P^{-1}+B^TR^{-1}B$、$S=BPB^T+R$，直接相乘可得 $APB^T=B^TR^{-1}S$。若 P、R、A、S 均可逆，左右分别乘逆矩阵，得到 $A^{-1}B^TR^{-1}=PB^TS^{-1}$。P、R 正定是充分条件，仅有 P、R 可逆不保证另外两个逆矩阵存在。
+A_ZH: 令 $A=P^{-1}+B^TR^{-1}B$、$S=BPB^T+R$，直接相乘可得 $APB^T=B^TR^{-1}S$。若 P、R、A、S 均可逆，左乘 $A^{-1}$、右乘 $S^{-1}$，得到 $A^{-1}B^TR^{-1}=PB^TS^{-1}$。P、R 正定是充分条件，仅有 P、R 可逆不保证另外两个逆矩阵存在。
 
 @@ M318 | x12-problems | historical | XHA3:1; XHA3S:2-4
 Q_EN: For a real M-by-N matrix A, consider Ax=y. Which claims hold? Square means at most one solution; N>M means always solvable; N>M means nonzero nullity; N<M means some y is inconsistent; N<M means zero nullity.

@@ -4,7 +4,7 @@
     "CS5489": {
       "title_zh": "CS5489 · 机器学习双语学习卡",
       "title_en": "CS5489 · Bilingual machine learning cards",
-      "short_description": "CS5489 双语卡 / Bilingual cards\n326卡：182 Canvas配套＋144往年预习；30节微课。\n先理解→做题→遮答复习→英语复述；每卡答案末尾可跳微课。\nLearn → practise → recall.\nExtra Resources 非已确认考试/QE范围。\n完整介绍 / Guide:\nhttps://crazyshout.github.io/micro-course/guide.html?course=CS5489",
+      "short_description": "CS5489: 326 bilingual cards + 30 lessons. 中英学习卡；先理解再复习。Extra Resources为往年预习，非已确认QE范围。介绍/Guide: https://crazyshout.github.io/micro-course/guide.html?course=CS5489",
       "course_url": "https://crazyshout.github.io/micro-course/?course=CS5489",
       "guide_url": "https://crazyshout.github.io/micro-course/guide.html?course=CS5489",
       "sections": [
@@ -31,7 +31,7 @@
     "CS5222": {
       "title_zh": "CS5222 · 计算机网络双语学习卡",
       "title_en": "CS5222 · Bilingual computer networking cards",
-      "short_description": "CS5222 双语卡 / Bilingual cards\n279卡：134 Canvas配套＋145往年预习；20节微课。\n先理解→画图做题→遮答复习→英语复述；每卡答案末尾可跳微课。\nLearn → practise → recall.\nExtra Resources 非已确认考试/QE范围。\n完整介绍 / Guide:\nhttps://crazyshout.github.io/micro-course/guide.html?course=CS5222",
+      "short_description": "CS5222: 279 bilingual cards + 20 lessons. 中英学习卡；先理解再复习。Extra Resources为往年预习，非已确认QE范围。介绍/Guide: https://crazyshout.github.io/micro-course/guide.html?course=CS5222",
       "course_url": "https://crazyshout.github.io/micro-course/?course=CS5222",
       "guide_url": "https://crazyshout.github.io/micro-course/guide.html?course=CS5222",
       "sections": [

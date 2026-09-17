@@ -30,7 +30,7 @@ Q_ZH: Jupyter Notebook 如何执行？为什么运行顺序可能导致错误？
 A_EN: Markdown cells explain; code cells execute in a shared kernel that keeps variables in memory. Running a later cell first may use an old value or an undefined variable. Before trusting a result, restart the kernel and run all cells from top to bottom. Save outputs together with the code so another reader can follow the computation.
 A_ZH: Markdown 单元解释内容；代码单元在共享的内核中执行，变量会留在内存里。先运行后面的单元可能使用旧值，或遇到未定义变量。确认结果前应重启内核并从上到下运行所有单元。把输出和代码一起保存，方便别人追踪计算过程。
 
-@@ M008 | 02-python | learn | P1:15-28
+@@ M008 | 02-python | learn | P1:15-28,76-85
 Q_EN: What do assignment, equality and Python's basic numeric operators mean?
 Q_ZH: Python 的赋值、相等比较和基本数值运算分别是什么意思？
 A_EN: `x = 3` assigns a value; `x == 3` returns a Boolean comparison. With positive integers, `7 / 2` is 3.5, `7 // 2` is 3, `7 % 2` is 1, and `2 ** 3` is 8. Integer, float, Boolean and string values have different types. `%` tests divisibility: `n % d == 0` means $d$ divides $n$.
@@ -103,8 +103,8 @@ A_EN: Assignment can make two names refer to the same mutable object. With `a = 
 A_ZH: 赋值可能让两个名字指向同一个可变对象。若 `a = [1,2]`、`b = a`，修改 `b[0]` 也会改变 `a[0]`。对平坦列表，`a.copy()` 会创建独立列表；嵌套对象还需注意浅拷贝。NumPy 切片也经常共享数据，需要独立数据缓冲区时应使用 `.copy()`。
 
 @@ M020 | 02-python | worked | P1:105-136;T1:14-18
-Q_EN: Write the logic for counting proper factors of a positive integer $n$.
-Q_ZH: 如何编写正整数 $n$ 的真因数计数逻辑？
+Q_EN: Write the logic for counting nontrivial positive divisors of an integer $n>1$.
+Q_ZH: 怎样统计整数 $n>1$ 的非平凡正因数（不含 1 和 n）？
 A_EN: Here the tutorial excludes both 1 and $n$. Inspect integers $d=2,\ldots,n-1$ and count those with zero remainder. A compact function body is `return sum(n % d == 0 for d in range(2, n))`. For $n=12$, the factors counted are 2, 3, 4 and 6, giving 4. For a prime such as 7, the count is 0.
 A_ZH: 本教程规定不计 1 和 $n$ 本身。检查 $d=2,\ldots,n-1$，统计余数为 0 的项。简洁的函数体是 `return sum(n % d == 0 for d in range(2, n))`。例如 $n=12$ 时计入 2、3、4、6，共 4 个；质数 7 的计数为 0。
 
@@ -193,16 +193,16 @@ A_EN: A seed makes a pseudorandom sequence repeat under the same algorithm and e
 A_ZH: 在相同算法和环境下，种子使伪随机序列可重复，便于复现数据划分或模拟样本。它不能证明模型好、消除抽样不确定性，也不能保证所有库和设备上结果完全相同。应记录种子、划分与软件版本，并用同一划分比较模型。
 
 @@ M035 | 04-tutorial | classroom | T1:14-24
-Q_EN: In Tutorial 1, what exactly should the factor-counting plot contain?
-Q_ZH: Tutorial 1 的因数计数图具体应该画什么？
-A_EN: For every integer $n$ from 2 through 100 inclusive, compute the number of divisors excluding 1 and $n$. Use `range(2,101)` for the horizontal values and evaluate the counting function for each. The x-axis is the integer; the y-axis is its proper-factor count. Check $n=2\to0$, $n=4\to1$, and $n=12\to4$ before plotting.
-A_ZH: 对 2 到 100（包含两端）的每个整数 $n$，统计除 1 和 $n$ 外的因数个数。横轴用 `range(2,101)`，逐个调用计数函数。横轴是整数，纵轴是对应真因数个数。画图前先检查 $n=2\to0$、$n=4\to1$、$n=12\to4$。
+Q_EN: What do the factor-count plot and histogram in Tutorial 1 each show?
+Q_ZH: Tutorial 1 的因数计数图和直方图分别表示什么？
+A_EN: For each integer n from 2 through 100, count divisors excluding 1 and n. The first plot uses n on the x-axis and this nontrivial-divisor count on the y-axis. The histogram instead groups those counts: its x-axis is a count bin and its y-axis is how many integers fall there. Check 2→0, 4→1, 12→4; all histogram frequencies together must account for 99 integers.
+A_ZH: 对 2 到 100 的每个整数 n，统计除 1 和 n 外的非平凡因数个数。第一张图横轴是 n，纵轴是它的因数个数；直方图则把这些计数分箱，横轴是因数个数区间，纵轴是落入该区间的整数数量。先检查 2→0、4→1、12→4；直方图各箱频数合计应覆盖 99 个整数。
 
 @@ M036 | 04-tutorial | classroom | T1:26-33
 Q_EN: How should I approach the data1.pickle plotting exercise?
 Q_ZH: 应该怎样完成 data1.pickle 的绘图练习？
-A_EN: Load the provided trusted tutorial file and inspect the object's type and array shape before indexing. The supplied exercise contains 120 two-dimensional samples. Plot the first coordinate against the second with a scatter plot, preserving any grouping requested in the notebook. Do not assume a transposed orientation or a label column without inspecting the loaded object.
-A_ZH: 读取课程提供的可信文件后，先检查对象类型与数组形状，再索引。该练习提供 120 个二维样本。用散点图将第一坐标与第二坐标对应绘出，并保留 Notebook 要求的分组。不能在未检查对象前，就假定数据需要转置或额外一列是标签。
+A_EN: Load the trusted tutorial file and verify that mydata has shape (120,2): each row is one sample and each column one coordinate. Use `plt.scatter(mydata[:,0], mydata[:,1])` and label the coordinate axes. The supplied exercise has no class-label column or grouping requirement. Swapping rows and columns changes which objects are treated as samples.
+A_ZH: 读取可信的教程文件，确认 mydata 形状为 (120,2)：每行一个样本，每列一个坐标。用 `plt.scatter(mydata[:,0], mydata[:,1])` 绘图并标注坐标轴。原题没有类别标签列，也没有按类别分组要求。把行列颠倒，会改变哪些对象被当作样本。
 
 @@ M037 | 04-tutorial | learn | T1:35-36
 Q_EN: What is the projection of $v$ onto a nonzero vector $u$?
@@ -243,8 +243,8 @@ A_ZH: 概率质量函数给离散结果分配概率，总和为 1；概率密度
 @@ M043 | 05-probability | learn | P2:134-136
 Q_EN: What are joint, marginal and conditional probabilities?
 Q_ZH: 联合概率、边缘概率与条件概率是什么？
-A_EN: $P(A,B)$ describes both events occurring. A marginal removes another variable by summing or integrating, for example $P(A)=\sum_b P(A,b)$. A conditional restricts attention to cases where $B$ occurred: $P(A\mid B)=P(A,B)/P(B)$ for $P(B)>0$. The comma means “and”; the vertical bar means “given.”
-A_ZH: $P(A,B)$ 描述两个事件同时发生。边缘概率通过对其他变量求和或积分得到，例如 $P(A)=\sum_b P(A,b)$。条件概率只考虑已发生 $B$ 的情形：当 $P(B)>0$，$P(A\mid B)=P(A,B)/P(B)$。逗号表示“同时”，竖线表示“在给定条件下”。
+A_EN: For events A and B, $P(A\cap B)$ is the probability that both occur; $P(A\mid B)=P(A\cap B)/P(B)$ requires $P(B)>0$. For a discrete variable Y whose possible values are b, $P(A)=\sum_b P(A\cap\{Y=b\})$: sum across mutually exclusive, exhaustive cases. For example, add the probabilities of rain on a workday and rain on a non-workday to get the probability of rain.
+A_ZH: 对事件 A、B，$P(A\cap B)$ 表示二者同时发生；$P(A\mid B)=P(A\cap B)/P(B)$ 要求 $P(B)>0$。若离散变量 Y 的所有可能值记为 b，则 $P(A)=\sum_b P(A\cap\{Y=b\})$，即对互斥且穷尽的情况求和。例如“下雨且是工作日”加“下雨且非工作日”，才得到全部下雨概率。
 
 @@ M044 | 05-probability | worked | P2:134-136
 Q_EN: In 100 messages, 20 are spam and 10 are spam containing “free.” What is $P(\text{free}\mid\text{spam})$?
@@ -294,7 +294,7 @@ Q_ZH: 什么是最大似然估计（MLE）？
 A_EN: Choose parameters $\theta$ that make the observed training data most likely: $\hat\theta=\arg\max_\theta\prod_{i=1}^N p(x_i\mid\theta)$ for independent samples. Equivalently maximize $\sum_i\log p(x_i\mid\theta)$. The data are fixed while the parameter varies. A likelihood is a function of the parameter; it is not automatically a normalized probability distribution over parameters.
 A_ZH: 选择使已观测训练数据最可能出现的参数：独立样本下，$\hat\theta=\arg\max_\theta\prod_{i=1}^N p(x_i\mid\theta)$，等价于最大化 $\sum_i\log p(x_i\mid\theta)$。这里数据固定、参数变化。似然是关于参数的函数，并不自动成为参数上的归一化概率分布。
 
-@@ M052 | 06-bayes | learn | B1:11-13
+@@ M052 | 06-bayes | learn | B1:11-16
 Q_EN: Derive the MLE of a Bernoulli probability.
 Q_ZH: 如何推导伯努利概率的最大似然估计？
 A_EN: Let $s$ of $N$ observations equal 1. The log likelihood is $\ell(p)=s\log p+(N-s)\log(1-p)$. For an interior optimum, $\ell'(p)=s/p-(N-s)/(1-p)=0$, giving $\hat p=s/N$. If $s=0$ or $s=N$, the maximum is at a boundary, 0 or 1. The estimate is the observed success fraction.
@@ -319,11 +319,11 @@ Q_ZH: 如何推导高斯均值的最大似然估计？
 A_EN: The log likelihood contains $-\frac{1}{2\sigma^2}\sum_i(x_i-\mu)^2$. Differentiating with respect to $\mu$ gives $\frac{1}{\sigma^2}\sum_i(x_i-\mu)=0$. Hence $\hat\mu=\frac1N\sum_i x_i$. The best center under the squared-deviation Gaussian model is the sample mean. For a class-conditional model, use only samples in that class.
 A_ZH: 对数似然含有 $-\frac{1}{2\sigma^2}\sum_i(x_i-\mu)^2$。对 $\mu$ 求导并令其为 0，得 $\frac{1}{\sigma^2}\sum_i(x_i-\mu)=0$，所以 $\hat\mu=\frac1N\sum_i x_i$。平方偏差形式的高斯模型中，最佳中心就是样本均值。类条件模型须只使用该类样本。
 
-@@ M056 | 06-bayes | learn | B1:26;B2:44
+@@ M056 | 06-bayes | learn | B1:18-26; B2:44
 Q_EN: What is the Gaussian variance MLE, and why do I sometimes see $N-1$ instead?
 Q_ZH: 高斯方差的 MLE 是什么？为什么有时分母是 $N-1$？
-A_EN: The MLE is $\hat\sigma^2_{ML}=\frac1N\sum_i(x_i-\bar x)^2$. The usual unbiased sample estimator uses $1/(N-1)$ instead, correcting the bias from estimating the mean. They answer different estimation goals. NumPy `var` defaults to denominator $N$, while the lecture's `np.cov` call uses $N-1$ by default. Do not call both the exact same MLE.
-A_ZH: MLE 为 $\hat\sigma^2_{ML}=\frac1N\sum_i(x_i-\bar x)^2$。常用无偏样本估计改用 $1/(N-1)$，修正估计均值带来的偏差。它们对应不同估计目标。NumPy 的 `var` 默认分母为 $N$，而课上 `np.cov` 的默认分母为 $N-1$，不能把两者都称作完全相同的 MLE。
+A_EN: For N independent Gaussian observations with unknown mean, nonzero sample spread gives $\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$. The unbiased variance estimator instead divides by N−1 and needs N>1. NumPy var defaults to N; the lecture np.cov call uses N−1. If all observations coincide, the formula gives zero, but for a Gaussian model requiring positive variance the likelihood grows without bound as variance tends to zero: no positive-variance MLE exists.
+A_ZH: 对均值未知的 N 个独立高斯观测，样本有非零离散程度时，$\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$。无偏方差估计改除以 N−1，且要求 N>1。NumPy var 默认除以 N，课上的 np.cov 默认除以 N−1。若观测全部相同，公式得到零；但在方差必须为正的高斯模型中，方差趋零时似然无界增大，并不存在正方差的 MLE。
 
 @@ M057 | 06-bayes | worked | B1:26
 Q_EN: Find the Gaussian mean and variance MLEs for $x=(1,2,3)$.
@@ -371,8 +371,8 @@ A_ZH: $s_c(x)=\log\pi_c-\frac12\sum_j\left[\log(2\pi\sigma^2_{cj})+\frac{(x_j-\m
 @@ M064 | 07-gaussian | learn | B2:19-32
 Q_EN: How do I read a class-density plot and a posterior decision-region plot?
 Q_ZH: 如何阅读类条件密度图和后验决策区域图？
-A_EN: A class-density plot shows where features are likely under a specified class, $p(x\mid c)$. A posterior plot compares classes after including priors and normalization. A decision boundary is where competing posterior scores tie, not necessarily halfway between visible clusters. Test points falling in another class's region indicate classification errors relative to their labels.
-A_ZH: 类条件密度图展示给定某类别时特征在哪些位置更可能出现，即 $p(x\mid c)$；后验图则加入先验并归一化后比较各类。决策边界是竞争类别后验分数相等的位置，不一定在两个簇的几何中点。测试点落入另一类别的区域，表示相对于其标签发生错分。
+A_EN: A class-density plot shows $p(x\mid c)$ for one class. Posterior regions compare classes after incorporating priors. A boundary between predicted regions occurs where the winning class changes; there the largest posterior scores tie. In multiclass classification, two equally low scores below a third class do not form a prediction boundary. Test points in another class region are classification errors relative to their labels.
+A_ZH: 类条件密度图显示某一类的 $p(x\mid c)$；后验区域则加入先验后比较类别。预测区域的边界出现在获胜类别切换的位置，此处最大后验分数并列。多分类中，两个低分相等、却都低于第三类，并不构成预测边界。测试点落入另一类别区域，表示相对于其标签发生错分。
 MEDIA: Lecture2b-cell-27.png
 
 @@ M065 | 07-gaussian | learn | B2:11,28-32
@@ -528,7 +528,7 @@ Q_ZH: 如何在 Gaussian、Bernoulli 和 Multinomial NB 之间选择？
 A_EN: Gaussian NB suits continuous features modeled as class-conditional Gaussians. Bernoulli NB suits binary occurrence indicators and scores both presence and absence. Multinomial NB suits nonnegative token counts; nonnegative TF-IDF is also commonly used in practice. Do not feed arbitrary negative standardized features into a multinomial count model. Match representation, assumptions and validation evidence.
 A_ZH: Gaussian NB 适合可用类条件高斯描述的连续特征；Bernoulli NB 适合二元出现指示，同时对出现与缺席计分；Multinomial NB 适合非负词频，实践中也常用于非负 TF-IDF。不能把任意含负值的标准化特征直接当成多项式计数输入。应同时匹配表示方式、假设与验证证据。
 
-@@ M091 | 09-assignment | learn | A1:3
+@@ M091 | 09-assignment | learn | A1:3; METRIC:Classification metrics
 Q_EN: What is balanced accuracy, and why is it used here?
 Q_ZH: 什么是平衡准确率？为什么本作业使用它？
 A_EN: For $C$ classes, balanced accuracy is mean class recall: $BA=\frac1C\sum_c TP_c/(TP_c+FN_c)$. Each class contributes equally, even when sample counts differ. Ordinary accuracy weights frequent classes more heavily through their sample counts. Here the normal class is much more common, so balanced accuracy helps expose failure on spam or smishing.
@@ -540,7 +540,7 @@ Q_ZH: 三类召回率分别为 0.95、0.60、0.40，平衡准确率是多少？
 A_EN: $BA=(0.95+0.60+0.40)/3=0.65$, or 65%. A classifier that always predicts the majority class has recalls $(1,0,0)$ and $BA=1/3$, provided all three classes are present. Its ordinary accuracy could still look high if the majority class dominates. These are illustrative calculations, not measured assignment results.
 A_ZH: $BA=(0.95+0.60+0.40)/3=0.65$，即 65%。若三类均存在，永远预测多数类的模型召回率为 $(1,0,0)$，平衡准确率为 $1/3$。当多数类占比很高时，它的普通准确率仍可能很好看。这里是计算示例，不是已测得的作业实验结果。
 
-@@ M093 | 09-assignment | learn | A1:3
+@@ M093 | 09-assignment | learn | A1:3; METRIC:Classification metrics
 Q_EN: How do I read a confusion matrix and distinguish precision from recall?
 Q_ZH: 如何阅读混淆矩阵？精确率与召回率怎样区分？
 A_EN: First state the axes; a common convention uses true classes as rows and predicted classes as columns. For class $c$, recall is $TP_c/(TP_c+FN_c)$: how much of the true class was found? Precision is $TP_c/(TP_c+FP_c)$: how much of what was predicted as that class is correct? Balanced accuracy averages recall, not precision.
@@ -552,7 +552,7 @@ Q_ZH: Assignment 1 怎样建立合理的第一个基线？
 A_EN: Start with a majority-class baseline to reveal the effect of imbalance, then a training-only word vectorizer plus a smoothed NB classifier. Compare count/Bernoulli and count or TF-IDF/multinomial variants on the same validation split. Record feature settings, smoothing, class recalls and balanced accuracy. This is an experiment plan; actual performance must come from your runs.
 A_ZH: 先用多数类基线观察类别不平衡的影响，再用仅在训练集拟合的词向量器配合平滑 NB。使用同一验证划分，比较计数/伯努利，以及计数或 TF-IDF/多项式方案。记录特征设置、平滑参数、各类召回率和平衡准确率。这是实验方案，实际效果须来自你的运行结果。
 
-@@ M095 | 09-assignment | learn | A1:3;LEAK:11.2
+@@ M095 | 09-assignment | learn | A1:3; LEAK:Data leakage
 Q_EN: Where can data leakage occur even if I never train the classifier on test labels?
 Q_ZH: 即使不用测试标签训练分类器，哪里仍可能发生数据泄漏？
 A_EN: A vocabulary, IDF weights, normalization statistics or feature selection can leak evaluation information if fitted before splitting. In cross-validation, fit each learned preprocessing step within that fold's training subset. A pipeline helps enforce this sequence. Fixed transformations such as a predetermined lowercase rule differ from statistics learned from the full dataset.
@@ -579,8 +579,8 @@ A_ZH: 不是。普通多项式分布定义在总次数固定的非负整数计�
 @@ M102 | 10-extension | extension | B1:32-41
 Q_EN: How does a decision change when false positives and false negatives have unequal costs?
 Q_ZH: 假阳性与假阴性的代价不相等时，决策如何变化？
-A_EN: Let $p=P(y=1\mid x)$, with zero cost for correct predictions. Predicting 1 costs $C_{FP}(1-p)$ in expectation; predicting 0 costs $C_{FN}p$. Choose 1 when $p>C_{FP}/(C_{FP}+C_{FN})$. A threshold of 0.5 follows only when the two costs are equal. This is an extension of the lecture's equal-cost Bayes decision.
-A_ZH: 设 $p=P(y=1\mid x)$，正确分类代价为 0。预测为 1 的期望代价是 $C_{FP}(1-p)$，预测为 0 的期望代价是 $C_{FN}p$。当 $p>C_{FP}/(C_{FP}+C_{FN})$ 时选择 1。只有两种错误代价相同时，阈值才是 0.5。这是对课堂等代价贝叶斯决策的扩展。
+A_EN: Let $p=P(y=1\mid x)$, correct predictions cost zero, and $C_{FP},C_{FN}\ge0$ with positive sum. Predicting 1 has expected cost $C_{FP}(1-p)$; predicting 0 costs $C_{FN}p$. Choose 1 when $p>C_{FP}/(C_{FP}+C_{FN})$; at equality either decision has the same expected cost. Equal positive costs give threshold 0.5. This extends the lecture decision rule to unequal costs.
+A_ZH: 设 $p=P(y=1\mid x)$，正确分类代价为零，且 $C_{FP},C_{FN}\ge0$、二者之和为正。预测 1 的期望代价为 $C_{FP}(1-p)$，预测 0 为 $C_{FN}p$。当 $p>C_{FP}/(C_{FP}+C_{FN})$ 时选择 1；等号处两种选择期望代价相同。两种正代价相等时阈值才为 0.5。这是对课堂规则的不同代价扩展。
 
 @@ M103 | 10-extension | extension | B2:3,25-28;NB:1.9
 Q_EN: Does an NB posterior of 0.99 guarantee about 99% correctness on such predictions?
@@ -592,7 +592,7 @@ A_ZH: 不保证。这种解释要求概率在相关数据总体上经过校准�
 Q_EN: Does zero covariance always imply independence?
 Q_ZH: 零协方差一定意味着独立吗？
 A_EN: No. Let $X$ be uniform on $\{-1,0,1\}$ and $Y=X^2$. Symmetry gives $\operatorname{Cov}(X,Y)=0$, but $Y$ is determined by $X$, so they are dependent. For jointly Gaussian variables, zero cross-covariance does imply independence. The Gaussian qualification is essential when connecting diagonal covariance to naive Bayes.
-A_ZH: 不一定。令 $X$ 在 $\{-1,0,1\}$ 上均匀分布，$Y=X^2$。对称性使 $\operatorname{Cov}(X,Y)=0$，但 $Y$ 被 $X$ 完全确定，两者仍相关依赖。对联合高斯变量，零交叉协方差才意味着独立。由对角协方差联系到朴素贝叶斯时，这个高斯前提很关键。
+A_ZH: 不一定。令 $X$ 在 $\{-1,0,1\}$ 上均匀分布，$Y=X^2$。对称性使 $\operatorname{Cov}(X,Y)=0$，但 $Y$ 被 $X$ 完全确定，两者仍有统计依赖、并不独立。对联合高斯变量，零交叉协方差才意味着独立。由对角协方差联系到朴素贝叶斯时，这个高斯前提很关键。
 
 @@ M105 | 10-extension | extension | B1:8-48;B2:3-99
 Q_EN: Give a one-minute English explanation of naive Bayes, including a limitation.
@@ -627,8 +627,8 @@ A_ZH: 每个设置都重新训练，保持其他选择固定，再画准确率�
 @@ M111 | 11-tutorial2 | learn | T2:29-31
 Q_EN: What is the Poisson distribution, and how is its rate estimated from counts?
 Q_ZH: 什么是泊松分布？如何根据计数估计其参数？
-A_EN: $P(X=x)=e^{-\mu}\mu^x/x!$ for nonnegative integer $x$ and rate $\mu\ge0$. Its mean and variance both equal $\mu$. For independent observations, the MLE is their average: $\hat\mu=N^{-1}\sum_n x^{(n)}$. Word counts $(0,1,3,0)$ therefore give $\hat\mu=1$. Raw nonnegative counts match this observation model; fractional TF-IDF values do not literally represent Poisson counts.
-A_ZH: 对非负整数 $x$ 和参数 $\mu\ge0$，$P(X=x)=e^{-\mu}\mu^x/x!$，其均值与方差都为 $\mu$。独立观测的 MLE 是平均值：$\hat\mu=N^{-1}\sum_n x^{(n)}$。词计数 $(0,1,3,0)$ 给出 $\hat\mu=1$。原始非负计数匹配此观测模型，分数形式的 TF-IDF 则不是真正的泊松计数。
+A_EN: For integer $x\ge0$ and rate $\mu>0$, $P(X=x)=e^{-\mu}\mu^x/x!$; mean and variance both equal $\mu$. At $\mu=0$, X is zero with probability one. For N>0 independent equal-exposure observations, $\hat\mu=N^{-1}\sum_n x^{(n)}$. Counts (0,1,3,0) give rate 1. Fractional TF-IDF values are not literal Poisson counts.
+A_ZH: 对整数 $x\ge0$ 和率参数 $\mu>0$，$P(X=x)=e^{-\mu}\mu^x/x!$，均值与方差都等于 $\mu$。当 $\mu=0$，X 以概率 1 取零。对 N>0 个独立、等暴露量观测，$\hat\mu=N^{-1}\sum_n x^{(n)}$。计数 (0,1,3,0) 得到率 1。分数形式的 TF-IDF 不是真正的泊松计数。
 
 @@ M112 | 11-tutorial2 | classroom | T2:31-32
 Q_EN: What parameters must a Poisson naive Bayes classifier learn?
@@ -648,11 +648,11 @@ Q_ZH: 两类先验相等，泊松均值分别为 $(2,1)$、$(1,2)$，文档 $x=(
 A_EN: Both rate sums equal 3. After dropping shared prior and factorial terms, scores are $2\log2-3$ and $2\log1-3=-3$. The first exceeds the second by $2\log2=\log4$, giving likelihood ratio 4 and posterior probability $4/(4+1)=0.8$ for the first class. This is a toy calculation, not an AGNews experiment result.
 A_ZH: 两类参数和都是 3。省略共同先验和阶乘项后，分数为 $2\log2-3$ 与 $2\log1-3=-3$。第一类高出 $2\log2=\log4$，因此似然比为 4，第一类后验为 $4/(4+1)=0.8$。这是手算例子，不是 AGNews 实验成绩。
 
-@@ M115 | 11-tutorial2 | classroom | T2:31-32
+@@ M115 | 11-tutorial2 | extension | T2:31-32; GP:4.2,2.1
 Q_EN: Why smooth Poisson count rates, and how do pseudo-counts differ from pseudo-exposure?
 Q_ZH: 为什么要平滑泊松计数率？伪计数与额外暴露量有什么区别？
-A_EN: An estimated rate of zero assigns zero probability to every positive count. One explicit smoothing rule is $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$, where $T_{cj}$ is the total feature count in class c, $N_c>0$ is the number of equal-exposure documents, $a>0$ is a pseudo-count, and $b\ge0$ is extra exposure measured in document units. The numerator adds events; the denominator adds exposure. This is not Bernoulli's two-outcome denominator. State the convention and select its strength using validation data.
-A_ZH: 若估计率为零，任何正计数都会得到零概率。一种明确的平滑规则为 $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$：$T_{cj}$ 是 c 类中该特征的总计数，$N_c>0$ 是等暴露量文档数，$a>0$ 为伪计数，$b\ge0$ 为以文档数计的额外暴露量。分子补事件，分母补暴露量；它不等于伯努利两种结果的分母。必须说明约定，并用验证数据选择强度。
+A_EN: A zero fitted rate makes every positive count impossible. Let T be total count in N>0 equal-exposure documents. With a Gamma(a,b) prior using shape a>0 and rate b>0, the posterior is Gamma(a+T,b+N), so its mean is $(T+a)/(N+b)$. The numerator adds pseudo-events, the denominator adds pseudo-exposure. T=0,N=4,a=b=1 gives 0.2. This is a Bayesian extension and a posterior mean, not a MAP formula or the tutorial template’s unspecified alpha convention.
+A_ZH: 拟合率为零会让所有正计数变得“不可能”。设 N>0 篇等暴露量文档的总计数为 T。采用形状 a>0、率 b>0 的 Gamma(a,b) 先验，后验为 Gamma(a+T,b+N)，故后验均值为 $(T+a)/(N+b)$。分子加伪事件，分母加伪暴露量。例如 T=0、N=4、a=b=1 时得 0.2。这是贝叶斯扩展及后验均值，不是 MAP 公式，也不能当作教程模板未定义的 alpha 约定。
 
 @@ M116 | 11-tutorial2 | check | T2:31-35
 Q_EN: Why might Poisson NB be a poor model for some document collections?
@@ -808,11 +808,11 @@ Q_ZH: One-vs-rest 逻辑回归与多项式逻辑回归有什么区别？
 A_EN: One-vs-rest trains separate binary tasks. Multinomial logistic regression trains a joint softmax model whose class scores compete through one normalization and one cross-entropy objective. Both can produce linear boundaries in the original features, but their training objectives differ. A multiclass dataset alone does not tell you which formulation an implementation uses.
 A_ZH: One-vs-rest 分别训练多个二元任务；多项式逻辑回归联合训练 Softmax 模型，各类分数在共享归一化和交叉熵目标中竞争。两者都可能在原特征空间产生线性边界，但训练目标不同。仅看到多分类数据，不能判断程序用了哪种形式。
 
-@@ M141 | 12-logistic | check | L3A:59,98-99
-Q_EN: What can I infer from a positive learned coefficient, and what additional context is needed?
-Q_ZH: 学到正系数能说明什么？还需要哪些上下文？
-A_EN: Holding other inputs fixed, increasing that feature raises the positive-class logit under the model. Check the label mapping, feature scaling and whether other features are correlated. The coefficient's magnitude depends on units, so it is not automatically a comparable feature-importance score. The lecture's fitted Iris coefficients are one saved run, not universal constants.
-A_ZH: 在其他输入固定时，增加该特征会提高模型的正类 logit。还应检查标签映射、特征缩放和特征间相关性。系数大小依赖单位，不能自动当作可直接比较的特征重要性。课件中的 Iris 拟合系数只是一次保存的运行结果，不是通用常数。
+@@ M141 | 12-logistic | check | L3A:15-19,59,91-99
+Q_EN: In binary logistic regression, what does a positive feature coefficient imply?
+Q_ZH: 二分类逻辑回归中，特征系数为正意味着什么？
+A_EN: Holding other inputs fixed, increasing the feature raises the positive-class logit and predicted probability. Check which label is positive and how features are scaled; magnitude depends on units and does not prove causation. This sign rule cannot be transferred directly to one coefficient in multiclass softmax, where all class scores compete. A fitted Iris coefficient table describes one fitted model, not universal constants.
+A_ZH: 其他输入固定时，增加该特征会提高正类 logit 和预测概率。应确认哪个标签是正类、特征怎样缩放；系数大小依赖单位，也不能证明因果关系。这个符号规则不能直接套到多分类 softmax 的某个单独系数，因为所有类别分数都在竞争。Iris 的拟合系数表只描述一个已拟合模型，不是通用常数。
 
 @@ M143 | 13-svm | learn | L3B:4-27;SVM:1
 Q_EN: What margin does a hard-margin SVM try to maximize?
@@ -857,11 +857,11 @@ Q_ZH: 写出硬间隔 SVM 对偶问题，并解释变量含义。
 A_EN: Maximize $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$, subject to $\alpha_i\ge0$ and $\sum_i\alpha_i y_i=0$. There is one multiplier per training example. Training samples enter through inner products, which will enable kernels. This version is hard-margin; the soft-margin dual additionally requires $\alpha_i\le C$.
 A_ZH: 最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$，约束为 $\alpha_i\ge0$、$\sum_i\alpha_i y_i=0$。每个训练样本对应一个乘子。样本通过内积进入目标，这为核方法提供了基础。本式是硬间隔形式，软间隔对偶还要求 $\alpha_i\le C$。
 
-@@ M150 | 13-svm | learn | L3B:37-41;SVM:2-4
+@@ M150 | 13-svm | learn | L3B:37-41; SVM:2-4; CVX:5.5.3
 Q_EN: What are the KKT conditions for differentiable minimization with constraints $g_i(x)\ge0$?
 Q_ZH: 对约束 $g_i(x)\ge0$ 的可微最小化问题，KKT 条件包括什么？
-A_EN: They include primal feasibility $g_i(x)\ge0$, dual feasibility $\lambda_i\ge0$, stationarity $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$, and complementary slackness $\lambda_i g_i(x)=0$. They are necessary under appropriate constraint qualifications; for a convex problem they also provide sufficiency. Do not replace complementary slackness by demanding every $g_i(x)=0$.
-A_ZH: 包括原始可行性 $g_i(x)\ge0$、对偶可行性 $\lambda_i\ge0$、驻点条件 $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$，以及互补松弛 $\lambda_i g_i(x)=0$。满足适当约束资格时它们是必要条件，凸问题中还可给出充分性。不能把互补松弛替换成要求所有 $g_i(x)=0$。
+A_EN: The conditions are primal feasibility $g_i(x)\ge0$, dual feasibility $\lambda_i\ge0$, stationarity $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$, and complementary slackness $\lambda_i g_i(x)=0$. Under suitable constraint qualifications they are necessary at an optimum. With convex f and concave g_i, any point and multipliers satisfying them certify a global optimum. Complementary slackness does not require every constraint to be active.
+A_ZH: 条件为原始可行性 $g_i(x)\ge0$、对偶可行性 $\lambda_i\ge0$、驻点条件 $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$，以及互补松弛 $\lambda_i g_i(x)=0$。适当约束资格下，它们是最优点的必要条件。若 f 凸、各 g_i 凹，满足这些条件的点及乘子就能证明该点全局最优。互补松弛不要求每个约束都取等号。
 
 @@ M151 | 13-svm | check | L3B:38,41,44;SVM:2,4
 Q_EN: Does a zero multiplier prove that a constraint is strictly inactive?
@@ -1062,3 +1062,45 @@ Q_EN: What common framework links logistic regression, SVM and regularized model
 Q_ZH: 什么共同框架联系逻辑回归、SVM 和正则化模型选择？
 A_EN: Minimize a data-fit term plus a complexity penalty: $\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$. Logistic and hinge losses reward different score behavior, while $\Omega$ limits complexity within a chosen model family. Choose the family, representation and hyperparameters using relevant validation evidence. “No free lunch” does not mean all methods perform equally on your actual task or that domain knowledge is useless.
 A_ZH: 共同形式是最小化数据拟合项与复杂度惩罚：$\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$。逻辑损失和 hinge loss 对分数行为的偏好不同，$\Omega$ 则限制所选模型家族的复杂度。应根据相关验证证据选择家族、表示与超参数。“没有免费午餐”不意味着所有方法在你的实际任务上同样好，也不意味着领域知识无用。
+
+@@ M327 | 01-map | learn | I:13-14
+Q_EN: How do task T, experience E and performance measure P define a learning problem?
+Q_ZH: 任务 T、经验 E、评价指标 P 怎样定义一个学习问题？
+A_EN: T is what the system must do, E is what it learns from, and P measures how well it does T. For spam filtering, T is classifying messages, E is labeled training messages, and P might be held-out F1. “More training data” alone does not prove learning: performance must improve under an appropriate evaluation. Training success without improvement on unseen data may simply be memorization.
+A_ZH: T 是系统要完成什么，E 是从什么经验中学习，P 是怎样评价完成效果。垃圾短信例子中，T 是分类短信，E 是带标签的训练短信，P 可以是留出集上的 F1。仅说“增加了训练数据”不能证明学得更好，必须在适当评估下观察改进。训练效果变好、未见数据效果却不变，可能只是记住了训练样本。
+
+@@ M328 | 01-map | learn | I:16-20
+Q_EN: How do supervised, unsupervised and reinforcement learning differ?
+Q_ZH: 监督学习、无监督学习和强化学习有什么区别？
+A_EN: Supervised learning uses input–target examples, such as images with digit labels. Unsupervised learning looks for structure without supplied target labels, such as grouping similar documents. Reinforcement learning chooses actions while interacting with an environment to improve cumulative reward; an action may affect later observations and rewards. These categories describe the learning feedback, not whether the model is a neural network.
+A_ZH: 监督学习利用输入与目标配对的样本，例如带数字标签的图片。无监督学习在没有给定目标标签时寻找结构，例如把相似文档聚类。强化学习与环境交互、选择动作，以提高累计奖励；动作还可能影响后续观测和奖励。这些分类依据学习反馈，而不是模型是否使用神经网络。
+
+@@ M329 | 03-numpy | worked | P2:90-96,108
+Q_EN: For x=(1,2) and y=(3,4), compare the inner and outer products and their shapes.
+Q_ZH: 对 x=(1,2)、y=(3,4)，内积与外积的数值和形状有何不同？
+A_EN: The inner product $x^Ty=1\cdot3+2\cdot4=11$ is a scalar. The outer product $xy^T$ is a 2×2 matrix with rows (3,4) and (6,8): entry (i,j) is $x_i y_j$. More generally x in R^m and y in R^n give an m×n outer product; their inner product requires matching lengths. Covariance averages outer products of centered feature vectors, explaining why it is a matrix of feature-pair relationships.
+A_ZH: 内积 $x^Ty=1\cdot3+2\cdot4=11$ 是标量；外积 $xy^T$ 是 2×2 矩阵，两行为 (3,4)、(6,8)，第 (i,j) 项为 $x_i y_j$。一般 m 维 x 与 n 维 y 的外积为 m×n；内积则要求长度相同。协方差对中心化特征向量的外积取平均，所以得到描述特征两两关系的矩阵。
+
+@@ M330 | 03-numpy | worked | P2:71; NPARG:Parameters,Notes,Examples
+Q_EN: How do max, argmax and a classifier's class-label mapping differ?
+Q_ZH: max、argmax 和分类器的类别标签映射有什么区别？
+A_EN: For scores (0.2,0.7,0.1), max is 0.7 but argmax is index 1. If columns correspond to labels (2,5,9), the predicted label is 5, not 1. For an n×C score array, `argmax(axis=1)` selects one column index per sample; map those indices through the label list. NumPy resolves tied maxima by their first occurrence; this is a tie convention, not evidence of greater confidence.
+A_ZH: 分数为 (0.2,0.7,0.1) 时，max 得到 0.7，argmax 得到下标 1。如果三列对应标签 (2,5,9)，预测标签应为 5，而不是 1。对 n×C 分数数组，`argmax(axis=1)` 为每个样本选一个列下标，再通过标签列表转换。NumPy 在最大值并列时返回首次出现的位置，这是平局约定，不表示更有信心。
+
+@@ M331 | 08-text | worked | B2:100
+Q_EN: What does a word bigram preserve that a unigram bag of words loses?
+Q_ZH: 单词二元组 bigram 保留了词袋 unigram 丢失的什么信息？
+A_EN: A word n-gram is a run of n consecutive tokens. “not very good” gives bigrams “not very” and “very good”, preserving local order. Unigrams only record separate words. Adding bigrams can distinguish short phrases but enlarges the feature space and creates more rare features. It does not preserve arbitrary long-range order, and the vocabulary must still be learned using training data only.
+A_ZH: 单词 n-gram 是连续 n 个词构成的片段。“not very good” 的 bigram 为“not very”和“very good”，保留局部顺序；unigram 只分别记录单词。加入 bigram 有助于区分短语，但会扩大特征空间、增加稀有特征。它并不保留任意长距离顺序，词表仍必须只用训练数据学习。
+
+@@ M332 | 08-text | learn | B2:99
+Q_EN: How do stemming and lemmatization reduce word variation, and what can they lose?
+Q_ZH: 词干提取和词形还原怎样减少单词变体，又可能丢失什么？
+A_EN: Stemming uses rules to shorten words; testing and tests may become test, but a stem need not be a dictionary word. Lemmatization uses linguistic information to map inflected forms to a lemma, such as went→go. Both can share evidence across forms and shrink a vocabulary, but may merge distinctions useful to the task. Apply preprocessing consistently and choose it by validation rather than assuming it always helps.
+A_ZH: 词干提取按规则截短单词，例如 testing、tests 可变成 test，结果不一定是词典中的词。词形还原利用语言信息，把屈折形式还原为词元，例如 went→go。二者都能让变体共享统计信息、缩小词表，但也可能合并对任务有用的区别。训练和预测必须使用一致处理，并通过验证判断是否有益。
+
+@@ M333 | 08-text | learn | B2:100
+Q_EN: How does a dense word embedding differ from a one-hot word indicator?
+Q_ZH: 稠密词嵌入与单词的 one-hot 指示向量有什么区别？
+A_EN: A one-hot vector identifies a word by one nonzero coordinate and gives distinct words no graded similarity. An embedding represents a word with learned real-valued coordinates; useful semantic relations may appear as nearby directions or distances. Such relations depend on data, training objective and similarity measure. Vector analogies are illustrative tendencies, not guaranteed laws of meaning. A dense embedding is also not a vector of class probabilities.
+A_ZH: one-hot 用唯一非零坐标标识单词，不能为不同词提供程度不同的相似性。词嵌入用学习得到的实数坐标表示词，有用的语义关系可能体现为接近的方向或距离，但这取决于数据、训练目标及相似度定义。向量类比只是可能出现的规律，并非语义的必然定律。稠密词嵌入也不是类别概率向量。

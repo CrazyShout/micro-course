@@ -6,15 +6,15 @@ CS5222 · Bilingual computer networking cards
 
 ## 这套牌组用来做什么 / Purpose
 
-274 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。
+280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。
 
-These 274 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation.
+These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation.
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-129 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 已提供的两部分、课堂 Q&A、Tutorial 1–2 及研究报告方法：网络基础、交换、时延、吞吐量、分层、HTTP、邮件和 DNS。145 张 Extra Resources 卡预习 P2P/socket、可靠传输、TCP、IP、路由、链路层及往年题。历史链路课件并不完整，仍以新增 Canvas 资料确定本学期范围。
+129 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 已提供的两部分、课堂 Q&A、Tutorial 1–2 及研究报告方法：网络基础、交换、时延、吞吐量、分层、HTTP、邮件和 DNS。151 张 Extra Resources 卡预习 P2P/socket、可靠传输、TCP、IP、路由、链路层及往年题。历史链路课件并不完整，仍以新增 Canvas 资料确定本学期范围。
 
-The 129 Canvas/support cards cover Chapter 1, the available two parts of Chapter 2, class Q&A, Tutorials 1–2, and report methodology. Another 145 historical cards preview P2P/sockets, reliability, TCP, IP, routing, the link layer, and historical exercises. Historical link-layer materials are incomplete; new Canvas releases define the current scope.
+The 129 Canvas/support cards cover Chapter 1, the available two parts of Chapter 2, class Q&A, Tutorials 1–2, and report methodology. Another 151 historical cards preview P2P/sockets, reliability, TCP, IP, routing, the link layer, and historical exercises. Historical link-layer materials are incomplete; new Canvas releases define the current scope.
 
 ## 怎样使用题目与图示 / How to use problems and diagrams
 

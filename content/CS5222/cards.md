@@ -244,7 +244,7 @@ MEDIA: chapter1-slide-55.png
 Q_EN: Can a high-throughput path still feel slow for an interactive application?
 Q_ZH: 高吞吐量路径为什么仍可能让交互应用感觉很慢？
 A_EN: Yes. A path may transfer large files quickly once data are flowing but have a large propagation delay or queueing delay before responses arrive. Interactive tasks often depend on round-trip time and delay variation, while bulk transfers emphasize sustained throughput. Describe latency, throughput and loss separately when diagnosing a network problem.
-A_ZH: 可以。数据开始流动后，路径可能很快传完大文件，但响应到达前仍有很大的传播或排队时延。交互任务经常依赖往返时间和时延波动，批量传输更重视持续吞吐量。诊断网络问题时，应分别描述时延、吞吐量与丢包。
+A_ZH: 数据开始流动后，路径可能很快传完大文件，但响应到达前仍有很大的传播或排队时延。交互任务经常依赖往返时间和时延波动，批量传输更重视持续吞吐量。诊断网络问题时，应分别描述时延、吞吐量与丢包。
 
 @@ N040 | 03-performance | check | N1:25-55
 Q_EN: What checklist prevents common network calculation mistakes?

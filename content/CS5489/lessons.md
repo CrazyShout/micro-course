@@ -3,7 +3,7 @@
 本稿是 AI 编写的串讲与教学例题，来源通过 CARDS 关联到原课件页/单元。卡片范围表示复习入口，不表示一节短课穷尽了这些卡片的所有细节。PREREQ 是概念先修；BRIDGE 解释联系。题答的 ` || ` 分隔中文与英文。
 
 @@ ml01 | 学习的对象：从短信到可检验的预测 | From messages to testable predictions
-CARDS: M001,M002,M003,M004
+CARDS: M001,M002,M003,M004,M327,M328
 PREREQ:
 GOAL: 能区分特征、标签、参数和超参数，并画出一次可信的训练流程。
 EXPLAIN: 想让计算机识别垃圾短信，先把每条短信变成特征 x，例如长度和 free 出现次数；训练时还知道标签 y，例如 spam 或 ham。模型 f 把 x 映射为预测。学习不是记住文件名，而是用训练样本决定 f 的参数，使新短信也能被正确处理。
@@ -41,7 +41,7 @@ TRANSFER_A: 查该变量的赋值或导入是否在前面的实际执行路径�
 BRIDGE: 列表适合组织对象，机器学习计算则需要具有明确形状的数组。
 
 @@ ml03 | 先看形状，再看矩阵公式 | Shapes before matrix formulas
-CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034
+CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034,M329,M330
 PREREQ: ml02
 GOAL: 能给矩阵乘法、广播和按轴统计逐步标出形状。
 EXPLAIN: 约定一行是一条样本，一列是一种特征。X 有 N 行 d 列，权重 w 有 d 个数；一条样本的预测是各特征乘对应权重后求和，全部样本一起写成 Xw。矩阵式只是把重复的标量运算打包，并没有增加新规则。
@@ -141,7 +141,7 @@ TRANSFER_A: 相同的二次项抵消，留下线性分数，连接到 LDA 与逻
 BRIDGE: 对文本词频而言，高斯未必是合适的观测模型；先决定“出现”还是“出现次数”。
 
 @@ ml08 | 同一条短信，为什么有不同的 NB 模型 | Text representation and naive Bayes
-CARDS: M075,M076,M077,M078,M079,M080,M081,M082,M083,M084,M085,M086,M087,M088,M089
+CARDS: M075,M076,M077,M078,M079,M080,M081,M082,M083,M084,M085,M086,M087,M088,M089,M331,M332,M333
 PREREQ: ml02,ml06
 GOAL: 能从数据表示选择 Bernoulli 或 Multinomial NB，并算出平滑概率。
 EXPLAIN: 固定词表为 free、meeting、win。短信 free free win 的词频向量是 (2,0,1)，出现标记则是 (1,0,1)。这两种表示问的问题不同：Bernoulli NB 关注每个词是否出现，Multinomial NB 关注文档中各词元分配了多少次。

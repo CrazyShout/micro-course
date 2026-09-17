@@ -877,3 +877,39 @@ Q_EN: What tests reveal a message-board client's protocol bugs before running it
 Q_ZH: 在对接课程服务器前，哪些测试能发现留言板客户端的协议错误？
 A_EN: With a local mock server, split one response across several reads, combine multiple lines in one read, and test empty messages, invalid commands/IDs, unexpected disconnects and QUIT acknowledgement. Verify exact newline/terminator handling and that partial data stays buffered. Handle error replies explicitly; success in one send/one recv example does not establish correct framing. These are AI-added test cases derived from the historical project's error-handling requirements.
 A_ZH: 用本地模拟服务器将一个回复拆成多次读取、把多行合并进一次读取，并测试空消息、非法命令/ID、意外断开和 QUIT 确认。核对换行与终止符，确保不完整数据保留在缓冲中，并显式处理错误回复。一次 send/一次 recv 的演示成功不代表分帧正确。这些是根据历史项目错误处理要求补充的 AI 测试思路。
+
+@@ N280 | x01-applications | learn | XW:5; HTTPSEM:15.3.1,15.4.5,15.5.5,15.6.1
+Q_EN: What do HTTP status codes 200, 304, 404 and 500 tell you?
+Q_ZH: HTTP 状态码 200、304、404、500 分别告诉你什么？
+A_EN: 200 indicates success; 304 validates a stored representation after a conditional GET/HEAD without sending its content again; 404 says the server cannot find the target or will not disclose its existence; 500 indicates an unexpected server condition preventing fulfillment. A status describes HTTP processing, not whether the page is scientifically correct or every embedded object loaded successfully.
+A_ZH: 200 表示成功；304 在条件 GET/HEAD 后验证已有副本，无须再次发送其内容；404 表示找不到目标或不愿透露其存在；500 表示服务器遇到意外情况而无法完成请求。状态码描述 HTTP 处理结果，不保证网页知识正确，也不证明其中所有嵌入对象都已成功加载。
+
+@@ N281 | x01-applications | worked | XW:5; HTTPSEM:13.1.2-13.1.3,15.4.5
+Q_EN: A cached response has ETag "v1". How can a conditional GET avoid downloading unchanged content?
+Q_ZH: 缓存响应的 ETag 为 "v1"。条件 GET 怎样避免重复下载未变化的内容？
+A_EN: Send `If-None-Match: "v1"`. If the selected representation still matches, the server returns 304 and no content; reuse the validated stored content. Otherwise an ordinary successful GET can return 200 with the new representation. `If-Modified-Since` instead uses a modification date. A repeated URL alone does not guarantee 304: a conditional request and the relevant server-side comparison are required.
+A_ZH: 发送 `If-None-Match: "v1"`。若选定表示仍匹配，服务器返回不带内容的 304，可复用经验证的缓存内容；否则普通成功 GET 可返回带新表示的 200。`If-Modified-Since` 则使用修改日期。仅重复访问同一 URL 不保证出现 304，还要有条件请求及服务端相应比较。
+
+@@ N282 | x06-link | learn | XNA3:1-2; ARP:Packet Generation,Packet Reception
+Q_EN: What does ARP resolve, and whose MAC address is needed for an off-subnet IPv4 destination?
+Q_ZH: ARP 解析什么？IPv4 目的地在子网外时，需要谁的 MAC 地址？
+A_EN: On an Ethernet IPv4 LAN, ARP maps a local next-hop IP address to its MAC address. Routing first chooses that next hop: the destination itself if on-link, otherwise a gateway. If the mapping is absent, broadcast an ARP request on that LAN; the target normally replies directly. The IP destination remains the remote host, while the frame destination is the gateway's local MAC. ARP is neither DNS nor an Internet-wide search.
+A_ZH: 在以太网 IPv4 局域网中，ARP 把本地下一跳 IP 映射到 MAC 地址。先由路由确定下一跳：同链路时为目标主机，跨子网时为网关。若缺少映射，就在本 LAN 广播 ARP 请求，目标通常直接回复。IP 目的地址仍是远端主机，帧的目的 MAC 却是网关的本地接口。ARP 既不是 DNS，也不是全互联网搜索。
+
+@@ N283 | x06-link | learn | XNT11:2; XNT11S:11
+Q_EN: How does a basic Ethernet switch learn addresses and decide whether to forward or flood?
+Q_ZH: 基本以太网交换机怎样学习地址、决定转发还是泛洪？
+A_EN: In a loop-free LAN, learn source MAC→arrival port from received frames. Look up the destination: a known different port gets a single forwarded copy; the same arrival port needs no forwarding; an unknown destination is flooded to the other eligible ports in that LAN/VLAN. Entries age out. Learning uses the source, forwarding uses the destination. The switch does not learn a host's location merely because another host names it as a destination.
+A_ZH: 在无环 LAN 中，从收到的帧学习“源 MAC→入端口”。再查询目的地址：已知且在其他端口就定向转发；在同一入端口则不必转发；未知则向该 LAN/VLAN 的其他可用端口泛洪。表项会老化。学习看源地址，转发看目的地址；别人把某主机写成目的地，并不能让交换机直接学到它的位置。
+
+@@ N284 | x04-ip | learn | XN4:13-20
+Q_EN: What does a router's switching fabric do, and why can a router queue packets even when its external links are fast?
+Q_ZH: 路由器的交换结构做什么？外部链路很快时，为什么内部仍可能排队？
+A_EN: The fabric transfers packets from input ports to selected output ports. Memory, a shared bus and crossbar interconnection are basic designs with different internal contention. If aggregate input exceeds fabric capacity, input queues grow; if many inputs target one slower output, that output queues even with a fast fabric. Distinguish internal transfer capacity from each external link's transmission rate.
+A_ZH: 交换结构把分组从输入端口送到选定输出端口。内存、共享总线、交叉互连是基本实现，它们面临不同内部争用。总输入超过交换能力时，输入队列积累；即使内部很快，多路输入集中到较慢的一个出口时，输出仍要排队。内部搬运能力与各条外部链路发送速率是不同瓶颈。
+
+@@ N285 | x04-ip | worked | XN4:19-21
+Q_EN: What does the historical buffer-sizing rule B≈C×RTT mean, and why is a larger buffer not automatically better?
+Q_ZH: 往年缓冲区经验式 B≈C×RTT 是什么意思？为什么缓冲区越大不一定越好？
+A_EN: C in bit/s times RTT in seconds gives a buffer size in bits: 10 Gbit/s×0.25 s=2.5 Gbit. It is a historical sizing heuristic, not a universal requirement; traffic and congestion-control assumptions matter. If Q bits already await service on an R-bit/s FIFO output, their service adds Q/R seconds of waiting. More buffer can absorb bursts but also sustain longer queues; it does not increase link capacity.
+A_ZH: C 用 bit/s、RTT 用秒，相乘得到以 bit 计的容量：10 Gbit/s×0.25 s=2.5 Gbit。这是历史经验式，不能当作普遍要求，流量和拥塞控制假设会影响适用性。若 FIFO 出口已有 Q bit 等待，速率为 R bit/s，它们的服务会增加 Q/R 秒等待。更多缓冲能吸收突发，也能维持更长队列，却不增加链路容量。

@@ -135,8 +135,8 @@ A_ZH: 反复抽取小样本集，拟合候选模型，再统计残差低于阈�
 @@ M205 | x03-robust | learn | XROB:8-9
 Q_EN: How is the ideal RANSAC trial count related to inlier probability?
 Q_ZH: 理想情况下，RANSAC 迭代次数如何由内点概率决定？
-A_EN: If each sampled point is an inlier independently with probability w, a sample of s points is clean with probability $w^s$. After T independent trials, success probability is $1-(1-w^s)^T$. To reach p, choose $T\ge\log(1-p)/\log(1-w^s)$ and round up. Real sampling without replacement and degeneracy require extra care.
-A_ZH: 若每次独立抽到内点的概率为 w，s 个点全部为内点的概率是 $w^s$。T 次独立试验至少成功一次的概率为 $1-(1-w^s)^T$。要达到 p，取 $T\ge\log(1-p)/\log(1-w^s)$ 并向上取整。实际无放回采样及退化样本还需要额外处理。
+A_EN: For s>=1 independently sampled points, each an inlier with probability w, a clean sample has probability $w^s$. T independent trials succeed at least once with probability $1-(1-w^s)^T$. For $0<w<1$ and $0 < p < 1$, round $\log(1-p)/\log(1-w^s)$ upward. If w=1 one trial suffices; if w=0 no finite number succeeds. Sampling without replacement or degenerate clean samples requires a modified model.
+A_ZH: 独立抽取 s>=1 个点，每个为内点的概率为 w，则全内点样本概率为 $w^s$。T 次独立试验至少成功一次的概率为 $1-(1-w^s)^T$。当 $0<w<1$、$0 < p < 1$，将 $\log(1-p)/\log(1-w^s)$ 向上取整即可。w=1 时一次足够；w=0 时有限次都不可能成功。无放回采样或全内点仍退化的情形，需要修改模型。
 
 @@ M206 | x03-robust | worked | XROB:8-9
 Q_EN: With inlier fraction 0.5, sample size 2 and target success 0.99, how many ideal RANSAC trials are needed?
@@ -153,8 +153,8 @@ A_ZH: 使用固定特征 $\phi(x)=(1,x,x^2)$，再预测 $w^T\phi(x)$。曲线�
 @@ M208 | x03-robust | learn | XROB:19-22
 Q_EN: What is kernel ridge regression, and what is its main computational tradeoff?
 Q_ZH: 什么是核岭回归？它的主要计算取舍是什么？
-A_EN: Form the training Gram matrix $K_{ij}=k(x_i,x_j)$ and solve $(K+\lambda I)\alpha=y$. Predict with $\hat y(x)=\sum_i\alpha_i k(x_i,x)$. This avoids an explicit high-dimensional feature map, but an exact Gram matrix stores $n^2$ entries. Bias handling and kernel centering must be specified consistently.
-A_ZH: 构造训练 Gram 矩阵 $K_{ij}=k(x_i,x_j)$，解 $(K+\lambda I)\alpha=y$，再用 $\hat y(x)=\sum_i\alpha_i k(x_i,x)$ 预测。它避免显式构造高维特征，但精确 Gram 矩阵需要存储 $n^2$ 个元素。截距和核中心化必须采用一致约定。
+A_EN: For a positive-semidefinite kernel Gram matrix $K_{ij}=k(x_i,x_j)$ and $\lambda>0$, solve $(K+\lambda I)\alpha=y$ uniquely and predict $\hat y(x)=\sum_i\alpha_i k(x_i,x)$. This formula has no separately fitted intercept; centering or an intercept needs consistent extra treatment. The kernel avoids an explicit feature map, but storing a dense exact K takes n² entries.
+A_ZH: 对半正定核的 Gram 矩阵 $K_{ij}=k(x_i,x_j)$ 及 $\lambda>0$，方程 $(K+\lambda I)\alpha=y$ 有唯一解，用 $\hat y(x)=\sum_i\alpha_i k(x_i,x)$ 预测。此式没有单独拟合截距；如需中心化或截距，应另作一致处理。核方法避免显式特征映射，但存储稠密精确 K 仍需 n² 个元素。
 
 @@ M209 | x03-robust | learn | XROB:23-26
 Q_EN: What does the epsilon-insensitive loss in support vector regression mean?
@@ -195,8 +195,8 @@ A_ZH: (0,2) 分入第一簇，(8,10) 分入第二簇，新中心分别为 1 和 
 @@ M215 | x04-clustering | check | XCL:19-23
 Q_EN: Why use multiple initializations, and why is lower training inertia insufficient for choosing k?
 Q_ZH: 为什么要使用多个初始化？为什么不能仅凭较小训练惯性选择 k？
-A_EN: Different initial centers can lead to different local optima. Restarts reduce dependence on one initialization. Increasing k can always reproduce a coarser solution and usually reduces inertia, so the minimum alone favors excessive clusters. Use stability, an elbow, domain meaning or a justified validation criterion; none is a universal proof of the true k.
-A_ZH: 不同初始中心可能进入不同局部最优，多次重启可降低对某一次初始化的依赖。增大 k 总能复现较粗划分，通常会降低惯性，因此只求最小值会偏向过多簇。可结合稳定性、肘部、领域意义或合理验证标准，但没有一种自动保证找出“真实 k”。
+A_EN: Different initial centers can lead to different local optima, so use restarts. The globally minimal training inertia cannot increase when k increases: extra centers can reproduce or improve the old fit. Separate local algorithm runs need not show this monotonicity. Training inertia alone favors too many clusters; combine it with stability, an elbow, domain meaning or a justified validation criterion. None universally identifies a true k.
+A_ZH: 不同初始中心可能进入不同局部最优，因此要多次重启。k 增大时，全局最小训练惯性不会增加，因为额外中心能复现或改善原拟合；但各自独立运行的局部算法结果未必单调。只看训练惯性容易偏向过多簇，应结合稳定性、肘部、领域意义或合理验证标准，没有一种方法普遍保证找出真实 k。
 
 @@ M216 | x04-clustering | check | XCL:23,35
 Q_EN: Does ordinary k-means require every cluster to contain the same number of points?
@@ -249,8 +249,8 @@ A_ZH: E 步选择后验，使似然下界在当前参数处取等号；M 步提�
 @@ M224 | x04-clustering | learn | XCL:31,35; XEM:21-23
 Q_EN: In what sense are k-means and GMM/EM related?
 Q_ZH: k-means 与 GMM/EM 在什么意义上相关？
-A_EN: Both alternate assigning points and updating representatives. K-means uses hard nearest-center assignments; GMM EM generally uses posterior weights and learns a density. Equal-weight spherical Gaussians with very small shared variance lead toward hard nearest-center assignments. Unit covariance alone still produces soft responsibilities, so it is not exactly ordinary k-means.
-A_ZH: 两者都交替分配样本和更新代表参数。k-means 使用硬最近中心分配；GMM 的 EM 通常使用后验权重，并学习概率密度。等权球形高斯在共享方差趋于很小时，其分配趋近硬最近中心。仅取单位协方差仍会得到软责任度，不能直接说等于普通 k-means。
+A_EN: Both alternate assignments and representative updates. K-means uses hard nearest-center assignments; GMM EM uses posterior weights and fits a density. For equal-weight spherical Gaussians, as shared variance tends to zero a point with a unique nearest center gets hard assignment in the limit. Exactly tied nearest centers can retain split responsibility. Unit covariance alone still gives soft assignments, not ordinary k-means.
+A_ZH: 两者都交替分配样本和更新代表参数。k-means 用硬最近中心分配；GMM 的 EM 用后验权重并拟合密度。对等权球形高斯，共享方差趋零时，具有唯一最近中心的点在极限下变成硬分配；最近距离恰好并列时，责任度仍可分摊。仅设单位协方差，仍是软分配，并不等于普通 k-means。
 
 @@ M225 | x04-clustering | worked | XCL:30
 Q_EN: Points are 0 and 10, with responsibilities 0.8 and 0.2 for one component. Find its updated mean and mixture weight.
@@ -270,11 +270,11 @@ Q_ZH: 特征选择与特征提取有什么区别？
 A_EN: Feature selection keeps a subset of original coordinates. Feature extraction constructs new coordinates, for example linear combinations in PCA. Both can reduce dimension, but fewer coordinates do not automatically mean lossless compression or better prediction. PCA is unsupervised; dimensionality reduction in general can also use supervision.
 A_ZH: 特征选择保留原始坐标的子集，特征提取则构造新坐标，例如 PCA 中的线性组合。两者都能降维，但坐标更少并不自动意味着无损压缩或预测更好。PCA 属于无监督方法，而广义降维也可以使用监督信息。
 
-@@ M228 | x05-pca | learn | XSVD:18-22
+@@ M228 | x05-pca | learn | XSVD:18-22; NPSVD:Parameters,Returns
 Q_EN: What does the singular value decomposition represent?
 Q_ZH: 奇异值分解表示什么？
-A_EN: For a real matrix, $X=U\Sigma V^T$ decomposes it into orthogonal input/output directions and nonnegative singular values. In a rank-r thin SVD, U is n-by-r, V is d-by-r and Sigma is r-by-r for n-by-d X. Each term $\sigma_j u_jv_j^T$ is rank one. SVD exists even when X is rectangular or singular.
-A_ZH: 实矩阵的 $X=U\Sigma V^T$ 把它分解为正交的输入、输出方向以及非负奇异值。若 n 行 d 列的 X 秩为 r，则薄 SVD 中 U 为 n 行 r 列、V 为 d 行 r 列、Sigma 为 r 阶方阵。每项 $\sigma_j u_jv_j^T$ 秩为一；矩形或奇异矩阵也有 SVD。
+A_EN: For real n-by-d X, $X=U\Sigma V^T$ uses orthogonal directions and nonnegative singular values. A compact rank-r SVD keeps only positive singular values: U is n-by-r, V d-by-r, and Sigma r-by-r. NumPy `full_matrices=False` instead keeps min(n,d) directions, including zero singular values if rank-deficient. Each retained positive term $\sigma_j u_jv_j^T$ has rank one; rectangular and singular matrices also have an SVD.
+A_ZH: 实数 n 行 d 列矩阵的 $X=U\Sigma V^T$ 使用正交方向和非负奇异值。秩为 r 的紧致 SVD 只保留正奇异值：U 为 n 行 r 列、V 为 d 行 r 列、Sigma 为 r 阶。NumPy 的 `full_matrices=False` 则保留 min(n,d) 个方向，秩不足时仍包含零奇异值。每个正奇异值项 $\sigma_j u_jv_j^T$ 秩为一；矩形与奇异矩阵也有 SVD。
 
 @@ M229 | x05-pca | learn | XSVD:21-22
 Q_EN: How does truncated SVD give a best low-rank approximation?

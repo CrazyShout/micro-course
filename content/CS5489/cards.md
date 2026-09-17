@@ -30,11 +30,11 @@ Q_ZH: Jupyter Notebook 如何执行？为什么运行顺序可能导致错误？
 A_EN: Markdown cells explain; code cells execute in a shared kernel that keeps variables in memory. Running a later cell first may use an old value or an undefined variable. Before trusting a result, restart the kernel and run all cells from top to bottom. Save outputs together with the code so another reader can follow the computation.
 A_ZH: Markdown 单元解释内容；代码单元在共享的内核中执行，变量会留在内存里。先运行后面的单元可能使用旧值，或遇到未定义变量。确认结果前应重启内核并从上到下运行所有单元。把输出和代码一起保存，方便别人追踪计算过程。
 
-@@ M008 | 02-python | learn | P1:15-28,76-85
-Q_EN: What do assignment, equality and Python's basic numeric operators mean?
-Q_ZH: Python 的赋值、相等比较和基本数值运算分别是什么意思？
-A_EN: `x = 3` assigns a value; `x == 3` returns a Boolean comparison. With positive integers, `7 / 2` is 3.5, `7 // 2` is 3, `7 % 2` is 1, and `2 ** 3` is 8. Integer, float, Boolean and string values have different types. `%` tests divisibility: `n % d == 0` means $d$ divides $n$.
-A_ZH: `x = 3` 给变量赋值；`x == 3` 返回布尔比较结果。对这里的正整数，`7 / 2` 为 3.5，`7 // 2` 为 3，`7 % 2` 为 1，`2 ** 3` 为 8。整数、浮点数、布尔值、字符串是不同类型。`%` 可测试整除：`n % d == 0` 表示 $d$ 是 $n$ 的因数。
+@@ M008 | 02-python | learn | P1:16,18,20,80
+Q_EN: After `x = 3`, what do `x == 3` and `x == 4` return? How is `==` different from `=`?
+Q_ZH: 执行 `x = 3` 后，`x == 3` 和 `x == 4` 分别返回什么？`==` 与 `=` 有何不同？
+A_EN: They return `True` and `False`. Assignment `=` makes the name x refer to a value; comparison `==` asks whether two values are equal and returns a Boolean. Comparing does not change x: after either comparison, x is still 3.
+A_ZH: 分别返回 `True` 和 `False`。赋值 `=` 让名称 x 指向一个值；比较 `==` 检查两个值是否相等，并返回布尔值。比较不会改变 x：两次比较后，x 仍为 3。
 
 @@ M009 | 02-python | learn | P1:29-57
 Q_EN: How do list indexing and slicing work?
@@ -90,11 +90,11 @@ Q_ZH: 文本文件、CSV 和 pickle 有什么区别？
 A_EN: Plain text stores characters; CSV organizes text into rows and columns with quoting rules; pickle stores Python objects in a Python-specific binary representation. Use `with open(...)` to close files reliably. Use a CSV parser rather than splitting every comma, because messages may contain quoted commas. Load pickle only from a trusted source, since unpickling can execute code.
 A_ZH: 纯文本保存字符；CSV 按带引号规则的行列组织文本；pickle 用 Python 专用二进制表示保存对象。用 `with open(...)` 保证文件关闭。短信可能含被引号包住的逗号，因此应使用 CSV 解析器，不能简单按所有逗号切分。只读取可信来源的 pickle，因为反序列化可能执行代码。
 
-@@ M018 | 02-python | learn | P1:169-179
-Q_EN: How do exceptions and pandas help debug a data pipeline?
-Q_ZH: 异常处理和 pandas 如何帮助检查数据流程？
-A_EN: An exception reports that an operation failed; catch a specific expected error with `try/except` and explain or fix it. Do not silently replace failed data loading with fake results. A pandas DataFrame is a labeled table: inspect columns, shape, missing values and sample rows after loading. Confirm IDs and labels before converting the table to NumPy arrays.
-A_ZH: 异常说明某个操作失败；用 `try/except` 捕获明确预期的错误，并解释或修复。不要在读取失败后悄悄生成假结果。pandas DataFrame 是带标签的表格，读取后应检查列、形状、缺失值与样例行。转成 NumPy 数组前，先确认 ID 和标签对应关系。
+@@ M018 | 02-python | learn | P1:169-170
+Q_EN: A Python file-loading operation raises an exception. What does `try/except` do, and does catching the exception mean the data were loaded?
+Q_ZH: Python 读取文件时引发异常。`try/except` 有什么作用？捕获异常就表示数据读入成功了吗？
+A_EN: No. An exception reports that an operation failed. Code in `try` attempts the operation; a matching `except` handles the error. Catch a specific expected error and explain or fix it. Handling the error does not produce the missing data: do not continue as if loading succeeded or silently substitute invented results.
+A_ZH: 不表示成功。异常说明操作失败；`try` 内尝试执行操作，匹配的 `except` 处理错误。应捕获明确预期的错误，并解释或修复。处理错误并不会产生缺失的数据，不能装作读取成功继续执行，也不能悄悄用编造结果替代。
 
 @@ M019 | 02-python | check | P1:29-43;P2:110-121
 Q_EN: Why can `b = a` make changes appear in both variables?
@@ -429,8 +429,8 @@ A_EN: Given log joint scores $s_c$, compute $\log p(c\mid x)=s_c-\operatorname{L
 A_ZH: 已有对数联合分数 $s_c$ 时，计算 $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$，其中 $\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$、$m=\max_c s_c$。先减最大值可避免指数过大。分数为 $(-1000,-1001)$ 时，后验约为 $(0.7311,0.2689)$，直接对原分数取指数却可能下溢。
 
 @@ M073 | 07-gaussian | check | B2:44
-Q_EN: You want to reuse a custom Gaussian classifier that estimates class means/covariances and predicts from log posterior scores. Before trusting it on a new dataset, which assumptions about labels, shapes and numerical stability should you inspect?
-Q_ZH: 准备复用一个估计类别均值、协方差，并根据对数后验分数预测的自定义高斯分类器。用于新数据前，应检查哪些标签、数组形状和数值稳定性假设？
+Q_EN: A custom Gaussian classifier uses training-label array y, sets `K=max(y)+1`, and fits a mean/covariance for each label in `range(K)` (0 through K−1). Before reusing it on new data, what label and covariance assumptions should you check?
+Q_ZH: 某自定义高斯分类器用训练标签数组 y，令 `K=max(y)+1`，再为 `range(K)`（0 至 K−1）中每个标签拟合均值和协方差。用于新数据前，应检查哪些标签与协方差假设？
 A_EN: It sets `K = max(y)+1` and loops through `range(K)`, assuming consecutive integer labels starting at zero. Each class must contain enough observations for covariance estimation, and covariance must be numerically usable. The assignment labels 0, 1, 2 fit the label convention; arbitrary strings or labels 1, 3 do not. Map labels explicitly when generalizing the code.
 A_ZH: 它用 `K = max(y)+1` 并遍历 `range(K)`，假设标签为从 0 开始的连续整数。每类还须有足够观测估计协方差，协方差必须数值可用。作业标签 0、1、2 满足约定，任意字符串或 1、3 这样的标签则不满足。推广代码时应显式映射标签。
 
@@ -1106,3 +1106,27 @@ Q_EN: How does a dense word embedding differ from a one-hot word indicator?
 Q_ZH: 稠密词嵌入与单词的 one-hot 指示向量有什么区别？
 A_EN: A one-hot vector identifies a word by one nonzero coordinate and gives distinct words no graded similarity. An embedding represents a word with learned real-valued coordinates; useful semantic relations may appear as nearby directions or distances. Such relations depend on data, training objective and similarity measure. Vector analogies are illustrative tendencies, not guaranteed laws of meaning. A dense embedding is also not a vector of class probabilities.
 A_ZH: one-hot 用唯一非零坐标标识单词，不能为不同词提供程度不同的相似性。词嵌入用学习得到的实数坐标表示词，有用的语义关系可能体现为接近的方向或距离，但这取决于数据、训练目标及相似度定义。向量类比只是可能出现的规律，并非语义的必然定律。稠密词嵌入也不是类别概率向量。
+
+@@ M334 | 02-python | worked | P1:76-79
+Q_EN: In Python, what do `7 / 2`, `7 // 2` and `7 % 2` return? How are the quotient and remainder related?
+Q_ZH: Python 中 `7 / 2`、`7 // 2`、`7 % 2` 分别返回什么？商与余数有什么关系？
+A_EN: They return 3.5, 3 and 1. `/` performs division, `//` rounds the quotient down, and `%` returns the remainder: $7=3\times2+1$. For positive integer n and d, `n % d == 0` tests whether d divides n. Floor division rounds toward negative infinity, so `-7 // 2` is −4, not −3.
+A_ZH: 分别为 3.5、3、1。`/` 做除法，`//` 把商向下取整，`%` 返回余数，满足 $7=3\times2+1$。正整数 n、d 中，`n % d == 0` 检查 d 能否整除 n。向下取整是朝负无穷方向，因此 `-7 // 2` 为 −4，而不是 −3。
+
+@@ M335 | 02-python | worked | P1:76
+Q_EN: What does Python's `2 ** 3` compute, and why is it different from `2 * 3`?
+Q_ZH: Python 的 `2 ** 3` 计算什么？为什么它不同于 `2 * 3`？
+A_EN: `**` is exponentiation: `2 ** 3` means $2^3=2\times2\times2=8$. `*` is multiplication, so `2 * 3` is 6. The exponent counts repeated factors in this positive-integer example; the two operators are not interchangeable.
+A_ZH: `**` 表示乘方：`2 ** 3` 是 $2^3=2\times2\times2=8$。`*` 表示乘法，因此 `2 * 3` 是 6。在这个正整数例子中，指数表示重复相乘的因子个数，两个运算符不能互换。
+
+@@ M336 | 02-python | worked | P1:21-28
+Q_EN: Identify the Python types of `3`, `3.0`, `True` and `"3"`. Why should their roles be distinguished before arithmetic?
+Q_ZH: `3`、`3.0`、`True` 和 `"3"` 在 Python 中分别是什么类型？运算前为什么要分清它们的作用？
+A_EN: Their types are integer (`int`), floating point (`float`), Boolean (`bool`) and string (`str`). Quotes make `"3"` text. `True` expresses a logical condition, even though Python permits some numeric uses of Booleans. Check the data type and intended meaning before doing arithmetic; convert numeric text explicitly when appropriate.
+A_ZH: 依次是整数 `int`、浮点数 `float`、布尔值 `bool`、字符串 `str`。引号使 `"3"` 成为文本。`True` 表示逻辑条件，尽管 Python 允许布尔值参与某些数值运算。计算前要检查类型和含义；确认是数值文本后，再明确转换。
+
+@@ M337 | 02-python | learn | P1:171-179
+Q_EN: After reading a CSV into a pandas DataFrame, what should you inspect before using its rows as training examples?
+Q_ZH: 将 CSV 读入 pandas DataFrame 后，在把每一行当作训练样本前，应检查什么？
+A_EN: A DataFrame is a table with named columns; columns can have different types. Inspect column names, row/column counts, types, missing values and a few rows. Identify which columns are features, labels and IDs, and keep each label aligned with its row. Successful file reading does not prove the table matches the intended dataset.
+A_ZH: DataFrame 是列有名称的表格，各列可以有不同类型。应检查列名、行列数、类型、缺失值和若干样例行；分清特征列、标签列与 ID 列，保持标签和对应行对齐。文件读取成功并不证明表格符合预期数据结构。

@@ -648,11 +648,11 @@ Q_ZH: DDPM 的前向加噪过程是什么？
 A_EN: Choose a variance schedule with $0<\beta_t<1$ and use $q(x_t|x_{t-1})=N(\sqrt{1-\beta_t}x_{t-1},\beta_t I)$. Signal is attenuated while Gaussian noise is added. This forward process is specified by the schedule; the reverse denoising model is learned. Increasing beta linearly is one schedule choice, not the definition of diffusion.
 A_ZH: 选取满足 $0<\beta_t<1$ 的方差计划，并令 $q(x_t|x_{t-1})=N(\sqrt{1-\beta_t}x_{t-1},\beta_t I)$。信号逐步衰减，同时加入高斯噪声。前向过程由计划指定，反向去噪模型则需要学习。Beta 线性增长只是一种计划选择，不是扩散模型的定义。
 
-@@ M291 | x10-generative | learn | XGEN:35-39
-Q_EN: How can training sample a noisy state at timestep t without simulating every earlier step?
-Q_ZH: 训练时怎样不逐步模拟前面所有时刻，直接得到第 t 步的带噪状态？
-A_EN: Define $\alpha_t=1-\beta_t$ and $\bar\alpha_t=\prod_{s=1}^t\alpha_s$. Then sample $\epsilon\sim N(0,I)$ and set $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$. The product, not a sum, accumulates signal retention. When bar-alpha is near zero, x_t is approximately standard Gaussian under the model.
-A_ZH: 定义 $\alpha_t=1-\beta_t$、$\bar\alpha_t=\prod_{s=1}^t\alpha_s$，采样 $\epsilon\sim N(0,I)$ 后，直接令 $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$。信号保留比例通过乘积而非求和累计。Bar-alpha 接近零时，模型中的 x_t 近似标准高斯。
+@@ M291 | x10-generative | learn | XGEN:33-39
+Q_EN: A DDPM starts from clean data x0 and uses the Gaussian forward process $x_s=\sqrt{1-\beta_s}x_{s-1}+\sqrt{\beta_s}\epsilon_s$, with independent $\epsilon_s\sim N(0,I)$ and noise variances $0<\beta_s<1$. How can training sample x_t directly without simulating steps 1 through t?
+Q_ZH: DDPM 从干净数据 x0 出发，采用高斯前向过程 $x_s=\sqrt{1-\beta_s}x_{s-1}+\sqrt{\beta_s}\epsilon_s$，各 $\epsilon_s\sim N(0,I)$ 相互独立，噪声方差 $0<\beta_s<1$。训练时怎样直接采样 x_t，而不逐步模拟 1 至 t？
+A_EN: Define $\bar\alpha_t=\prod_{s=1}^t(1-\beta_s)$. Draw fresh $\epsilon\sim N(0,I)$ and set $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$. The product accumulates signal retention. This has the correct conditional distribution given x0; it need not reproduce one particular previously sampled noise path.
+A_ZH: 定义 $\bar\alpha_t=\prod_{s=1}^t(1-\beta_s)$，重新采样 $\epsilon\sim N(0,I)$，令 $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$。乘积累计信号保留比例。这给出给定 x0 后正确的条件分布，不要求复现先前某次逐步加噪的具体轨迹。
 
 @@ M292 | x10-generative | check | XGEN:37-39; XDDPM:2-3
 Q_EN: Is the reverse conditional $q(x_{t-1}\mid x_t)$ exactly Gaussian merely because forward diffusion adds Gaussian noise?
@@ -757,14 +757,14 @@ A_EN: For positive priors and common positive-definite Sigma, quadratic terms ca
 A_ZH: 类别先验为正且共享正定 Sigma 时，高斯对数比中的二次项抵消。因此对数优势为 $w^Tx+b$，其中 $w=\Sigma^{-1}(\mu_1-\mu_0)$，$b=\log(\pi_1/\pi_0)-(\mu_1^T\Sigma^{-1}\mu_1-\mu_0^T\Sigma^{-1}\mu_0)/2$。把优势换成概率得到 $\sigma(w^Tx+b)$。不同类别协方差通常会留下二次边界。
 
 @@ M309 | x12-problems | historical | XHA1:3-4; XHA1S:6-8
-Q_EN: For a nonsingular joint Gaussian partitioned into xa and xb, what is the distribution of xb given xa?
-Q_ZH: 非退化联合高斯分为 xa 和 xb 时，给定 xa 后 xb 的分布是什么？
-A_EN: It is Gaussian with mean $\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a)$ and covariance $\Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab}$. One derivation holds xa fixed and completes the square in xb in the joint exponent. The conditional covariance does not depend on the realized xa, while the conditional mean does.
-A_ZH: 它仍是高斯，均值为 $\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a)$，协方差为 $\Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab}$。可在联合密度指数中固定 xa，对 xb 配方得到。条件协方差不依赖 xa 的具体观测值，而条件均值依赖它。
+Q_EN: A joint Gaussian vector is split into x_a and x_b. Define mean blocks $\mu_a,\mu_b$ and covariance blocks $\Sigma_{ij}=\operatorname{Cov}(x_i,x_j)$ for i,j in {a,b}. Its joint covariance is positive definite. What are the mean and covariance of x_b given x_a?
+Q_ZH: 联合高斯向量分为 x_a、x_b。均值分块为 $\mu_a,\mu_b$，协方差分块定义为 $\Sigma_{ij}=\operatorname{Cov}(x_i,x_j)$，其中 i,j 属于 {a,b}。联合协方差正定。给定 x_a 后，x_b 的均值和协方差是什么？
+A_EN: The conditional distribution is Gaussian, with mean $\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a)$ and covariance $\Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab}$. The observed deviation of x_a shifts the predicted mean of x_b; the conditional covariance does not depend on that observed value. Positive definiteness ensures the required inverse exists.
+A_ZH: 条件分布仍为高斯，均值为 $\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a)$，协方差为 $\Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab}$。x_a 的观测偏差会调整 x_b 的预测均值；条件协方差不依赖此次观测的具体值。正定条件保证所需逆矩阵存在。
 
 @@ M310 | x12-problems | historical | XHA2:1; XHA2S:1-2
-Q_EN: Historical Assignment 2 reports frequencies (100,81,34,9,6) for counts (0,1,2,3,4+). When is the provided estimate 0.8696 valid?
-Q_ZH: 往年 Assignment 2 中，计数 (0,1,2,3,4+) 的频数为 (100,81,34,9,6)，所给估计 0.8696 在什么条件下成立？
+Q_EN: Historical Assignment 2 reports frequencies (100,81,34,9,6) for counts (0,1,2,3,4+). Under what assumption does the empirical mean, used to estimate a Poisson rate, equal the provided 0.8696?
+Q_ZH: 往年 Assignment 2 中，计数 (0,1,2,3,4+) 的频数为 (100,81,34,9,6)。用经验均值估计泊松率时，所给 0.8696 依赖什么假设？
 A_EN: The provided solution explicitly assumes every 4+ observation equals 4, giving $(81+68+27+24)/230=0.8696$. Without that assumption, the exact empirical mean is unknown and at least this large. If treating 4+ as censored Poisson data, maximize the grouped likelihood with a $P_\lambda(X\ge4)^6$ term instead of silently replacing all tail counts by 4.
 A_ZH: 配套解答明确假设所有 4+ 观测都等于 4，得到 $(81+68+27+24)/230=0.8696$。不作这一假设，就不知道精确样本均值，只能知道其至少这么大。若将 4+ 当作删失的 Poisson 数据，应在分组似然中使用 $P_\lambda(X\ge4)^6$，不能默默把全部尾部计数替换成 4。
 

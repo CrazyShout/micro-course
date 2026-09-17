@@ -1,0 +1,2089 @@
+{
+  "ml03": [
+    {
+      "id": "axis-means",
+      "title": {
+        "zh": "按轴求均值",
+        "en": "Means by axis"
+      },
+      "goal": {
+        "zh": "能区分每列与每行均值及形状。",
+        "en": "Distinguish column and row means and their shapes."
+      },
+      "explain": {
+        "zh": "一行一样本、一列一特征。axis=0 消去行轴，每列一个均值；axis=1 消去列轴，每行一个均值。",
+        "en": "With samples in rows, axis=0 removes the row axis and returns a mean per feature; axis=1 returns a mean per sample."
+      },
+      "worked_q": {
+        "zh": "X=[[1,2],[3,4]]，求两种均值。",
+        "en": "Find both means for X=[[1,2],[3,4]]."
+      },
+      "worked_a": {
+        "zh": "列均值((1+3)/2,(2+4)/2)=(2,3)；行均值(1.5,3.5)，都为(2,)但含义不同。",
+        "en": "Column means are (2,3), row means (1.5,3.5); both have shape (2,) but different meanings."
+      },
+      "practice_q": {
+        "zh": "X=[[1,3],[5,7],[9,11]]，求列均值。",
+        "en": "Find column means for [[1,3],[5,7],[9,11]]."
+      },
+      "hint": {
+        "zh": "每列除以三条样本。",
+        "en": "Average each column over three samples."
+      },
+      "practice_a": {
+        "zh": "(5,7)，形状(2,)；keepdims=True为(1,2)。",
+        "en": "Means are (5,7), shape (2,), or (1,2) with keepdims=True."
+      },
+      "transfer_q": {
+        "zh": "同一3×2数组减去列均值(5,7)，得到什么？为什么能广播？",
+        "en": "Subtract means (5,7) from that 3×2 array. What results, and why does broadcasting work?"
+      },
+      "transfer_a": {
+        "zh": "[[-4,-4],[0,0],[4,4]]；末维2匹配，各行共用同一均值。",
+        "en": "Result is [[−4,−4],[0,0],[4,4]]. The matching last dimension lets every row use the same feature means."
+      },
+      "card_ids": [
+        "CS5489-M023",
+        "CS5489-M026",
+        "CS5489-M027"
+      ],
+      "sources": [
+        {
+          "name": "Lecture1b.ipynb",
+          "locator": "cell 20-49",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M023. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture1b.ipynb",
+          "locator": "cell 57-83",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M026. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture1b.ipynb",
+          "locator": "cell 72-83",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M027. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml03#axis-means",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml06": [
+    {
+      "id": "gaussian-mle",
+      "title": {
+        "zh": "高斯均值和方差：逐项算偏差",
+        "en": "Gaussian mean and variance"
+      },
+      "goal": {
+        "zh": "能从观测计算高斯均值与方差MLE，区分n与n−1。",
+        "en": "Compute Gaussian mean/variance MLEs and distinguish n from n−1."
+      },
+      "explain": {
+        "zh": "模型假设：观测独立同分布于一维高斯，未知均值，方差参数限制为正。均值MLE为样本平均。把每点减均值、平方、求和，再除n得到方差MLE；除n−1是不同的无偏估计目标。这里至少两个非相同观测，避免零方差的退化情形。",
+        "en": "Model assumptions: IID observations from a univariate Gaussian with unknown mean and strictly positive variance. The mean MLE is the average; variance MLE averages squared deviations using n. Dividing by n−1 targets unbiased variance instead. These examples use nonidentical observations to avoid zero-variance degeneracy."
+      },
+      "worked_q": {
+        "zh": "x=(1,2,3)，求两项MLE。",
+        "en": "Find both MLEs for x=(1,2,3)."
+      },
+      "worked_a": {
+        "zh": "均值2；偏差−1,0,1；平方和2；方差2/3。",
+        "en": "Mean 2; deviations −1,0,1; squared sum 2; variance 2/3."
+      },
+      "practice_q": {
+        "zh": "x=(2,4,6)，补出均值、偏差和方差MLE。",
+        "en": "Compute mean, deviations and variance MLE for (2,4,6)."
+      },
+      "hint": {
+        "zh": "先平均，再计算平方偏差，不平均原始平方。",
+        "en": "Center before squaring."
+      },
+      "practice_a": {
+        "zh": "均值4；偏差−2,0,2；平方和8；方差8/3。",
+        "en": "Mean 4; deviations −2,0,2; squared sum 8; variance 8/3."
+      },
+      "transfer_q": {
+        "zh": "x=(1,3)，独立求均值、MLE方差与分母n−1的方差。为何两个方差不一样？",
+        "en": "For (1,3), find mean, MLE variance and n−1 variance, and explain the difference."
+      },
+      "transfer_a": {
+        "zh": "均值2；平方和2；MLE为2/2=1，无偏估计为2/1=2。分母与估计目标不同，不是算术冲突。",
+        "en": "Mean 2 and squared sum 2 give MLE variance 1 and unbiased variance 2. The estimators target different properties."
+      },
+      "card_ids": [
+        "CS5489-M054",
+        "CS5489-M055",
+        "CS5489-M056",
+        "CS5489-M057"
+      ],
+      "sources": [
+        {
+          "name": "Lecture2a.ipynb",
+          "locator": "cell 18-26",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M054, CS5489-M056. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2a.ipynb",
+          "locator": "cell 23-26",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M055. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 44",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M056. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2a.ipynb",
+          "locator": "cell 26",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M057. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml06#gaussian-mle",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml11": [
+    {
+      "id": "softmax",
+      "title": {
+        "zh": "从分数到多类别概率",
+        "en": "From scores to class probabilities"
+      },
+      "goal": {
+        "zh": "能计算softmax并验证共同平移不改变概率。",
+        "en": "Compute softmax and verify invariance to a common shift."
+      },
+      "explain": {
+        "zh": "对每类分数先取指数，再除所有指数之和：$p_k=e^{z_k}/\\sum_j e^{z_j}$。它把类别放在同一个和为1的分布中。 本单元 ln 表示自然对数，exp 是其反函数。",
+        "en": "Exponentiate each score and normalize: $p_k=e^{z_k}/\\sum_j e^{z_j}$. The resulting class probabilities sum to one. Here ln is the natural logarithm, inverse to exp."
+      },
+      "worked_q": {
+        "zh": "分数(ln 2,0,0)，求概率。",
+        "en": "Find probabilities for (ln 2,0,0)."
+      },
+      "worked_a": {
+        "zh": "指数(2,1,1)，总和4，概率(1/2,1/4,1/4)。",
+        "en": "Exponentials (2,1,1) sum to 4, giving (1/2,1/4,1/4)."
+      },
+      "practice_q": {
+        "zh": "分数(0,ln 3)，求概率。",
+        "en": "Find probabilities for (0,ln 3)."
+      },
+      "hint": {
+        "zh": "指数分别为1和3。",
+        "en": "Exponentials are 1 and 3."
+      },
+      "practice_a": {
+        "zh": "结果为：(1/4,3/4)。",
+        "en": "The result is (1/4,3/4)."
+      },
+      "transfer_q": {
+        "zh": "所有分数共同加1000。用代数解释概率不变，并给安全计算方法。",
+        "en": "Add 1000 to all scores. Explain invariance algebraically and give a numerically safer computation."
+      },
+      "transfer_a": {
+        "zh": "分子分母都有e^1000因子，抵消。实际先减最大分数再exp，避免溢出；不应真的先算e^1000。",
+        "en": "The common e^1000 factor cancels. Subtract the maximum logit before exponentiation to avoid overflow."
+      },
+      "card_ids": [
+        "CS5489-M137",
+        "CS5489-M138",
+        "CS5489-M139"
+      ],
+      "sources": [
+        {
+          "name": "Lecture3a.ipynb",
+          "locator": "cell 86-91",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M137. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3a.ipynb",
+          "locator": "cell 86-89",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M138. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3a.ipynb",
+          "locator": "cell 90-91",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M139. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml11#softmax",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml12": [
+    {
+      "id": "slack",
+      "title": {
+        "zh": "软间隔：正确分类也可能违反间隔",
+        "en": "Soft-margin violations"
+      },
+      "goal": {
+        "zh": "能由带标签分数求最小松弛并解释分类。",
+        "en": "Find minimum slack from a labeled score and interpret classification."
+      },
+      "explain": {
+        "zh": "记z=yf(x)，约束z≥1−ξ、ξ≥0，最小松弛ξ=max(0,1−z)。z>0分对；0<z<1虽分对仍在间隔内。",
+        "en": "For z=yf(x), constraints imply minimum ξ=max(0,1−z). Positive z is correctly classified, but 0<z<1 still violates the margin."
+      },
+      "worked_q": {
+        "zh": "z=0.4，求ξ与分类情况。",
+        "en": "For z=0.4 find slack and classification status."
+      },
+      "worked_a": {
+        "zh": "ξ=0.6；分对但在间隔内。",
+        "en": "Slack 0.6; correct but inside the margin."
+      },
+      "practice_q": {
+        "zh": "z=−0.2，补出ξ。",
+        "en": "Find slack for z=−0.2."
+      },
+      "hint": {
+        "zh": "计算1−(−0.2)。",
+        "en": "Use this hint: Compute 1−(−0.2)."
+      },
+      "practice_a": {
+        "zh": "ξ=1.2；负带标签分数表示分错。",
+        "en": "Slack 1.2; the negative labeled score means misclassification."
+      },
+      "transfer_q": {
+        "zh": "z=2与z=0各如何解释？",
+        "en": "Interpret z=2 and z=0."
+      },
+      "transfer_a": {
+        "zh": "z=2给ξ=0、满足间隔；z=0给ξ=1、位于决策边界，类别需平局规则，不能直接称严格分对。",
+        "en": "z=2 needs no slack; z=0 needs slack 1 and lies on the decision boundary, requiring a tie rule."
+      },
+      "card_ids": [
+        "CS5489-M154",
+        "CS5489-M155",
+        "CS5489-M156"
+      ],
+      "sources": [
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 49-54",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M154. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "SVM.pdf",
+          "locator": "page 3",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M154, CS5489-M156. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 50-54",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M155. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 54,58",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M156. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml12#slack",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml14": [
+    {
+      "id": "rbf-scale",
+      "title": {
+        "zh": "RBF范围与C不是同一旋钮",
+        "en": "RBF scale versus C"
+      },
+      "goal": {
+        "zh": "能算RBF相似度并区分gamma和C的作用。",
+        "en": "Compute RBF similarity and distinguish gamma from C."
+      },
+      "explain": {
+        "zh": "RBF为$k(x,z)=\\exp(-\\gamma\\|x-z\\|^2)$，gamma控制同一距离衰减多快；C控制间隔违约惩罚，并不直接出现在这个核值中。",
+        "en": "RBF is $k(x,z)=\\exp(-\\gamma\\|x-z\\|^2)$. Gamma controls decay with distance; C weights margin penalties and does not directly appear in the kernel value."
+      },
+      "worked_q": {
+        "zh": "平方距离4、gamma=0.25，核值多少？",
+        "en": "Find the kernel for squared distance 4 and gamma=0.25."
+      },
+      "worked_a": {
+        "zh": "结果为：exp(−1)≈0.3679。",
+        "en": "The result is exp(−1)≈0.3679."
+      },
+      "practice_q": {
+        "zh": "同一平方距离、gamma改为1，核值多少？",
+        "en": "Keep the distance but use gamma=1."
+      },
+      "hint": {
+        "zh": "乘积变为4。",
+        "en": "The exponent magnitude becomes 4."
+      },
+      "practice_a": {
+        "zh": "exp(−4)≈0.0183，相似度更小。",
+        "en": "exp(−4)≈0.0183, a smaller similarity."
+      },
+      "transfer_q": {
+        "zh": "所有坐标乘10，希望每对RBF核值不变，gamma应怎样改？只改C能保证吗？",
+        "en": "Scale all coordinates by 10. How must gamma change to preserve every RBF value? Can changing C alone guarantee this?"
+      },
+      "transfer_a": {
+        "zh": "平方距离乘100，gamma应除100；C不改变核公式，不能保证恢复核值。",
+        "en": "Squared distances multiply by 100, so divide gamma by 100. C does not alter this kernel formula."
+      },
+      "card_ids": [
+        "CS5489-M168",
+        "CS5489-M169",
+        "CS5489-M170"
+      ],
+      "sources": [
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 101-112",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M168. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 101-104",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M169. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cell 113-118",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M170. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml14#rbf-scale",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml17": [
+    {
+      "id": "cost-threshold",
+      "title": {
+        "zh": "把错误代价变成决策阈值",
+        "en": "Cost-sensitive thresholds"
+      },
+      "goal": {
+        "zh": "能从两个动作的期望代价推出阈值。",
+        "en": "Derive a decision threshold from expected action costs."
+      },
+      "explain": {
+        "zh": "p为垃圾后验，误封正常代价C_FP、漏掉垃圾代价C_FN，正确动作代价0。预测垃圾损失C_FP(1−p)，预测正常损失C_FN p；选择前者当p>C_FP/(C_FP+C_FN)。这假定p可作为决策概率使用。",
+        "en": "With spam probability p and zero cost for correct actions, spam prediction costs C_FP(1−p), while normal prediction costs C_FN p. Choose spam above C_FP/(C_FP+C_FN), assuming p is suitable for decision-making."
+      },
+      "worked_q": {
+        "zh": "C_FP=9,C_FN=1，求阈值。",
+        "en": "Find the threshold for costs 9 and 1."
+      },
+      "worked_a": {
+        "zh": "9/(9+1)=0.9，误封更贵，需要更强证据。",
+        "en": "Threshold 0.9; costly false positives require stronger evidence."
+      },
+      "practice_q": {
+        "zh": "C_FP=1,C_FN=9，阈值多少？",
+        "en": "Find the threshold after swapping costs."
+      },
+      "hint": {
+        "zh": "仍按误封代价除总代价。",
+        "en": "Divide false-positive cost by the total."
+      },
+      "practice_a": {
+        "zh": "0.1，漏检更贵，降低门槛。",
+        "en": "0.1; costly false negatives lower the threshold."
+      },
+      "transfer_q": {
+        "zh": "C_FP=3,C_FN=2，p=0.7。直接比较两个动作代价并选择；阈值处怎么处理？",
+        "en": "For costs 3 and 2 and p=0.7, compare action costs directly. What happens exactly at threshold?"
+      },
+      "transfer_a": {
+        "zh": "预测垃圾代价3×0.3=0.9；预测正常2×0.7=1.4，选垃圾。阈值0.6处两者相等，应声明平局规则。",
+        "en": "Spam costs 0.9 versus normal 1.4, so choose spam. At threshold 0.6 the costs tie; specify a tie rule."
+      },
+      "card_ids": [
+        "CS5489-M102",
+        "CS5489-M103"
+      ],
+      "sources": [
+        {
+          "name": "Lecture2a.ipynb",
+          "locator": "cell 32-41",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M102. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 3,25-28",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M103. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "naive_bayes.html",
+          "locator": "section 1.9",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M103. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml17#cost-threshold",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml19": [
+    {
+      "id": "ridge",
+      "title": {
+        "zh": "正则化怎样改正规方程",
+        "en": "Ridge changes the equations"
+      },
+      "goal": {
+        "zh": "能在明确目标系数下算Ridge并解释收缩。",
+        "en": "Compute ridge under a specified objective convention."
+      },
+      "explain": {
+        "zh": "目标$J=\\frac12\\|Xw-y\\|^2+\\frac\\lambda2\\|w\\|^2$给$(X^TX+\\lambda I)w=X^Ty$。本单元所有系数都受惩罚，不另设未惩罚截距。",
+        "en": "The stated half-squared-error plus half-lambda penalty gives $(X^TX+\\lambda I)w=X^Ty$. All coefficients are penalized here, with no unpenalized intercept."
+      },
+      "worked_q": {
+        "zh": "一维XᵀX=1、Xᵀy=3、lambda=1，求w。",
+        "en": "Find w for XᵀX=1,Xᵀy=3,lambda=1."
+      },
+      "worked_a": {
+        "zh": "2w=3，w=1.5；OLS为3。",
+        "en": "2w=3 gives 1.5, compared with OLS 3."
+      },
+      "practice_q": {
+        "zh": "XᵀX=5、Xᵀy=10、lambda=5，求w。",
+        "en": "Use 5,10,and lambda=5."
+      },
+      "hint": {
+        "zh": "先加左边系数。",
+        "en": "Add the left-side coefficients."
+      },
+      "practice_a": {
+        "zh": "10w=10，w=1，OLS为2。",
+        "en": "w=1 versus OLS 2."
+      },
+      "transfer_q": {
+        "zh": "XᵀX=diag(1,4)、Xᵀy=(3,8)、lambda=1，求两维w，是否都缩小同一比例？",
+        "en": "For XᵀX=diag(1,4),Xᵀy=(3,8),lambda=1, compute w and compare shrinkage factors."
+      },
+      "transfer_a": {
+        "zh": "Ridge=(3/2,8/5)=(1.5,1.6)，OLS=(3,2)。比例1/2与4/5不同；收缩依赖数据曲率。",
+        "en": "Ridge is (1.5,1.6) versus OLS (3,2). Factors 1/2 and 4/5 differ because curvature differs."
+      },
+      "card_ids": [
+        "CS5489-M194",
+        "CS5489-M195",
+        "CS5489-M197"
+      ],
+      "sources": [
+        {
+          "name": "Lecture5.2.pdf",
+          "locator": "page 3-6",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M194. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture5.2.pdf",
+          "locator": "page 4-7,17",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M195. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture5.2.pdf",
+          "locator": "page 15-16",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M197. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml19#ridge",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml20": [
+    {
+      "id": "loss-comparison",
+      "title": {
+        "zh": "同一个残差在两种损失下",
+        "en": "Two losses for one residual"
+      },
+      "goal": {
+        "zh": "能比较平方损失与epsilon不敏感损失。",
+        "en": "Compare squared and epsilon-insensitive loss."
+      },
+      "explain": {
+        "zh": "这里平方损失定义为r²；epsilon不敏感损失为max(0,|r|−epsilon)。前者放大大残差，后者在容差内不罚；它们目标不同。",
+        "en": "Use squared loss r² and epsilon-insensitive loss max(0,|r|−epsilon). Their penalties differ, including a zero-penalty band for the latter."
+      },
+      "worked_q": {
+        "zh": "r=−0.5、epsilon=0.2，求两损失。",
+        "en": "Find both losses for r=−0.5,epsilon=0.2."
+      },
+      "worked_a": {
+        "zh": "平方0.25；不敏感max(0,0.5−0.2)=0.3。",
+        "en": "Squared loss 0.25; insensitive loss 0.3."
+      },
+      "practice_q": {
+        "zh": "r=0.1、epsilon=0.2呢？",
+        "en": "Now r=0.1 with epsilon=0.2."
+      },
+      "hint": {
+        "zh": "先判断是否在容差内。",
+        "en": "Check the tolerance band."
+      },
+      "practice_a": {
+        "zh": "0.01与0。",
+        "en": "The result is 0.01 and 0."
+      },
+      "transfer_q": {
+        "zh": "r从1变10、epsilon=0.2固定，两损失各怎样变化？",
+        "en": "For r changing from 1 to 10 with epsilon=0.2, compare both changes."
+      },
+      "transfer_a": {
+        "zh": "平方由1变100；不敏感由0.8变9.8。后者在带外线性增加，但不能仅靠损失数值大小宣称一个模型普遍更好。",
+        "en": "Squared loss rises 1→100, insensitive loss 0.8→9.8. Their scales differ; smaller numeric values alone do not establish a better model."
+      },
+      "card_ids": [
+        "CS5489-M203",
+        "CS5489-M209",
+        "CS5489-M210"
+      ],
+      "sources": [
+        {
+          "name": "Lecture6.1.pdf",
+          "locator": "page 5-7",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M203. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture6.1.pdf",
+          "locator": "page 23-26",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M209. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture6.1.pdf",
+          "locator": "page 24",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M210. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml20#loss-comparison",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml23": [
+    {
+      "id": "pca-reconstruction",
+      "title": {
+        "zh": "投影之后怎样重构",
+        "en": "Reconstruct after projection"
+      },
+      "goal": {
+        "zh": "能中心化、算得分、重构并量化丢失方向。",
+        "en": "Center a point, compute its score, reconstruct and measure lost information."
+      },
+      "explain": {
+        "zh": "给训练均值μ和单位方向v：得分z=vᵀ(x−μ)，重构x̂=μ+zv。必须加回均值；这里只保留一个方向。",
+        "en": "With training mean μ and unit direction v, compute z=vᵀ(x−μ) and reconstruct x̂=μ+zv. Add the mean back; only one direction is retained."
+      },
+      "worked_q": {
+        "zh": "μ=(1,1)、v=(1,0)、x=(4,3)，求得分与重构。",
+        "en": "Use μ=(1,1),v=(1,0),x=(4,3)."
+      },
+      "worked_a": {
+        "zh": "中心化(3,2)，z=3，重构(4,1)；残差(0,2)，平方误差4。",
+        "en": "Centered point (3,2), score 3, reconstruction (4,1), residual (0,2), squared error 4."
+      },
+      "practice_q": {
+        "zh": "同μ、v，x=(2,5)，补出结果。",
+        "en": "With the same μ,v, use x=(2,5)."
+      },
+      "hint": {
+        "zh": "只保留水平方向，垂直重构回均值。",
+        "en": "Retain horizontal displacement only."
+      },
+      "practice_a": {
+        "zh": "z=1，重构(2,1)，平方误差16。",
+        "en": "Score 1, reconstruction (2,1), squared error 16."
+      },
+      "transfer_q": {
+        "zh": "μ=(1,1)、x=(4,3)，改保留v=(0,1)，独立求重构误差。能否凭单点误差决定全训练集PCA方向？",
+        "en": "For μ=(1,1),x=(4,3), retain v=(0,1). Compute reconstruction error. Does one point determine the PCA direction for the full dataset?"
+      },
+      "transfer_a": {
+        "zh": "z=2，重构(1,3)，平方误差9。不能；PCA方向由全训练集的总变化/重构目标决定。",
+        "en": "Score 2, reconstruction (1,3), squared error 9. PCA optimizes the full training dataset, not this point alone."
+      },
+      "card_ids": [
+        "CS5489-M231",
+        "CS5489-M233",
+        "CS5489-M237"
+      ],
+      "sources": [
+        {
+          "name": "Lecture8.1.pdf",
+          "locator": "page 9-12,17-18",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M231. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture8.1.pdf",
+          "locator": "page 17-18,28-30",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M233. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture8.1.pdf",
+          "locator": "page 11,23",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M237. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture6.1.pdf",
+          "locator": "page 34",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M237. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml23#pca-reconstruction",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml25": [
+    {
+      "id": "sliding-products",
+      "title": {
+        "zh": "亲手移动一个滤波器",
+        "en": "Slide a filter by hand"
+      },
+      "goal": {
+        "zh": "能按互相关约定逐窗计算，并区分核翻转。",
+        "en": "Compute sliding cross-correlation and distinguish kernel reversal."
+      },
+      "explain": {
+        "zh": "本单元互相关不翻核，步长1、无填充。每个合法窗口与核逐项乘后求和。数学卷积的核翻转是另一约定。",
+        "en": "Use unflipped cross-correlation, stride 1, no padding. Multiply and sum in each valid window; mathematical convolution reverses the kernel."
+      },
+      "worked_q": {
+        "zh": "序列(1,2,3)，核(1,−1)，求输出。",
+        "en": "Use input (1,2,3),kernel (1,−1)."
+      },
+      "worked_a": {
+        "zh": "结果为：(1−2,2−3)=(−1,−1)。",
+        "en": "The result is Output (−1,−1)."
+      },
+      "practice_q": {
+        "zh": "输入(2,0,3,1)、核(1,2)，求输出。",
+        "en": "Use input (2,0,3,1),kernel (1,2)."
+      },
+      "hint": {
+        "zh": "合法起点有三个。",
+        "en": "There are three valid starts."
+      },
+      "practice_a": {
+        "zh": "结果为：(2+0,0+6,3+2)=(2,6,5)。",
+        "en": "The result is Output (2,6,5)."
+      },
+      "transfer_q": {
+        "zh": "同输入(2,0,3,1)，若按翻核后再做valid运算，结果多少？为何与上一题不同？",
+        "en": "For the same input, reverse the kernel before a valid operation. What changes?"
+      },
+      "transfer_a": {
+        "zh": "翻成(2,1)，输出(4,3,7)。操作约定变了；不能把翻核差异误当算术错误。",
+        "en": "Kernel (2,1) gives (4,3,7). The operation convention changed."
+      },
+      "card_ids": [
+        "CS5489-M255",
+        "CS5489-M262",
+        "CS5489-M263"
+      ],
+      "sources": [
+        {
+          "name": "Lecture9.2.pdf",
+          "locator": "page 17-25",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M255. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture9.2.pdf",
+          "locator": "page 38-45",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M262. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture9.2.pdf",
+          "locator": "page 20-25,32-39",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M263. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml25#sliding-products",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml27": [
+    {
+      "id": "reconstruction-mse",
+      "title": {
+        "zh": "重构误差与压缩代价",
+        "en": "Reconstruction error and bitrate"
+      },
+      "goal": {
+        "zh": "能算MSE并说明它没有评价什么。",
+        "en": "Compute MSE and state what it does not measure."
+      },
+      "explain": {
+        "zh": "MSE是各像素平方误差的平均；比较压缩还要说明码率、数值范围和感知/任务要求。",
+        "en": "MSE averages squared pixel errors; compression comparisons additionally need bitrate, numeric range and perceptual/task requirements."
+      },
+      "worked_q": {
+        "zh": "真值(0,2)，预测A=(1,1)、B=(0,0)，求MSE。",
+        "en": "Truth (0,2), predictions A=(1,1),B=(0,0). Find MSE."
+      },
+      "worked_a": {
+        "zh": "结果为：A=(1+1)/2=1；B=(0+4)/2=2。",
+        "en": "A has MSE 1, B has MSE 2."
+      },
+      "practice_q": {
+        "zh": "真值(1,3)，预测(1,1)，MSE多少？",
+        "en": "Truth (1,3),prediction (1,1): find MSE."
+      },
+      "hint": {
+        "zh": "两误差是0与−2。",
+        "en": "Errors are 0 and −2."
+      },
+      "practice_a": {
+        "zh": "结果为：MSE=(0+4)/2=2。",
+        "en": "MSE is 2."
+      },
+      "transfer_q": {
+        "zh": "系统A在1 bit/pixel时MSE=2，B在10 bit/pixel时MSE=1。能仅据1<2说B压缩更好吗？",
+        "en": "A gives MSE 2 at 1 bit/pixel; B gives MSE 1 at 10 bit/pixel. Is B necessarily the better compression system?"
+      },
+      "transfer_a": {
+        "zh": "不能，B用了十倍码率；需同码率或完整率失真比较，必要时再评感知质量。",
+        "en": "No; B spends ten times the bitrate. Compare matched rates or rate–distortion curves, with perceptual quality when relevant."
+      },
+      "card_ids": [
+        "CS5489-M282",
+        "CS5489-M283"
+      ],
+      "sources": [
+        {
+          "name": "Lecture11.2.pdf",
+          "locator": "page 20-23",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M282. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture11.2.pdf",
+          "locator": "page 31-44",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M283. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml27#reconstruction-mse",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml28": [
+    {
+      "id": "gan-roles",
+      "title": {
+        "zh": "GAN中的两个对手",
+        "en": "The two GAN objectives"
+      },
+      "goal": {
+        "zh": "能跟踪判别器与生成器各自使用的目标，并识别模式坍塌。",
+        "en": "Track discriminator/generator objectives and recognize mode collapse."
+      },
+      "explain": {
+        "zh": "D试图区分真实x与G(z)，G试图使生成样本被D当成真实。以下生成器使用常见非饱和损失−log D(G(z))，不同于原始minimax生成器损失；D更新时固定G，G更新时固定D参数。",
+        "en": "D distinguishes real x from G(z); G aims to make generated samples look real to D. Here use the common non-saturating G loss −log D(G(z)), distinct from original minimax G loss. Alternate updates while fixing the other model’s parameters."
+      },
+      "worked_q": {
+        "zh": "D对一个生成样本给“真实”概率0.2，生成器损失多少？若升至0.5呢？",
+        "en": "D assigns a generated sample real-probability 0.2. Find G loss, then compare at 0.5."
+      },
+      "worked_a": {
+        "zh": "−log0.2≈1.609；−log0.5≈0.693，G希望提高此概率。",
+        "en": "Loss drops from about 1.609 to 0.693; G favors a larger real-probability."
+      },
+      "practice_q": {
+        "zh": "D训练时这条生成样本标签为假，损失−log(1−D)。D从0.5降至0.2时损失怎样变？",
+        "en": "For D, the fake sample has loss −log(1−D). How does changing D from 0.5 to 0.2 affect it?"
+      },
+      "hint": {
+        "zh": "D和G对同一个概率希望的方向相反。",
+        "en": "D and G favor opposite changes in that probability."
+      },
+      "practice_a": {
+        "zh": "由0.693降至−log0.8≈0.223，符合D辨假的目标。",
+        "en": "D loss drops from 0.693 to about 0.223."
+      },
+      "transfer_q": {
+        "zh": "生成器只反复产生一张逼真图，D(G(z))都很高。说明哪些表现好、哪些仍失败。",
+        "en": "G repeats one realistic image with high D scores. What can still fail?"
+      },
+      "transfer_a": {
+        "zh": "单样本逼真或当前D分数好不代表覆盖数据分布；可能模式坍塌，缺少多样性。还需检验分布覆盖与条件一致性。",
+        "en": "Realism or current D scores do not establish distribution coverage; mode collapse can destroy diversity. Evaluate coverage and conditioning too."
+      },
+      "card_ids": [
+        "CS5489-M286",
+        "CS5489-M287",
+        "CS5489-M288",
+        "CS5489-M289"
+      ],
+      "sources": [
+        {
+          "name": "Lecture12.1.pdf",
+          "locator": "page 11-15",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M286. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture12.1.pdf",
+          "locator": "page 13-15",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M287. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture12.1.pdf",
+          "locator": "page 13-15,19-20",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M288. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture12.1.pdf",
+          "locator": "page 19-26",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M289. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml28#gan-roles",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml29": [
+    {
+      "id": "attention-shapes",
+      "title": {
+        "zh": "注意力矩阵的每条轴",
+        "en": "Attention matrix axes"
+      },
+      "goal": {
+        "zh": "能核对Q/K/V与分数、输出的形状。",
+        "en": "Check Q,K,V,score and output shapes."
+      },
+      "explain": {
+        "zh": "n个token，每个query/key宽dk、value宽dv：Q,K为n×dk，V为n×dv；QKᵀ为n×n，softmax对每个query的key轴归一化，乘V得到n×dv。",
+        "en": "For n tokens, Q,K have shape n×dk and V n×dv. Scores are n×n; normalize over keys for each query, then multiply by V to obtain n×dv."
+      },
+      "worked_q": {
+        "zh": "n=3,dk=2,dv=4，分数与输出形状是什么？",
+        "en": "For n=3,dk=2,dv=4,find score and output shapes."
+      },
+      "worked_a": {
+        "zh": "QKᵀ:(3,2)@(2,3)=(3,3)；乘V得到(3,4)。",
+        "en": "Scores are (3,3) and output (3,4)."
+      },
+      "practice_q": {
+        "zh": "n=5,dk=4,dv=2呢？",
+        "en": "Now n=5,dk=4,dv=2."
+      },
+      "hint": {
+        "zh": "token轴保留为输出行数。",
+        "en": "The token axis remains the number of output rows."
+      },
+      "practice_a": {
+        "zh": "分数(5,5)，输出(5,2)。",
+        "en": "Scores (5,5),output (5,2)."
+      },
+      "transfer_q": {
+        "zh": "token数从5翻倍为10、dk/dv不变，分数矩阵和输出元素各扩大几倍？",
+        "en": "Double tokens 5→10 with fixed dk,dv. How do score-matrix and output element counts change?"
+      },
+      "transfer_a": {
+        "zh": "分数25→100为4倍，输出10→20为2倍；不据此断言整网运行时间恰好4倍。",
+        "en": "Score elements quadruple 25→100; output elements double 10→20. Total runtime need not scale by exactly four."
+      },
+      "card_ids": [
+        "CS5489-M297",
+        "CS5489-M298",
+        "CS5489-M299"
+      ],
+      "sources": [
+        {
+          "name": "Lecture12.2.pdf",
+          "locator": "page 13-15",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M297. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "1706.03762",
+          "locator": "section 3.2",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M297. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture12.2.pdf",
+          "locator": "page 13",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M298. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture12.2.pdf",
+          "locator": "page 14-18",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M299. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml29#attention-shapes",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net02": [
+    {
+      "id": "activity-probability",
+      "title": {
+        "zh": "独立活跃概率不是容量保证",
+        "en": "Independent activity probabilities"
+      },
+      "goal": {
+        "zh": "能算小规模同时活跃概率并指出独立假设。",
+        "en": "Compute small simultaneous-activity probabilities and state independence."
+      },
+      "explain": {
+        "zh": "独立时同时发生的概率相乘。这个规则来自建模假设，不是所有用户流量都自然满足。",
+        "en": "Independent event probabilities multiply. Independence is an assumption, not an automatic property of users."
+      },
+      "worked_q": {
+        "zh": "三人各以0.1概率独立活跃，全部活跃概率？",
+        "en": "Three independent users are each active with probability 0.1. Find all-active probability."
+      },
+      "worked_a": {
+        "zh": "结果为：0.1³=0.001。",
+        "en": "The result is 0.1³=0.001."
+      },
+      "practice_q": {
+        "zh": "两人各0.2独立活跃，至少一人活跃概率？",
+        "en": "Two independent users have activity probability 0.2. Find at-least-one probability."
+      },
+      "hint": {
+        "zh": "先算两人都不活跃，再用1减去。",
+        "en": "Complement the probability that both are inactive."
+      },
+      "practice_a": {
+        "zh": "结果为：1−0.8²=0.36。",
+        "en": "The result is 1−0.8²=0.36."
+      },
+      "transfer_q": {
+        "zh": "两人总是一起活跃，每人边际活跃概率仍0.2。两人同时活跃概率多少，为什么不是0.04？",
+        "en": "Two users always activate together, each with marginal probability 0.2. What is joint activity probability and why not 0.04?"
+      },
+      "transfer_a": {
+        "zh": "共同事件概率0.2；两人不独立，不能相乘。相同单用户概率并不决定共同拥塞概率。",
+        "en": "It is 0.2. Dependence prevents multiplication; identical marginal activity does not determine overload probability."
+      },
+      "card_ids": [
+        "CS5222-N018",
+        "CS5222-N020",
+        "CS5222-N021"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slide 29-31",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N018, CS5222-N021. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slide 29-30",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N020. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net02#activity-probability",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net04": [
+    {
+      "id": "shared-bottleneck",
+      "title": {
+        "zh": "先画共享关系，再找瓶颈",
+        "en": "Shared bottlenecks"
+      },
+      "goal": {
+        "zh": "能区分独立接入速率与共享容量份额。",
+        "en": "Distinguish private access limits from shared capacity."
+      },
+      "explain": {
+        "zh": "理想单流速率受路径各环节上限的最小值约束。共享链路在本题按活跃流数均分；端点独立链路不再除流数。",
+        "en": "Ideal rate is limited by the smallest per-flow bound. Divide only shared links among active flows under the equal-sharing assumption."
+      },
+      "worked_q": {
+        "zh": "10条流，每流独立服务器20Mbps、客户端10Mbps，共享核心50Mbps，求每流速率。",
+        "en": "Ten flows have private 20 Mbps server and 10 Mbps client links, sharing a 50 Mbps core. Find rate per flow."
+      },
+      "worked_a": {
+        "zh": "结果为：min(20,10,50/10)=5Mbps。",
+        "en": "min(20,10,5)=5 Mbps."
+      },
+      "practice_q": {
+        "zh": "其他不变，核心升到200Mbps呢？",
+        "en": "Raise only the core to 200 Mbps."
+      },
+      "hint": {
+        "zh": "先算新的核心份额，再取最小。",
+        "en": "Recompute the core share and minimum."
+      },
+      "practice_a": {
+        "zh": "min(20,10,20)=10Mbps，客户端成为瓶颈。",
+        "en": "10 Mbps; client access becomes the bottleneck."
+      },
+      "transfer_q": {
+        "zh": "只有一条共享服务器20Mbps链路，10客户端各独立10Mbps，核心50Mbps，10流均分。独立求每流速率。",
+        "en": "Now one shared server link is 20 Mbps; ten clients have private 10 Mbps links and share a 50 Mbps core. Find equal per-flow rate."
+      },
+      "transfer_a": {
+        "zh": "min(20/10,10,50/10)=2Mbps。题设的共享关系改变了答案。",
+        "en": "min(2,10,5)=2 Mbps; the shared-link topology changes the bound."
+      },
+      "card_ids": [
+        "CS5222-N037",
+        "CS5222-N038",
+        "CS5222-N039"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slide 53-54",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N037. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slide 55",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N038. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slide 45-55",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N039. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net04#shared-bottleneck",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net08": [
+    {
+      "id": "mail-envelope",
+      "title": {
+        "zh": "信封地址与正文地址",
+        "en": "Envelope versus message headers"
+      },
+      "goal": {
+        "zh": "能区分实际SMTP收件人和显示的To字段。",
+        "en": "Distinguish SMTP recipients from displayed To headers."
+      },
+      "explain": {
+        "zh": "SMTP RCPT TO是投递信封中的收件地址；DATA内的To是消息首部内容。它们可不同，成功接收邮件也不证明用户已读。",
+        "en": "SMTP RCPT TO specifies envelope recipients; To inside DATA is a message header. They can differ, and server acceptance does not prove human reading."
+      },
+      "worked_q": {
+        "zh": "RCPT TO:<b@example.test>，DATA中的To为c@example.test。仅据这些记录，服务器接受的投递目标是谁？",
+        "en": "RCPT TO names b@example.test while To in DATA names c@example.test. Which envelope target is evidenced?"
+      },
+      "worked_a": {
+        "zh": "b@example.test；不能由To替换信封收件人。",
+        "en": "b@example.test; the To header does not override the envelope evidence."
+      },
+      "practice_q": {
+        "zh": "RCPT TO有B与C两个地址，To只显示B，是否矛盾？",
+        "en": "The envelope has recipients B and C but To displays only B. Is that contradictory?"
+      },
+      "hint": {
+        "zh": "区分显示内容与投递指令。",
+        "en": "Separate display content from delivery instructions."
+      },
+      "practice_a": {
+        "zh": "不矛盾；两名信封收件人可接收同一消息，To不必穷尽信封列表。",
+        "en": "No. The displayed To field need not enumerate every envelope recipient."
+      },
+      "transfer_q": {
+        "zh": "SMTP对RCPT和DATA返回成功，能证明C打开邮件了吗？还缺什么证据？",
+        "en": "Successful SMTP replies follow recipient and DATA commands. Does that prove C opened the message?"
+      },
+      "transfer_a": {
+        "zh": "不能，只证明该阶段服务器接受了相应操作；人类阅读是另一个事件，SMTP这些记录没有提供它。",
+        "en": "No. These replies evidence server acceptance at that stage, not human reading."
+      },
+      "card_ids": [
+        "CS5222-N113",
+        "CS5222-N114",
+        "CS5222-N119"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha2_2026_student_part2.pptx",
+          "locator": "slide 20",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N113. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part2.pptx",
+          "locator": "slide 20,23",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N114. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part2.pptx",
+          "locator": "slide 19-23",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N119. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "rfc5321.html",
+          "locator": "section 4.1.1.4",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N119. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net08#mail-envelope",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net12": [
+    {
+      "id": "tcp-framing",
+      "title": {
+        "zh": "把字节流重新分成消息",
+        "en": "Framing a byte stream"
+      },
+      "goal": {
+        "zh": "能跨recv边界按分隔符恢复消息。",
+        "en": "Recover delimiter-framed messages across recv boundaries."
+      },
+      "explain": {
+        "zh": "本题每条ASCII消息以换行符结束，消息内容不含换行。TCP仅保留有序字节流，不保留每次send的消息边界；接收缓冲保存未完成尾部。",
+        "en": "Each ASCII message ends in a newline and contains no embedded newline. TCP preserves ordered bytes, not send boundaries; buffer incomplete tails."
+      },
+      "worked_q": {
+        "zh": "先收到AB，再收到C<换行>D<换行>，恢复哪些消息？",
+        "en": "Receive AB, then C<newline>D<newline>. Which messages are complete?"
+      },
+      "worked_a": {
+        "zh": "先缓冲AB；第二次拼成ABC<换行>D<换行>，提取ABC与D，尾部为空。",
+        "en": "Buffer AB, then extract ABC and D when delimiters arrive; no tail remains."
+      },
+      "practice_q": {
+        "zh": "依次收到HE、LLO<换行>WO、RLD<换行>，每步输出什么？",
+        "en": "Receive HE, then LLO<newline>WO, then RLD<newline>. What is emitted each step?"
+      },
+      "hint": {
+        "zh": "没有分隔符前不输出完整消息。",
+        "en": "No complete message before its delimiter."
+      },
+      "practice_a": {
+        "zh": "第一步无；第二步输出HELLO并留WO；第三步输出WORLD。",
+        "en": "Emit nothing, then HELLO with tail WO, then WORLD."
+      },
+      "transfer_q": {
+        "zh": "一次recv收到A<换行>B<换行>C，应该只返回一条吗？缓冲留下什么？",
+        "en": "One recv yields A<newline>B<newline>C. Should only one message be returned, and what remains?"
+      },
+      "transfer_a": {
+        "zh": "可提取A和B两条，保留未完成C；一个recv可能含多条消息和一条尾部。",
+        "en": "Extract A and B, retaining incomplete C. A receive can contain several messages and a tail."
+      },
+      "card_ids": [
+        "CS5222-N145",
+        "CS5222-N146",
+        "CS5222-N147"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slide 95,102-105",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N145. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slide 98-105",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N146. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slide 102-105",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N147. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "2024_cs5222_programming_assignment.pdf",
+          "locator": "page 2-6",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N147. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net12#tcp-framing",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net13": [
+    {
+      "id": "stop-wait-rate",
+      "title": {
+        "zh": "停等为什么浪费高速链路",
+        "en": "Stop-and-wait utilization"
+      },
+      "goal": {
+        "zh": "能统一单位计算理想停等利用率与吞吐量。",
+        "en": "Compute ideal stop-and-wait utilization and throughput with consistent units."
+      },
+      "explain": {
+        "zh": "无丢包、ACK发送时间忽略，一次循环为L/R+RTT；有效发送占L/R，因此U=(L/R)/(L/R+RTT)，吞吐量U R。",
+        "en": "With no loss and negligible ACK serialization, a cycle is L/R+RTT. Utilization is (L/R)/(L/R+RTT), and throughput U R."
+      },
+      "worked_q": {
+        "zh": "R=1Gbps、L=8000bit、RTT=30ms，计算。",
+        "en": "Use R=1 Gbps,L=8000 bits,RTT=30 ms."
+      },
+      "worked_a": {
+        "zh": "L/R=0.008ms；U=0.008/30.008≈0.0002666=0.02666%；吞吐量≈0.2666Mbps。",
+        "en": "Serialization 0.008 ms; utilization about 0.02666%; throughput about 0.2666 Mbps."
+      },
+      "practice_q": {
+        "zh": "R=1Mbps、L=1000bit、RTT=9ms，计算。",
+        "en": "Use R=1 Mbps,L=1000 bits,RTT=9 ms."
+      },
+      "hint": {
+        "zh": "发送需1ms，循环共10ms。",
+        "en": "Serialization takes 1 ms; the cycle 10 ms."
+      },
+      "practice_a": {
+        "zh": "U=0.1，吞吐量0.1Mbps。",
+        "en": "U=0.1, throughput 0.1 Mbps."
+      },
+      "transfer_q": {
+        "zh": "上一完整规格中仅把R提高到10Mbps，吞吐量会十倍吗？",
+        "en": "With L=1000 bits,RTT=9 ms, raise only R to 10 Mbps. Does throughput increase tenfold?"
+      },
+      "transfer_a": {
+        "zh": "发送0.1ms，循环9.1ms，吞吐量1000/0.0091≈0.10989Mbps。等待占主导，不会十倍。",
+        "en": "Throughput is 1000/0.0091≈0.10989 Mbps. Waiting dominates, so it does not rise tenfold."
+      },
+      "card_ids": [
+        "CS5222-N159",
+        "CS5222-N160",
+        "CS5222-N161"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha3_2025_student.pptx",
+          "locator": "slide 45-46",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N159, CS5222-N160. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha3_2025_student.pptx",
+          "locator": "slide 47-50",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N161. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net13#stop-wait-rate",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net14": [
+    {
+      "id": "window-budget",
+      "title": {
+        "zh": "接收窗口和拥塞窗口的共同限额",
+        "en": "Window-limited sending budget"
+      },
+      "goal": {
+        "zh": "能从cwnd、rwnd与在途量算新增可发送量。",
+        "en": "Compute newly sendable bytes from cwnd,rwnd and outstanding data."
+      },
+      "explain": {
+        "zh": "简化模型新增额度为max(0,min(cwnd,rwnd)−inflight)。cwnd约束网络拥塞，rwnd约束接收容量；不把两者相加。",
+        "en": "In the simplified model, additional budget is max(0,min(cwnd,rwnd)−inflight). The two limits address congestion and receiver capacity, not additive allowances."
+      },
+      "worked_q": {
+        "zh": "cwnd=12kB、rwnd=8kB、在途5kB，还能发多少？",
+        "en": "Use windows 12 and 8 kB with 5 kB outstanding."
+      },
+      "worked_a": {
+        "zh": "结果为：min(12,8)−5=3kB。",
+        "en": "The result is 3 kB."
+      },
+      "practice_q": {
+        "zh": "cwnd=6、rwnd=10、在途4，单位都kB，求额度。",
+        "en": "Use cwnd=6,rwnd=10,inflight=4 kB."
+      },
+      "hint": {
+        "zh": "先选较小窗口。",
+        "en": "Take the smaller limit first."
+      },
+      "practice_a": {
+        "zh": "结果为：2kB。",
+        "en": "The result is 2 kB."
+      },
+      "transfer_q": {
+        "zh": "窗口变小后cwnd=4、rwnd=9，仍有6kB在途，额度是多少？是否需要“发送−2kB”？",
+        "en": "If cwnd shrinks to 4 kB while rwnd=9 and 6 kB remains outstanding, what is the budget?"
+      },
+      "transfer_a": {
+        "zh": "原差为−2，但新增额度截为0，等确认推进；已在途数据不会因此被负发送撤回。",
+        "en": "Clamp the negative difference to zero and wait for acknowledgments; already-sent bytes cannot be unsent."
+      },
+      "card_ids": [
+        "CS5222-N174",
+        "CS5222-N175"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha3_2025_student.pptx",
+          "locator": "slide 81-82,103",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N174. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha3_2025_student.pptx",
+          "locator": "slide 103-104",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N175. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net14#window-budget",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net16": [
+    {
+      "id": "ipv4-fragmentation",
+      "title": {
+        "zh": "逐片计算长度与偏移",
+        "en": "IPv4 fragment lengths and offsets"
+      },
+      "goal": {
+        "zh": "能按MTU切分原载荷并写总长、offset和MF。",
+        "en": "Fragment a payload under MTU and give lengths, offsets and MF."
+      },
+      "explain": {
+        "zh": "题设IPv4允许分片、无选项，每片首部20byte。每个非末片数据长度取不超过MTU−20的最大8倍数；offset按原载荷起点的8byte单位算。",
+        "en": "Assume allowed IPv4 fragmentation, no options and 20-byte headers. Nonfinal payloads use the largest multiple of eight within MTU−20; offsets count eight-byte units in the original payload."
+      },
+      "worked_q": {
+        "zh": "改编自历史 Chapter 4 第25页：原数据报4000byte含20byte首部，MTU1500，求各片。",
+        "en": "Adapted from historical Chapter 4 slide 25: Fragment a 4000-byte datagram including 20-byte header at MTU1500."
+      },
+      "worked_a": {
+        "zh": "载荷3980；每片最多1480数据，分1480、1480、1020。加首部总长1500、1500、1040；offset 0、1480/8=185、2960/8=370；MF为1、1、0。",
+        "en": "Payload 3980 splits into 1480,1480,1020. Total lengths 1500,1500,1040; offsets 0,185,370; MF 1,1,0."
+      },
+      "practice_q": {
+        "zh": "原数据报2020byte含20byte首部，MTU1020，同规则求各片。",
+        "en": "Fragment 2020 bytes including header at MTU1020."
+      },
+      "hint": {
+        "zh": "载荷2000，每片最多1000且1000可被8整除。",
+        "en": "Payload is 2000; capacity 1000 is divisible by eight."
+      },
+      "practice_a": {
+        "zh": "数据1000、1000；总长1020、1020；offset0、125；MF1、0。",
+        "en": "Payloads 1000,1000; lengths 1020,1020; offsets 0,125; MF1,0."
+      },
+      "transfer_q": {
+        "zh": "原数据报2020byte、首部20byte，MTU1010。为何非末片不能放990byte？独立计算片表。",
+        "en": "With total 2020,header20,MTU1010, why not put 990 bytes in a nonfinal fragment? Compute the table."
+      },
+      "transfer_a": {
+        "zh": "990不是8倍数，取984。载荷2000分984、984、32；总长1004、1004、52；offset0、123、246；MF1、1、0。末片可不是8倍数。",
+        "en": "990 is not divisible by eight; use 984. Payloads 984,984,32 yield lengths 1004,1004,52; offsets 0,123,246; MF1,1,0. Only the final fragment may use a non-multiple payload."
+      },
+      "card_ids": [
+        "CS5222-N189",
+        "CS5222-N190",
+        "CS5222-N191",
+        "CS5222-N192"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 23",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N189. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 23-25",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N190. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 24-26",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N191. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 25",
+          "kind": "historical",
+          "note": "The 4000-byte datagram / MTU 1500 worked example is adapted from historical Chapter 4 slide 25. The separate practice and transfer cases use newly chosen MTUs and datagram sizes."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net16#ipv4-fragmentation",
+          "kind": "derived",
+          "note": "The practice and transfer variants are newly authored. The worked 4000-byte / MTU1500 case is adapted from historical Chapter4 slide25, as separately cited."
+        }
+      ]
+    },
+    {
+      "id": "longest-prefix",
+      "title": {
+        "zh": "最长前缀找下一跳",
+        "en": "Longest-prefix next hop"
+      },
+      "goal": {
+        "zh": "能比较匹配前缀，而非比较表中顺序。",
+        "en": "Select among matching prefixes instead of table order."
+      },
+      "explain": {
+        "zh": "只在匹配目的地址的条目中选前缀位数最长者。默认0.0.0.0/0用于没有更具体匹配时；本题表项均已有确定下一跳。",
+        "en": "Among matching entries, choose the longest prefix. A default 0.0.0.0/0 applies only when no more specific entry matches; each entry here has a fixed next hop."
+      },
+      "worked_q": {
+        "zh": "10.0.0.0/8→A、10.1.0.0/16→B、10.1.2.0/24→C，目的10.1.2.99选谁？",
+        "en": "For 10.0.0.0/8→A,10.1.0.0/16→B,10.1.2.0/24→C,route 10.1.2.99."
+      },
+      "worked_a": {
+        "zh": "三条都匹配，/24最长，选C。",
+        "en": "All match; /24 wins, so C."
+      },
+      "practice_q": {
+        "zh": "同表，目的10.1.3.4选谁？",
+        "en": "With the same table, route 10.1.3.4."
+      },
+      "hint": {
+        "zh": "/24的第三字节必须是2。",
+        "en": "The /24 requires third octet 2."
+      },
+      "practice_a": {
+        "zh": "只匹配/8与/16，选B。",
+        "en": "Select B via /16."
+      },
+      "transfer_q": {
+        "zh": "另有默认0.0.0.0/0→D，目的11.1.2.99选谁？把/24放在表首会影响结果吗？",
+        "en": "Add default 0.0.0.0/0→D and route 11.1.2.99. Does moving /24 to the first row change the answer?"
+      },
+      "transfer_a": {
+        "zh": "10开头条目均不匹配，选D；表顺序不替代前缀匹配。",
+        "en": "Only default matches, so D; row order does not override matching."
+      },
+      "card_ids": [
+        "CS5222-N185",
+        "CS5222-N186",
+        "CS5222-N187"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 5-8,13-14",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N185. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 15-16,48",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N186. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha4_2025_student.pptx",
+          "locator": "slide 16,48",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N187. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net16#longest-prefix",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net17": [
+    {
+      "id": "distance-vector",
+      "title": {
+        "zh": "先去邻居，再接后半程",
+        "en": "Distance-vector updates"
+      },
+      "goal": {
+        "zh": "能用邻居通告计算新距离与下一跳。",
+        "en": "Compute a distance and next hop from neighbor advertisements."
+      },
+      "explain": {
+        "zh": "对目的Z，候选为本地到邻居的成本加邻居通告到Z的成本，再取最小。通告是当前获知的值，变化传播可能滞后。",
+        "en": "For destination Z, add local neighbor cost to that neighbor’s advertised remaining distance, then take the minimum. Advertisements may lag changes."
+      },
+      "worked_q": {
+        "zh": "经A为2+6，经B为5+1，选谁？",
+        "en": "Compare 2+6 via A with 5+1 via B."
+      },
+      "worked_a": {
+        "zh": "A为8、B为6，选B。",
+        "en": "Choose B at 6 versus 8."
+      },
+      "practice_q": {
+        "zh": "B新通告到Z为4，A不变，选谁？",
+        "en": "B now advertises remaining distance 4; A is unchanged."
+      },
+      "hint": {
+        "zh": "重新计算5+4，不保留旧和。",
+        "en": "Use this hint: Recompute 5+4."
+      },
+      "practice_a": {
+        "zh": "A为8、B为9，改选A。",
+        "en": "Choose A at 8 versus 9."
+      },
+      "transfer_q": {
+        "zh": "A也通告Z不可达（∞），B仍通告4，本地边2/5不变。新距离多少？它能保证全网真实路径已无环吗？",
+        "en": "A advertises infinity and B advertises 4 with local costs 2 and 5. Find the update; does it prove globally loop-free routing?"
+      },
+      "transfer_a": {
+        "zh": "min(∞,5+4)=9，选B。单次局部更新不能证明全网同步或无环，还需考虑通告时效及协议机制。",
+        "en": "Update to 9 via B. A local update alone does not prove global synchronization or absence of loops."
+      },
+      "card_ids": [
+        "CS5222-N203",
+        "CS5222-N207",
+        "CS5222-N208",
+        "CS5222-N209"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha5_2025_student.pptx",
+          "locator": "slide 9-13,19-23",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N203. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha5_2025_student.pptx",
+          "locator": "slide 19-23",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N207. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha5_2025_student.pptx",
+          "locator": "slide 19-20",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N208. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha5_2025_student.pptx",
+          "locator": "slide 26-28",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N209. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net17#distance-vector",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "net18": [
+    {
+      "id": "even-parity",
+      "title": {
+        "zh": "偶校验能发现哪些翻转",
+        "en": "Even parity and bit flips"
+      },
+      "goal": {
+        "zh": "能构造偶校验位并给出两位漏检反例。",
+        "en": "Construct an even-parity bit and demonstrate a two-flip miss."
+      },
+      "explain": {
+        "zh": "加一位使整个码字中1的个数为偶数。接收时只查奇偶性；奇数次翻转改变奇偶，偶数次翻转可能通过。",
+        "en": "Append a bit so the codeword has an even number of ones. Odd numbers of bit flips change parity; even numbers can pass."
+      },
+      "worked_q": {
+        "zh": "数据1011001，追加什么？",
+        "en": "What parity bit follows 1011001?"
+      },
+      "worked_a": {
+        "zh": "有4个1，追加0得到10110010。",
+        "en": "Four ones require 0, yielding 10110010."
+      },
+      "practice_q": {
+        "zh": "数据1110，追加什么？",
+        "en": "What parity bit follows 1110?"
+      },
+      "hint": {
+        "zh": "目前3个1是奇数。",
+        "en": "There are three ones."
+      },
+      "practice_a": {
+        "zh": "追加1，码字11101有4个1。",
+        "en": "Append 1, yielding 11101 with four ones."
+      },
+      "transfer_q": {
+        "zh": "码字11101的前两位翻转，得到什么？是否检出？",
+        "en": "Flip the first two bits of 11101. Find the result and detection outcome."
+      },
+      "transfer_a": {
+        "zh": "变成00101，有2个1仍偶数，单偶校验漏检。这不是纠错机制。",
+        "en": "It becomes 00101 with two ones, so the error passes the parity check; parity is not a correction mechanism."
+      },
+      "card_ids": [
+        "CS5222-N219",
+        "CS5222-N220",
+        "CS5222-N221"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha6_2025_student_part1.pptx",
+          "locator": "slide 11-14",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N219. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha6_2025_student_part1.pptx",
+          "locator": "slide 12",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N220, CS5222-N221. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "tutorial-11.pdf",
+          "locator": "page 1",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N221. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net18#even-parity",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    },
+    {
+      "id": "slotted-aloha",
+      "title": {
+        "zh": "一槽中恰好一人发送",
+        "en": "Exactly one slotted-ALOHA sender"
+      },
+      "goal": {
+        "zh": "能计算空闲、成功和碰撞概率并核对总和。",
+        "en": "Compute idle, success and collision probabilities and check their sum."
+      },
+      "explain": {
+        "zh": "N个积压节点独立以p在槽首发送，槽内容一包，多包必碰撞。本模型空闲(1−p)^N；成功Np(1−p)^(N−1)；碰撞是余下概率。",
+        "en": "Assume N backlogged independent nodes transmitting with probability p at slot start, one packet per slot and all simultaneous transmissions collide. Idle=(1−p)^N; success=Np(1−p)^(N−1); collision is the remainder."
+      },
+      "worked_q": {
+        "zh": "N=4,p=1/4，求三种概率。",
+        "en": "For N=4,p=1/4,find the three probabilities."
+      },
+      "worked_a": {
+        "zh": "空闲(3/4)^4=81/256；成功4×(1/4)×(3/4)^3=108/256；碰撞67/256；总和1。",
+        "en": "Idle81/256, success108/256, collision67/256; they sum to one."
+      },
+      "practice_q": {
+        "zh": "N=2,p=1/2，计算。",
+        "en": "Use N=2,p=1/2."
+      },
+      "hint": {
+        "zh": "成功有“甲发乙不发”和相反两种互斥情况。",
+        "en": "There are two mutually exclusive single-sender cases."
+      },
+      "practice_a": {
+        "zh": "空闲1/4、成功1/2、碰撞1/4。",
+        "en": "Idle1/4,success1/2,collision1/4."
+      },
+      "transfer_q": {
+        "zh": "仍N=2，将p升至1。成功率是否上升？计算并解释。",
+        "en": "Keep N=2 but raise p to1. Does success improve?"
+      },
+      "transfer_a": {
+        "zh": "两人每槽都发，空闲0、成功0、碰撞1；更积极发送不保证更多成功。",
+        "en": "Both always transmit: idle0,success0,collision1. More attempts need not produce more successful slots."
+      },
+      "card_ids": [
+        "CS5222-N226",
+        "CS5222-N228",
+        "CS5222-N230"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha6_2025_student_part1.pptx",
+          "locator": "slide 18-24",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N226. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "cs5222_cha6_2025_student_part1.pptx",
+          "locator": "slide 25-27",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5222-N228, CS5222-N230. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "net18#slotted-aloha",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml16": [
+    {
+      "id": "baseline-pipeline",
+      "title": {
+        "zh": "把短信基线连成一条可复现流程",
+        "en": "A reproducible text baseline"
+      },
+      "goal": {
+        "zh": "能安排训练、变换、预测和错误检查的完整顺序。",
+        "en": "Order fitting, transformation, prediction and error inspection."
+      },
+      "explain": {
+        "zh": "一个最小基线可以只用词计数向量器与Multinomial NB。先固定划分，再在训练文本拟合词表、训练标签拟合模型；验证/测试只用同一词表变换。每一步保存输入输出的含义和形状。",
+        "en": "A minimal baseline uses a count vectorizer and multinomial NB. Fix the split, fit vocabulary and model on training data, and transform validation/test text using that vocabulary. Record each step’s meaning and shape."
+      },
+      "worked_q": {
+        "zh": "训练两篇文本“free win”“meeting”，标签垃圾/正常；词表固定为(free,meeting,win)。写训练矩阵、验证文本“free meeting”的向量，再列训练和评价顺序。",
+        "en": "Training texts are “free win” and “meeting”, labeled spam/legitimate; vocabulary order is (free,meeting,win). Encode training and validation text “free meeting”, then order fitting and evaluation."
+      },
+      "worked_a": {
+        "zh": "训练矩阵[[1,0,1],[0,1,0]]，形状(2,3)；验证向量[1,1,0]。训练标签与两行对应；拟合NB，再预测验证向量，与留出的真实标签比较。验证文本不更新词表或NB。",
+        "en": "Training matrix [[1,0,1],[0,1,0]] has shape (2,3); validation vector is [1,1,0]. Fit NB with labels aligned to rows, predict validation, and compare with held-out labels without refitting."
+      },
+      "practice_q": {
+        "zh": "同词表下验证文本“win win unknown”如何编码？unknown能临时加进这一条向量吗？",
+        "en": "Encode “win win unknown” with the same vocabulary. Can unknown be added only for this vector?"
+      },
+      "hint": {
+        "zh": "保持三个特征位置和训练时一致。",
+        "en": "Keep the same three feature positions."
+      },
+      "practice_a": {
+        "zh": "[0,0,2]；此计数向量器忽略未登录词，不能临时扩列而仍使用三特征模型。其他未知词策略须训练时定义。",
+        "en": "[0,0,2]; this vectorizer ignores unknown words. Do not add a feature without updating the model definition; other unknown-word policies must be defined during training."
+      },
+      "transfer_q": {
+        "zh": "一次改了词表、模型、划分后分数提高。独立设计比较来判断词表改动是否有效，并说应检查哪类具体输出。",
+        "en": "Vocabulary, model and split all change and score improves. Design a comparison isolating vocabulary and state which concrete outputs to inspect."
+      },
+      "transfer_a": {
+        "zh": "固定划分与模型及调参预算，只比较词表方案；每方案各自仅在训练拟合。比较相同验证集预测、混淆矩阵、假阳性/假阴性文本；最后测试仍保留。",
+        "en": "Fix split, model and tuning budget; compare only vocabularies fitted on training data. Inspect matched validation predictions, confusion matrices and false-positive/negative texts, preserving the test set."
+      },
+      "card_ids": [
+        "CS5489-M094",
+        "CS5489-M095",
+        "CS5489-M096",
+        "CS5489-M099"
+      ],
+      "sources": [
+        {
+          "name": "Assignment1-Doc.ipynb",
+          "locator": "cell 3",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M094, CS5489-M095, CS5489-M096, CS5489-M099. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 61-71",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M094. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "common_pitfalls.html",
+          "locator": "section Data leakage",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M095. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml16#baseline-pipeline",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml26": [
+    {
+      "id": "training-steps",
+      "title": {
+        "zh": "epoch、更新与累积",
+        "en": "Epochs, updates and accumulation"
+      },
+      "goal": {
+        "zh": "能区分读过样本批数与参数更新次数。",
+        "en": "Distinguish batches processed from optimizer steps."
+      },
+      "explain": {
+        "zh": "一epoch看完一次训练样本；一次更新是optimizer step。无丢弃尾批、无累积时每批更新；梯度累积会把多批合成一次更新，本单元样本数都整除批量。",
+        "en": "An epoch covers training samples once; an optimizer step updates parameters. Without accumulation each batch triggers a step; accumulation combines batches. All example sizes divide evenly."
+      },
+      "worked_q": {
+        "zh": "N=1000,batch=100，无累积，5epochs更新几次？",
+        "en": "N=1000,batch100,no accumulation: how many updates in five epochs?"
+      },
+      "worked_a": {
+        "zh": "每epoch10批，5×10=50次。",
+        "en": "Ten batches per epoch, fifty updates total."
+      },
+      "practice_q": {
+        "zh": "N=120,batch=20，无累积，3epochs呢？",
+        "en": "N=120,batch20,no accumulation: three epochs?"
+      },
+      "hint": {
+        "zh": "先算每epoch批数。",
+        "en": "First count batches per epoch."
+      },
+      "practice_a": {
+        "zh": "6×3=18次更新。",
+        "en": "Eighteen updates."
+      },
+      "transfer_q": {
+        "zh": "N=120,batch=20，每3批累积一次更新，3epochs，且每epoch恰好整除，更新几次？是否变成看数据一遍？",
+        "en": "With N=120,batch20,one step every three batches for three epochs, how many updates? Does this mean only one data pass?"
+      },
+      "transfer_a": {
+        "zh": "每epoch6批合2次更新，总6次；仍看数据3遍。累积改变更新频率，不改变epoch定义。",
+        "en": "Two steps per epoch, six total, but still three data passes. Accumulation changes step frequency, not epoch definition."
+      },
+      "card_ids": [
+        "CS5489-M265",
+        "CS5489-M266",
+        "CS5489-M268"
+      ],
+      "sources": [
+        {
+          "name": "Lecture10.1.pdf",
+          "locator": "page 4-8",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M265. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture10.2.pdf",
+          "locator": "page 33",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M265. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture10.1.pdf",
+          "locator": "page 9-17",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M266. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture10.1.pdf",
+          "locator": "page 23-24",
+          "kind": "historical",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M268. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml26#training-steps",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ],
+  "ml08": [
+    {
+      "id": "bernoulli-presence",
+      "title": {
+        "zh": "Bernoulli只数有没有",
+        "en": "Bernoulli counts presence"
+      },
+      "goal": {
+        "zh": "能按文档出现数做Bernoulli平滑，并计算缺词证据。",
+        "en": "Smooth document-presence probabilities and evaluate word absence."
+      },
+      "explain": {
+        "zh": "某类N篇文档中，k篇出现某词；对“出现/不出现”两个结果各加alpha，得到p=(k+alpha)/(N+2alpha)。一篇出现五次仍只贡献一次出现记录。",
+        "en": "If a word appears in k of N class documents, add alpha to both binary outcomes: p=(k+alpha)/(N+2alpha). Five occurrences in one document still contribute one presence."
+      },
+      "worked_q": {
+        "zh": "N=10，k=0，alpha=1，求出现与不出现概率。",
+        "en": "With N=10,k=0,alpha=1,find presence and absence probabilities."
+      },
+      "worked_a": {
+        "zh": "出现(0+1)/(10+2)=1/12，不出现11/12；平滑避免未见词的零概率。",
+        "en": "Presence is 1/12 and absence 11/12; smoothing avoids a zero probability for an unseen event."
+      },
+      "practice_q": {
+        "zh": "四篇同类文档中，三篇至少出现一次，alpha=1，求p。",
+        "en": "The word appears at least once in three of four documents. With alpha=1,find p."
+      },
+      "hint": {
+        "zh": "分母使用文档数加2alpha，不是总词元数。",
+        "en": "Use document count plus 2alpha, not total token count."
+      },
+      "practice_a": {
+        "zh": "结果为：p=(3+1)/(4+2)=2/3。",
+        "en": "The result is p=4/6=2/3."
+      },
+      "transfer_q": {
+        "zh": "四篇同类文档中，这个词只在第一篇出现五次，其余三篇未出现，alpha=1。独立求p，以及新文档缺这个词时该特征的似然因子和对数项。",
+        "en": "Among four documents, a word occurs five times only in the first; the other three lack it. With alpha=1,find p and this feature’s likelihood factor and log contribution when absent in a new document."
+      },
+      "transfer_a": {
+        "zh": "k=1而非5，所以p=(1+1)/(4+2)=1/3。缺词因子1−p=2/3，对数项log(2/3)；Bernoulli把未出现也当证据，不能混用Multinomial的零次数项。",
+        "en": "k=1, not5, so p=1/3. Absence contributes factor2/3 and log(2/3); this differs from the zero-count term of multinomial NB."
+      },
+      "card_ids": [
+        "CS5489-M079",
+        "CS5489-M080",
+        "CS5489-M081",
+        "CS5489-M082"
+      ],
+      "sources": [
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 72-74",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M079. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 72-73",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M080. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 72,80-81",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M081. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cell 80-81",
+          "kind": "course",
+          "note": "Support for the referenced concept or worked case, linked from CS5489-M082. Explanations are adapted for this unit; additional variants are authored separately."
+        },
+        {
+          "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
+          "locator": "ml08#bernoulli-presence",
+          "kind": "derived",
+          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    }
+  ]
+}

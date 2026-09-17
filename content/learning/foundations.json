@@ -1,0 +1,559 @@
+{
+  "foundations": [
+    {
+      "id": "python",
+      "title": {
+        "zh": "Python：逐行看变量怎样变化",
+        "en": "Python: trace values one line at a time"
+      },
+      "body": {
+        "zh": "程序按顺序执行。变量是当前值的名字：`total = 0` 把 0 赋给 `total`；`total = total + n` 先算右边，再更新左边。`=` 是赋值，`==` 才是比较是否相等。\n\n`for n in values:` 依次取出列表中的元素；`if n > 0:` 只在条件为真时执行缩进部分。缩进表示“属于谁”，不是装饰。`def` 定义可重复调用的函数，定义时不会执行函数体；调用时把实参交给形参。`return` 把结果交回调用处并立即结束本次函数调用，`print` 则把值显示出来。\n\n读代码时在纸上保留一列“当前 n”和一列“当前 total”。列表索引从 0 开始；`range(1,4)` 产生 1、2、3，不包含 4。",
+        "en": "A program executes in order. A variable names its current value: `total = 0` assigns zero to `total`; `total = total + n` evaluates the right side before updating the left. `=` assigns a value; `==` compares values for equality.\n\n`for n in values:` visits the list's elements in order. `if n > 0:` runs its indented block only when the condition is true. Indentation defines which block a line belongs to. `def` defines a reusable function without running its body yet; a call supplies arguments to its parameters. `return` sends a result back and immediately ends that call, whereas `print` displays a value.\n\nTrace code with columns for “current n” and “current total.” List indexing starts at zero; `range(1,4)` produces 1, 2, 3, excluding 4."
+      },
+      "worked_q": {
+        "zh": "下面完整程序打印什么？特别注意 `return` 在循环外。\n\n```python\ndef positive_sum(values):\n    total = 0\n    for n in values:\n        if n > 0:\n            total = total + n\n    return total\n\nanswer = positive_sum([2, -1, 3])\nprint(answer)\n```",
+        "en": "What does this complete program print? Notice that `return` is outside the loop.\n\n```python\ndef positive_sum(values):\n    total = 0\n    for n in values:\n        if n > 0:\n            total = total + n\n    return total\n\nanswer = positive_sum([2, -1, 3])\nprint(answer)\n```"
+      },
+      "worked_a": {
+        "zh": "开始 `total=0`；读到 2 后变为 2；读到 −1 时条件为假，仍为 2；读到 3 后变为 5。循环结束后返回 5，故打印 `5`。如果把 `return total` 缩进到 `for` 内，就会在第一次循环后返回 2，这是另一个程序。",
+        "en": "Start with `total=0`. Visiting 2 changes it to 2; −1 fails the condition, so it stays 2; visiting 3 changes it to 5. After the loop, the function returns 5 and the program prints `5`. Moving `return total` inside the `for` block would return 2 after the first iteration: that is a different program."
+      },
+      "check_q": {
+        "zh": "沿用上面的函数，`positive_sum([0, 4, -2])` 返回多少？若列表为空 `[]` 呢？",
+        "en": "Using the function above, what does `positive_sum([0, 4, -2])` return? What about an empty list `[]`?"
+      },
+      "check_a": {
+        "zh": "分别为 4 和 0。0 不满足 `n > 0`，−2 也不满足；空列表使循环执行零次，初始值 0 被直接返回。",
+        "en": "The results are 4 and 0. Neither 0 nor −2 satisfies `n > 0`. An empty list executes the loop zero times and returns the initial total, zero."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture1a.ipynb",
+          "locator": "单元 / cells 96–106, 125–126",
+          "kind": "course",
+          "note": "当前 Canvas：条件、循环、函数。 / Current Canvas: conditionals, loops, and functions."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "本例用于追踪控制流，不是课堂作业的参考答案。 / This example teaches control-flow tracing; it is not an assignment solution."
+        }
+      ]
+    },
+    {
+      "id": "vectors-matrices",
+      "title": {
+        "zh": "向量与矩阵：先数形状，再做乘法",
+        "en": "Vectors and matrices: shape before multiplication"
+      },
+      "body": {
+        "zh": "标量是一个数；向量是一列或一排数；矩阵是一张数表。`shape=(2,3)` 表示 2 行、3 列。数学中 $x\\in\\mathbb R^d$ 表示含 $d$ 个实数的向量；这里把它看作列向量。$x_i$ 是第 $i$ 个分量，$T$ 表示转置，即行列互换。NumPy 的一维数组形状是 `(d,)`，并不会自动成为 `(d,1)`。\n\n点积 $x^Ty=\\sum_{i=1}^d x_i y_i$ 的意思是“对应位置相乘，再全部相加”；$\\sum$ 就是求和记号。它要求长度相同，结果是一个数。长度用 $\\|x\\|_2=\\sqrt{\\sum_i x_i^2}$ 计算，例如 $(3,4)$ 的长度为 5；两个非零向量的点积为 0 表示垂直。\n\n矩阵乘法 $(m\\times d)(d\\times n)$ 得到 $(m\\times n)$：中间维度必须匹配。每个结果元素是一行与一列的点积。对 NumPy `ndarray`，`A @ B` 是矩阵乘法，`A * B` 是逐元素乘法（或广播），二者不能替换。\n\n平方根符号 $\\sqrt{25}=5$ 表示非负数 5 满足 $5\\times5=25$；长度公式里的平方根把平方和换回长度。",
+        "en": "A scalar is one number; a vector is an ordered row or column of numbers; a matrix is a table. `shape=(2,3)` means two rows and three columns. In mathematics, $x\\in\\mathbb R^d$ is a vector of $d$ real numbers, treated here as a column. $x_i$ is component $i$; $T$ transposes rows and columns. A one-dimensional NumPy array has shape `(d,)`, not automatically `(d,1)`.\n\nThe dot product $x^Ty=\\sum_{i=1}^d x_i y_i$ means “multiply matching components, then add”; $\\sum$ denotes summation. Equal lengths are required, and the result is one number. The length is $\\|x\\|_2=\\sqrt{\\sum_i x_i^2}$; for example, $(3,4)$ has length 5. Two nonzero vectors with zero dot product are perpendicular.\n\nMatrix multiplication $(m\\times d)(d\\times n)$ produces $(m\\times n)$: the inner dimensions must match. Each output element is a row–column dot product. For a NumPy `ndarray`, `A @ B` performs matrix multiplication, while `A * B` is elementwise multiplication (possibly with broadcasting); they are different operations.\n\nThe square root $\\sqrt{25}=5$ is the nonnegative number whose square is 25: $5\\times5=25$. In a length formula, the square root converts the sum of squares back to a length."
+      },
+      "worked_q": {
+        "zh": "令 $A=\\begin{bmatrix}1&2&3\\\\4&5&6\\end{bmatrix}$，$w=(1,0,-1)^T$。$Aw$ 的形状与数值是什么？",
+        "en": "Let $A=\\begin{bmatrix}1&2&3\\\\4&5&6\\end{bmatrix}$ and $w=(1,0,-1)^T$. What are the shape and values of $Aw$?"
+      },
+      "worked_a": {
+        "zh": "形状为 $(2\\times3)(3\\times1)=(2\\times1)$。第一行为 $1\\cdot1+2\\cdot0+3(-1)=-2$；第二行为 $4\\cdot1+5\\cdot0+6(-1)=-2$。所以 $Aw=(-2,-2)^T$。NumPy 若把 $w$ 存成一维数组，输出形状为 `(2,)`，数值相同。",
+        "en": "The shape is $(2\\times3)(3\\times1)=(2\\times1)$. The first row gives $1\\cdot1+2\\cdot0+3(-1)=-2$; the second gives $4\\cdot1+5\\cdot0+6(-1)=-2$. Thus $Aw=(-2,-2)^T$. With a one-dimensional NumPy $w$, the output shape is `(2,)` with the same values."
+      },
+      "check_q": {
+        "zh": "$x=(1,2)^T$、$y=(2,-1)^T$ 的点积是多少？$A$ 为 $2\\times3$ 时，能直接计算 $AA$ 吗？",
+        "en": "What is the dot product of $x=(1,2)^T$ and $y=(2,-1)^T$? If $A$ is $2\\times3$, is $AA$ a valid matrix product?"
+      },
+      "check_a": {
+        "zh": "点积为 $1\\cdot2+2(-1)=0$，这两个非零向量垂直。$AA$ 不合法，因为 $(2\\times3)(2\\times3)$ 的中间维度 3 与 2 不同；$AA^T$ 则合法，形状为 $2\\times2$。",
+        "en": "The dot product is $1\\cdot2+2(-1)=0$, so these nonzero vectors are perpendicular. $AA$ is invalid because the inner dimensions 3 and 2 differ. $AA^T$ is valid and has shape $2\\times2$."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture1b.ipynb",
+          "locator": "单元 / cells 3–5, 63, 90, 102–106",
+          "kind": "course",
+          "note": "当前 Canvas：数组形状、逐元素乘法、点积和矩阵乘法。 / Current Canvas: array shapes, elementwise products, dot products, and matrix products."
+        },
+        {
+          "name": "Harrington, Machine Learning in Action (2012)",
+          "locator": "Appendix B.1–B.3，印刷页 / printed pp.337–339；PDF pp.364–366",
+          "kind": "historical",
+          "note": "参考书补充；本段明确区分 ndarray 与数学列向量。 / Reference-book support; this unit distinguishes ndarray shapes from mathematical column vectors."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "矩阵与垂直例子由基本定义直接计算。 / The matrix and perpendicularity examples are calculated directly from the definitions."
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": {
+        "zh": "概率：先说清在什么集合里数",
+        "en": "Probability: specify the group you are counting"
+      },
+      "body": {
+        "zh": "随机试验的可能结果构成样本空间；事件是其中一组结果。例如从固定的 10 条短信中等概率抽一条，“抽到垃圾短信”是事件 $S$。等概率时 $P(S)$ 等于满足条件的条数除以总条数；真实世界的概率模型不一定来自等概率计数。$P(S)$ 在 0 与 1 之间，$1-P(S)$ 是“不属于 $S$”的概率。\n\n$S\\cap F$ 表示“$S$ 和 $F$ 同时发生”。条件概率 $P(S\\mid F)=P(S\\cap F)/P(F)$ 表示已知 $F$ 后，只在 $F$ 那一组里重新计算比例，要求 $P(F)>0$。竖线 $\\mid$ 读作“给定”，不是除号；$P(S\\mid F)$ 与 $P(F\\mid S)$ 一般不同。\n\n若 $P(S\\cap F)=P(S)P(F)$，两个事件独立；“互斥”则是不能同时发生。两个概率都大于 0 的互斥事件不独立。随机变量把结果变成数，例如令垃圾短信对应 $Y=1$、正常短信对应 $Y=0$；$P(Y=1)$ 就是事件的概率。朴素贝叶斯假设的是给定类别后的特征独立，不是无条件独立。",
+        "en": "The possible outcomes of a random experiment form its sample space; an event is a set of outcomes. For example, choose one of ten fixed messages with equal probability. “The message is spam” is event $S$. Under equally likely outcomes, $P(S)$ is the qualifying count divided by the total; not every real-world probability model is an equally likely counting problem. $P(S)$ lies between 0 and 1, and $1-P(S)$ is the probability of “not $S$.”\n\n$S\\cap F$ means both events occur. Conditional probability $P(S\\mid F)=P(S\\cap F)/P(F)$ recomputes the proportion within group $F$ after $F$ is known, requiring $P(F)>0$. The bar $\\mid$ means “given,” not division. Generally, $P(S\\mid F)$ and $P(F\\mid S)$ differ.\n\nEvents are independent when $P(S\\cap F)=P(S)P(F)$. Mutually exclusive events cannot both occur; if both have positive probability, they are not independent. A random variable converts an outcome into a number, such as $Y=1$ for spam and $Y=0$ for legitimate mail; $P(Y=1)$ is an event probability. Naive Bayes assumes feature independence conditional on the class, not unconditional independence."
+      },
+      "worked_q": {
+        "zh": "固定 10 条短信中有 3 条垃圾短信。垃圾短信中 2 条含 free；7 条正常短信中也有 2 条含 free。等概率抽一条，令 S 表示垃圾短信、F 表示含 free。求 P(S)、P(F)、P(S|F) 与 P(F|S)。",
+        "en": "Among ten fixed messages, three are spam. Two spam messages contain free; two of the seven legitimate messages also contain free. Choose a message uniformly. Let S mean spam and F mean containing free. Find P(S), P(F), P(S|F), and P(F|S)."
+      },
+      "worked_a": {
+        "zh": "$P(S)=3/10$；含 free 共 $2+2=4$ 条，所以 $P(F)=4/10$。在这 4 条里有 2 条垃圾短信，$P(S\\mid F)=2/4=1/2$；在 3 条垃圾短信里有 2 条含 free，$P(F\\mid S)=2/3$。分母变了，答案就不同。",
+        "en": "$P(S)=3/10$. There are $2+2=4$ messages containing free, so $P(F)=4/10$. Two of those four are spam, giving $P(S\\mid F)=2/4=1/2$. Two of the three spam messages contain free, giving $P(F\\mid S)=2/3$. Different conditioning groups produce different denominators."
+      },
+      "check_q": {
+        "zh": "在同一组 10 条短信里，S 与 F 是否独立？用交集概率与乘积比较，不只凭感觉。",
+        "en": "In the same ten-message population, are S and F independent? Compare the joint probability with the product of their probabilities."
+      },
+      "check_a": {
+        "zh": "不独立：$P(S\\cap F)=2/10=0.2$，而 $P(S)P(F)=(3/10)(4/10)=0.12$。二者不相等。这个判断只针对题设的固定总体，不自动证明所有短信的生成机制。",
+        "en": "No. $P(S\\cap F)=2/10=0.2$, but $P(S)P(F)=(3/10)(4/10)=0.12$. They differ. This conclusion concerns the specified finite population; it does not establish how all messages are generated."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture1b.ipynb",
+          "locator": "单元 / cells 128–137",
+          "kind": "course",
+          "note": "当前 Canvas：随机变量、联合/边缘/条件概率与 Bayes。 / Current Canvas: random variables, joint/marginal/conditional probabilities, and Bayes."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "短信总体、事件定义与独立性检验是补充教学例子；用明确的均匀抽样假设独立验算。 / The finite population, event framing, and independence check are added teaching examples, checked under explicit uniform sampling."
+        }
+      ]
+    },
+    {
+      "id": "powers-logs",
+      "title": {
+        "zh": "指数与对数：乘了几次，反过来问次数",
+        "en": "Powers and logs: reverse repeated multiplication"
+      },
+      "body": {
+        "zh": "$2^3=2\\cdot2\\cdot2=8$，所以 $\\log_2 8=3$：对数问的是“底数 2 的几次方等于 8”。$2^0=1$；$2^{-3}=1/8$。一般地 $\\log_b x=y$ 等价于 $b^y=x$，其中 $b>0$、$b\\ne1$、$x>0$。$\\ln x$ 是底数 $e\\approx2.718$ 的自然对数，$\\exp(y)=e^y$。\n\n对正数 $a,b$，$\\log(ab)=\\log a+\\log b$，$\\log(a^k)=k\\log a$，但 $\\log(a+b)$ 通常不能拆开成两个对数。底数大于 1 时，对数严格递增，因此比较两个正数的大小，可以改成比较其对数。\n\n模型把独立观测的概率相乘时，正数乘积的对数变成求和；$\\prod_i p_i$ 表示连乘，$\\sum_i\\log p_i$ 表示逐项取对数再相加。这样便于求导，也能避免许多小数直接相乘造成数值下溢。$p=0$ 时有限的 $\\log p$ 不存在，不能把它随意改成 0。",
+        "en": "$2^3=2\\cdot2\\cdot2=8$, so $\\log_2 8=3$: a logarithm asks “which power of 2 gives 8?” Also, $2^0=1$ and $2^{-3}=1/8$. Generally, $\\log_b x=y$ is equivalent to $b^y=x$, with $b>0$, $b\\ne1$, and $x>0$. $\\ln x$ is the natural logarithm with base $e\\approx2.718$, and $\\exp(y)=e^y$.\n\nFor positive $a,b$, $\\log(ab)=\\log a+\\log b$ and $\\log(a^k)=k\\log a$. In general, $\\log(a+b)$ cannot be split into the two logs. For a base greater than 1, logarithms strictly preserve ordering, so comparing positive values is equivalent to comparing their logs.\n\nWhen a model multiplies probabilities of independent observations, the log of that positive product becomes a sum. $\\prod_i p_i$ means multiply the factors, while $\\sum_i\\log p_i$ means add their individual logs. This simplifies differentiation and avoids many numerical-underflow problems. At $p=0$, no finite $\\log p$ exists; replacing it by zero changes the mathematics."
+      },
+      "worked_q": {
+        "zh": "两项独立证据在模型 A 下的概率为 0.2 和 0.5，在模型 B 下为 0.1 和 0.8。比较联合概率，和比较联合概率的自然对数，选择会不同吗？",
+        "en": "Two independent pieces of evidence have probabilities 0.2 and 0.5 under model A, and 0.1 and 0.8 under model B. Does comparing joint probabilities give a different choice from comparing their natural logarithms?"
+      },
+      "worked_a": {
+        "zh": "A 得 $0.2\\cdot0.5=0.10$，B 得 $0.1\\cdot0.8=0.08$，所以 A 更大。$\\ln0.10\\approx-2.3026$，$\\ln0.08\\approx-2.5257$，A 的对数仍较大；负数也按通常大小比较。这里比较的是对已观测证据的似然，不是模型本身的后验概率。",
+        "en": "A gives $0.2\\cdot0.5=0.10$, and B gives $0.1\\cdot0.8=0.08$, so A is larger. $\\ln0.10\\approx-2.3026$ and $\\ln0.08\\approx-2.5257$; A remains larger on the log scale. Negative numbers still use ordinary ordering. These are likelihoods of the observed evidence, not posterior probabilities of the models."
+      },
+      "check_q": {
+        "zh": "计算 $\\log_2(1/8)$ 与 $\\log_2(2\\cdot4)$。能把 $\\log_2(2+4)$ 也写成 $\\log_2 2+\\log_2 4$ 吗？",
+        "en": "Compute $\\log_2(1/8)$ and $\\log_2(2\\cdot4)$. Can you also write $\\log_2(2+4)=\\log_2 2+\\log_2 4$?"
+      },
+      "check_a": {
+        "zh": "前两个分别为 −3 和 3，因为 $2^{-3}=1/8$、$2^3=8$。不能拆分加法：$\\log_2(2+4)=\\log_2 6$，而右边等于 3，即 $\\log_2 8$。",
+        "en": "The first two answers are −3 and 3, because $2^{-3}=1/8$ and $2^3=8$. The sum cannot be split: $\\log_2(2+4)=\\log_2 6$, whereas the proposed right side equals 3, or $\\log_2 8$."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture2a.ipynb",
+          "locator": "单元 / cells 13–15",
+          "kind": "course",
+          "note": "当前 Canvas 使用 log-likelihood；基础指数规则与手算示例是本单元补充。 / Current Canvas uses log-likelihood; elementary power rules and arithmetic examples are added here."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "对数恒等式、定义域、排序与数值例子按定义验证。 / Log identities, domains, ordering, and numerical examples are checked from their definitions."
+        }
+      ]
+    },
+    {
+      "id": "derivatives",
+      "title": {
+        "zh": "导数与梯度：输入动一点，输出怎样变",
+        "en": "Derivatives and gradients: how a small input change matters"
+      },
+      "body": {
+        "zh": "先看直线 $y=3x+1$：$x$ 增加 0.1，$y$ 增加 0.3，斜率为 3。曲线的导数是在某一点附近的“瞬时斜率”。对 $f(x)=x^2$，从 $x$ 到 $x+h$ 的平均斜率为 $[(x+h)^2-x^2]/h=2x+h$（$h\\ne0$）；让 $h$ 越来越接近 0，就得到 $f'(x)=2x$。\n\n因此在 $x=2$ 附近，小改变量 $\\Delta x$ 导致 $\\Delta f\\approx4\\Delta x$。这是局部近似，不是任意大步长下的等式。$\\Delta$ 表示“改变量”；$df/dx$ 与 $f'(x)$ 都表示对 $x$ 的导数。常用规则：常数的导数为 0，$x^2$ 的导数为 $2x$，$\\ln x$ 的导数为 $1/x$（$x>0$），$e^x$ 的导数仍为 $e^x$；求和可以逐项求导。\n\n函数有多个输入时，偏导 $\\partial E/\\partial u$ 表示固定其他输入，只改变 $u$。梯度 $\\nabla E$ 把所有偏导排成向量；梯度下降用 $w_{\\rm new}=w-\\eta\\nabla E(w)$，其中 $\\eta>0$ 是步长，所有分量都从旧 $w$ 计算。步长过大可能上坡。若 $y$ 通过中间变量 $z$ 依赖 $x$，链式法则是 $dy/dx=(dy/dz)(dz/dx)$：两段变化率相乘。",
+        "en": "Start with the line $y=3x+1$: increasing $x$ by 0.1 increases $y$ by 0.3, so the slope is 3. A derivative is the local slope of a curve at a point. For $f(x)=x^2$, the average slope from $x$ to $x+h$ is $[(x+h)^2-x^2]/h=2x+h$ for $h\\ne0$. As $h$ approaches zero, this gives $f'(x)=2x$.\n\nNear $x=2$, a small change $\\Delta x$ therefore gives $\\Delta f\\approx4\\Delta x$. This is a local approximation, not an equality for arbitrary steps. $\\Delta$ means “change”; $df/dx$ and $f'(x)$ both denote the derivative with respect to $x$. Useful rules: a constant differentiates to zero, $x^2$ to $2x$, $\\ln x$ to $1/x$ for $x>0$, and $e^x$ to itself. Differentiate a sum term by term.\n\nWith several inputs, the partial derivative $\\partial E/\\partial u$ holds the other inputs fixed. The gradient $\\nabla E$ collects all partial derivatives into a vector. Gradient descent uses $w_{\\rm new}=w-\\eta\\nabla E(w)$, where $\\eta>0$ is the step size and every component is computed at the old $w$. Too large a step can increase the objective. If $y$ depends on $x$ through an intermediate $z$, the chain rule is $dy/dx=(dy/dz)(dz/dx)$: multiply the two rates of change."
+      },
+      "worked_q": {
+        "zh": "令 $E(u,v)=(u-1)^2+(v-2)^2$，从 $(u,v)=(0,0)$ 出发，用步长 $\\eta=0.1$ 做一次梯度下降。写出两个偏导、更新后的点以及更新前后的 $E$。",
+        "en": "For $E(u,v)=(u-1)^2+(v-2)^2$, start at $(u,v)=(0,0)$ and take one gradient-descent step with $\\eta=0.1$. Find both partial derivatives, the new point, and the objective before and after the step."
+      },
+      "worked_a": {
+        "zh": "$\\partial E/\\partial u=2(u-1)$，$\\partial E/\\partial v=2(v-2)$。旧点的梯度为 $(-2,-4)$；减去 $0.1(-2,-4)$，得到 $(0.2,0.4)$。旧损失为 $1+4=5$，新损失为 $(-0.8)^2+(-1.6)^2=3.2$。本例下降了，不代表任何函数或任意步长都保证下降。",
+        "en": "$\\partial E/\\partial u=2(u-1)$ and $\\partial E/\\partial v=2(v-2)$. The old-point gradient is $(-2,-4)$. Subtracting $0.1(-2,-4)$ gives $(0.2,0.4)$. The old loss is $1+4=5$; the new loss is $(-0.8)^2+(-1.6)^2=3.2$. It decreases here; arbitrary functions and step sizes do not have that guarantee."
+      },
+      "check_q": {
+        "zh": "令 $z=3x+1$、$y=z^2$。当 $x=1$ 时，$dy/dx$ 是多少？为什么不能只写 $2z$？",
+        "en": "Let $z=3x+1$ and $y=z^2$. At $x=1$, what is $dy/dx$? Why is $2z$ alone incomplete?"
+      },
+      "check_a": {
+        "zh": "此时 $z=4$，$dy/dz=2z=8$，但 $dz/dx=3$，所以 $dy/dx=8\\cdot3=24$。$2z$ 衡量的是对 $z$ 的变化率，还没包含 $x$ 对 $z$ 的影响。",
+        "en": "Here $z=4$, so $dy/dz=2z=8$, but $dz/dx=3$. Thus $dy/dx=8\\cdot3=24$. The expression $2z$ measures change with respect to $z$ and omits how $x$ changes $z$."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture2a.ipynb；Lecture3a.ipynb",
+          "locator": "Lecture2a cells 15, 27；Lecture3a cell 52",
+          "kind": "course",
+          "note": "当前 Canvas 使用导数求估计量和梯度下降；从斜率到链式法则的基础衔接与例子为补充。 / Current Canvas uses differentiation and gradient descent; the slope-to-chain-rule bridge and examples are added explanations."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "用差商展开、解析偏导和有限差分验证；不把导数为零误当作全局最优充分条件。 / Checked through difference quotients, analytic partials, and finite differences; a zero derivative is not claimed to guarantee a global optimum."
+        }
+      ]
+    },
+    {
+      "id": "bits-rates",
+      "title": {
+        "zh": "比特、字节与时延：先统一单位",
+        "en": "Bits, bytes, and delay: align the units"
+      },
+      "body": {
+        "zh": "1 bit 是一个二进制位，1 byte（字节）=8 bits。小写 b 常表示 bit，大写 B 常表示 byte；100 Mbps 表示每秒 $100\\times10^6$ bits，不是每秒 100 MB。这里网络速率用十进制：kbps=$10^3$ bit/s，Mbps=$10^6$ bit/s；1 ms=$10^{-3}$ s。MiB 则是 $2^{20}$ bytes，题目写 MB、MiB 时要按其定义换算。\n\n发送时延 $L/R$ 衡量把一个长 $L$ bits 的分组全部推入速率 $R$ bit/s 的链路要多久。传播时延 $d/v$ 衡量信号沿长度 $d$ 米、速度 $v$ 米/秒的介质移动要多久。像把一列车全部开出车站与车头行驶到下一站，是两种不同的时间。\n\n单条链路、无排队和处理时延时，从开始发送到最后一比特到达的时间为 $L/R+d/v$。这不自动等于往返时间 RTT；RTT 还涉及返回方向及其他事件。看见数字先写单位，再写“计到哪个事件结束”。",
+        "en": "One bit is a binary digit; one byte equals 8 bits. Lowercase b often means bit and uppercase B means byte. Thus 100 Mbps is $100\\times10^6$ bits per second, not 100 MB per second. Here network rates use decimal prefixes: kbps=$10^3$ bit/s and Mbps=$10^6$ bit/s; 1 ms=$10^{-3}$ s. A MiB is $2^{20}$ bytes, so follow the stated MB or MiB convention.\n\nTransmission delay $L/R$ is the time to push all $L$ bits into a link running at $R$ bit/s. Propagation delay $d/v$ is the time a signal travels distance $d$ meters at speed $v$ meters/second. Like getting an entire train out of a station versus its front reaching the next station, these are different times.\n\nFor one link with no queueing or processing delay, the time from starting transmission until the last bit arrives is $L/R+d/v$. This is not automatically a round-trip time, RTT, which also involves a return path and other events. Write the units and specify the finishing event before calculating."
+      },
+      "worked_q": {
+        "zh": "一个 1200-byte 分组通过一条 2 Mbps、长 100 km 的链路。传播速度为 2×10⁸ m/s，忽略排队和处理。从开始发送到最后一比特到达需多久？",
+        "en": "A 1200-byte packet crosses one 2 Mbps link of length 100 km. Propagation speed is 2×10⁸ m/s. Ignore queueing and processing. How long from the start of transmission until the last bit arrives?"
+      },
+      "worked_a": {
+        "zh": "先换单位：$L=1200\\cdot8=9600$ bits，$R=2\\cdot10^6$ bit/s，$d=100000$ m。发送时延 $9600/(2\\cdot10^6)=0.0048$ s=4.8 ms；传播时延 $100000/(2\\cdot10^8)=0.0005$ s=0.5 ms；合计 5.3 ms。",
+        "en": "Convert first: $L=1200\\cdot8=9600$ bits, $R=2\\cdot10^6$ bit/s, and $d=100000$ m. Transmission takes $9600/(2\\cdot10^6)=0.0048$ s=4.8 ms. Propagation takes $100000/(2\\cdot10^8)=0.0005$ s=0.5 ms. The total is 5.3 ms."
+      },
+      "check_q": {
+        "zh": "单条 4 Mbps 链路发送 1000-byte 分组，传播时延为 3 ms，无排队和处理。从开始发送到最后一比特到达需多久？速率加倍后呢？",
+        "en": "A 4 Mbps link carries a 1000-byte packet with 3 ms propagation delay and no queueing or processing. How long from transmission start to last-bit arrival? What if the bit rate doubles?"
+      },
+      "check_a": {
+        "zh": "发送需 $8000/(4\\cdot10^6)=2$ ms，总计 5 ms。速率加倍使发送时延降为 1 ms，传播仍为 3 ms，所以总计 4 ms，并非整个时间减半。",
+        "en": "Transmission takes $8000/(4\\cdot10^6)=2$ ms, giving 5 ms total. Doubling the bit rate reduces transmission to 1 ms but leaves propagation at 3 ms, for 4 ms total. The entire delay does not halve."
+      },
+      "sources": [
+        {
+          "name": "CS5222 Chapter 1，cs5222_cha1_2026_student.pptx",
+          "locator": "幻灯片 / slides 25–26, 45–47",
+          "kind": "course",
+          "note": "当前 Canvas：发送、传播和完成事件。 / Current Canvas: transmission, propagation, and completion events."
+        },
+        {
+          "name": "Kurose & Ross, Computer Networking: A Top-Down Approach, 8th ed.",
+          "locator": "§1.4.1，印刷页 / printed pp.36–38；PDF pp.47–49",
+          "kind": "historical",
+          "note": "教材时延定义；只使用定义，不照背旧速率示例。 / Textbook delay definitions; historical example speeds are not treated as current measurements."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "字节/比特换算与两道单链路例题独立验算。 / Byte/bit conversions and the two one-link calculations are independently checked."
+        }
+      ]
+    },
+    {
+      "id": "binary-prefixes",
+      "title": {
+        "zh": "二进制与子网前缀：相同的左半段",
+        "en": "Binary and subnet prefixes: a shared left-hand part"
+      },
+      "body": {
+        "zh": "十进制 205 表示 $2\\cdot100+0\\cdot10+5$；二进制每一位只能取 0 或 1，八位从左到右的位权为 128、64、32、16、8、4、2、1。所以 `11000000` 表示 $128+64=192$。八位的取值范围是 0–255。\n\nIPv4 地址有 32 位，通常分成四组八位，写成如 `10.1.2.130` 的十进制形式。`/k` 表示左边 k 位是网络前缀，其余 $32-k$ 位在该地址块内变化；一块有 $2^{32-k}$ 个地址。`/26` 不是“前 26 个十进制数”，而是前 26 个二进制位。\n\n以 `/26` 为例：前三组八位固定，最后一组的前两位也固定，其余六位可变，每位各有两个选择，连乘六次得到 $2^6=64$，所以每块 64 个地址：0–63、64–127、128–191、192–255。相同前缀判断的是地址是否在同一块，不是判断字符串开头是否相似。传统多接入 IPv4 子网通常保留全零和全一主机部分给网络地址与广播地址；不要把“减 2”套到 /31、/32 等不同约定。",
+        "en": "Decimal 205 means $2\\cdot100+0\\cdot10+5$. Binary digits are only 0 or 1; an eight-bit group has place values 128, 64, 32, 16, 8, 4, 2, 1 from left to right. Thus `11000000` means $128+64=192$. Eight bits represent values from 0 to 255.\n\nAn IPv4 address has 32 bits, normally shown as four eight-bit groups in decimal, such as `10.1.2.130`. A `/k` prefix fixes the leftmost k bits; the remaining $32-k$ bits vary within a block of $2^{32-k}$ addresses. `/26` means 26 binary bits, not 26 decimal digits.\n\nFor `/26`, the first three groups and the first two bits of the final group are fixed. Six bits vary, each with two choices: multiplying six twos gives $2^6=64$. This produces 64-address blocks: 0–63, 64–127, 128–191, and 192–255. A shared prefix is a bit-level block membership test, not a text-prefix resemblance test. Traditional multi-access IPv4 subnets usually reserve all-zero and all-one host parts for the network and broadcast addresses; do not apply “subtract 2” blindly to conventions such as /31 or /32."
+      },
+      "worked_q": {
+        "zh": "10.1.2.130/26 属于哪个地址块？10.1.2.190 与 10.1.2.200 分别是否在同一块？",
+        "en": "Which address block contains 10.1.2.130/26? Are 10.1.2.190 and 10.1.2.200 in that same block?"
+      },
+      "worked_a": {
+        "zh": "每块有 64 个地址，130 落在 128–191，因此网络为 10.1.2.128/26。130 的末组是 `10000010`，前两位为 `10`；190 的末组也以前两位 `10` 开始，所以在同一块。200 的末组为 `11001000`，前两位 `11`，属于 192–255 那一块。",
+        "en": "Each block has 64 addresses. Since 130 lies in 128–191, the network is 10.1.2.128/26. The final group of 130 is `10000010`, starting with `10`. The final group of 190 also starts with `10`, so it is in the same block. The final group of 200 is `11001000`, starting with `11`, so it belongs to the 192–255 block."
+      },
+      "check_q": {
+        "zh": "172.16.5.200/27 所在地址块的网络地址、末地址、总地址数是什么？采用传统网络/广播保留规则时有多少可用主机地址？",
+        "en": "For 172.16.5.200/27, find the block's network address, last address, and total address count. How many host addresses are usable under the traditional network/broadcast reservation rule?"
+      },
+      "check_a": {
+        "zh": "有 $32-27=5$ 个可变位，所以每块 $2^5=32$ 个地址；200 落在 192–223。网络地址为 172.16.5.192，末地址为 172.16.5.223；共 32 个地址，按题设传统规则有 30 个可用主机地址（193–222）。",
+        "en": "There are $32-27=5$ variable bits, so each block contains $2^5=32$ addresses. The value 200 lies in 192–223. The network address is 172.16.5.192 and the last address is 172.16.5.223. There are 32 addresses total and, under the stated traditional rule, 30 usable host addresses, 193–222."
+      },
+      "sources": [
+        {
+          "name": "Kurose & Ross, Computer Networking: A Top-Down Approach, 8th ed.",
+          "locator": "§4.3.2，印刷页 / printed pp.334–338；PDF pp.345–349",
+          "kind": "historical",
+          "note": "参考书中的 32 位地址、子网、CIDR 前缀基础；属于后续网络层预习。 / Reference-book treatment of 32-bit addresses, subnets, and CIDR; this is preparation for the later network layer."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "二进制展开与 /26、/27 地址块为自拟教学例子；不是本学期 Tutorial 的原题。 / Binary expansions and /26-/27 blocks are original teaching examples, not current tutorial questions."
+        }
+      ]
+    },
+    {
+      "id": "linear-algebra",
+      "title": {
+        "zh": "后续补课：秩、特征向量与正定",
+        "en": "Later bridge: rank, eigenvectors, and positive definiteness"
+      },
+      "body": {
+        "zh": "这一小段在协方差、回归、PCA 与核方法前按需看；先会形状与点积即可。列向量如果能由其他列的倍数相加得到，就没有增加独立方向。矩阵的秩 rank 是独立列方向的数量；例如 $\\begin{bmatrix}1&2\\\\2&4\\end{bmatrix}$ 第二列是第一列的两倍，秩为 1。一个 $n\\times n$ 方阵只有秩为 $n$ 时才有逆；逆 $A^{-1}$ 满足 $A^{-1}A=AA^{-1}=I$，其中 $I$ 的对角线是 1，其余为 0。\n\n若非零向量 $v$ 经过矩阵后方向不变或反向，只改变倍数，即 $Av=\\lambda v$，就称 $v$ 为特征向量、$\\lambda$ 为特征值；$\\lambda=0$ 时它被压成零。PCA 用对称协方差矩阵的这些方向描述数据变化。\n\n对实对称矩阵 $A$，若所有非零 $x$ 都满足 $x^TAx>0$，称其正定（PD）；若只要求 $x^TAx\\ge0$，称半正定（PSD）。这里 $x^TAx$ 是一个数。PSD 可以把某些方向压为零，因此可能没有逆；仅看对角线为正并不足以证明正定。",
+        "en": "Use this optional bridge before covariance, regression, PCA, or kernels, after learning shapes and dot products. A column expressible as a weighted sum of other columns adds no independent direction. Rank counts independent column directions. In $\\begin{bmatrix}1&2\\\\2&4\\end{bmatrix}$, the second column is twice the first, so the rank is 1. An $n\\times n$ matrix has an inverse only when its rank is $n$. The inverse satisfies $A^{-1}A=AA^{-1}=I$, where $I$ has ones on the diagonal and zeros elsewhere.\n\nIf a nonzero vector obeys $Av=\\lambda v$, the matrix scales that direction, possibly reversing it: $v$ is an eigenvector and $\\lambda$ an eigenvalue. At $\\lambda=0$, that vector is mapped to zero. PCA uses such directions of a symmetric covariance matrix to describe variation.\n\nFor a real symmetric matrix $A$, positive definiteness (PD) means $x^TAx>0$ for every nonzero $x$. Positive semidefiniteness (PSD) allows $x^TAx\\ge0$. The expression $x^TAx$ is a scalar. A PSD matrix may collapse some directions and lack an inverse. Positive diagonal entries alone do not prove positive definiteness."
+      },
+      "worked_q": {
+        "zh": "$X=\\begin{bmatrix}1&1\\\\2&2\\end{bmatrix}$ 的两列重复。计算 $X^TX$，解释它为什么不可逆；再把 $A=X^TX+I$ 写出来，验证方向 $(1,1)^T$ 与 $(1,-1)^T$ 的特征值。",
+        "en": "The columns of $X=\\begin{bmatrix}1&1\\\\2&2\\end{bmatrix}$ are identical. Compute $X^TX$ and explain why it is not invertible. Then form $A=X^TX+I$ and check the eigenvalues for directions $(1,1)^T$ and $(1,-1)^T$."
+      },
+      "worked_a": {
+        "zh": "$X^TX=\\begin{bmatrix}5&5\\\\5&5\\end{bmatrix}$，秩为 1；它把非零向量 $(1,-1)^T$ 映到零，因此不可逆。加上 $I$ 得 $A=\\begin{bmatrix}6&5\\\\5&6\\end{bmatrix}$。$A(1,1)^T=(11,11)^T$，特征值为 11；$A(1,-1)^T=(1,-1)^T$，特征值为 1。两个独立方向均有正特征值，故此对称矩阵正定并可逆。这是 ridge 加 $\\lambda I$（$\\lambda>0$）修复零方向的一个小例子。",
+        "en": "$X^TX=\\begin{bmatrix}5&5\\\\5&5\\end{bmatrix}$ has rank 1. It maps the nonzero vector $(1,-1)^T$ to zero, so it is not invertible. Adding $I$ gives $A=\\begin{bmatrix}6&5\\\\5&6\\end{bmatrix}$. Since $A(1,1)^T=(11,11)^T$, that direction has eigenvalue 11. Since $A(1,-1)^T=(1,-1)^T$, that direction has eigenvalue 1. These two independent directions have positive eigenvalues, so this symmetric matrix is PD and invertible. This illustrates how ridge's $\\lambda I$, with $\\lambda>0$, repairs zero directions."
+      },
+      "check_q": {
+        "zh": "$B=\\begin{bmatrix}4&0\\\\0&0\\end{bmatrix}$ 是 PSD、PD，还是都不是？它有逆吗？用 $x^TBx$ 解释。",
+        "en": "Is $B=\\begin{bmatrix}4&0\\\\0&0\\end{bmatrix}$ PSD, PD, or neither? Is it invertible? Explain using $x^TBx$."
+      },
+      "check_a": {
+        "zh": "$x^TBx=4x_1^2\\ge0$，所以是 PSD。但非零 $x=(0,1)^T$ 使它为 0，所以不是 PD。秩为 1，不能把被压成零的第二个方向恢复回来，因此无逆。",
+        "en": "$x^TBx=4x_1^2\\ge0$, so it is PSD. For the nonzero vector $x=(0,1)^T$, the value is zero, so it is not PD. Its rank is 1, and the collapsed second direction cannot be recovered; therefore it has no inverse."
+      },
+      "sources": [
+        {
+          "name": "Harrington, Machine Learning in Action (2012)",
+          "locator": "Appendix B.2，印刷页 / printed pp.338–339（PDF pp.365–366）；§13.1，印刷页 / printed pp.272–274（PDF pp.299–301）",
+          "kind": "historical",
+          "note": "参考书支撑逆、秩及 PCA 特征方向。 / Reference-book support for inverse, rank, and PCA eigen-directions."
+        },
+        {
+          "name": "CS5489 Lecture3b.ipynb",
+          "locator": "单元 / cell 118",
+          "kind": "course",
+          "note": "当前 Canvas 引入 PSD 核矩阵；此处给基础定义和二维例子。 / Current Canvas introduces PSD kernel matrices; this unit supplies the basic definition and a two-dimensional example."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "秩、二次型和加单位阵的例子按矩阵运算直接验证。 / Rank, quadratic-form, and identity-shift examples are checked by direct matrix operations."
+        }
+      ]
+    },
+    {
+      "id": "optimization",
+      "title": {
+        "zh": "后续补课：最优化先看允许走到哪里",
+        "en": "Later bridge: optimization starts with feasible choices"
+      },
+      "body": {
+        "zh": "$\\min_x f(x)$ 问最小的函数值，$\\arg\\min_x f(x)$ 问哪个 $x$ 取得它；$\\arg\\max$ 同理问最大值的位置。约束规定允许的 $x$，满足所有约束的点称为可行点。例如最小化 $x^2$ 但要求 $x\\ge1$ 时，无约束最优点 0 不允许使用。\n\n无约束、可微函数在内部局部最优点必须导数为 0；这只是必要条件，并不保证全局最小。有约束时，最优点可以在边界，原目标的导数不必为 0。凸函数可以直观理解为图形不高于任意两点连线的函数；凸可行集表示任意两个可行点之间的整段连线仍可行。在凸可行集上最小化凸函数时，局部最小也是全局最小。\n\n沿本课程的 $g(x)\\ge0$ 约定，拉格朗日函数写为 $L(x,\\alpha)=f(x)-\\alpha g(x)$，乘子 $\\alpha\\ge0$。KKT 要同时检查可行性、乘子非负、驻点条件 $\\partial L/\\partial x=0$ 和互补松弛 $\\alpha g(x)=0$。$\\alpha>0$ 意味着该约束在边界；$\\alpha=0$ 不保证离开边界。一般问题需要适当正则条件才保证最优解满足 KKT；本单元的凸例子不存在这种障碍。",
+        "en": "$\\min_x f(x)$ asks for the smallest function value, whereas $\\arg\\min_x f(x)$ asks which $x$ attains it. Similarly, $\\arg\\max$ asks where a maximum is attained. Constraints define permitted choices; a point satisfying all constraints is feasible. When minimizing $x^2$ subject to $x\\ge1$, the unconstrained optimum zero is not permitted.\n\nFor a differentiable unconstrained function, an interior local optimum must have zero derivative. This necessary condition does not guarantee a global minimum. With constraints, the optimum can lie on a boundary where the original objective's derivative is nonzero. A convex function lies no higher than the line segment joining any two points of its graph. Minimizing a convex function over a convex feasible set makes every local minimum global.\n\nUnder this course's convention $g(x)\\ge0$, the Lagrangian is $L(x,\\alpha)=f(x)-\\alpha g(x)$ with multiplier $\\alpha\\ge0$. KKT checks feasibility, nonnegative multipliers, stationarity $\\partial L/\\partial x=0$, and complementary slackness $\\alpha g(x)=0$. A positive multiplier implies a boundary constraint; a zero multiplier does not guarantee an inactive constraint. General problems require suitable regularity for an optimum to satisfy KKT; the convex example here has no such obstacle.\n\nA feasible set is convex when the entire line segment between any two feasible points remains feasible."
+      },
+      "worked_q": {
+        "zh": "最小化 $f(x)=x^2$，约束为 $x\\ge1$。求最优点、最小值，并用 $g(x)=x-1$ 验证 KKT 乘子。",
+        "en": "Minimize $f(x)=x^2$ subject to $x\\ge1$. Find the optimizer and minimum value, then verify the KKT multiplier using $g(x)=x-1$."
+      },
+      "worked_a": {
+        "zh": "允许区间为 $[1,\\infty)$，$x^2$ 在此随 $x$ 增大而增大，因此 $x^*=1$，最小值为 1。$L=x^2-\\alpha(x-1)$，驻点条件为 $2x-\\alpha=0$，给出 $\\alpha=2$。可行性、$\\alpha\\ge0$ 和 $\\alpha(x-1)=0$ 全满足。原目标导数 $2x=2$ 并不为 0，因为最优点在约束边界。",
+        "en": "The feasible interval is $[1,\\infty)$, where $x^2$ increases with $x$. Thus $x^*=1$ and the minimum is 1. For $L=x^2-\\alpha(x-1)$, stationarity gives $2x-\\alpha=0$, hence $\\alpha=2$. Feasibility, $\\alpha\\ge0$, and $\\alpha(x-1)=0$ all hold. The original derivative $2x=2$ is nonzero because the optimum is at the constraint boundary."
+      },
+      "check_q": {
+        "zh": "把目标改为 $f(x)=(x-3)^2$，仍要求 $x\\ge1$。最优点与乘子是什么？这个约束在最优点是否紧约束？",
+        "en": "Change the objective to $f(x)=(x-3)^2$ while keeping $x\\ge1$. What are the optimizer and multiplier? Is the constraint active there?"
+      },
+      "check_a": {
+        "zh": "$x^*=3$ 可行且使目标为 0，因此全局最优。$g(3)=2>0$，互补松弛要求 $\\alpha=0$；约束不紧。驻点条件 $2(x-3)-\\alpha=0$ 也成立。这里“松约束⇒乘子为零”成立，但不能反推所有零乘子都对应松约束。",
+        "en": "$x^*=3$ is feasible and gives objective zero, hence a global minimum. Since $g(3)=2>0$, complementary slackness requires $\\alpha=0$; the constraint is inactive. Stationarity $2(x-3)-\\alpha=0$ also holds. Here “inactive implies zero multiplier” is valid; the converse is not generally valid."
+      },
+      "sources": [
+        {
+          "name": "CS5489 Lecture3b.ipynb",
+          "locator": "单元 / cells 33–41",
+          "kind": "course",
+          "note": "当前 Canvas 的约束与拉格朗日符号约定。原讲义的简化口述不代替完整 KKT 条件。 / Current Canvas constraint and Lagrangian sign convention. Simplified slide statements do not replace the complete KKT conditions."
+        },
+        {
+          "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
+          "locator": "本补课单元 / This foundation unit",
+          "kind": "derived",
+          "note": "两个一维凸问题直接求解并验算 KKT；补明必要/充分条件、正则性和零乘子方向，避免沿用讲义过度简化。 / Both one-dimensional convex problems are solved directly and checked against KKT; necessity, sufficiency, regularity, and the zero-multiplier implication are stated carefully."
+        }
+      ]
+    }
+  ],
+  "lesson_map": {
+    "ml01": [],
+    "ml02": [
+      "python"
+    ],
+    "ml03": [
+      "python",
+      "vectors-matrices"
+    ],
+    "ml04": [
+      "vectors-matrices"
+    ],
+    "ml05": [
+      "probability"
+    ],
+    "ml06": [
+      "probability",
+      "powers-logs",
+      "derivatives"
+    ],
+    "ml07": [
+      "vectors-matrices",
+      "probability",
+      "linear-algebra"
+    ],
+    "ml08": [
+      "probability",
+      "powers-logs"
+    ],
+    "ml09": [
+      "probability",
+      "powers-logs",
+      "derivatives"
+    ],
+    "ml10": [
+      "vectors-matrices",
+      "powers-logs",
+      "derivatives"
+    ],
+    "ml11": [
+      "probability",
+      "powers-logs"
+    ],
+    "ml12": [
+      "vectors-matrices",
+      "derivatives",
+      "optimization"
+    ],
+    "ml13": [
+      "derivatives",
+      "optimization"
+    ],
+    "ml14": [
+      "vectors-matrices",
+      "linear-algebra"
+    ],
+    "ml15": [
+      "vectors-matrices"
+    ],
+    "ml16": [
+      "python",
+      "probability"
+    ],
+    "ml17": [],
+    "ml18": [
+      "vectors-matrices"
+    ],
+    "ml19": [
+      "vectors-matrices",
+      "derivatives",
+      "linear-algebra"
+    ],
+    "ml20": [
+      "probability",
+      "derivatives"
+    ],
+    "ml21": [
+      "vectors-matrices",
+      "derivatives"
+    ],
+    "ml22": [
+      "probability",
+      "powers-logs"
+    ],
+    "ml23": [
+      "vectors-matrices",
+      "linear-algebra"
+    ],
+    "ml24": [
+      "derivatives",
+      "vectors-matrices"
+    ],
+    "ml25": [
+      "vectors-matrices",
+      "python"
+    ],
+    "ml26": [
+      "derivatives"
+    ],
+    "ml27": [],
+    "ml28": [
+      "probability",
+      "derivatives"
+    ],
+    "ml29": [
+      "vectors-matrices",
+      "powers-logs"
+    ],
+    "ml30": [
+      "derivatives",
+      "linear-algebra",
+      "optimization"
+    ],
+    "net01": [
+      "bits-rates"
+    ],
+    "net02": [
+      "bits-rates",
+      "probability"
+    ],
+    "net03": [
+      "bits-rates"
+    ],
+    "net04": [
+      "bits-rates"
+    ],
+    "net05": [],
+    "net06": [],
+    "net07": [
+      "bits-rates"
+    ],
+    "net08": [],
+    "net09": [],
+    "net10": [
+      "bits-rates"
+    ],
+    "net11": [],
+    "net12": [
+      "bits-rates",
+      "python"
+    ],
+    "net13": [
+      "bits-rates"
+    ],
+    "net14": [
+      "bits-rates"
+    ],
+    "net15": [
+      "bits-rates"
+    ],
+    "net16": [
+      "binary-prefixes"
+    ],
+    "net17": [
+      "binary-prefixes"
+    ],
+    "net18": [
+      "binary-prefixes",
+      "probability"
+    ],
+    "net19": [
+      "bits-rates",
+      "binary-prefixes"
+    ],
+    "net20": [
+      "binary-prefixes"
+    ]
+  }
+}

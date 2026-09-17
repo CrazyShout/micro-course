@@ -1,0 +1,2124 @@
+{
+  "courses": {
+    "CS5489": {
+      "basis": "当前 Lecture 1 Intro 第 10 页的四项学习目标；以下是学习材料映射，不是全学期或 QE 达成证明。",
+      "outcomes": [
+        {
+          "name": "解释算法 / Explain",
+          "lessons": [
+            "ml01",
+            "ml05",
+            "ml06",
+            "ml08",
+            "ml10",
+            "ml12",
+            "ml13"
+          ],
+          "practical_tasks": [],
+          "evidence": "各微课的同能力例题、独立变式和关联卡片。"
+        },
+        {
+          "name": "实现算法 / Implement",
+          "lessons": [
+            "ml02",
+            "ml03",
+            "ml04",
+            "ml16",
+            "ml08"
+          ],
+          "practical_tasks": [
+            "python-factor-program",
+            "implement-bernoulli-nb",
+            "sms-reproducible-baseline"
+          ],
+          "evidence": "提供从零实现 Bernoulli NB 的任务和手算验收点；须自己运行，尚未获得你的完成证据。"
+        },
+        {
+          "name": "应用到问题 / Apply",
+          "lessons": [
+            "ml08",
+            "ml09",
+            "ml15",
+            "ml16"
+          ],
+          "practical_tasks": [
+            "sms-reproducible-baseline"
+          ],
+          "evidence": "需交代数据、模型假设和受控对比，尚未替你完成数据实验。"
+        },
+        {
+          "name": "评价优缺点 / Evaluate",
+          "lessons": [
+            "ml11",
+            "ml15",
+            "ml16",
+            "ml17"
+          ],
+          "practical_tasks": [
+            "sms-reproducible-baseline"
+          ],
+          "evidence": "用指标、错误样本与改变条件的题目检查推理。"
+        }
+      ],
+      "gaps": [
+        "当前 Canvas 只覆盖已下载 Lecture 1–3、Tutorial 1–2 和 Assignment 1，后续资料仍需核对。",
+        "历史视觉架构 VGG、Inception、ResNeXt、SE、CLIP 的专门训练链尚缺。",
+        "PSNR、SSIM 的完整计算和适用条件尚未分别展开。",
+        "参考书全部章节和正式 QE 范围尚未完整映射；实际编程能力须通过自己的运行验证。"
+      ]
+    },
+    "CS5222": {
+      "basis": "当前 Chapter 1–2 主题与教程；以下四类是本学习系统的能力分类，不冒充学校正式 CILO。",
+      "outcomes": [
+        {
+          "name": "解释协议与分层 / Explain",
+          "lessons": [
+            "net01",
+            "net02",
+            "net05",
+            "net06",
+            "net08",
+            "net09"
+          ],
+          "practical_tasks": [],
+          "evidence": "用独立变式解释职责、条件和信息流。"
+        },
+        {
+          "name": "计算与建模 / Calculate",
+          "lessons": [
+            "net03",
+            "net04",
+            "net07",
+            "net10",
+            "net16",
+            "net18"
+          ],
+          "practical_tasks": [
+            "network-model-check"
+          ],
+          "evidence": "检查单位、事件定义、模型条件与分步结果；net16/net18 为历史预习。"
+        },
+        {
+          "name": "实际观察 / Observe",
+          "lessons": [
+            "net09",
+            "net20"
+          ],
+          "practical_tasks": [
+            "dns-trace"
+          ],
+          "evidence": "提供个人抓包任务及失败排查，不宣称已采集你的运行证据。"
+        },
+        {
+          "name": "迁移与诊断 / Transfer",
+          "lessons": [
+            "net11",
+            "net19",
+            "net20"
+          ],
+          "practical_tasks": [
+            "dns-trace",
+            "network-model-check"
+          ],
+          "evidence": "改变模型条件并提出区分原因的观察；历史课题保留范围标记。"
+        }
+      ],
+      "gaps": [
+        "当前 Chapter 2 仅指已下载部分；全学期提纲不等于当前已确认考核范围。",
+        "历史 Chapter 6 材料止于前 29 张，不能代表完整链路层课程。",
+        "历史 Tutorial 8 第 2 页 P4 的原表仍需图像校勘；最长前缀机制和自拟题已提供。",
+        "无线与移动主题在现有提纲中有时间条件；正式 QE 范围仍待官方确认。",
+        "抓包、项目和调试能力须实际动手验证，网页和卡片本身不能证明已掌握。"
+      ]
+    }
+  },
+  "objectives": [
+    {
+      "lesson_id": "ml01",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能把一个预测任务写成特征、标签、参数、超参数与训练—验证—测试流程，并识别信息泄漏。",
+      "worked": {
+        "zh": "短信用 free 次数 x 预测标签 y（垃圾=1、正常=0）。规则为分数 wx，w 从数据学得；候选模型设置有简单版和复杂版。100 条已标注短信按 80/10/10 划分。每组分别做什么，w 和模型设置分别叫什么？",
+        "en": "A spam task uses free-count x to predict y (spam=1, legitimate=0), with score wx and learned w. Choose between simple and complex model settings using an 80/10/10 split of 100 labeled messages. What is each split for, and which quantity is a parameter versus a hyperparameter?"
+      },
+      "independent": {
+        "zh": "另一位同学不读测试标签，却先用全部 200 条短信建立词表，再按 160/20/20 训练与评价。指出泄漏位置，并写出修正后的先后顺序。",
+        "en": "A student builds the vocabulary from all 200 messages without reading test labels, then trains and evaluates on the split. Identify the leakage and give the corrected order."
+      },
+      "card_ids": [
+        "CS5489-M001",
+        "CS5489-M002",
+        "CS5489-M003",
+        "CS5489-M004",
+        "CS5489-M327",
+        "CS5489-M328"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml02",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能逐行跟踪一个含循环、判断和 return 的函数，并在干净 Notebook 中独立复现。",
+      "worked": {
+        "zh": "使用正文多行 count_factors 函数计算 n=6。依次列出 d、6 % d、count 的变化和最后的返回值。",
+        "en": "Trace the multiline count_factors function above for n=6. List each d, remainder, count change, and returned value."
+      },
+      "independent": {
+        "zh": "在重启后的 Notebook 中调用 count_factors(7)，应先运行什么单元、得到什么值？若把函数最后的 return count 改为 print(count)，y=count_factors(7) 的 y 又是什么？",
+        "en": "After restarting a notebook, what must run before count_factors(7), and what value should it return? If return count is replaced by print(count), what does y=count_factors(7) assign to y?"
+      },
+      "card_ids": [
+        "CS5489-M007",
+        "CS5489-M008",
+        "CS5489-M009",
+        "CS5489-M010",
+        "CS5489-M011",
+        "CS5489-M012",
+        "CS5489-M013",
+        "CS5489-M014",
+        "CS5489-M015",
+        "CS5489-M016",
+        "CS5489-M017",
+        "CS5489-M018",
+        "CS5489-M019",
+        "CS5489-M020",
+        "CS5489-M334",
+        "CS5489-M335",
+        "CS5489-M336",
+        "CS5489-M337"
+      ],
+      "units": [],
+      "practical_tasks": [
+        "python-factor-program"
+      ]
+    },
+    {
+      "lesson_id": "ml03",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能把每行样本的加权求和写成矩阵乘法，并逐步检查预测与残差的形状。",
+      "worked": {
+        "zh": "X 的两行为 (1,2)、(3,4)，w=(2,-1)，标签 y=(1,1)。求 Xw、预测减标签的残差，并给出形状。",
+        "en": "X has rows (1,2),(3,4), w=(2,-1), and labels y=(1,1). Compute Xw and prediction-minus-label residuals, giving each shape."
+      },
+      "independent": {
+        "zh": "三条样本的预测被存为形状 (3,1)，标签为 (3,)。直接相减得到什么形状？怎样改成逐样本残差，并解释原因？",
+        "en": "Three predictions are stored as (3,1), with labels (3,). What shape does subtraction produce, and how should you obtain matched per-sample residuals?"
+      },
+      "card_ids": [
+        "CS5489-M021",
+        "CS5489-M022",
+        "CS5489-M023",
+        "CS5489-M024",
+        "CS5489-M025",
+        "CS5489-M026",
+        "CS5489-M027",
+        "CS5489-M028",
+        "CS5489-M029",
+        "CS5489-M030",
+        "CS5489-M031",
+        "CS5489-M032",
+        "CS5489-M033",
+        "CS5489-M034",
+        "CS5489-M329",
+        "CS5489-M330",
+        "CS5489-M035",
+        "CS5489-M036"
+      ],
+      "units": [
+        {
+          "id": "axis-means",
+          "goal": {
+            "zh": "能区分每列与每行均值及形状。",
+            "en": "Distinguish column and row means and their shapes."
+          },
+          "independent": {
+            "zh": "同一3×2数组减去列均值(5,7)，得到什么？为什么能广播？",
+            "en": "Subtract means (5,7) from that 3×2 array. What results, and why does broadcasting work?"
+          },
+          "card_ids": [
+            "CS5489-M023",
+            "CS5489-M026",
+            "CS5489-M027"
+          ]
+        }
+      ],
+      "practical_tasks": [
+        "python-factor-program"
+      ]
+    },
+    {
+      "lesson_id": "ml04",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能解释 Gram–Schmidt 每次减掉什么，并手算两维例子。",
+      "worked": {
+        "zh": "对 v1=(1,1)、v2=(1,0) 做正交归一化。",
+        "en": "Orthonormalize v1=(1,1) and v2=(1,0)."
+      },
+      "independent": {
+        "zh": "对v₁=(1,1)、v₂=(2,2)正交归一化。独立算第二余量，说明能否得到两个独立单位方向。",
+        "en": "Orthonormalize v₁=(1,1),v₂=(2,2). Compute the second residual and determine whether two independent unit directions exist."
+      },
+      "card_ids": [
+        "CS5489-M037",
+        "CS5489-M038",
+        "CS5489-M039",
+        "CS5489-M040",
+        "CS5489-M041"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml05",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能从人数表推回条件概率与后验公式。",
+      "worked": {
+        "zh": "1,000 条短信中 20% 为垃圾；垃圾中 60% 含 free，正常中 10% 含 free。看到 free 后垃圾概率是多少？",
+        "en": "Of 1,000 messages, 20% are spam; 60% of spam and 10% of legitimate messages contain free. What is the spam probability given free?"
+      },
+      "independent": {
+        "zh": "若垃圾先验为 0.2，两类中 free 出现概率都为 0.6，看到 free 后垃圾概率是多少？解释这个词有没有改变判断。",
+        "en": "If the spam prior is 0.2 and free appears with probability 0.6 in both classes, what is the spam posterior, and does the word change the evidence?"
+      },
+      "card_ids": [
+        "CS5489-M042",
+        "CS5489-M043",
+        "CS5489-M044",
+        "CS5489-M045",
+        "CS5489-M046",
+        "CS5489-M047",
+        "CS5489-M048",
+        "CS5489-M049"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml06",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能从独立伯努利观测写出似然、求出 MLE，并检查内部解与边界；高斯估计见补充单元。",
+      "worked": {
+        "zh": "四次独立的同分布硬币观测为正、正、反、正，正面概率为 p。写出似然，求使它最大的 p。",
+        "en": "Four independent identically distributed coin outcomes are heads, heads, tails, heads with heads probability p. Write the likelihood and maximize it."
+      },
+      "independent": {
+        "zh": "四次观测全部成功。写出似然并求 MLE；为什么这里不能机械要求导数等于零？",
+        "en": "All four observations are successes. Find the likelihood and MLE, explaining why a zero derivative is not required here."
+      },
+      "card_ids": [
+        "CS5489-M050",
+        "CS5489-M051",
+        "CS5489-M052",
+        "CS5489-M053",
+        "CS5489-M054",
+        "CS5489-M055",
+        "CS5489-M056",
+        "CS5489-M057",
+        "CS5489-M058",
+        "CS5489-M059",
+        "CS5489-M060"
+      ],
+      "units": [
+        {
+          "id": "gaussian-mle",
+          "goal": {
+            "zh": "能从观测计算高斯均值与方差MLE，区分n与n−1。",
+            "en": "Compute Gaussian mean/variance MLEs and distinguish n from n−1."
+          },
+          "independent": {
+            "zh": "x=(1,3)，独立求均值、MLE方差与分母n−1的方差。为何两个方差不一样？",
+            "en": "For (1,3), find mean, MLE variance and n−1 variance, and explain the difference."
+          },
+          "card_ids": [
+            "CS5489-M054",
+            "CS5489-M055",
+            "CS5489-M056",
+            "CS5489-M057"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml07",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能区分完整逐类协方差、对角 Gaussian NB 和共享协方差。",
+      "worked": {
+        "zh": "两个特征时，一类完整协方差有几个独立参数？对角模型呢？",
+        "en": "With two features, how many independent covariance parameters does one full model need, compared with a diagonal model?"
+      },
+      "independent": {
+        "zh": "K=3 类、d=2 特征，只统计协方差参数：每类完整、每类对角、三类共享一个完整协方差，各需要几个独立数？共享会带来什么限制？",
+        "en": "For three classes and two features, count covariance parameters for separate full, separate diagonal, and one shared full covariance. What does sharing restrict?"
+      },
+      "card_ids": [
+        "CS5489-M061",
+        "CS5489-M062",
+        "CS5489-M063",
+        "CS5489-M064",
+        "CS5489-M065",
+        "CS5489-M066",
+        "CS5489-M067",
+        "CS5489-M068",
+        "CS5489-M069",
+        "CS5489-M070",
+        "CS5489-M071",
+        "CS5489-M072",
+        "CS5489-M073",
+        "CS5489-M074"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml08",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能从数据表示选择 Bernoulli 或 Multinomial NB，并算出平滑概率。",
+      "worked": {
+        "zh": "某类三词总计数 (3,1,0)，alpha=1，多项式平滑概率是多少？",
+        "en": "A class has token counts (3,1,0). With alpha=1, what are the smoothed multinomial probabilities?"
+      },
+      "independent": {
+        "zh": "某类词表只有 free、meeting，词元计数为 (3,1)，alpha=1。一条新文档含两个 free、零个 meeting。求平滑词概率和忽略类别共同系数后的文档似然；为什么不能把 Bernoulli 的缺词项直接加进来？",
+        "en": "A class has counts (3,1) for free and meeting with alpha=1. A new document contains two free tokens and no meeting tokens. Find smoothed probabilities and document likelihood up to class-common factors. Why not add a Bernoulli absence term?"
+      },
+      "card_ids": [
+        "CS5489-M075",
+        "CS5489-M076",
+        "CS5489-M077",
+        "CS5489-M078",
+        "CS5489-M079",
+        "CS5489-M080",
+        "CS5489-M081",
+        "CS5489-M082",
+        "CS5489-M083",
+        "CS5489-M084",
+        "CS5489-M085",
+        "CS5489-M086",
+        "CS5489-M087",
+        "CS5489-M088",
+        "CS5489-M089",
+        "CS5489-M331",
+        "CS5489-M332",
+        "CS5489-M333"
+      ],
+      "units": [
+        {
+          "id": "bernoulli-presence",
+          "goal": {
+            "zh": "能按文档出现数做Bernoulli平滑，并计算缺词证据。",
+            "en": "Smooth document-presence probabilities and evaluate word absence."
+          },
+          "independent": {
+            "zh": "四篇同类文档中，这个词只在第一篇出现五次，其余三篇未出现，alpha=1。独立求p，以及新文档缺这个词时该特征的似然因子和对数项。",
+            "en": "Among four documents, a word occurs five times only in the first; the other three lack it. With alpha=1,find p and this feature’s likelihood factor and log contribution when absent in a new document."
+          },
+          "card_ids": [
+            "CS5489-M079",
+            "CS5489-M080",
+            "CS5489-M081",
+            "CS5489-M082"
+          ]
+        }
+      ],
+      "practical_tasks": [
+        "implement-bernoulli-nb"
+      ]
+    },
+    {
+      "lesson_id": "ml09",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能从 Poisson 概率写出类分数，并解释文档长度与独立性假设。",
+      "worked": {
+        "zh": "等先验，A 的均值 (2,1)，B 为 (1,2)，x=(2,0)，哪个分数大？",
+        "en": "With equal priors, rates (2,1) for A and (1,2) for B, which class scores higher for x=(2,0)?"
+      },
+      "independent": {
+        "zh": "两类单词均值为 1 和 10，空计数 x=0、更支持哪类？",
+        "en": "With one feature, equal priors, and rates 1 and 10, which class does x=0 support?"
+      },
+      "card_ids": [
+        "CS5489-M108",
+        "CS5489-M109",
+        "CS5489-M110",
+        "CS5489-M111",
+        "CS5489-M112",
+        "CS5489-M113",
+        "CS5489-M114",
+        "CS5489-M115",
+        "CS5489-M116",
+        "CS5489-M117",
+        "CS5489-M118"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml10",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能说出一次参数更新为什么朝这个方向，并手算梯度。",
+      "worked": {
+        "zh": "x=2、t=1、w=0，固定 b=0，无正则，eta=0.1，做一步更新。",
+        "en": "For x=2, t=1, w=0, fixed b=0, no regularization, and eta=0.1, perform one update."
+      },
+      "independent": {
+        "zh": "x=2、t=1、初始 w=b=0、eta=0.1，无正则，同时训练权重与偏置。分别求两个梯度、新参数与新分数。",
+        "en": "With x=2, t=1, initial w=b=0, eta=0.1, and no regularization, train both weight and bias. Find both gradients, new parameters, and new score."
+      },
+      "card_ids": [
+        "CS5489-M119",
+        "CS5489-M120",
+        "CS5489-M121",
+        "CS5489-M122",
+        "CS5489-M123",
+        "CS5489-M124",
+        "CS5489-M125",
+        "CS5489-M126",
+        "CS5489-M127",
+        "CS5489-M128",
+        "CS5489-M129",
+        "CS5489-M130",
+        "CS5489-M131",
+        "CS5489-M132"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml11",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能按相同折比较超参数并检查预处理泄漏；多类别 softmax 用独立补充单元练习。",
+      "worked": {
+        "zh": "设置 A 的三折验证准确率为 (0.82,0.86,0.84)，B 为 (0.90,0.74,0.79)。各折样本数相同，按算术平均选方案。选谁，并说明每折词表在哪里拟合。",
+        "en": "Settings A and B obtain equal-sized-fold validation accuracies (0.82,0.86,0.84) and (0.90,0.74,0.79). Select by arithmetic mean and state where each fold’s vocabulary is fitted."
+      },
+      "independent": {
+        "zh": "A 的平均分 0.84 来自在每折内拟合缩放；B 的 0.85 来自先用全部开发数据拟合缩放、再三折验证。可以直接选 B 吗？写出公平重比的流程。",
+        "en": "A scores 0.84 with scaling fitted inside each fold; B scores 0.85 after scaling all development data before cross-validation. May B be selected directly? Give a fair comparison procedure."
+      },
+      "card_ids": [
+        "CS5489-M133",
+        "CS5489-M134",
+        "CS5489-M135",
+        "CS5489-M136",
+        "CS5489-M137",
+        "CS5489-M138",
+        "CS5489-M139",
+        "CS5489-M140",
+        "CS5489-M141"
+      ],
+      "units": [
+        {
+          "id": "softmax",
+          "goal": {
+            "zh": "能计算softmax并验证共同平移不改变概率。",
+            "en": "Compute softmax and verify invariance to a common shift."
+          },
+          "independent": {
+            "zh": "所有分数共同加1000。用代数解释概率不变，并给安全计算方法。",
+            "en": "Add 1000 to all scores. Explain invariance algebraically and give a numerically safer computation."
+          },
+          "card_ids": [
+            "CS5489-M137",
+            "CS5489-M138",
+            "CS5489-M139"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml12",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能用几何距离解释间隔，并判断松弛变量的含义。",
+      "worked": {
+        "zh": "一维样本 (-1,-1)、(1,+1)，求硬间隔解。",
+        "en": "Find the hard-margin solution for one-dimensional samples (-1,-1) and (1,+1)."
+      },
+      "independent": {
+        "zh": "分界面 w=2、b=0，点 x=3 到边界的距离是多少？把 w、b 同乘 10 后重算，并解释分数和距离的区别。",
+        "en": "For boundary w=2,b=0, find the distance of x=3. Recompute after multiplying w,b by 10, and distinguish score from distance."
+      },
+      "card_ids": [
+        "CS5489-M143",
+        "CS5489-M144",
+        "CS5489-M145",
+        "CS5489-M146",
+        "CS5489-M154",
+        "CS5489-M155",
+        "CS5489-M156",
+        "CS5489-M159",
+        "CS5489-M160",
+        "CS5489-M161",
+        "CS5489-M162",
+        "CS5489-M163",
+        "CS5489-M164"
+      ],
+      "units": [
+        {
+          "id": "slack",
+          "goal": {
+            "zh": "能由带标签分数求最小松弛并解释分类。",
+            "en": "Find minimum slack from a labeled score and interpret classification."
+          },
+          "independent": {
+            "zh": "z=2与z=0各如何解释？",
+            "en": "Interpret z=2 and z=0."
+          },
+          "card_ids": [
+            "CS5489-M154",
+            "CS5489-M155",
+            "CS5489-M156"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml13",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能逐项求拉格朗日函数的导数、求两点硬间隔乘子，并正确使用互补松弛。",
+      "worked": {
+        "zh": "一维样本 (x₁,y₁)=(−1,−1)、(x₂,y₂)=(1,+1)。写 L=½w²+α₁(1−w+b)+α₂(1−w−b)。先对 w、b 求导，再由最优 w=1、b=0 求乘子。",
+        "en": "For (x₁,y₁)=(−1,−1),(x₂,y₂)=(1,+1), use L=½w²+α₁(1−w+b)+α₂(1−w−b). Differentiate in w,b and find multipliers at the optimum w=1,b=0."
+      },
+      "independent": {
+        "zh": "从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 ∂L/∂w 和 ∂L/∂b，推出 w 的展开。再判断：gᵢ<0 能推出 αᵢ=0 吗？αᵢ=0 能推出 gᵢ<0 吗？",
+        "en": "For general L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)], derive both derivatives and the expansion of w. Under complementary slackness, does gᵢ<0 imply αᵢ=0, and does αᵢ=0 imply gᵢ<0?"
+      },
+      "card_ids": [
+        "CS5489-M147",
+        "CS5489-M148",
+        "CS5489-M149",
+        "CS5489-M150",
+        "CS5489-M151",
+        "CS5489-M152",
+        "CS5489-M153",
+        "CS5489-M157",
+        "CS5489-M158"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml14",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能通过显式特征映射验证二次核；RBF 与超参数区别见补充单元。",
+      "worked": {
+        "zh": "x=(1,2)、z=(3,4)，二次核是多少？",
+        "en": "Compute the homogeneous quadratic kernel for x=(1,2) and z=(3,4)."
+      },
+      "independent": {
+        "zh": "将映射错误地写成 ψ(a,b)=(a²,ab,b²)。对 x=z=(1,1)，比较 ψ(x)ᵀψ(z) 与 (xᵀz)²，并指出少了什么。",
+        "en": "Suppose ψ(a,b)=(a²,ab,b²) is used instead. For x=z=(1,1), compare its dot product with (xᵀz)² and identify the missing factor."
+      },
+      "card_ids": [
+        "CS5489-M165",
+        "CS5489-M166",
+        "CS5489-M167",
+        "CS5489-M168",
+        "CS5489-M169",
+        "CS5489-M170",
+        "CS5489-M171",
+        "CS5489-M172"
+      ],
+      "units": [
+        {
+          "id": "rbf-scale",
+          "goal": {
+            "zh": "能算RBF相似度并区分gamma和C的作用。",
+            "en": "Compute RBF similarity and distinguish gamma from C."
+          },
+          "independent": {
+            "zh": "所有坐标乘10，希望每对RBF核值不变，gamma应怎样改？只改C能保证吗？",
+            "en": "Scale all coordinates by 10. How must gamma change to preserve every RBF value? Can changing C alone guarantee this?"
+          },
+          "card_ids": [
+            "CS5489-M168",
+            "CS5489-M169",
+            "CS5489-M170"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml15",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能用训练统计完成特征缩放，解释尺度含义，并识别预处理泄漏。",
+      "worked": {
+        "zh": "训练最小值 2、最大值 6，映射到 [-1,1] 后，4 与新值 8 分别是多少？",
+        "en": "With training minimum 2 and maximum 6, map 4 and a new value 8 to [-1,1]."
+      },
+      "independent": {
+        "zh": "训练特征为 (2,4,6)，新测试值 8。正确按训练范围映射到 [−1,1] 后 4、8 各是什么？若误用全体 (2,4,6,8) 的范围，两个结果怎样变，为什么评估有问题？",
+        "en": "Training values are (2,4,6) and the new test value is 8. Map 4 and 8 to [−1,1] using training statistics; compare with fitting the range on all four values. Why is the latter invalid evaluation?"
+      },
+      "card_ids": [
+        "CS5489-M173",
+        "CS5489-M174",
+        "CS5489-M175",
+        "CS5489-M176",
+        "CS5489-M177",
+        "CS5489-M178",
+        "CS5489-M179",
+        "CS5489-M180",
+        "CS5489-M181",
+        "CS5489-M182"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml16",
+      "course": "CS5489",
+      "status": "canvas",
+      "goal": "能从混淆矩阵计算 precision、recall、balanced accuracy，并用错误类型选择下一步检查。",
+      "worked": {
+        "zh": "二分类垃圾邮件任务：TP=6、FN=4、FP=2、TN=8，垃圾为正类。计算精确率、召回率和两类 balanced accuracy。",
+        "en": "For spam-positive binary classification with TP=6,FN=4,FP=2,TN=8, compute precision, recall, and two-class balanced accuracy."
+      },
+      "independent": {
+        "zh": "数据有 10 条垃圾、90 条正常。模型一律预测正常。独立写出 TP/FN/FP/TN，并算 accuracy 与 balanced accuracy；下一步优先看哪类错误？",
+        "en": "A dataset has 10 spam and 90 legitimate messages. An always-legitimate model predicts all normal. Derive TP/FN/FP/TN, accuracy and balanced accuracy, then identify the errors to investigate."
+      },
+      "card_ids": [
+        "CS5489-M091",
+        "CS5489-M092",
+        "CS5489-M093",
+        "CS5489-M094",
+        "CS5489-M095",
+        "CS5489-M096",
+        "CS5489-M099"
+      ],
+      "units": [
+        {
+          "id": "baseline-pipeline",
+          "goal": {
+            "zh": "能安排训练、变换、预测和错误检查的完整顺序。",
+            "en": "Order fitting, transformation, prediction and error inspection."
+          },
+          "independent": {
+            "zh": "一次改了词表、模型、划分后分数提高。独立设计比较来判断词表改动是否有效，并说应检查哪类具体输出。",
+            "en": "Vocabulary, model and split all change and score improves. Design a comparison isolating vocabulary and state which concrete outputs to inspect."
+          },
+          "card_ids": [
+            "CS5489-M094",
+            "CS5489-M095",
+            "CS5489-M096",
+            "CS5489-M099"
+          ]
+        }
+      ],
+      "practical_tasks": [
+        "implement-bernoulli-nb",
+        "sms-reproducible-baseline"
+      ]
+    },
+    {
+      "lesson_id": "ml17",
+      "course": "CS5489",
+      "status": "supplement",
+      "goal": "能用四句英文连接任务、模型假设、决策规则和局限，并迁移到另一模型。",
+      "worked": {
+        "zh": "用四句英文介绍词元计数 Multinomial NB：说明输入/输出、给定类别的词元模型、如何预测以及一个局限。",
+        "en": "Give a four-sentence English explanation of token-count multinomial NB: input/output, class-conditional token model, prediction rule, and one limitation."
+      },
+      "independent": {
+        "zh": "独立用四句英文解释二分类逻辑回归。必须包含：线性分数、sigmoid、交叉熵训练、概率或泛化的一个限制。",
+        "en": "Independently explain binary logistic regression in four English sentences, including linear score, sigmoid, cross-entropy training, and one probability or generalization limitation."
+      },
+      "card_ids": [
+        "CS5489-M101",
+        "CS5489-M102",
+        "CS5489-M103",
+        "CS5489-M104",
+        "CS5489-M105",
+        "CS5489-M106"
+      ],
+      "units": [
+        {
+          "id": "cost-threshold",
+          "goal": {
+            "zh": "能从两个动作的期望代价推出阈值。",
+            "en": "Derive a decision threshold from expected action costs."
+          },
+          "independent": {
+            "zh": "C_FP=3,C_FN=2，p=0.7。直接比较两个动作代价并选择；阈值处怎么处理？",
+            "en": "For costs 3 and 2 and p=0.7, compare action costs directly. What happens exactly at threshold?"
+          },
+          "card_ids": [
+            "CS5489-M102",
+            "CS5489-M103"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml18",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能手算多数投票，并解释为什么尺度会改变邻居。",
+      "worked": {
+        "zh": "最近三点标签 A、B、B，距离 0.1、1、1。普通投票与 1/距离加权各选什么？",
+        "en": "The nearest labels are A,B,B at distances 0.1,1,1. Compare ordinary and inverse-distance voting."
+      },
+      "independent": {
+        "zh": "查询点 (0,0)，A 类邻居 (0.1,2)，B 类邻居 (1,0)；普通欧氏 1-NN 先选谁？若只把第一坐标单位改成原来的 10 倍，查询和邻居同时换单位、不标准化，又选谁？",
+        "en": "For query (0,0), neighbor A=(0.1,2) and B=(1,0), which class does Euclidean 1-NN choose? If the first coordinate is multiplied by 10 for all points without standardization, which is chosen?"
+      },
+      "card_ids": [
+        "CS5489-M183",
+        "CS5489-M184",
+        "CS5489-M185",
+        "CS5489-M186"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml19",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能逐项求导得到正规方程，说明何时唯一以及正则化改了什么。",
+      "worked": {
+        "zh": "拟合 (0,1)、(1,3)、(2,5) 的直线 y=b+ax，写出正规方程并解。",
+        "en": "Fit y=b+ax to (0,1),(1,3),(2,5) using the normal equations."
+      },
+      "independent": {
+        "zh": "X 两列完全相同，但有 1000 行，OLS 一定唯一吗？",
+        "en": "If X has two identical columns and 1,000 rows, must OLS have a unique solution?"
+      },
+      "card_ids": [
+        "CS5489-M187",
+        "CS5489-M188",
+        "CS5489-M189",
+        "CS5489-M190",
+        "CS5489-M191",
+        "CS5489-M192",
+        "CS5489-M193",
+        "CS5489-M194",
+        "CS5489-M195",
+        "CS5489-M196",
+        "CS5489-M197",
+        "CS5489-M198",
+        "CS5489-M199",
+        "CS5489-M200",
+        "CS5489-M201",
+        "CS5489-M202"
+      ],
+      "units": [
+        {
+          "id": "ridge",
+          "goal": {
+            "zh": "能在明确目标系数下算Ridge并解释收缩。",
+            "en": "Compute ridge under a specified objective convention."
+          },
+          "independent": {
+            "zh": "XᵀX=diag(1,4)、Xᵀy=(3,8)、lambda=1，求两维w，是否都缩小同一比例？",
+            "en": "For XᵀX=diag(1,4),Xᵀy=(3,8),lambda=1, compute w and compare shrinkage factors."
+          },
+          "card_ids": [
+            "CS5489-M194",
+            "CS5489-M195",
+            "CS5489-M197"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml20",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能计算 RANSAC 的成功概率和尝试次数，并区分独立近似与有限无放回抽样；损失比较见补充单元。",
+      "worked": {
+        "zh": "按独立取点的理想模型，w=0.5、s=2，至少一次抽到全内点的概率要达到 0.99，需几次尝试？",
+        "en": "Under the independent-draw model, with w=0.5 and s=2, how many trials give at least 0.99 probability of drawing an all-inlier sample?"
+      },
+      "independent": {
+        "zh": "只有 N=4 个点，其中 I=2 个内点，每次从中无放回取 s=2。单次全内点概率是否仍为 (I/N)²=1/4？若每次重新独立抽子集，要至少 50% 成功率需几次？",
+        "en": "Among four points, two are inliers. Each trial samples two distinct points without replacement. Is all-inlier probability still 1/4? If subsets are resampled independently between trials, how many trials reach 50% success?"
+      },
+      "card_ids": [
+        "CS5489-M203",
+        "CS5489-M204",
+        "CS5489-M205",
+        "CS5489-M206",
+        "CS5489-M207",
+        "CS5489-M208",
+        "CS5489-M209",
+        "CS5489-M210"
+      ],
+      "units": [
+        {
+          "id": "loss-comparison",
+          "goal": {
+            "zh": "能比较平方损失与epsilon不敏感损失。",
+            "en": "Compare squared and epsilon-insensitive loss."
+          },
+          "independent": {
+            "zh": "r从1变10、epsilon=0.2固定，两损失各怎样变化？",
+            "en": "For r changing from 1 to 10 with epsilon=0.2, compare both changes."
+          },
+          "card_ids": [
+            "CS5489-M203",
+            "CS5489-M209",
+            "CS5489-M210"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml21",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能执行k-means的一次分配与均值更新，检查目标下降，并说明不保证全局最优。",
+      "worked": {
+        "zh": "数据 0、2、8、10，中心先取 0、10，完成一次分配和更新。",
+        "en": "For data 0,2,8,10 and initial centers 0,10, perform one assignment and update."
+      },
+      "independent": {
+        "zh": "每次迭代损失都下降，为什么仍要尝试多个初始化？",
+        "en": "Why try multiple initializations if every iteration reduces or preserves the loss?"
+      },
+      "card_ids": [
+        "CS5489-M211",
+        "CS5489-M212",
+        "CS5489-M213",
+        "CS5489-M214",
+        "CS5489-M215",
+        "CS5489-M216"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml22",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能在固定方差的一维双高斯模型中完成一次 E 步和 M 步，更新责任度、混合权重和均值。",
+      "worked": {
+        "zh": "两个观测 x=(0,2)，初始均值 (0,2)、混合权重各 1/2，两个方差固定为 1。本例只学习均值与混合权重。高斯密度在自身均值处约 0.398942，距离 2 处约 0.053991。完成一次 E/M 更新。",
+        "en": "For observations x=(0,2), initial means (0,2), equal mixture weights, and both variances fixed at 1, perform one E/M update of means and weights. Gaussian densities are about 0.398942 at distance zero and 0.053991 at distance two."
+      },
+      "independent": {
+        "zh": "两个观测仍为 (0,2)，初始均值 (0,2)、固定方差 1，但先验混合权重改成 (3/4,1/4)。令 a=exp(−2)≈0.135335。两点对成分 1 的责任度分别为 3/(3+a) 与 3a/(3a+1)。独立算出两点责任度、有效样本数、新权重及两均值。",
+        "en": "Keep observations and initial means (0,2), fixed variance 1, but change initial weights to (3/4,1/4). With a=exp(−2)≈0.135335, component-1 responsibilities are 3/(3+a) and 3a/(3a+1). Compute responsibilities, effective counts, new weights and both means."
+      },
+      "card_ids": [
+        "CS5489-M217",
+        "CS5489-M218",
+        "CS5489-M219",
+        "CS5489-M220",
+        "CS5489-M221",
+        "CS5489-M222",
+        "CS5489-M223",
+        "CS5489-M224",
+        "CS5489-M225",
+        "CS5489-M226"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml23",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能解释中心化、最大方差方向和低秩重构之间的联系。",
+      "worked": {
+        "zh": "协方差为 diag(9,1)，只保留一个方向，选哪个、保留多少方差？",
+        "en": "For covariance diag(9,1), which one-dimensional direction is selected and what variance fraction is retained?"
+      },
+      "independent": {
+        "zh": "二维训练数据的协方差为 diag(9,1)。若第二特征由米改成毫米且不标准化，协方差对角变成什么？保留一个主成分的方向如何改变？",
+        "en": "Training covariance is diag(9,1). If the second feature changes from meters to millimeters without standardization, what is the new diagonal and which principal direction is retained?"
+      },
+      "card_ids": [
+        "CS5489-M227",
+        "CS5489-M228",
+        "CS5489-M229",
+        "CS5489-M230",
+        "CS5489-M231",
+        "CS5489-M232",
+        "CS5489-M233",
+        "CS5489-M234",
+        "CS5489-M235",
+        "CS5489-M236",
+        "CS5489-M237",
+        "CS5489-M238",
+        "CS5489-M239",
+        "CS5489-M240"
+      ],
+      "units": [
+        {
+          "id": "pca-reconstruction",
+          "goal": {
+            "zh": "能中心化、算得分、重构并量化丢失方向。",
+            "en": "Center a point, compute its score, reconstruct and measure lost information."
+          },
+          "independent": {
+            "zh": "μ=(1,1)、x=(4,3)，改保留v=(0,1)，独立求重构误差。能否凭单点误差决定全训练集PCA方向？",
+            "en": "For μ=(1,1),x=(4,3), retain v=(0,1). Compute reconstruction error. Does one point determine the PCA direction for the full dataset?"
+          },
+          "card_ids": [
+            "CS5489-M231",
+            "CS5489-M233",
+            "CS5489-M237"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml24",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能区分前向、反向、更新，并手算局部导数如何相乘与相加。",
+      "worked": {
+        "zh": "f=(x+y)z，x=-2、y=5、z=-4，求 f 与三个偏导。",
+        "en": "For f=(x+y)z at x=-2,y=5,z=-4, compute f and its three partial derivatives."
+      },
+      "independent": {
+        "zh": "令预测 q=wx，损失 L=½(q−y)²，x=2、y=3、w=1。独立画出 w→q→L 的计算顺序，求 L、dL/dw，并以学习率 0.1 更新 w；所有梯度使用旧参数。",
+        "en": "Use prediction q=wx and loss L=½(q−y)² with x=2,y=3,w=1. Trace w→q→L, compute L and dL/dw, then update w with learning rate 0.1 using old-parameter gradients."
+      },
+      "card_ids": [
+        "CS5489-M241",
+        "CS5489-M242",
+        "CS5489-M243",
+        "CS5489-M244",
+        "CS5489-M245",
+        "CS5489-M246",
+        "CS5489-M247",
+        "CS5489-M248",
+        "CS5489-M249",
+        "CS5489-M250",
+        "CS5489-M251",
+        "CS5489-M252",
+        "CS5489-M253",
+        "CS5489-M254"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml25",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能从窗口位置数推输出尺寸、从共享滤波器数推参数量；滑动内积见补充单元。",
+      "worked": {
+        "zh": "32×32 RGB 输入，6 个 5×5 核，步长 1、无填充，求输出形状及含偏置参数量。",
+        "en": "For 32×32 RGB input and six 5×5 filters with stride 1 and no padding, find output shape and parameter count including biases."
+      },
+      "independent": {
+        "zh": "把上一规格完整重述为：16×16 单通道、4 个 3×3 核、每核一偏置；现在步长改为 2、两侧填充均为 1、膨胀仍为 1。独立算输出尺寸及参数数目，并说明哪些改变、哪些不变。",
+        "en": "For 16×16 single-channel input and four 3×3 filters with one bias each, now use stride 2, padding 1 on each side, dilation 1. Compute output shape and parameter count, explaining changes."
+      },
+      "card_ids": [
+        "CS5489-M255",
+        "CS5489-M256",
+        "CS5489-M257",
+        "CS5489-M258",
+        "CS5489-M259",
+        "CS5489-M260",
+        "CS5489-M261",
+        "CS5489-M262",
+        "CS5489-M263",
+        "CS5489-M264"
+      ],
+      "units": [
+        {
+          "id": "sliding-products",
+          "goal": {
+            "zh": "能按互相关约定逐窗计算，并区分核翻转。",
+            "en": "Compute sliding cross-correlation and distinguish kernel reversal."
+          },
+          "independent": {
+            "zh": "同输入(2,0,3,1)，若按翻核后再做valid运算，结果多少？为何与上一题不同？",
+            "en": "For the same input, reverse the kernel before a valid operation. What changes?"
+          },
+          "card_ids": [
+            "CS5489-M255",
+            "CS5489-M262",
+            "CS5489-M263"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml26",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能计算 inverted dropout 的保留值与期望，并区分训练模式和评估模式。",
+      "worked": {
+        "zh": "一个激活为 3，训练时 inverted dropout 以 q=0.75 保留；保留值除以 q，丢弃则为 0。列出两种输出及概率，计算期望。",
+        "en": "An activation of 3 uses inverted dropout with retention q=0.75: divide retained values by q, otherwise output zero. List outcomes and probabilities and compute expectation."
+      },
+      "independent": {
+        "zh": "固定网络权重，输入激活恒为 2，q=0.5；训练 dropout 后紧接平方函数。计算平方输出的期望，再与关闭 dropout 时比较。能否由单个激活期望不变推出整网期望不变？",
+        "en": "With fixed weights and activation 2, apply training dropout at q=0.5 then square its output. Compare expected squared output with evaluation mode. Does preserved activation expectation imply preserved whole-network expectation?"
+      },
+      "card_ids": [
+        "CS5489-M265",
+        "CS5489-M266",
+        "CS5489-M267",
+        "CS5489-M268",
+        "CS5489-M269",
+        "CS5489-M270",
+        "CS5489-M271",
+        "CS5489-M272",
+        "CS5489-M273",
+        "CS5489-M274",
+        "CS5489-M275",
+        "CS5489-M276"
+      ],
+      "units": [
+        {
+          "id": "training-steps",
+          "goal": {
+            "zh": "能区分读过样本批数与参数更新次数。",
+            "en": "Distinguish batches processed from optimizer steps."
+          },
+          "independent": {
+            "zh": "N=120,batch=20，每3批累积一次更新，3epochs，且每epoch恰好整除，更新几次？是否变成看数据一遍？",
+            "en": "With N=120,batch20,one step every three batches for three epochs, how many updates? Does this mean only one data pass?"
+          },
+          "card_ids": [
+            "CS5489-M265",
+            "CS5489-M266",
+            "CS5489-M268"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml27",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能根据问题选择图像类别、检测框、语义像素或实例像素输出，并解释输出中丢失的信息。",
+      "worked": {
+        "zh": "画面中有两辆相邻汽车。要分别回答“有没有车”“两辆车各在哪里”“哪些像素是车”“每个车像素属于哪辆车”，各需要哪种输出？",
+        "en": "An image contains two adjacent cars. Which output answers whether cars exist, where each car is, which pixels are cars, and which car owns each car pixel?"
+      },
+      "independent": {
+        "zh": "两个人的像素连成同一片 person 区域。需求改为“分别计算两个人各占多少像素”。只保留语义分割结果能唯一回答吗？还缺什么？",
+        "en": "Two people form one connected person-class region. The task asks how many pixels belong to each person. Can semantic segmentation alone uniquely answer this, and what is missing?"
+      },
+      "card_ids": [
+        "CS5489-M277",
+        "CS5489-M278",
+        "CS5489-M279",
+        "CS5489-M280",
+        "CS5489-M281",
+        "CS5489-M282",
+        "CS5489-M283",
+        "CS5489-M284"
+      ],
+      "units": [
+        {
+          "id": "reconstruction-mse",
+          "goal": {
+            "zh": "能算MSE并说明它没有评价什么。",
+            "en": "Compute MSE and state what it does not measure."
+          },
+          "independent": {
+            "zh": "系统A在1 bit/pixel时MSE=2，B在10 bit/pixel时MSE=1。能仅据1<2说B压缩更好吗？",
+            "en": "A gives MSE 2 at 1 bit/pixel; B gives MSE 1 at 10 bit/pixel. Is B necessarily the better compression system?"
+          },
+          "card_ids": [
+            "CS5489-M282",
+            "CS5489-M283"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml28",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能逐项计算标准高斯扩散的前向加噪，并区分训练中已知噪声与生成时预测噪声。",
+      "worked": {
+        "zh": "标准前向式 xt=√a·x0+√(1−a)·ε，a=0.36、x0=2、ε=1。求两系数与 xt。",
+        "en": "For xt=√a·x0+√(1−a)·ε with a=0.36,x0=2,ε=1, compute both coefficients and xt."
+      },
+      "independent": {
+        "zh": "训练时 a=0.25、x0=4、采样 ε=−2。算出 xt；生成时若只给这一个 xt 和 a，能唯一恢复真实 x0 与 ε 吗？解释网络预测的作用。",
+        "en": "During training use a=0.25,x0=4 and sampled ε=−2. Compute xt. During generation, do xt and a alone uniquely determine the true x0 and ε? Explain the learned prediction’s role."
+      },
+      "card_ids": [
+        "CS5489-M285",
+        "CS5489-M286",
+        "CS5489-M287",
+        "CS5489-M288",
+        "CS5489-M289",
+        "CS5489-M290",
+        "CS5489-M291",
+        "CS5489-M292",
+        "CS5489-M293",
+        "CS5489-M294"
+      ],
+      "units": [
+        {
+          "id": "gan-roles",
+          "goal": {
+            "zh": "能跟踪判别器与生成器各自使用的目标，并识别模式坍塌。",
+            "en": "Track discriminator/generator objectives and recognize mode collapse."
+          },
+          "independent": {
+            "zh": "生成器只反复产生一张逼真图，D(G(z))都很高。说明哪些表现好、哪些仍失败。",
+            "en": "G repeats one realistic image with high D scores. What can still fail?"
+          },
+          "card_ids": [
+            "CS5489-M286",
+            "CS5489-M287",
+            "CS5489-M288",
+            "CS5489-M289"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml29",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能区分 query/key/value，手算注意力加权，并核对矩阵维度。",
+      "worked": {
+        "zh": "一个 query 的缩放后分数 (ln 3,0)，values=(2,10)，输出多少？",
+        "en": "For scaled scores (ln 3,0) and scalar values (2,10), what is the attention output?"
+      },
+      "independent": {
+        "zh": "一个 query 的缩放后分数为 (0,ln 3)，对应标量 values=(2,10)。独立算权重和输出；若只把 values 对调、分数不变，输出又是多少？",
+        "en": "One query has scaled scores (0,ln 3) and scalar values (2,10). Compute weights and output; then swap only values while leaving scores fixed."
+      },
+      "card_ids": [
+        "CS5489-M295",
+        "CS5489-M296",
+        "CS5489-M297",
+        "CS5489-M298",
+        "CS5489-M299",
+        "CS5489-M300",
+        "CS5489-M301",
+        "CS5489-M302"
+      ],
+      "units": [
+        {
+          "id": "attention-shapes",
+          "goal": {
+            "zh": "能核对Q/K/V与分数、输出的形状。",
+            "en": "Check Q,K,V,score and output shapes."
+          },
+          "independent": {
+            "zh": "token数从5翻倍为10、dk/dv不变，分数矩阵和输出元素各扩大几倍？",
+            "en": "Double tokens 5→10 with fixed dk,dv. How do score-matrix and output element counts change?"
+          },
+          "card_ids": [
+            "CS5489-M297",
+            "CS5489-M298",
+            "CS5489-M299"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "ml30",
+      "course": "CS5489",
+      "status": "preview",
+      "goal": "能把复合函数拆成计算图、逐步使用链式法则，并在改变输入后独立重算。",
+      "worked": {
+        "zh": "令 L=q²，q=u exp(v)−2v exp(−u)。先对 q 分别求 u、v 偏导，再写 L 的两个偏导。",
+        "en": "Let L=q² with q=u exp(v)−2v exp(−u). Derive both partial derivatives of q, then those of L."
+      },
+      "independent": {
+        "zh": "同一 L 在 u=1、v=0 时，独立求 L、L_u、L_v。给精确形式并用 exp(−1)≈0.367879 检查。",
+        "en": "For the same L at u=1,v=0, independently compute L,L_u,L_v, giving exact forms and a check using exp(−1)≈0.367879."
+      },
+      "card_ids": [
+        "CS5489-M303",
+        "CS5489-M304",
+        "CS5489-M305",
+        "CS5489-M306",
+        "CS5489-M307",
+        "CS5489-M308",
+        "CS5489-M309",
+        "CS5489-M310",
+        "CS5489-M311",
+        "CS5489-M312",
+        "CS5489-M313",
+        "CS5489-M314",
+        "CS5489-M315",
+        "CS5489-M316",
+        "CS5489-M317",
+        "CS5489-M318",
+        "CS5489-M319",
+        "CS5489-M320",
+        "CS5489-M321",
+        "CS5489-M322",
+        "CS5489-M323",
+        "CS5489-M324",
+        "CS5489-M325",
+        "CS5489-M326"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net01",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能在主机、接入网、路由器与链路图上追踪一条消息。",
+      "worked": {
+        "zh": "手机经 Wi-Fi 连路由器，再到远端网站，浏览器程序、无线段和中间转发分别属于什么角色？",
+        "en": "In a phone-to-website path via Wi-Fi and routers, identify the browser, wireless segment, and intermediate forwarding roles."
+      },
+      "independent": {
+        "zh": "手机成功将数据经路由器送到服务器，但服务器应用不理解请求格式。网络中的输送角色是否因此足以保证网页显示？说明协议还规定什么。",
+        "en": "A phone’s data reaches a server via routers, but the server application cannot understand the request format. Is successful delivery sufficient for a webpage to work? Explain what a protocol must additionally specify."
+      },
+      "card_ids": [
+        "CS5222-N001",
+        "CS5222-N002",
+        "CS5222-N003",
+        "CS5222-N004",
+        "CS5222-N005",
+        "CS5222-N006",
+        "CS5222-N007",
+        "CS5222-N008",
+        "CS5222-N009",
+        "CS5222-N010",
+        "CS5222-N011",
+        "CS5222-N012"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net02",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能比较预留用户数与实际活跃需求，解释分组共享的容量收益与拥塞条件。",
+      "worked": {
+        "zh": "1 Mbps 链路，每个活跃用户需 100 kbps，预留式可支持多少个同时用户？",
+        "en": "A 1 Mbps link allocates 100 kbps per active user. How many simultaneous reserved-rate users fit?"
+      },
+      "independent": {
+        "zh": "同一 2 Mbps 链路上 12 个用户因直播同时活跃，每人需 250 kbps。总需求与超出容量是多少？为什么“平时很少一起用”不能保证这次无拥塞？",
+        "en": "On a 2 Mbps link, 12 users simultaneously need 250 kbps each during a live stream. Compute demand and excess, and explain why usually sparse activity does not guarantee no congestion now."
+      },
+      "card_ids": [
+        "CS5222-N013",
+        "CS5222-N014",
+        "CS5222-N015",
+        "CS5222-N016",
+        "CS5222-N017",
+        "CS5222-N018",
+        "CS5222-N019",
+        "CS5222-N020",
+        "CS5222-N021",
+        "CS5222-N022",
+        "CS5222-N023",
+        "CS5222-N024",
+        "CS5222-N095",
+        "CS5222-N096",
+        "CS5222-N097",
+        "CS5222-N098"
+      ],
+      "units": [
+        {
+          "id": "activity-probability",
+          "goal": {
+            "zh": "能算小规模同时活跃概率并指出独立假设。",
+            "en": "Compute small simultaneous-activity probabilities and state independence."
+          },
+          "independent": {
+            "zh": "两人总是一起活跃，每人边际活跃概率仍0.2。两人同时活跃概率多少，为什么不是0.04？",
+            "en": "Two users always activate together, each with marginal probability 0.2. What is joint activity probability and why not 0.04?"
+          },
+          "card_ids": [
+            "CS5222-N018",
+            "CS5222-N020",
+            "CS5222-N021"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net03",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能用时间轴推出单包与多包到达时间，避免死套公式。",
+      "worked": {
+        "zh": "1500 byte，2 Mbps，1000 km，传播速度 2×10^8 m/s，末位何时到达？",
+        "en": "For 1500 bytes, 2 Mbps, 1000 km, and propagation speed 2×10^8 m/s, when does the last bit arrive?"
+      },
+      "independent": {
+        "zh": "单链路包长 1500 byte、速率 2 Mbps、距离 1000 km、传播速度 2×10^8 m/s，忽略处理排队。只将包长减半，独立算首位与末位到达时间，并解释哪项不变。",
+        "en": "For one link with packet length 1500 bytes, rate 2 Mbps, distance 1000 km and propagation speed 2×10^8 m/s, ignore processing and queues. Halve only the packet length and compute first- and last-bit arrival times."
+      },
+      "card_ids": [
+        "CS5222-N025",
+        "CS5222-N026",
+        "CS5222-N027",
+        "CS5222-N028",
+        "CS5222-N029",
+        "CS5222-N030",
+        "CS5222-N031",
+        "CS5222-N032"
+      ],
+      "units": [],
+      "practical_tasks": [
+        "network-model-check"
+      ]
+    },
+    {
+      "lesson_id": "net04",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能计算输入负载并由到达事件解释排队；瓶颈与共享吞吐量见补充单元。",
+      "worked": {
+        "zh": "平均 1000 byte，每秒 100 包，1 Mbps 链路，负载是多少？",
+        "en": "For 1,000-byte average packets at 100 packets/s on a 1 Mbps link, compute load."
+      },
+      "independent": {
+        "zh": "每包发送 1 ms，队列初始为空，每 8 ms 重复一次四包到达。模式 A 到达 0、2、4、6 ms；模式 B 四包都在 0 ms 到达。分别求负载和平均排队时间（不含自身发送）。",
+        "en": "Each packet takes 1 ms, the queue starts empty, and four arrivals repeat every 8 ms. Pattern A arrives at 0,2,4,6 ms; pattern B sends all four at time zero. Find load and mean queueing time excluding own transmission."
+      },
+      "card_ids": [
+        "CS5222-N033",
+        "CS5222-N034",
+        "CS5222-N035",
+        "CS5222-N036",
+        "CS5222-N037",
+        "CS5222-N038",
+        "CS5222-N039",
+        "CS5222-N040"
+      ],
+      "units": [
+        {
+          "id": "shared-bottleneck",
+          "goal": {
+            "zh": "能区分独立接入速率与共享容量份额。",
+            "en": "Distinguish private access limits from shared capacity."
+          },
+          "independent": {
+            "zh": "只有一条共享服务器20Mbps链路，10客户端各独立10Mbps，核心50Mbps，10流均分。独立求每流速率。",
+            "en": "Now one shared server link is 20 Mbps; ten clients have private 10 Mbps links and share a 50 Mbps core. Find equal per-flow rate."
+          },
+          "card_ids": [
+            "CS5222-N037",
+            "CS5222-N038",
+            "CS5222-N039"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net05",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能按应用—传输—网络—链路的封装顺序追踪消息，并计算载荷与首部开销。",
+      "worked": {
+        "zh": "1000 byte HTTP 应用数据交给 TCP、IP、Ethernet，题设每层都加 20 byte 首部，不计尾部。写出四层职责和最终大小、应用载荷效率。",
+        "en": "Pass 1000 bytes of HTTP data through TCP, IP and Ethernet, each adding a 20-byte header in this model and no trailer. Identify layer roles, final size and application-payload efficiency."
+      },
+      "independent": {
+        "zh": "一个路由器将 IP 数据报从链路 A 转到链路 B。假设无 NAT、无 IP 分片，原链路帧的目的 MAC 是路由器，下一段目的 MAC 应指谁？应用数据是否应增加一个新的 HTTP 首部？",
+        "en": "A router forwards an IP datagram from link A to link B without NAT or fragmentation. Its incoming destination MAC names the router. Whom should the next link destination identify, and should the router add another HTTP header?"
+      },
+      "card_ids": [
+        "CS5222-N041",
+        "CS5222-N042",
+        "CS5222-N043",
+        "CS5222-N044",
+        "CS5222-N045",
+        "CS5222-N046",
+        "CS5222-N047",
+        "CS5222-N048",
+        "CS5222-N049",
+        "CS5222-N050",
+        "CS5222-N051"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net06",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能根据应用需求讨论可靠性、速率与时延，而不机械选 TCP/UDP。",
+      "worked": {
+        "zh": "文件下载与实时通话对“迟到但最终正确”的数据通常有何不同？",
+        "en": "How do file download and live conversation differ in their treatment of late but correct data?"
+      },
+      "independent": {
+        "zh": "控制命令要求 100 ms 内送达且不能重复执行。仅说“UDP 延迟低，所以选 UDP”遗漏了哪些需求？给出判断框架，不假设某协议自动满足全部要求。",
+        "en": "A control command must arrive within 100 ms and must not execute twice. What is missing from “choose UDP because it is low-latency”? Give a decision framework without assuming a transport automatically meets every requirement."
+      },
+      "card_ids": [
+        "CS5222-N052",
+        "CS5222-N053",
+        "CS5222-N054",
+        "CS5222-N055",
+        "CS5222-N056",
+        "CS5222-N057",
+        "CS5222-N058",
+        "CS5222-N059",
+        "CS5222-N060",
+        "CS5222-N061",
+        "CS5222-N062",
+        "CS5222-N063",
+        "CS5222-N064",
+        "CS5222-N065"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net07",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能画出 TCP 建连、基础页面、附属对象与缓存命中的依赖。",
+      "worked": {
+        "zh": "DNS 已完成，基础 HTML 和两个对象都很小，RTT=50 ms。串行非持久与一条无流水线持久连接各多久？",
+        "en": "DNS is done. A tiny base HTML and two tiny objects use RTT=50 ms. Compare serial nonpersistent HTTP with one persistent, non-pipelined connection."
+      },
+      "independent": {
+        "zh": "DNS 已完成且持久 TCP 连接已建好，RTT=50 ms。缓存中的小页面需要条件验证，服务器返回 304；忽略处理、发送时间和 TLS。此次验证至少占几个 RTT？省掉了什么、没省掉什么？",
+        "en": "DNS is complete and a persistent TCP connection is open with RTT 50 ms. A cached tiny page requires conditional validation and receives 304. Ignore processing, serialization and TLS. How many RTTs does validation take, and what is saved?"
+      },
+      "card_ids": [
+        "CS5222-N066",
+        "CS5222-N067",
+        "CS5222-N068",
+        "CS5222-N069",
+        "CS5222-N100",
+        "CS5222-N101",
+        "CS5222-N102",
+        "CS5222-N103",
+        "CS5222-N104",
+        "CS5222-N105",
+        "CS5222-N106",
+        "CS5222-N107",
+        "CS5222-N108",
+        "CS5222-N109",
+        "CS5222-N110"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net08",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能按发送界面、服务器投递、收件读取追踪邮件协议；信封与邮件头见补充单元。",
+      "worked": {
+        "zh": "浏览器打开网页邮箱发信，浏览器与网站、邮件服务器与对方邮件服务器分别用什么应用协议角色？",
+        "en": "When sending through webmail, distinguish the browser-to-site and mail-server-to-mail-server protocol roles."
+      },
+      "independent": {
+        "zh": "将 Bob 的读取方式也改为网页邮箱。发送服务器到接收服务器仍使用 SMTP。画出三段协议，并说明 Bob 浏览器是否因此直接发送 IMAP 命令。",
+        "en": "Bob now reads through webmail; inter-server delivery still uses SMTP. Identify the three protocol legs and say whether Bob’s browser must directly issue IMAP commands."
+      },
+      "card_ids": [
+        "CS5222-N111",
+        "CS5222-N112",
+        "CS5222-N113",
+        "CS5222-N114",
+        "CS5222-N115",
+        "CS5222-N116",
+        "CS5222-N117",
+        "CS5222-N118",
+        "CS5222-N119",
+        "CS5222-N120"
+      ],
+      "units": [
+        {
+          "id": "mail-envelope",
+          "goal": {
+            "zh": "能区分实际SMTP收件人和显示的To字段。",
+            "en": "Distinguish SMTP recipients from displayed To headers."
+          },
+          "independent": {
+            "zh": "SMTP对RCPT和DATA返回成功，能证明C打开邮件了吗？还缺什么证据？",
+            "en": "Successful SMTP replies follow recipient and DATA commands. Does that prove C opened the message?"
+          },
+          "card_ids": [
+            "CS5222-N113",
+            "CS5222-N114",
+            "CS5222-N119"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net09",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能区分本地解析器、根、TLD、权威服务器及递归/迭代。",
+      "worked": {
+        "zh": "主机向本地递归解析器查一个域名，RTT=2 ms。无相关缓存，解析器依次问根、TLD、权威服务器，三个串行上游交互各 20 ms。列出各自返回的角色，并算总时延。",
+        "en": "A host queries a local recursive resolver in a 2 ms RTT. With no relevant cache, the resolver queries root, TLD, and authoritative servers sequentially, each taking 20 ms. Describe their answer roles and total delay."
+      },
+      "independent": {
+        "zh": "主机到解析器 RTT=2 ms；缓存中只有可直接访问的正确 TLD 服务器地址，没有域的权威委派或最终记录。TLD 和权威交互各 20 ms，串行且无别名。跳过哪步，总时间多少？",
+        "en": "Host-to-resolver RTT is 2 ms. Only the usable address of the correct TLD server is cached, not the domain’s authoritative delegation or final record. TLD and authoritative exchanges each take 20 ms sequentially, with no aliases. What is skipped and what is total delay?"
+      },
+      "card_ids": [
+        "CS5222-N121",
+        "CS5222-N122",
+        "CS5222-N123",
+        "CS5222-N124",
+        "CS5222-N125",
+        "CS5222-N126",
+        "CS5222-N127",
+        "CS5222-N128",
+        "CS5222-N129",
+        "CS5222-N130",
+        "CS5222-N131",
+        "CS5222-N132",
+        "CS5222-N133",
+        "CS5222-N134"
+      ],
+      "units": [],
+      "practical_tasks": [
+        "dns-trace"
+      ]
+    },
+    {
+      "lesson_id": "net10",
+      "course": "CS5222",
+      "status": "canvas",
+      "goal": "能独立列出网络数值题的单位、路径、完成事件和忽略项。",
+      "worked": {
+        "zh": "8×10^6 bit 经三条 2 Mbps 存储转发链路，整报文与 800 个 10000 bit 包比较，忽略其他开销。",
+        "en": "Compare an 8×10^6-bit message with 800 packets of 10,000 bits over three 2 Mbps store-and-forward links, ignoring other costs."
+      },
+      "independent": {
+        "zh": "三条等速 2 Mbps 存储转发链路传 800 个包，每包载荷 10000 bit，另加 100 bit 首部，忽略传播与处理。独立算流水线总时间；与忽略首部的 4.01 s 比较。",
+        "en": "Three equal 2 Mbps store-and-forward links carry 800 packets, each with 10000 payload bits plus 100 header bits. Ignore propagation and processing. Find pipeline completion time and compare with 4.01 s when headers are omitted."
+      },
+      "card_ids": [
+        "CS5222-N071",
+        "CS5222-N072",
+        "CS5222-N073",
+        "CS5222-N074",
+        "CS5222-N075",
+        "CS5222-N076",
+        "CS5222-N077",
+        "CS5222-N078",
+        "CS5222-N079",
+        "CS5222-N080",
+        "CS5222-N081",
+        "CS5222-N082",
+        "CS5222-N083",
+        "CS5222-N084",
+        "CS5222-N085",
+        "CS5222-N099"
+      ],
+      "units": [],
+      "practical_tasks": [
+        "network-model-check"
+      ]
+    },
+    {
+      "lesson_id": "net11",
+      "course": "CS5222",
+      "status": "supplement",
+      "goal": "能用英文区分测量现象与因果结论，并设计有控制条件的网络比较。",
+      "worked": {
+        "zh": "一次网页访问用了 2 秒。用三句英文写：能观察到什么、还不能断言什么、接下来要拆分测量什么。",
+        "en": "A page load took two seconds. Write three English sentences stating the observation, an unsupported causal claim, and the measurements needed next."
+      },
+      "independent": {
+        "zh": "替代路径只在夜里测一次，比白天测的原路径快。独立用三句英文解释为何不能保证改路由后普遍更好，并给一个更公平的比较方案。",
+        "en": "An alternative route measured once at night beats the original route measured during daytime. Explain in three English sentences why this does not guarantee a general improvement and propose a fairer comparison."
+      },
+      "card_ids": [
+        "CS5222-N086",
+        "CS5222-N087",
+        "CS5222-N088",
+        "CS5222-N093",
+        "CS5222-N094"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net12",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能分开计算服务器注入、最慢下载与总上传下界；TCP 应用定界见补充单元。",
+      "worked": {
+        "zh": "F=1 Gbit、N=10、us=100 Mbps、每个 ui=10 Mbps、dmin=50 Mbps，求两种理想下界。",
+        "en": "For F=1 Gbit, N=10, us=100 Mbps, each ui=10 Mbps, and dmin=50 Mbps, find client-server and P2P lower bounds."
+      },
+      "independent": {
+        "zh": "仍为 F=1 Gbit、N=10、us=100 Mbps、dmin=50 Mbps，若每个对等节点上传升至 90 Mbps，下界是多少？相对各 30 Mbps 的 25 s，为何没有缩成三分之一？",
+        "en": "Keep F=1 Gbit,N=10,us=100 Mbps,dmin=50 Mbps and raise each peer upload to 90 Mbps. Compute the bound and explain why it is not one third of the 25 s bound with 30 Mbps peers."
+      },
+      "card_ids": [
+        "CS5222-N135",
+        "CS5222-N136",
+        "CS5222-N137",
+        "CS5222-N138",
+        "CS5222-N139",
+        "CS5222-N140",
+        "CS5222-N141",
+        "CS5222-N142",
+        "CS5222-N143",
+        "CS5222-N144",
+        "CS5222-N145",
+        "CS5222-N146",
+        "CS5222-N147",
+        "CS5222-N148"
+      ],
+      "units": [
+        {
+          "id": "tcp-framing",
+          "goal": {
+            "zh": "能跨recv边界按分隔符恢复消息。",
+            "en": "Recover delimiter-framed messages across recv boundaries."
+          },
+          "independent": {
+            "zh": "一次recv收到A<换行>B<换行>C，应该只返回一条吗？缓冲留下什么？",
+            "en": "One recv yields A<newline>B<newline>C. Should only one message be returned, and what remains?"
+          },
+          "card_ids": [
+            "CS5222-N145",
+            "CS5222-N146",
+            "CS5222-N147"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net13",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能用丢包事件逐步追踪基础 GBN 与 SR 的接收、确认与重传差别。",
+      "worked": {
+        "zh": "序号为包编号。依次发 0、1、2、3，只有 1 丢失，0/2/3 按发送顺序到达；ACK 不丢，尚未超时。GBN 采用“ACK k 表示截至 k 连续收到”，SR 单独确认。列出收到 0、2、3 后的接收行为。",
+        "en": "Packet numbers are 0,1,2,3. Only packet 1 is lost; 0,2,3 arrive in order, ACKs are delivered, and no timeout has occurred. GBN ACK k acknowledges all packets through k; SR acknowledges individually. Trace arrivals 0,2,3."
+      },
+      "independent": {
+        "zh": "独立变式：包 0、1 已连续收到并确认；发出的 2、3、4 中只有 3 丢失，2 和 4 按序到达，ACK 不丢。写出 GBN/SR 对 4 的行为，以及 3 超时后的重传集合。",
+        "en": "Variation: 0 and 1 were received and acknowledged; among sent packets 2,3,4 only 3 is lost, while 2 and 4 arrive in order and ACKs are delivered. Describe each protocol’s response to 4 and retransmissions when 3 times out."
+      },
+      "card_ids": [
+        "CS5222-N149",
+        "CS5222-N150",
+        "CS5222-N151",
+        "CS5222-N152",
+        "CS5222-N153",
+        "CS5222-N154",
+        "CS5222-N155",
+        "CS5222-N156",
+        "CS5222-N157",
+        "CS5222-N158",
+        "CS5222-N159",
+        "CS5222-N160",
+        "CS5222-N161",
+        "CS5222-N162",
+        "CS5222-N163",
+        "CS5222-N164",
+        "CS5222-N165",
+        "CS5222-N166"
+      ],
+      "units": [
+        {
+          "id": "stop-wait-rate",
+          "goal": {
+            "zh": "能统一单位计算理想停等利用率与吞吐量。",
+            "en": "Compute ideal stop-and-wait utilization and throughput with consistent units."
+          },
+          "independent": {
+            "zh": "上一完整规格中仅把R提高到10Mbps，吞吐量会十倍吗？",
+            "en": "With L=1000 bits,RTT=9 ms, raise only R to 10 Mbps. Does throughput increase tenfold?"
+          },
+          "card_ids": [
+            "CS5222-N159",
+            "CS5222-N160",
+            "CS5222-N161"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net14",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能从字节范围和缺口推累计 ACK；接收与拥塞窗口限额见补充单元。",
+      "worked": {
+        "zh": "已按序收到至字节 999，接着收到 seq=1000、长 500 byte 的数据段，ACK 是多少？",
+        "en": "Bytes through 999 are contiguous, then a segment starts at 1000 with 500 data bytes. What ACK follows?"
+      },
+      "independent": {
+        "zh": "已连续收到字节 0–535，后来收到 900–1000；再收到 536–899，接收方保留了原乱序段。前后两次累计 ACK 分别是多少？无 SYN/FIN。",
+        "en": "Bytes 0–535 arrived contiguously, followed by 900–1000, then 536–899. The receiver retained the out-of-order segment. What are the ACKs after the latter two arrivals, with no SYN/FIN?"
+      },
+      "card_ids": [
+        "CS5222-N167",
+        "CS5222-N168",
+        "CS5222-N169",
+        "CS5222-N170",
+        "CS5222-N171",
+        "CS5222-N172",
+        "CS5222-N173",
+        "CS5222-N174",
+        "CS5222-N175",
+        "CS5222-N176",
+        "CS5222-N177"
+      ],
+      "units": [
+        {
+          "id": "window-budget",
+          "goal": {
+            "zh": "能从cwnd、rwnd与在途量算新增可发送量。",
+            "en": "Compute newly sendable bytes from cwnd,rwnd and outstanding data."
+          },
+          "independent": {
+            "zh": "窗口变小后cwnd=4、rwnd=9，仍有6kB在途，额度是多少？是否需要“发送−2kB”？",
+            "en": "If cwnd shrinks to 4 kB while rwnd=9 and 6 kB remains outstanding, what is the budget?"
+          },
+          "card_ids": [
+            "CS5222-N174",
+            "CS5222-N175"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net15",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能在明确的理想 TCP 教学模型中追踪慢启动、加性增长与丢包后的窗口变化。",
+      "worked": {
+        "zh": "教学模型以 MSS 为单位：每轮开始记录 cwnd，初始 1，阈值 4；无丢包时若 cwnd<4，下一轮翻倍但最多到 4，达到阈值后每轮加 1。列前五轮窗口。",
+        "en": "In an idealized model measured in MSS, record cwnd at each round’s start. Begin at 1 with threshold 4; below threshold double up to 4, then add 1 per round. With no loss, list the first five windows."
+      },
+      "independent": {
+        "zh": "cwnd=8 MSS 时发生丢包。按此题简化模型，三次重复 ACK 后跳过快速恢复细节、直接从 cwnd=4、阈值4进入拥塞避免；超时后从 cwnd=1、阈值4进入慢启动。分别列事件后的四轮窗口。",
+        "en": "At cwnd=8 MSS, compare this simplified model: after triple duplicate ACKs, omit fast-recovery details and resume at cwnd=4,threshold=4; after timeout restart at cwnd=1,threshold=4. List the next four rounds in each case."
+      },
+      "card_ids": [
+        "CS5222-N178",
+        "CS5222-N179",
+        "CS5222-N180",
+        "CS5222-N181",
+        "CS5222-N182",
+        "CS5222-N183",
+        "CS5222-N184"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net16",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能由二进制前缀计算普通 IPv4 子网范围和可用主机数；转发与分片分别练习。",
+      "worked": {
+        "zh": "求 192.0.2.130/26 的网络、广播和普通可用主机范围。IPv4 共32位，每个十进制字节8位；本题采用保留网络/广播的普通子网规则。",
+        "en": "Find network, broadcast, and ordinary usable host range for 192.0.2.130/26. IPv4 has 32 bits, eight per octet; reserve network and broadcast addresses in this exercise."
+      },
+      "independent": {
+        "zh": "一个普通 IPv4 子网需至少50台主机，候选 /26 与 /27 中选最小足够的地址块，并给出包含192.0.2.77的网络/广播地址。说明为何另一个不够。",
+        "en": "A normal IPv4 subnet needs at least 50 hosts. Choose the smallest sufficient block from /26 and /27, and find its network/broadcast addresses containing 192.0.2.77. Explain why the other fails."
+      },
+      "card_ids": [
+        "CS5222-N185",
+        "CS5222-N186",
+        "CS5222-N187",
+        "CS5222-N188",
+        "CS5222-N189",
+        "CS5222-N190",
+        "CS5222-N191",
+        "CS5222-N192",
+        "CS5222-N193",
+        "CS5222-N194",
+        "CS5222-N195",
+        "CS5222-N196",
+        "CS5222-N197",
+        "CS5222-N198",
+        "CS5222-N199",
+        "CS5222-N200",
+        "CS5222-N201",
+        "CS5222-N202",
+        "CS5222-N284",
+        "CS5222-N285"
+      ],
+      "units": [
+        {
+          "id": "ipv4-fragmentation",
+          "goal": {
+            "zh": "能按MTU切分原载荷并写总长、offset和MF。",
+            "en": "Fragment a payload under MTU and give lengths, offsets and MF."
+          },
+          "independent": {
+            "zh": "原数据报2020byte、首部20byte，MTU1010。为何非末片不能放990byte？独立计算片表。",
+            "en": "With total 2020,header20,MTU1010, why not put 990 bytes in a nonfinal fragment? Compute the table."
+          },
+          "card_ids": [
+            "CS5222-N189",
+            "CS5222-N190",
+            "CS5222-N191",
+            "CS5222-N192"
+          ]
+        },
+        {
+          "id": "longest-prefix",
+          "goal": {
+            "zh": "能比较匹配前缀，而非比较表中顺序。",
+            "en": "Select among matching prefixes instead of table order."
+          },
+          "independent": {
+            "zh": "另有默认0.0.0.0/0→D，目的11.1.2.99选谁？把/24放在表首会影响结果吗？",
+            "en": "Add default 0.0.0.0/0→D and route 11.1.2.99. Does moving /24 to the first row change the answer?"
+          },
+          "card_ids": [
+            "CS5222-N185",
+            "CS5222-N186",
+            "CS5222-N187"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net17",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能逐步执行非负边权Dijkstra并在边代价变化后更新路径；距离向量见补充单元。",
+      "worked": {
+        "zh": "无向边 AB=2、AC=5、BC=1、BD=4、CD=1，从 A 求到 D 的最短路径。",
+        "en": "For undirected edges AB=2, AC=5, BC=1, BD=4, CD=1, find the shortest path from A to D."
+      },
+      "independent": {
+        "zh": "无向边 AB=2、AC=3、BD=1、CD=1、BC=4。从A独立求到D的最短路径、距离、下一跳、D前驱。随后把BD代价增至5，重新计算。",
+        "en": "For undirected edges AB=2,AC=3,BD=1,CD=1,BC=4, find A’s shortest path to D, distance, next hop, and D’s predecessor. Then raise BD to 5 and recompute."
+      },
+      "card_ids": [
+        "CS5222-N203",
+        "CS5222-N204",
+        "CS5222-N205",
+        "CS5222-N206",
+        "CS5222-N207",
+        "CS5222-N208",
+        "CS5222-N209",
+        "CS5222-N210",
+        "CS5222-N211",
+        "CS5222-N212",
+        "CS5222-N213",
+        "CS5222-N214",
+        "CS5222-N215",
+        "CS5222-N216"
+      ],
+      "units": [
+        {
+          "id": "distance-vector",
+          "goal": {
+            "zh": "能用邻居通告计算新距离与下一跳。",
+            "en": "Compute a distance and next hop from neighbor advertisements."
+          },
+          "independent": {
+            "zh": "A也通告Z不可达（∞），B仍通告4，本地边2/5不变。新距离多少？它能保证全网真实路径已无环吗？",
+            "en": "A advertises infinity and B advertises 4 with local costs 2 and 5. Find the update; does it prove globally loop-free routing?"
+          },
+          "card_ids": [
+            "CS5222-N203",
+            "CS5222-N207",
+            "CS5222-N208",
+            "CS5222-N209"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net18",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能用XOR长除法构造并检查CRC码字；偶校验和ALOHA使用独立练习单元。",
+      "worked": {
+        "zh": "数据 1101，生成式 1011，求 CRC 码字。",
+        "en": "Encode data 1101 with CRC generator 1011."
+      },
+      "independent": {
+        "zh": "数据101、生成式1011，独立计算CRC码字。若传输时最后一位翻转，接收端得到什么位串、余数是多少，能否检出？",
+        "en": "Independently encode data 101 using generator 1011. If the final transmitted bit flips, find the received bits and remainder and say whether the error is detected."
+      },
+      "card_ids": [
+        "CS5222-N217",
+        "CS5222-N218",
+        "CS5222-N219",
+        "CS5222-N220",
+        "CS5222-N221",
+        "CS5222-N222",
+        "CS5222-N223",
+        "CS5222-N224",
+        "CS5222-N225",
+        "CS5222-N226",
+        "CS5222-N227",
+        "CS5222-N228",
+        "CS5222-N229",
+        "CS5222-N230",
+        "CS5222-N282",
+        "CS5222-N283"
+      ],
+      "units": [
+        {
+          "id": "even-parity",
+          "goal": {
+            "zh": "能构造偶校验位并给出两位漏检反例。",
+            "en": "Construct an even-parity bit and demonstrate a two-flip miss."
+          },
+          "independent": {
+            "zh": "码字11101的前两位翻转，得到什么？是否检出？",
+            "en": "Flip the first two bits of 11101. Find the result and detection outcome."
+          },
+          "card_ids": [
+            "CS5222-N219",
+            "CS5222-N220",
+            "CS5222-N221"
+          ]
+        },
+        {
+          "id": "slotted-aloha",
+          "goal": {
+            "zh": "能计算空闲、成功和碰撞概率并核对总和。",
+            "en": "Compute idle, success and collision probabilities and check their sum."
+          },
+          "independent": {
+            "zh": "仍N=2，将p升至1。成功率是否上升？计算并解释。",
+            "en": "Keep N=2 but raise p to1. Does success improve?"
+          },
+          "card_ids": [
+            "CS5222-N226",
+            "CS5222-N228",
+            "CS5222-N230"
+          ]
+        }
+      ],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net19",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能按帧到达事件更新交换机MAC表，并区分已知单播、未知泛洪和同端口过滤。",
+      "worked": {
+        "zh": "一台交换机有端口1/2/3，初始MAC表为空，均属同一LAN。先在端口1收到A→G帧，再在端口3收到G→A帧。每步写学习到的表项和转发端口。",
+        "en": "A switch has ports 1,2,3 on one LAN and an empty MAC table. It receives A→G on port 1, then G→A on port 3. Trace learned entries and outgoing ports."
+      },
+      "independent": {
+        "zh": "同一LAN的交换机表中A→1、B→2；现在A移动，在端口3发A→B；随后端口2收到B→B的帧。分别怎样更新与转发？假设没有安全限制。",
+        "en": "A switch knows A→1,B→2 on one LAN. A moves and sends A→B into port 3; then B→B arrives on port 2. Trace learning and forwarding, with no security restrictions."
+      },
+      "card_ids": [
+        "CS5222-N231",
+        "CS5222-N232",
+        "CS5222-N233",
+        "CS5222-N234",
+        "CS5222-N235",
+        "CS5222-N236",
+        "CS5222-N237",
+        "CS5222-N238",
+        "CS5222-N239",
+        "CS5222-N240",
+        "CS5222-N241",
+        "CS5222-N242",
+        "CS5222-N243",
+        "CS5222-N244",
+        "CS5222-N245",
+        "CS5222-N246",
+        "CS5222-N247",
+        "CS5222-N248",
+        "CS5222-N249",
+        "CS5222-N250",
+        "CS5222-N251",
+        "CS5222-N252",
+        "CS5222-N253",
+        "CS5222-N254",
+        "CS5222-N255",
+        "CS5222-N256",
+        "CS5222-N257",
+        "CS5222-N258",
+        "CS5222-N259"
+      ],
+      "units": [],
+      "practical_tasks": []
+    },
+    {
+      "lesson_id": "net20",
+      "course": "CS5222",
+      "status": "preview",
+      "goal": "能在明确IPv4场景中串起地址配置、下一跳解析、DNS、TCP和HTTP，并说明缓存改变哪些步骤。",
+      "worked": {
+        "zh": "IPv4以太网主机刚启动，配置和缓存均为空；使用远端DNS和远端HTTP网站，经默认网关、无NAT。用简化协议顺序说明怎样从启动走到网页响应，特别指出DNS查询也需要下一跳MAC。",
+        "en": "An IPv4 Ethernet host starts with no configuration or caches. It uses remote DNS and HTTP servers through a default gateway, without NAT. Outline the simplified sequence from startup to response, including the next-hop MAC needed for DNS."
+      },
+      "independent": {
+        "zh": "主机配置有效，网站IP已缓存，但该网站现在与主机同一子网，ARP缓存为空、TCP未连接；IPv4以太网，无代理、无NAT。独立列必要步骤，并给第一帧目的IP与MAC指向谁。",
+        "en": "Configuration and website IP cache are valid; the website is now on the same IPv4 Ethernet subnet, ARP cache empty and TCP closed, with no proxy or NAT. List required steps and identify first-hop destination IP and MAC."
+      },
+      "card_ids": [
+        "CS5222-N260",
+        "CS5222-N261",
+        "CS5222-N262",
+        "CS5222-N263",
+        "CS5222-N264",
+        "CS5222-N265",
+        "CS5222-N266",
+        "CS5222-N267",
+        "CS5222-N268",
+        "CS5222-N269",
+        "CS5222-N270",
+        "CS5222-N271",
+        "CS5222-N272",
+        "CS5222-N273",
+        "CS5222-N274",
+        "CS5222-N275",
+        "CS5222-N276",
+        "CS5222-N277",
+        "CS5222-N278",
+        "CS5222-N279",
+        "CS5222-N280",
+        "CS5222-N281"
+      ],
+      "units": [],
+      "practical_tasks": [
+        "dns-trace"
+      ]
+    }
+  ],
+  "meaning": "Maps available teaching and independent tasks; not a mastery score or complete QE syllabus."
+}

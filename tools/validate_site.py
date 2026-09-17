@@ -52,6 +52,18 @@ def main():
     assert set(index['card_context'])==set(cards)
     linked=[];images=set();reading_figures=set();reading_count=0;beginner_figures=set()
     for lesson in lessons.values():
+        assert 'foundations' in lesson and 'units' in lesson and 'practical_tasks' in lesson
+        for item in lesson['foundations']:
+            for field in ['title','body','worked_q','worked_a','check_q','check_a']:
+                assert item[field]['zh'] and item[field]['en'] and item[field+'_html']['zh'] and item[field+'_html']['en']
+            assert item['sources']
+        for unit in lesson['units']:
+            assert set(unit['card_ids'])<=set(lesson['card_ids'])
+            for field in ['title','goal','explain','worked_q','worked_a','practice_q','hint','practice_a','transfer_q','transfer_a']:
+                assert unit[field]['zh'] and unit[field]['en'] and unit[field+'_html']['zh'] and unit[field+'_html']['en']
+        for task in lesson['practical_tasks']:
+            assert lesson['id'] in task['lessons']
+            for field in ['title','goal','instructions','acceptance']:assert task[field]['zh'] and task[field]['en']
         beginner=lesson['first_pass']
         assert len(beginner['steps'])==len(beginner['steps_html'])==3,lesson['id']
         for pair in [beginner['start'],beginner['trap'],*beginner['steps']]:
@@ -80,6 +92,10 @@ def main():
                 assert f['alt'] and all(f['caption_'+lang] for lang in ['zh','en'])
                 svg=(site/f['src']).read_text()
                 assert '<title ' in svg and '<desc ' in svg and '<script' not in svg
+    assert {o['lesson_id'] for o in learning['coverage']['objectives']}==set(lessons)
+    assert manifest['optional_foundations']==len({f['id'] for l in lessons.values() for f in l['foundations']})
+    assert manifest['focused_units']==sum(len(l['units']) for l in lessons.values())
+    assert manifest['practical_tasks']==len({t['id'] for l in lessons.values() for t in l['practical_tasks']})
     assert len(linked)==len(set(linked)) and set(linked)==set(cards)
     for card in cards.values():
         assert 'remote' not in card and card['learning_context']

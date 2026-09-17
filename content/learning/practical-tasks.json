@@ -1,0 +1,162 @@
+[
+  {
+    "id": "python-factor-program",
+    "lessons": [
+      "ml02",
+      "ml03"
+    ],
+    "title": {
+      "zh": "动手：把因数规则写成程序",
+      "en": "Implement the divisor rule"
+    },
+    "goal": {
+      "zh": "能从空白文件实现并检查一个小函数，而不只是读懂答案。",
+      "en": "Implement and check a small function from a blank file, rather than only recognizing its answer."
+    },
+    "instructions": {
+      "zh": "在自己的 Python 环境新建文件。先不看讲解，写 count_factors(n)：输入整数 n≥2，输出不含 1 和 n 的正因数个数。先用普通 for 和 if，不必用一行表达式。\n\n手写 2、4、12 的预期结果，再运行函数比较。最后统计 2 到 100 的 99 个结果：一个图画 n 与计数，另一个图统计各计数出现的频数。",
+      "en": "Create a file in your Python environment. Without looking at the explanation, implement count_factors(n) for integer n≥2, excluding 1 and n. Start with an ordinary for loop and if statement.\n\nWrite expected results for 2, 4 and 12 before running the code. Then process the 99 integers from 2 through 100: plot n against its count, and separately count the frequency of each divisor count."
+    },
+    "acceptance": {
+      "zh": "2→0、4→1、12→4；范围包含 100，总共 99 个输出；频数之和为 99。能解释 range 的右端为何写 n，以及“计数为 4”和“有 4 个整数”为什么不同。故意把范围改成 range(2,100)，能定位少了哪个样本。运行结果由你自己核对，这里不记录完成状态。",
+      "en": "Check 2→0, 4→1 and 12→4; include 100 and produce exactly 99 outputs; histogram frequencies must sum to 99. Explain why range ends at n and distinguish a divisor count of 4 from a frequency of 4. Deliberately use range(2,100) and identify the missing sample. Verify your own run; this task stores no completion state."
+    },
+    "sources": [
+      {
+        "name": "Tutorial1.ipynb",
+        "locator": "cells 14–24",
+        "kind": "course",
+        "note": "因数及绘图任务；独立运行与故障定位清单为教学补充。"
+      }
+    ]
+  },
+  {
+    "id": "implement-bernoulli-nb",
+    "lessons": [
+      "ml08",
+      "ml16"
+    ],
+    "title": {
+      "zh": "动手：自己实现一个两特征 Bernoulli NB",
+      "en": "Implement a two-feature Bernoulli NB"
+    },
+    "goal": {
+      "zh": "不用现成分类器，自己完成参数估计与分类评分。",
+      "en": "Estimate parameters and compute classification scores without a ready-made classifier."
+    },
+    "instructions": {
+      "zh": "训练数据逐行为 (1,1)、(1,0)、(0,0)、(0,1)，类别依次为 1、1、0、0；两个特征均为是否出现的 0/1 标记。假设给定类别后特征独立。自己实现 fit 与 score：先验用类别频率，特征概率用加一平滑 θ_cj=(该类该特征的 1 的个数+1)/(该类样本数+2)。\n\n对 x=(1,0)，按 log P(c)+各特征的 x_j log θ_cj+(1−x_j) log(1−θ_cj) 之和评分，选分数最大的类。不调用 sklearn 分类器。将结果与手算比较，再测试 x=(0,1)。请注意：未出现的特征也贡献一个概率因子。",
+      "en": "Training rows are (1,1), (1,0), (0,0), (0,1), labeled 1,1,0,0. Each feature is a binary presence indicator. Assume conditional independence given the class. Implement fit and score: estimate priors by class frequency and use add-one smoothing θ_cj=(number of ones for feature j in class c+1)/(number of class-c samples+2).\n\nScore x=(1,0) by log P(c) plus the sum of x_j log θ_cj+(1−x_j) log(1−θ_cj), then select the highest-scoring class. Do not call a sklearn classifier. Compare with hand calculation and also test x=(0,1). Absent features must contribute their probability factors."
+    },
+    "acceptance": {
+      "zh": "两类先验各 1/2；类 1 的 θ=(3/4,1/2)，类 0 为 (1/4,1/2)。对 (1,0)，未归一化概率为类 1 的 3/16、类 0 的 1/16，后验类 1 为 3/4；对 (0,1) 后验类 1 为 1/4。两种评分方式的预测一致。改变训练数据后一切参数须重算，不能硬编码这些答案。",
+      "en": "Both priors are 1/2. Feature probabilities are (3/4,1/2) for class1 and (1/4,1/2) for class0. For (1,0), unnormalized probabilities are 3/16 and 1/16, yielding class1 posterior3/4; for (0,1) its posterior is1/4. Probability and log-score predictions must agree. Recompute parameters after changing training data rather than hard-coding these answers."
+    },
+    "sources": [
+      {
+        "name": "Lecture2b.ipynb",
+        "locator": "cells 72–81",
+        "kind": "course",
+        "note": "伯努利模型依据；四行数据和实现验收为原创教学例子。"
+      }
+    ]
+  },
+  {
+    "id": "sms-reproducible-baseline",
+    "lessons": [
+      "ml16"
+    ],
+    "title": {
+      "zh": "动手：完成一次可复现的短信分类基线",
+      "en": "Run a reproducible SMS baseline"
+    },
+    "goal": {
+      "zh": "把数据划分、文本变换、模型和评价接起来，并用真实运行证据解释结果。",
+      "en": "Connect splitting, text transformation, modeling and evaluation, then explain results using evidence from a real run."
+    },
+    "instructions": {
+      "zh": "使用自己的 Assignment 1 数据和课程模板。遵循当前 Canvas 规定的数据划分；若只做额外练习，先固定一个训练/验证划分并记录随机种子。词表、变换参数与分类器只能在训练数据上拟合。\n\n先运行一个简单 NB 基线，再只改变一个参数（例如保持 Multinomial NB、词表和特征不变，仅改变平滑参数 α）。保持划分与指标不变。保存参数、每类样本数、混淆矩阵、最多两条实际错误样本（不足两条则记录真实数量，包括零条）和实际运行命令。最后重启环境，从头重跑。",
+      "en": "Use your Assignment 1 data and course template. Follow the current Canvas split; for separate practice, fix and record a train/validation split and seed. Fit the vocabulary, transformation parameters and classifier only on training data.\n\nRun a simple NB baseline, then change exactly one parameter, such as smoothing alpha while keeping Multinomial NB, the vocabulary and feature representation fixed. Keep the split and metrics fixed. Save settings, class counts, a confusion matrix, up to two actual errors (report the real count when fewer, including zero) and the actual run command. Restart the environment and rerun from the beginning."
+    },
+    "acceptance": {
+      "zh": "你能解释每个评价指标的分母；能指出拟合只使用训练数据的位置；第二次完整运行在相同环境和随机设置下得到一致结果；若有错误，能提出一个可检验原因；若零错误，如实报告并解释小验证集不能保证未来零错误。不提供预设“正确准确率”，不把这份流程当成已完成作业或已提交结果。",
+      "en": "Explain each metric denominator and locate the training-only fitting steps. A full rerun under the same environment and random settings should reproduce the result. If errors exist, propose a testable explanation. If none occur, report that honestly and explain why a small error-free validation set does not guarantee future perfection. There is no prescribed correct accuracy, and these instructions do not constitute a completed or submitted assignment."
+    },
+    "sources": [
+      {
+        "name": "Assignment1-Doc.ipynb",
+        "locator": "cells 3–17",
+        "kind": "course",
+        "note": "当前作业任务依据；本页受控实验与复现检查为额外学习步骤，不覆盖或替换教师提交要求。"
+      }
+    ]
+  },
+  {
+    "id": "dns-trace",
+    "lessons": [
+      "net09",
+      "net20"
+    ],
+    "title": {
+      "zh": "动手：识别一次自己的 DNS 查询与响应",
+      "en": "Inspect your own DNS query and response"
+    },
+    "goal": {
+      "zh": "在真实记录中辨认请求、响应和缓存边界，而不是背某张截图。",
+      "en": "Recognize a request, response and cache boundary in a real trace instead of memorizing a screenshot."
+    },
+    "instructions": {
+      "zh": "在自己的电脑上用 Wireshark 选择正在联网的接口开始短时抓包，然后在终端运行 nslookup example.com。停止抓包，用 dns 过滤；只查看这次练习相关的流量，不上传无关记录。\n\n找出查询名、查询类型、事务 ID、响应状态，以及实际返回的地址或名称记录；用事务 ID 和端点配对查询与响应。若没有看到记录，先检查接口和命令输出，并区分普通 DNS 与加密 DNS，不能直接认定“没有发生查询”。",
+      "en": "On your own computer, start a short Wireshark capture on the active network interface, run nslookup example.com in a terminal, then stop the capture and filter by dns. Inspect only this exercise traffic and do not upload unrelated records.\n\nLocate the query name, type, transaction ID, response status and returned address or name records. Pair messages by transaction ID and endpoints. If no record is visible, first check the interface and command output, and distinguish conventional from encrypted DNS; absence from this view does not prove no lookup occurred."
+    },
+    "acceptance": {
+      "zh": "至少说明一对查询/响应的对应依据，区分查询名和返回的 A 记录地址；记录实际值，不背固定 IP 或耗时。重复查询时若更快，只把它当作线索，不能单凭一次测量证明命中了哪一级缓存。没有数据时记录排查过程，不虚构抓包结果。",
+      "en": "Explain how at least one query/response pair matches and distinguish the queried name from an address in an A record. Record actual values instead of fixed IPs or timings. A faster repeated query is a clue, not proof of which cache responded. If capture data is unavailable, document diagnosis instead of inventing a trace."
+    },
+    "sources": [
+      {
+        "name": "cs5222_cha2_2026_student_part2.pptx",
+        "locator": "slides 38–43",
+        "kind": "course",
+        "note": "当前 DNS 解析、缓存与资源记录；操作任务为自行练习。"
+      },
+      {
+        "name": "cs5222_cha2_2025_student.pptx",
+        "locator": "slides 66–67",
+        "kind": "historical",
+        "note": "查询与响应报文格式、事务 ID；历史补充，不自动视为当前考核范围。"
+      }
+    ]
+  },
+  {
+    "id": "network-model-check",
+    "lessons": [
+      "net03",
+      "net10"
+    ],
+    "title": {
+      "zh": "动手：用事件表检查流水线时间",
+      "en": "Check pipeline timing with an event table"
+    },
+    "goal": {
+      "zh": "从每个分组的收发事件验证公式的模型条件。",
+      "en": "Verify a timing formula from individual packet events and explicit assumptions."
+    },
+    "instructions": {
+      "zh": "有 3 个等长包、2 条存储转发链路，每条链路发送一个包都需 1 ms；忽略传播、处理与交叉流量。画表，每行一个包，每列一条链路，填写开始与结束时间。\n\n自行写小程序或电子表格复算：某包在某链路的开始时间取“该包到达”和“该链路空闲”两者的较大值。再只把第二条链路的发送时间改成 2 ms，重新填表，不套等速公式。",
+      "en": "Use three equal packets and two store-and-forward links. Each packet takes 1 ms to transmit on either link; ignore propagation, processing and cross traffic. Make an event table with packets as rows and links as columns, listing start and finish times.\n\nRecompute in a short program or spreadsheet: a transmission starts at the later of packet arrival and link availability. Then change only the second link to 2 ms per packet and rebuild the table without applying the equal-rate formula."
+    },
+    "acceptance": {
+      "zh": "等速时末包在第 4 ms 完成；第二条链路变慢后在第 7 ms 完成。能指出第二条链路的结束时刻依次为 3、5、7 ms，并解释等待来自哪里。还要说明这些结果不是首位到达时间，也不含传播时延。",
+      "en": "The final packet finishes at 4 ms with equal rates and 7 ms with the slower second link. Explain its completion times of 3, 5 and 7 ms and the origin of waiting. State that these are full-packet completion times and exclude propagation."
+    },
+    "sources": [
+      {
+        "name": "tutorial-1_semA2026.pdf; tutorial-1-solution_semA2026.pptx",
+        "locator": "Q1a–b; solution slides 3–4",
+        "kind": "course",
+        "note": "存储转发任务依据；改速率的事件表为自行推导。"
+      }
+    ]
+  }
+]

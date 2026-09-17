@@ -27,3 +27,9 @@ Read the lesson, draw the path or event timeline, normalize units, define the co
 学习顺序、资料范围、评分、提交文件和运行提醒已集中到微课网站的“课程信息”栏目。牌组用于复习课程概念、公式、推导、技术方法和练习题。
 
 Study sequence, material scope, grading, submission files, and setup notes are collected in the website’s Course information section. This deck is for concepts, formulas, derivations, technical methods, and practice problems.
+
+## 按需补基础与独立练习 / Optional foundations and practice
+
+微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。
+
+Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work.

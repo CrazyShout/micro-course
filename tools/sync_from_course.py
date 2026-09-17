@@ -132,9 +132,22 @@ def main():
         (out/'guide.html').write_text(guide_html(learning['courses'],learning['lessons'],introductions))
         (out/'deck-introductions.json').write_text(json.dumps(introductions,ensure_ascii=False,indent=2)+'\n')
         (out/'.nojekyll').touch()
+        # Content versions prevent mixed old scripts/styles after a Pages update.
+        for page_path in out.glob('*.html'):
+            def version_asset(match):
+                rel=match.group(2)
+                target=out/rel
+                if not target.is_file():return match.group(0)
+                version=hashlib.sha256(target.read_bytes()).hexdigest()[:12]
+                return match.group(1)+rel+'?v='+version+match.group(3)
+            page_path.write_text(re.sub(r'((?:src|href)=")([^"?]+\.(?:css|js))(?:\?[^"]*)?(")',version_asset,page_path.read_text()))
         manifest={'schema_version':1,'source_snapshot':learning['snapshot'],
                   'beginner_revision':learning.get('beginner_revision'),'beginner_entries':len(learning['lessons']),
                   'beginner_figures':len(beginner_figures),
+                  'self_study_revision':learning.get('self_study_revision'),
+                  'optional_foundations':len({f['id'] for l in learning['lessons'] for f in l.get('foundations',[])}),
+                  'focused_units':sum(len(l.get('units',[])) for l in learning['lessons']),
+                  'practical_tasks':len({t['id'] for l in learning['lessons'] for t in l.get('practical_tasks',[])}),
                   'reading_revision':learning.get('reading_revision'),
                   'reading_supplements':sum(bool(l.get('reading')) for l in learning['lessons']),
                   'reading_figures':len(figures),
@@ -159,6 +172,8 @@ def main():
     reading_dest=ROOT/'content/reading';reading_dest.mkdir(parents=True,exist_ok=True)
     beginner_dest=ROOT/'content/learning';beginner_dest.mkdir(parents=True,exist_ok=True)
     shutil.copy2(source/'learning/first-pass.md',beginner_dest/'first-pass.md')
+    for name in ['foundations.json','lesson-units.json','practical-tasks.json','coverage-scope.json','coverage.json']:
+        shutil.copy2(source/'learning'/name,beginner_dest/name)
     shutil.copy2(source/'reading/authoring.md',reading_dest/'lessons.md')
     source_catalog=json.loads((source/'reading/sources.json').read_text())
     (reading_dest/'sources.json').write_text(json.dumps({k:{f:v for f,v in s.items() if f not in ['path','sha256']} for k,s in source_catalog.items()},ensure_ascii=False,indent=2)+'\n')

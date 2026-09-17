@@ -1,0 +1,133 @@
+{
+  "CS5489": {
+    "basis": "当前 Lecture 1 Intro 第 10 页的四项学习目标；以下是学习材料映射，不是全学期或 QE 达成证明。",
+    "outcomes": [
+      {
+        "name": "解释算法 / Explain",
+        "lessons": [
+          "ml01",
+          "ml05",
+          "ml06",
+          "ml08",
+          "ml10",
+          "ml12",
+          "ml13"
+        ],
+        "practical_tasks": [],
+        "evidence": "各微课的同能力例题、独立变式和关联卡片。"
+      },
+      {
+        "name": "实现算法 / Implement",
+        "lessons": [
+          "ml02",
+          "ml03",
+          "ml04",
+          "ml16",
+          "ml08"
+        ],
+        "practical_tasks": [
+          "python-factor-program",
+          "implement-bernoulli-nb",
+          "sms-reproducible-baseline"
+        ],
+        "evidence": "提供从零实现 Bernoulli NB 的任务和手算验收点；须自己运行，尚未获得你的完成证据。"
+      },
+      {
+        "name": "应用到问题 / Apply",
+        "lessons": [
+          "ml08",
+          "ml09",
+          "ml15",
+          "ml16"
+        ],
+        "practical_tasks": [
+          "sms-reproducible-baseline"
+        ],
+        "evidence": "需交代数据、模型假设和受控对比，尚未替你完成数据实验。"
+      },
+      {
+        "name": "评价优缺点 / Evaluate",
+        "lessons": [
+          "ml11",
+          "ml15",
+          "ml16",
+          "ml17"
+        ],
+        "practical_tasks": [
+          "sms-reproducible-baseline"
+        ],
+        "evidence": "用指标、错误样本与改变条件的题目检查推理。"
+      }
+    ],
+    "gaps": [
+      "当前 Canvas 只覆盖已下载 Lecture 1–3、Tutorial 1–2 和 Assignment 1，后续资料仍需核对。",
+      "历史视觉架构 VGG、Inception、ResNeXt、SE、CLIP 的专门训练链尚缺。",
+      "PSNR、SSIM 的完整计算和适用条件尚未分别展开。",
+      "参考书全部章节和正式 QE 范围尚未完整映射；实际编程能力须通过自己的运行验证。"
+    ]
+  },
+  "CS5222": {
+    "basis": "当前 Chapter 1–2 主题与教程；以下四类是本学习系统的能力分类，不冒充学校正式 CILO。",
+    "outcomes": [
+      {
+        "name": "解释协议与分层 / Explain",
+        "lessons": [
+          "net01",
+          "net02",
+          "net05",
+          "net06",
+          "net08",
+          "net09"
+        ],
+        "practical_tasks": [],
+        "evidence": "用独立变式解释职责、条件和信息流。"
+      },
+      {
+        "name": "计算与建模 / Calculate",
+        "lessons": [
+          "net03",
+          "net04",
+          "net07",
+          "net10",
+          "net16",
+          "net18"
+        ],
+        "practical_tasks": [
+          "network-model-check"
+        ],
+        "evidence": "检查单位、事件定义、模型条件与分步结果；net16/net18 为历史预习。"
+      },
+      {
+        "name": "实际观察 / Observe",
+        "lessons": [
+          "net09",
+          "net20"
+        ],
+        "practical_tasks": [
+          "dns-trace"
+        ],
+        "evidence": "提供个人抓包任务及失败排查，不宣称已采集你的运行证据。"
+      },
+      {
+        "name": "迁移与诊断 / Transfer",
+        "lessons": [
+          "net11",
+          "net19",
+          "net20"
+        ],
+        "practical_tasks": [
+          "dns-trace",
+          "network-model-check"
+        ],
+        "evidence": "改变模型条件并提出区分原因的观察；历史课题保留范围标记。"
+      }
+    ],
+    "gaps": [
+      "当前 Chapter 2 仅指已下载部分；全学期提纲不等于当前已确认考核范围。",
+      "历史 Chapter 6 材料止于前 29 张，不能代表完整链路层课程。",
+      "历史 Tutorial 8 第 2 页 P4 的原表仍需图像校勘；最长前缀机制和自拟题已提供。",
+      "无线与移动主题在现有提纲中有时间条件；正式 QE 范围仍待官方确认。",
+      "抓包、项目和调试能力须实际动手验证，网页和卡片本身不能证明已掌握。"
+    ]
+  }
+}

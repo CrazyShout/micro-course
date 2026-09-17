@@ -151,8 +151,8 @@ A_EN: With packet serialization time L/R, propagation round trip RTT, negligible
 A_ZH: 设分组发送时间为 L/R、传播往返时间为 RTT，忽略 ACK 发送与差错，则 $U=(L/R)/(RTT+L/R)$。发送者发一包后等待确认，吞吐量为 $L/(RTT+L/R)$ bit/s。必须明确题目的 RTT 是否已经包含发送或处理时间。
 
 @@ N160 | x02-transport | worked | XN3:45-46
-Q_EN: In the lecture example, R=1 Gbps, L=8,000 bits and RTT=30 ms. Find stop-and-wait utilization and throughput.
-Q_ZH: 课件例子中 R=1 Gbps、L=8,000 bit、RTT=30 ms，求停等利用率与吞吐量。
+Q_EN: In a loss-free stop-and-wait model, link rate R=1 Gbps, packet length L=8,000 bits, and round-trip propagation RTT=30 ms. Ignore ACK transmission and processing time. Find the fraction of a send–ACK cycle spent transmitting data and the resulting throughput.
+Q_ZH: 无丢包停等模型中，链路速率 R=1 Gbps，分组长度 L=8000 比特，往返传播时延 RTT=30 毫秒。忽略 ACK 传输与处理时间。求一个发送—确认周期中发送数据所占比例，以及吞吐量。
 A_EN: Serialization takes 8 microseconds. Utilization is $8/30008\approx0.0002666$, or 0.02666%. Throughput is about 266.6 kbit/s, despite a 1 Gbit/s link. Use consistent time units and distinguish the dimensionless fraction from its percentage.
 A_ZH: 发送时间为 8 微秒，利用率为 $8/30008\approx0.0002666$，即 0.02666%。吞吐量约为 266.6 kbit/s，远低于链路的 1 Gbit/s。计算时统一时间单位，并区分无量纲比例与百分数。
 
@@ -577,10 +577,10 @@ A_EN: Success is $4(1/4)(3/4)^3=108/256=0.421875$. Idle probability is $(3/4)^4=
 A_ZH: 成功概率为 $4(1/4)(3/4)^3=108/256=0.421875$，空闲概率为 $(3/4)^4=81/256$，其余 $67/256\approx0.261719$ 为碰撞概率。三种事件互斥且和为一，可用于检查计算。
 
 @@ N231 | x07-tutorials | historical | XNT3:1
-Q_EN: Tutorial 3 gives GET /cs453/index.html HTTP/1.1, Host: gaia.cs.umass.edu, and Connection: keep-alive. What can you infer, and can you read the client's IP from this text?
-Q_ZH: Tutorial 3 给出 GET /cs453/index.html HTTP/1.1、Host: gaia.cs.umass.edu 和 Connection: keep-alive。能推断什么？能从这些文本读出客户端 IP 吗？
-A_EN: The requested host/path is gaia.cs.umass.edu/cs453/index.html, the HTTP version is 1.1, and the request asks to keep the connection open. In the exercise's plain-HTTP setting the URL starts with http://. The client IP is in the network-layer context, not these HTTP lines. User-Agent describes the claimed client software; it is not proof of identity.
-A_ZH: 请求的主机与路径是 gaia.cs.umass.edu/cs453/index.html，版本为 HTTP/1.1，请求保持连接。在题设明文 HTTP 场景中 URL 以 http:// 开头。客户端 IP 要看网络层信息，不能从这些 HTTP 行得到。User-Agent 表示客户端声称的软件信息，不能证明身份。
+Q_EN: A plain-HTTP request contains GET /cs453/index.html HTTP/1.1, Host: gaia.cs.umass.edu, and Connection: keep-alive. What can you infer from these lines, and can you read the client IP from them?
+Q_ZH: 明文 HTTP 请求包含 GET /cs453/index.html HTTP/1.1、Host: gaia.cs.umass.edu 和 Connection: keep-alive。能从这些行推断什么？能读出客户端 IP 吗？
+A_EN: The requested URL is http://gaia.cs.umass.edu/cs453/index.html, the version is HTTP/1.1, and the client asks to keep the connection open. These lines contain the server name, not the client IP. The client address must come from network-layer information or other supplied context.
+A_ZH: 请求的 URL 是 http://gaia.cs.umass.edu/cs453/index.html，版本是 HTTP/1.1，客户端请求保持连接。这几行包含服务器名称，不包含客户端 IP。客户端地址须从网络层信息或其他给定上下文取得。
 
 @@ N232 | x07-tutorials | historical | XNT3:2
 Q_EN: A host-to-local-DNS exchange costs RTTL. An uncached lookup then needs three sequential upstream exchanges of RTTr each. What changes if the local resolver caches the answer?

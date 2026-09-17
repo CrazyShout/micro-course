@@ -114,8 +114,8 @@ A_ZH: 统计复用把容量共享给当时活跃的用户。若用户经常空�
 @@ N019 | 02-switching | classroom | N1:29-30
 Q_EN: A 1 Mbps link serves users needing 100 kbps when active. How many circuit-switched users fit?
 Q_ZH: 1 Mbps 链路服务活跃时需要 100 kbps 的用户，电路交换能容纳多少用户？
-A_EN: Each circuit reserves 100 kbps, so the maximum is $1000/100=10$ users. Their 10% activity probability does not change this fixed-reservation count. Under packet switching, the lecture instead considers 35 users and computes the probability that more than 10 are active together. That is a probability question, not a new guaranteed circuit capacity.
-A_ZH: 每条电路预留 100 kbps，因此最多 $1000/100=10$ 人。每人只有 10% 的活跃概率并不改变固定预留容量。分组交换示例则考虑 35 人，并计算超过 10 人同时活跃的概率。后者是概率问题，不是新的保证电路容量。
+A_EN: At most $1000/100=10$ users. Here 1 Mbps = 1,000 kbps, and each circuit reserves 100 kbps even while its user is idle. A low activity probability does not increase this fixed-reservation limit. Packet switching would instead require a separate model of simultaneous demand.
+A_ZH: 最多 $1000/100=10$ 人。这里 1 Mbps = 1000 kbps，每条电路在用户空闲时也预留 100 kbps。活跃概率低不会提高这个固定预留上限。若讨论分组交换，则需另外建立同时需求的模型。
 MEDIA: chapter1-slide-29.png
 
 @@ N020 | 02-switching | classroom | N1:29-30
@@ -176,16 +176,16 @@ A_EN: Starting when transmission begins and ignoring processing/queueing, serial
 A_ZH: 从开始发送计时，忽略处理和排队，串行化 6 毫秒、传播 5 毫秒，所以最后一比特在 $6+5=11$ 毫秒后到达。第一比特约在 5 毫秒后到达。“第一比特到达”和“整个分组到齐”是不同完成事件，解题前须明确目标。
 
 @@ N029 | 03-performance | learn | N1:25-27,45-46
-Q_EN: How do I compute delay for one packet over multiple store-and-forward links?
-Q_ZH: 一个分组经过多条存储转发链路时，怎样计算总时延？
-A_EN: Sum transmission and propagation over all links, plus processing and queueing at the relevant nodes: $D=\sum_i(L/R_i+d_i/s_i)+\sum_v(d_{proc,v}+d_{queue,v})$. Count links separately from intermediate routers: $N$ links have $N-1$ intermediate routers on a simple path. This expression is for one packet, not automatically the completion time of a packet train.
-A_ZH: 对每条链路累加传输与传播，并加入相关节点处理和排队：$D=\sum_i(L/R_i+d_i/s_i)+\sum_v(d_{proc,v}+d_{queue,v})$。应区分链路与中间路由器：简单路径上 $N$ 条链路有 $N-1$ 个中间路由器。本式针对一个分组，不自动等于多个分组连续发送的总完成时间。
+Q_EN: One packet of L bits follows N store-and-forward links. Link i has rate R_i bit/s, length d_i m and propagation speed s_i m/s. How do you combine these with processing and queueing delays to find its complete arrival time?
+Q_ZH: L 比特分组经过 N 条存储转发链路。第 i 条链路速率为 R_i 比特/秒，长度为 d_i 米，传播速度为 s_i 米/秒。怎样加上传输、传播、处理与排队时延，求整个分组到达所需的时间？
+A_EN: Use $D=\sum_{i=1}^N(L/R_i+d_i/s_i)+\sum_v(d_{proc,v}+d_{queue,v})$ seconds. The first sum counts every link; v indexes nodes with included processing or queueing, also in seconds. Count source/destination processing only if specified. A simple N-link path has N−1 intermediate routers. This is one packet, not a packet train.
+A_ZH: 总时间为 $D=\sum_{i=1}^N(L/R_i+d_i/s_i)+\sum_v(d_{proc,v}+d_{queue,v})$ 秒。第一项逐链路计数；v 遍历题设纳入处理或排队的节点，其时延也以秒计。源端、目的端处理仅在题设要求时加入。简单路径的 N 条链路有 N−1 个中间路由器。本式针对单个分组。
 
 @@ N030 | 03-performance | learn | N1:26;HT1:1b
 Q_EN: Why does pipelining make multiple-packet completion faster than sending each packet end to end separately?
 Q_ZH: 为什么流水线比逐个分组完全走到终点后再发下一个更快？
-A_EN: After packet 1 moves to link 2, link 1 can carry packet 2. For $P$ equal packets over $N$ equal-rate store-and-forward links, with no other delays, $D=(N+P-1)L/R$. The first packet needs $NL/R$; each additional packet then arrives one serialization time later. This assumes continuous sending and no cross traffic.
-A_ZH: 分组 1 进入链路 2 后，链路 1 可以发送分组 2。$P$ 个等长分组经过 $N$ 条等速率存储转发链路，忽略其他时延时，$D=(N+P-1)L/R$。首个分组需 $NL/R$，之后每个分组再间隔一个串行化时间到达。假设连续发送且无交叉流量。
+A_EN: While packet 1 uses link 2, link 1 can send packet 2. For P packets of L bits crossing N links, each at R bit/s, completion takes $D=(N+P-1)L/R$ seconds. The first packet needs $NL/R$; each later packet adds $L/R$. This model assumes store-and-forward, continuous sending, and no propagation, processing, queueing or cross traffic.
+A_ZH: 分组 1 使用链路 2 时，链路 1 可发分组 2。P 个分组每个 L 比特，经过 N 条速率均为 R 比特/秒的链路，总完成时间为 $D=(N+P-1)L/R$ 秒。首个分组需 $NL/R$，此后每个再增加 $L/R$。模型假设存储转发、连续发送，并忽略传播、处理、排队与交叉流量。
 
 @@ N031 | 03-performance | classroom | N1:47
 Q_EN: In the caravan analogy, ten cars require 12 s each at a tollbooth and travel 100 km at 100 km/h. When has the last car reached the next booth?
@@ -434,15 +434,15 @@ A_EN: In the lecture's basic model, the protocol does not require the server to 
 A_ZH: 在课堂基本模型中，协议不要求服务器必须记住之前请求的历史，才能解释每个新请求。这不等于服务器不保存文件、TCP 连接没有状态，或网站不能实现登录会话。应用可在基本请求—响应语义之上增加状态管理机制。
 
 @@ N071 | 07-exercises | classroom | NT1:1;NT1S:3;HT1:1a
-Q_EN: Tutorial 1 (2026A) Q1a: one packet of $L$ bits crosses two store-and-forward links of rates $R_1,R_2$. Ignore other delays. Find completion time.
-Q_ZH: 本学期 Tutorial 1 Q1a：$L$ 比特分组经过速率 $R_1,R_2$ 的两条存储转发链路，忽略其他时延，求完成时间。
+Q_EN: Tutorial 1 (2026A) Q1a: one L-bit packet crosses two store-and-forward links of rates $R_1,R_2$ bit/s. Ignore all other delays. From the start of transmission, how long until its last bit reaches the destination?
+Q_ZH: 本学期 Tutorial 1 Q1a：L 比特分组经过两条存储转发链路，速率为 $R_1,R_2$ 比特/秒。忽略其他时延，从开始发送到最后一比特到达目的地需多久？
 A_EN: The switch first receives all $L$ bits in $L/R_1$, then sends them in $L/R_2$. Total time is $D=L/R_1+L/R_2$. Do not replace this by $L/\min(R_1,R_2)$: the bottleneck rate describes sustained throughput, while this question asks for the first complete packet's latency.
 A_ZH: 交换设备先用 $L/R_1$ 收齐，再用 $L/R_2$ 发完，总时间为 $D=L/R_1+L/R_2$。不能替换为 $L/\min(R_1,R_2)$：瓶颈速率描述持续吞吐量，这里问的是首个完整分组的时延。
 
 
 @@ N072 | 07-exercises | classroom | NT1:1;NT1S:4;NQA:3;HT1:1b
-Q_EN: Tutorial 1 (2026A) Q1b: three equal packets cross two equal-rate store-and-forward links. Ignore other delays. How long until all arrive?
-Q_ZH: 本学期 Tutorial 1 Q1b：三个等长分组经过两条等速率存储转发链路，忽略其他时延，全部到达需多久？
+Q_EN: Tutorial 1 (2026A) Q1b: three packets, each L bits, are sent back-to-back across two store-and-forward links, each of rate R bit/s. Ignore all other delays. From the start of transmission, how long until all three arrive completely?
+Q_ZH: 本学期 Tutorial 1 Q1b：三个分组各 L 比特，连续发送，经过两条速率均为 R 比特/秒的存储转发链路。忽略其他时延，从开始发送到三个分组全部到齐需多久？
 A_EN: Let $t=L/R$. During successive intervals, link 1 sends packets 1, 2 and 3; link 2 sends them one interval later. Arrival times are $2t,3t,4t$, so completion is $4L/R$. Summing $2L/R$ separately for all three gives $6L/R$ and incorrectly forbids pipelining.
 A_ZH: 令 $t=L/R$。链路 1 依次发送分组 1、2、3；链路 2 比它晚一个时间段依次发送。到达时刻为 $2t,3t,4t$，所以完成需 $4L/R$。把三次 $2L/R$ 相加得到 $6L/R$，错误地禁止了流水线重叠。
 
@@ -497,15 +497,15 @@ A_ZH: 组包需 $512/128000=4$ 毫秒，发送需 $512/(4\times10^6)=0.128$ 毫�
 
 
 @@ N080 | 07-exercises | classroom | NT2:1;HT2:2a
-Q_EN: Tutorial 2 (2026A) Q2a: one packet traverses three links and two store-and-forward routers. Express delay when each router has processing delay $d_{proc}$ and no queueing.
-Q_ZH: 本学期 Tutorial 2 Q2a：一个分组经过三条链路和两个存储转发路由器，每路由器处理时延为 $d_{proc}$、无排队，写总时延。
+Q_EN: Tutorial 2 (2026A) Q2a: an L-bit packet crosses three links and two store-and-forward routers. Link i has rate R_i bit/s, length d_i m and propagation speed s_i m/s. Each router adds d_proc seconds; queueing and endpoint processing are zero. Find complete-packet delay.
+Q_ZH: 本学期 Tutorial 2 Q2a：L 比特分组经过三条链路和两个存储转发路由器。第 i 条链路速率 R_i 比特/秒，长度 d_i 米，传播速度 s_i 米/秒。每路由器处理 d_proc 秒，排队和端点处理为零。求整个分组到齐的时延。
 A_EN: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$. There are three serialization terms because each link transmits the whole packet, three propagation terms, and two router-processing terms. If the problem adds source or destination processing, include those separately; do not infer them when the stated model excludes them.
 A_ZH: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$。三条链路各发完整分组，因此有三个串行化项、三个传播项，以及两个路由处理项。若题目另加源端或目的端处理，应单独计入；模型未要求时不要自行添加。
 
 
 @@ N081 | 07-exercises | classroom | NT2:1;HT2:2b
-Q_EN: One packet crosses three store-and-forward links and two routers. Use $L=1500$ bytes, each $R=2$ Mbps, $s=2.5\times10^8$ m/s, distances 5,000/4,000/1,000 km, and 3 ms processing per router. Find delay.
-Q_ZH: 一个分组经过三条存储转发链路和两个路由器，分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒，求时延。
+Q_EN: One packet crosses three store-and-forward links and two routers, with no queueing or endpoint processing. Use $L=1500$ bytes, each $R=2$ Mbps, $s=2.5\times10^8$ m/s, distances 5,000/4,000/1,000 km, and 3 ms processing per router. Find complete-packet delay.
+Q_ZH: 一个分组经过三条存储转发链路和两个路由器，无排队与端点处理。分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒。求整个分组到齐的时延。
 A_EN: Each serialization takes 6 ms, so three give 18 ms. Total distance is $10^7$ m, giving 40 ms propagation. Two routers add 6 ms. Total: $18+40+6=64$ ms. Keep all three components visible; the result is easy to miscalculate if kilometers, bytes and milliseconds are mixed without conversion.
 A_ZH: 每条链路串行化 6 毫秒，三条共 18 毫秒。总距离 $10^7$ 米，传播共 40 毫秒；两个路由器再加 6 毫秒。总计 $18+40+6=64$ 毫秒。应保留分项，避免把千米、字节和毫秒不经换算直接混用。
 

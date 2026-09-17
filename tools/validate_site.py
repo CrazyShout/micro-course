@@ -40,12 +40,27 @@ def main():
     assert len(cards)==len(reader['cards'])==manifest['total_cards']
     assert len(lessons)==len(learning['lessons'])==manifest['total_lessons']
     assert set(index['card_context'])==set(cards)
-    linked=[];images=set()
+    linked=[];images=set();reading_figures=set();reading_count=0
     for lesson in lessons.values():
         linked.extend(lesson['card_ids'])
         assert all(x in lessons for x in lesson['prerequisites']+lesson['related'])
         assert all(c in cards for c in lesson['card_ids'])
         for ref in lesson['sources']:assert 'path' not in ref and (ref['href'] is None or ref['href'].startswith('https://'))
+        if lesson.get('reading'):
+            reading_count+=1;r=lesson['reading']
+            for field in ['body','check_q','check_a']:
+                assert re.search('[\u3400-\u9fff]',r[field]['zh']), (lesson['id'],field)
+                assert len(re.findall('[A-Za-z]+',r[field]['en']))>=4,(lesson['id'],field)
+                assert all(r[field+'_html'][lang] for lang in ['zh','en'])
+            assert r['sources'] and isinstance(r['optional'],bool)
+            for ref in r['sources']:
+                assert 'path' not in ref and ref['locator']
+                assert ref['href'] is None or ref['href'].startswith('https://www.rfc-editor.org/')
+            if r.get('figure'):
+                f=r['figure'];local_link(f['src']);reading_figures.add(f['src'])
+                assert f['alt'] and all(f['caption_'+lang] for lang in ['zh','en'])
+                svg=(site/f['src']).read_text()
+                assert '<title ' in svg and '<desc ' in svg and '<script' not in svg
     assert len(linked)==len(set(linked)) and set(linked)==set(cards)
     for card in cards.values():
         assert 'remote' not in card and card['learning_context']
@@ -63,6 +78,8 @@ def main():
         for image in card['media']:
             rel=card['course']+'/media/'+image;local_link(rel);images.add(rel)
     assert len(images)==manifest['images']
+    assert reading_count==manifest['reading_supplements']
+    assert len(reading_figures)==manifest['reading_figures']
     introductions=json.loads((site/'deck-introductions.json').read_text())
     assert set(introductions['courses'])==set(manifest['courses'])
     for course,intro in introductions['courses'].items():
@@ -78,6 +95,6 @@ def main():
         if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md']:
             assert not forbidden.search(file.read_text()),('Local path or credential-like data',str(file.relative_to(site)))
         assert not any(part in ['materials','checks','.git','markji-ready'] for part in file.relative_to(site).parts),file
-    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'cards':len(cards),'images':len(images),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
+    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
 
 if __name__=='__main__':main()

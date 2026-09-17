@@ -1,6 +1,9 @@
 {
   "schema_version": 1,
   "source_snapshot": "2026-09-15",
+  "reading_revision": "2026-09-17",
+  "reading_supplements": 26,
+  "reading_figures": 14,
   "courses": {
     "CS5489": {
       "lessons": 30,
@@ -352,8 +355,8 @@
     },
     {
       "path": "guide.html",
-      "bytes": 8302,
-      "sha256": "10c697f23a461ac1128f46a4570ebcd1b0d4835c2b30a497ee96dcca93b70c6a"
+      "bytes": 9301,
+      "sha256": "9ee21216078e6d1d8114f0ae91800bd0527af520515fd1005a8d23d979284afc"
     },
     {
       "path": "index.html",
@@ -362,8 +365,8 @@
     },
     {
       "path": "learning-data.js",
-      "bytes": 700953,
-      "sha256": "04ad5120cbc150a197be2e1755b8946df46a49039e0c69a22aa23190c263da99"
+      "bytes": 799959,
+      "sha256": "decef7d88c0491617af7c0f3a49d970fa2307e1c555b9d1d86b8633766b4c3f9"
     },
     {
       "path": "learning-demos.js",
@@ -377,18 +380,88 @@
     },
     {
       "path": "learning.css",
-      "bytes": 8448,
-      "sha256": "7451af332be13d08b890d5cfd3ad10e66084a2d070a4beb178ed7066e350ab2a"
+      "bytes": 9276,
+      "sha256": "eb9609151768eaa4fc2c4f112261796374a8208f43f32c97d6ad584a0aff26d9"
     },
     {
       "path": "learning.js",
-      "bytes": 9994,
-      "sha256": "dc23969918a3f01d0c4f762b3d06f40ae1f217806260823282dd59d30c56504f"
+      "bytes": 12157,
+      "sha256": "c8fc81b64d5eb197d7f46faeefb1a7f170c1ebfaf4f2811588a76004e9112f65"
     },
     {
       "path": "reader-data.js",
       "bytes": 1727090,
       "sha256": "d178385ce64a023385b657eb1019803badec707bc4f7b25bc8df1c771e854ca1"
+    },
+    {
+      "path": "reading/figures/ml-margin.svg",
+      "bytes": 2532,
+      "sha256": "672254a6e661e68847cc8aa882f0f83b57a4fe980193cf5abdcebdcd9ca66e9d"
+    },
+    {
+      "path": "reading/figures/ml-neighbors.svg",
+      "bytes": 2907,
+      "sha256": "13defa1c6e69a40837219701ee3327a1c78128045067e092cfe754f7213948a5"
+    },
+    {
+      "path": "reading/figures/ml-pca.svg",
+      "bytes": 2257,
+      "sha256": "a4a1e05bbfcaf6e6496c07b1cd001f276a26c6651162f4a979106235d8e1a779"
+    },
+    {
+      "path": "reading/figures/ml-tokens.svg",
+      "bytes": 2144,
+      "sha256": "36dc91442d28d44f918acec98ae0731840be049fbeec509048c9e9c03fcdb3ec"
+    },
+    {
+      "path": "reading/figures/ml-tree.svg",
+      "bytes": 2146,
+      "sha256": "875ac4702cfd2206d2c9a6a27f298e00078d8275ed5e05581fef9c8a0908e92f"
+    },
+    {
+      "path": "reading/figures/ml-workflow.svg",
+      "bytes": 2436,
+      "sha256": "3d55d30b390f4e9187b37fc2f756811acd1371f4fecb5b5e4d86f7abbf24b13d"
+    },
+    {
+      "path": "reading/figures/net-addresses.svg",
+      "bytes": 2687,
+      "sha256": "7cd63a0b3631a1a720913339a83e8e4f77dde1d1dc8c945fdc68c62d99343264"
+    },
+    {
+      "path": "reading/figures/net-cache.svg",
+      "bytes": 2938,
+      "sha256": "77d0013bc332726fdc06527feea5dabc9c2a310ed5cb295e5aa72ef7cb46da48"
+    },
+    {
+      "path": "reading/figures/net-pipeline.svg",
+      "bytes": 4000,
+      "sha256": "e3169a312c59da485eac0e6d835300bc868b129e26db8595d3eb78ce12126b44"
+    },
+    {
+      "path": "reading/figures/net-prefix.svg",
+      "bytes": 1617,
+      "sha256": "42eb901a7a7c9b93f909b1af29ffad1a8e0e5d87816c2c7e79d14b8134d05496"
+    },
+    {
+      "path": "reading/figures/net-queue.svg",
+      "bytes": 3769,
+      "sha256": "02457e4e80946e6a6f381e735db2a6e534db0fda083cab86ca64bbd62f3d71b7"
+    },
+    {
+      "path": "reading/figures/net-recovery.svg",
+      "bytes": 3480,
+      "sha256": "b5dee87f2a7ed7dd214e507f989963465fcdfa62419a586ef30d39f6c1de00b4"
+    },
+    {
+      "path": "reading/figures/net-routing.svg",
+      "bytes": 3148,
+      "sha256": "bd4fd0e7db2b28682d36470d21897e1f5bda0cbeabf008b8799d032e8ca2af14"
+    },
+    {
+      "path": "reading/figures/net-window.svg",
+      "bytes": 3054,
+      "sha256": "5f6510bfb0ee110a02bf60241c1b4539ad126f657b33efbdc0448b9f7f691873"
     },
     {
       "path": "vendor/katex/LICENSE",

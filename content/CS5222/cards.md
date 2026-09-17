@@ -433,12 +433,6 @@ Q_ZH: “HTTP 无状态”是什么意思？
 A_EN: In the lecture's basic model, the protocol does not require the server to remember a history of prior requests to interpret every new request. It does not mean a server stores no files, a TCP connection has no state, or a website cannot implement login sessions. Applications can add state-management mechanisms above the basic request–response semantics.
 A_ZH: 在课堂基本模型中，协议不要求服务器必须记住之前请求的历史，才能解释每个新请求。这不等于服务器不保存文件、TCP 连接没有状态，或网站不能实现登录会话。应用可在基本请求—响应语义之上增加状态管理机制。
 
-@@ N070 | 06-http | check | N2:19-22;N2B:1-43
-Q_EN: What does the current Chapter 2 material cover as of 2026-09-15?
-Q_ZH: 截至 2026-09-15，当前第 2 章材料覆盖到哪里？
-A_EN: Part 1 has 22 slides, and the new part 2 has 43 slides with numbering restarted at 1. Together they cover application architecture, transport requirements, HTTP basics and connections, cookies and caching, email protocols, and DNS through resource-record types. FTP, P2P and socket programming appear in an outline but are not developed in the downloaded slides. Match a source number to its specific part file.
-A_ZH: Part 1 有 22 张，新 Part 2 有 43 张且编号重新从 1 开始。合起来覆盖应用架构、传输需求、HTTP 基础与连接、Cookie/缓存、邮件协议，以及 DNS 到资源记录类型。FTP、P2P、套接字编程虽出现在目录中，但本次下载幻灯片尚未展开。引用编号必须同时指明属于哪个 part 文件。
-
 @@ N071 | 07-exercises | classroom | NT1:1;NT1S:3;HT1:1a
 Q_EN: Tutorial 1 (2026A) Q1a: one packet of $L$ bits crosses two store-and-forward links of rates $R_1,R_2$. Ignore other delays. Find completion time.
 Q_ZH: 本学期 Tutorial 1 Q1a：$L$ 比特分组经过速率 $R_1,R_2$ 的两条存储转发链路，忽略其他时延，求完成时间。
@@ -559,30 +553,6 @@ Q_EN: How should I interpret the lecture's term SSL today?
 Q_ZH: 今天应该怎样理解课件中的 SSL 这个名称？
 A_EN: SSL is the historical protocol family preceding TLS. Modern secure-transport discussions should specify TLS and its version, such as TLS 1.3. TLS aims to protect communication against eavesdropping and tampering and to authenticate peers under the chosen configuration. “Uses TLS” does not prove an application has no other security bugs. Keep this terminology update separate from the lecture's basic transport-service comparison.
 A_ZH: SSL 是 TLS 之前的历史协议族，讨论现代安全传输时应明确 TLS 及版本，例如 TLS 1.3。TLS 旨在防窃听、防篡改，并按配置认证对端。“使用 TLS”不代表应用没有其他安全漏洞。本卡是术语更新，与课堂基础传输服务比较分开理解。
-
-@@ N089 | 08-extension | admin | N0:5,11-13
-Q_EN: What is the current CS5222 assessment structure and the scope of this card collection?
-Q_ZH: 当前 CS5222 的考核结构及本卡片库范围是什么？
-A_EN: The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, Chapter 2 parts 1–2 and Tutorials 1–2. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.
-A_ZH: 课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 part1–2 与 Tutorial 1–2；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。
-
-@@ N090 | 08-extension | admin | NR:1
-Q_EN: What must the CS5222 research report submission contain?
-Q_ZH: CS5222 研究报告需要提交什么？
-A_EN: Choose a new networking technology encountered in daily life and related to textbook Chapters 1–7; the brief excludes Chapter 8 security topics. Submit a report of at most four pages, 12-point, single column, with references excluded from that page count, plus a reflection log of at most one page, both as PDFs. An appendix with prompts, screenshots or research notes is optional.
-A_ZH: 选择在生活中接触、且与教材第 1–7 章有关的新网络技术；要求排除第 8 章安全主题。提交最多 4 页、12 号字体、单栏的报告，参考文献不计入该页数；另附最多 1 页反思日志，两者均为 PDF。可选附录可记录提示词、截图或研究笔记。
-
-@@ N091 | 08-extension | admin | NR:1-3
-Q_EN: What makes the research report technically strong according to the current brief?
-Q_ZH: 按当前要求，怎样的研究报告才有技术深度？
-A_EN: Explain how you encountered the technology, what problem motivated it, how it works, its connection to course concepts, and its limitations or future challenges. Use your own explanations and accurate illustrations. The rubric weights novelty 10%, technical depth and clarity 35%, presentation 30%, and reflection 25%. A narrow mechanism explained well is more useful than unexplained advanced terminology.
-A_ZH: 说明如何接触该技术、它要解决什么问题、怎样工作、与课程概念如何联系，以及局限或未来挑战。用自己的解释和准确图示。评分中新颖性 10%、技术深度与清晰度 35%、呈现 30%、反思 25%。把一个具体机制讲透，比堆砌未解释的高级术语更有价值。
-
-@@ N092 | 08-extension | admin | NR:2-3
-Q_EN: What should I record about learning and GenAI use for the reflection log?
-Q_ZH: 反思日志中应记录哪些学习过程与 GenAI 使用信息？
-A_EN: Address what you learned, the hardest part, how GenAI helped or hindered understanding, how you verified its output, and what you would change next time. The brief requires acknowledgment of GenAI use and verification of facts, references and generated figures. Keep primary sources and concrete verification notes while working so the reflection records actual learning rather than a reconstructed story.
-A_ZH: 回答学到了什么、最难部分是什么、GenAI 如何帮助或妨碍理解、怎样验证输出、下次会如何改进。要求注明 GenAI 使用，并核实事实、参考文献和生成图示。研究过程中保留一手来源和具体验证记录，让反思描述真实学习，而非事后编造过程。
 
 @@ N093 | 08-extension | extension | N1:21-31,45-55
 Q_EN: Give a one-minute English comparison of circuit switching and packet switching.

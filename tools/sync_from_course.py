@@ -50,9 +50,9 @@ def guide_html(courses, lessons, introductions):
             deck_guides+='<h3>'+html.escape(section['title_zh'])+' / '+html.escape(section['title_en'])+'</h3><p>'+html.escape(section['body_zh'])+'</p><p class="english">'+html.escape(section['body_en'])+'</p>'
         deck_guides+='</section>'
     return '''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="CS5489 和 CS5222 连续微课、双语记忆卡与交互演示的使用方法。"><title>怎样使用 · Micro Course</title><link rel="stylesheet" href="learning.css"></head><body>
-<header><a class="brand" href="index.html">MICRO COURSE</a><nav><a href="index.html">连续微课</a><a href="cards.html">复习卡片</a></nav></header>
+<header><a class="brand" href="index.html">MICRO COURSE</a><nav><a href="index.html">连续微课</a><a href="cards.html">复习卡片</a><a href="notices.html">课程信息 / Notices</a></nav></header>
 <main style="max-width:900px;margin:28px auto;padding:0 16px"><section class="hero"><div class="eyebrow">LEARN → PRACTICE → RECALL</div><h1>先理解，再检索</h1><p>'''+str(count)+' 节连续微课 · '+str(cards)+''' 张双语卡片</p></section>
-<section class="panel"><h2>从这里开始</h2>'''+course_links+'''<ol><li>先读章节导读，了解要解决的问题；不熟悉的概念沿“先修补课”返回。</li><li>跟着完整例题手算，再独立尝试提示练习。需要时才展开提示，完成后核对答案。</li><li>不看答案做条件变化题，并用英语解释机制、假设和结论。</li><li>打开对应卡片做检索，再用 Markji 安排间隔复习。长推导和编程题仍应完整重做。</li></ol></section>
+<section class="panel"><h2>课程信息 / Course information</h2><p>评分、提交清单、课件范围与运行提醒见<a href="notices.html">课程信息与学习指南</a>，不再作为记忆卡复习。 / Assessment, submissions, material scope, and setup notes are on the information board.</p></section><section class="panel"><h2>从这里开始</h2>'''+course_links+'''<ol><li>先读章节导读，了解要解决的问题；不熟悉的概念沿“先修补课”返回。</li><li>跟着完整例题手算，再独立尝试提示练习。需要时才展开提示，完成后核对答案。</li><li>不看答案做条件变化题，并用英语解释机制、假设和结论。</li><li>打开对应卡片做检索，再用 Markji 安排间隔复习。长推导和编程题仍应完整重做。</li></ol></section>
 '''+deck_guides+'''<section class="panel"><h2>语言与范围</h2><p>中文用于连续串讲；英文术语、英语摘要及中英双语题答帮助过渡到英文考试。“英语口述训练”展示英文摘要与题答，不是整篇中文讲解的逐句翻译。</p><p>本学期 Canvas 是课程范围基准。Extra Resources 来自往年资料，尚未确认为本学期或 QE 的完整范围。新增串讲、类比和练习是 AI 编写的学习辅助。</p><p>卡片中保留原图，以及资料文件名、页码或 Notebook 单元号。Canvas 和历史仓库的完整原文件留在本地资料库；公开的官方文档仍可通过出处链接访问。</p></section>
 <section class="panel"><h2>参考书怎么读 / Reading companion</h2><p>26 节微课增加了参考书补充、14 幅原创示意图和 26 道双语自测。先看机制，再沿图读一遍例子，最后独立回答自测；图示可点击放大。决策树和 AdaBoost 折叠为选读，可按兴趣展开。</p><p>Machine Learning in Action（2012）与《机器学习实战》（2013）是同一著作的两个语言版本。网络部分参考 Computer Networking: A Top-Down Approach 第 8 版及《图解 HTTP》（2014）；HTTP 缓存、TLS 与 HTTP/3 的版本差异另核对 RFC 9111、8446、9114。新增段落有单独的书页定位，原始 PDF 留在本地。</p><p class="english">Reading supplements add original diagrams and bilingual checks. Book chapters explain mechanisms; Canvas remains the assessment baseline. The English and Chinese editions of Machine Learning in Action are the same work. Legacy code and protocol descriptions are qualified where needed.</p></section><section class="panel"><h2>学习记录与换设备</h2><p>完成标记和待复习标记保存在当前浏览器，可导出 JSON；网站没有账户或云同步。手机、电脑和原来的本地学习页各自保存记录，不会自动合并。自评标记也不会改变 Markji 的复习进度。</p><p>Markji 链接打开原课程牌组。APKG 是便携备份；已经在同一 Markji 牌组学习时，不必重复导入。</p><p><a href="CS5489/exports/CS5489-bilingual.apkg" download>下载 CS5489 APKG</a> · <a href="CS5222/exports/CS5222-bilingual.apkg" download>下载 CS5222 APKG</a></p></section>
 <section class="panel"><h2>课程维护</h2><p>页面内容随仓库更新发布。发现解释跳步时，应补那个中间步骤，再用变式检查能否迁移。</p><p><a href="https://github.com/CrazyShout/micro-course" target="_blank" rel="noopener">GitHub 仓库</a> · <a href="publication.json">当前内容与资源清单</a></p></section></main><script>const course=new URLSearchParams(location.search).get('course');const section=course&&document.getElementById(course);if(section)section.scrollIntoView();</script></body></html>'''
@@ -76,6 +76,11 @@ def main():
         out=Path(tmp)
         for name in ['learning.css','learning-demos.js']:
             shutil.copy2(source/name,out/name)
+        notices=load_js(source/'notices-data.js')
+        shutil.copy2(source/'notices-data.js',out/'notices-data.js')
+        for name in ['notices.html','notices.js']:
+            page=(source/name).read_text().replace('index.html','cards.html').replace('learning.html','index.html')
+            (out/name).write_text(page)
         page=(source/'learning.html').read_text()
         page=page.replace('href="learning.html"','href="index.html"').replace('href="index.html">复习卡片','href="cards.html">复习卡片').replace('href="LEARNING_GUIDE.md"','href="guide.html"')
         page=page.replace('<title>','<meta name="description" content="CS5489 与 CS5222：连续微课、双语卡片、独立练习和交互演示。"><title>',1)
@@ -125,6 +130,8 @@ def main():
                   'reading_revision':learning.get('reading_revision'),
                   'reading_supplements':sum(bool(l.get('reading')) for l in learning['lessons']),
                   'reading_figures':len(figures),
+                  'notices':len(notices['entries']),
+                  'moved_card_ids':notices['moved_card_ids'],
                   'courses':{c:{'lessons':v['lessons'],'cards':v['cards']} for c,v in learning['courses'].items()},
                   'total_lessons':len(learning['lessons']),'total_cards':len(reader['cards']),
                   'images':len({(c['course'],m) for c in reader['cards'] for m in c['media']}),
@@ -138,6 +145,9 @@ def main():
             shutil.rmtree(target)
         shutil.copytree(out,target)
     # Human-readable authoring copies, excluding raw materials and API tooling.
+    notice_dest=ROOT/'content/notices';notice_dest.mkdir(parents=True,exist_ok=True)
+    shutil.copy2(source/'notices/README.md',notice_dest/'README.md')
+    (notice_dest/'entries.json').write_text(json.dumps(notices,ensure_ascii=False,indent=2)+'\n')
     reading_dest=ROOT/'content/reading';reading_dest.mkdir(parents=True,exist_ok=True)
     shutil.copy2(source/'reading/authoring.md',reading_dest/'lessons.md')
     source_catalog=json.loads((source/'reading/sources.json').read_text())

@@ -3,7 +3,7 @@
 本稿的主线是“一次网页访问经过哪些机制”。串讲与数值变式为 AI 教学补充；来源通过 CARDS 关联到原课件。历史内容维持 Extra Resources 标记。题答的 ` || ` 分隔中文与英文。
 
 @@ net01 | 从一次网页访问认清网络里的角色 | The actors in a web request
-CARDS: N001-N012
+CARDS: N001,N002,N003,N004,N005,N006,N007,N008,N009,N010,N011,N012
 PREREQ:
 GOAL: 能在主机、接入网、路由器与链路图上追踪一条消息。
 EXPLAIN: 浏览器和网页服务器是应用所在的端系统。它们通常不直接相连，而是经过接入网、多个路由器和链路。链路携带比特，路由器按规则选择下一段路；Internet 则把很多自治管理的网络连接成可以互通的系统。
@@ -22,7 +22,7 @@ TRANSFER_A: 进程端口、应用协议、请求格式与响应状态等；网�
 BRIDGE: 共享网络怎样安排多个用户发送，要先理解电路交换与分组交换。
 
 @@ net02 | 分组交换：共享容量与等待的来源 | Packet switching and statistical multiplexing
-CARDS: N013-N024,N095-N098
+CARDS: N013,N014,N015,N016,N017,N018,N019,N020,N021,N022,N023,N024,N095,N096,N097,N098
 PREREQ: net01
 GOAL: 能解释预留资源与按需共享的取舍，并识别存储转发。
 EXPLAIN: 电路交换先预留通信资源，例如固定时隙；即使某时刻没数据，该份额仍被保留。分组交换把消息切成包，多个用户按需共享链路。突发流量通常不同时达到峰值，共享可以更灵活，但同时到达超过输出容量时需要排队。
@@ -41,7 +41,7 @@ TRANSFER_A: 活跃事件相关，联合高负载可能明显更常见。需要�
 BRIDGE: 接下来区分“把包送上链路”和“包沿链路传播”，再画完整时延。
 
 @@ net03 | 时延：数清第一个比特和最后一个比特 | Serialization, propagation, and pipelines
-CARDS: N025-N032
+CARDS: N025,N026,N027,N028,N029,N030,N031,N032
 PREREQ: net02
 GOAL: 能用时间轴推出单包与多包到达时间，避免死套公式。
 EXPLAIN: 传输时延 L/R 是把整个包的比特依次放上链路的时间；传播时延 d/s 是已经上链路的信号走到另一端的时间。二者可以重叠：第一比特已在路上时，后面的比特还未发出。忽略其他时延，首位约在 d/s 到达，末位在 L/R+d/s 到达。
@@ -62,7 +62,7 @@ TRANSFER_A: 首位约仍在 d/s 到达；末位的发送部分减半，传播部
 BRIDGE: 时延描述等多久；吞吐量描述持续交付多快，排队把二者联系起来。
 
 @@ net04 | 容量、吞吐量和排队为什么不能混用 | Capacity, throughput, and queueing
-CARDS: N033-N040
+CARDS: N033,N034,N035,N036,N037,N038,N039,N040
 PREREQ: net03
 GOAL: 能找瓶颈、计算负载，并指出仅凭平均速率推不出什么。
 EXPLAIN: 一条路径的持续单流吞吐量受最慢环节约束。在无其他限制的理想模型中，不超过各链路速率的最小值；应用有效吞吐量还要扣开销、重传，并考虑共享和协议窗口。提高非瓶颈链路常常没有效果。
@@ -81,7 +81,7 @@ TRANSFER_A: 不矛盾；长传输重视持续吞吐量，交互可能被传播�
 BRIDGE: 要说明开销和协议功能来自哪里，需要分层与封装。
 
 @@ net05 | 分层：每层首部回答一个不同的问题 | Layering and encapsulation
-CARDS: N041-N051
+CARDS: N041,N042,N043,N044,N045,N046,N047,N048,N049,N050,N051
 PREREQ: net01
 GOAL: 能把一次应用消息映射到五层职责，并解释安全功能的位置。
 EXPLAIN: 应用层定义消息含义；传输层联系进程；网络层跨网络送分组；链路层在本段链路送帧；物理层传信号。发送方逐层加入控制信息，接收方按对应规则解释和去除，这就是封装与解封装。
@@ -100,7 +100,7 @@ TRANSFER_A: 不能，源地址声明可能被伪造；应依赖相应认证机�
 BRIDGE: 应用通过 socket 使用传输服务，但仍要定义自己的消息协议。
 
 @@ net06 | 应用与 socket：进程需要什么服务 | Applications and transport services
-CARDS: N052-N065
+CARDS: N052,N053,N054,N055,N056,N057,N058,N059,N060,N061,N062,N063,N064,N065
 PREREQ: net04,net05
 GOAL: 能根据应用需求讨论可靠性、速率与时延，而不机械选 TCP/UDP。
 EXPLAIN: 客户端—服务器架构由持续服务的一方响应请求；P2P 允许节点同时提供与消费资源。架构回答角色怎样组织，传输协议回答进程间怎样交付数据，二者不能互相替代。
@@ -119,7 +119,7 @@ TRANSFER_A: 不能脱离任务与条件比较。连接建立、丢包恢复、�
 BRIDGE: HTTP 把应用请求与响应具体化；其时延需要连同传输连接来分析。
 
 @@ net07 | HTTP：沿依赖顺序数 RTT | HTTP timing, persistence, and caching
-CARDS: N066-N070,N100-N110
+CARDS: N066,N067,N068,N069,N100,N101,N102,N103,N104,N105,N106,N107,N108,N109,N110
 PREREQ: net03,net06
 GOAL: 能画出 TCP 建连、基础页面、附属对象与缓存命中的依赖。
 EXPLAIN: 浏览器先得到基础 HTML，才知道其中还引用哪些对象。非持久 HTTP 在简化模型中每个对象新建 TCP 连接：一个 RTT 建连，一个 RTT 请求与首批响应，再加对象发送时间。这个 2RTT 是课堂模型，需要忽略 DNS、TLS、慢启动等项才可直接使用。
@@ -138,7 +138,7 @@ TRANSFER_A: 仍需发验证请求、等待服务器响应；省去的是未变�
 BRIDGE: 同样使用应用协议，电子邮件却把发送、存储与读取拆成不同阶段。
 
 @@ net08 | 电子邮件：发送信件与读取信箱是两条流程 | Mail delivery versus mailbox access
-CARDS: N111-N120
+CARDS: N111,N112,N113,N114,N115,N116,N117,N118,N119,N120
 PREREQ: net06
 GOAL: 能追踪邮件从发送到读取，并区分 SMTP 信封与邮件内容。
 EXPLAIN: 用户代理把邮件交给邮件服务器，服务器之间用 SMTP 传递；收件人之后通过 IMAP、POP3 或 Webmail 访问邮箱。邮件到达服务器与用户已经阅读不是同一个事件。
@@ -157,7 +157,7 @@ TRANSFER_A: 不能，RETR 是获取内容；删除还涉及 DELE 及会话提交
 BRIDGE: 浏览器与邮件服务器都常需要把名称解析为地址，下一节追踪 DNS。
 
 @@ net09 | DNS：沿层级找答案，靠缓存少走路 | DNS resolution and caching
-CARDS: N121-N134
+CARDS: N121,N122,N123,N124,N125,N126,N127,N128,N129,N130,N131,N132,N133,N134
 PREREQ: net06,net07
 GOAL: 能区分本地解析器、根、TLD、权威服务器及递归/迭代。
 EXPLAIN: 用户通常把名字交给本地递归解析器，而不是亲自向所有层级查询。解析器可向根询问下一步，再找 TLD，再找该域的权威服务器，直到获得所需记录。根服务器不需要保存互联网所有主机地址，它提供委派方向。
@@ -176,7 +176,7 @@ TRANSFER_A: 普通未预知地址的依赖链中不能，先知道目的地址�
 BRIDGE: 回到当前教程，把时延、容量和应用依赖合成完整解题过程。
 
 @@ net10 | 当前教程：先画事件，再计算 | A method for current tutorial problems
-CARDS: N071-N085,N099
+CARDS: N071,N072,N073,N074,N075,N076,N077,N078,N079,N080,N081,N082,N083,N084,N085,N099
 PREREQ: net02,net03,net04
 GOAL: 能独立列出网络数值题的单位、路径、完成事件和忽略项。
 EXPLAIN: 每题先写四行：图中几条链路、包或报文多大、从哪个时刻到哪个事件、忽略了哪些项。再把 byte 转 bit、km 转 m，最后才选公式。链路数和路由器数通常差一；每个分组完整到达与整段文件全部到达也不是同一事件。
@@ -195,14 +195,14 @@ TRANSFER_A: 不一定；首部比例、处理开销、协议与链路限制都�
 BRIDGE: 当任务变成研究报告，仍要保持“观测支持哪些结论”的意识。
 
 @@ net11 | 研究与 QE：从机制解释到可验证结论 | Evidence and explanation in networking
-CARDS: N086-N094
+CARDS: N086,N087,N088,N093,N094
 PREREQ: net04,net05,net09
 GOAL: 能用机制、条件与证据组织英文解释，并规划研究报告。
 EXPLAIN: 解释网络问题可以按“现象—可能机制—区分证据—适用边界”展开。例如网页慢可能来自 DNS、建连、服务器、传输或渲染；只测到总时长，无法直接定位哪个机制占主导。先提出能区分原因的测量，再给结论。
 
 研究报告从具体问题出发，阅读原始论文的设定、方法、实验和限制，说明证据支持了什么。课件中的理想模型用来理解机制；真实抓包和实验用来判断具体系统。两者需要对照，不能把模拟条件、旧协议实现或历史统计直接当当前系统事实。
 
-英文口述先定义指标，再说明机制，给一个例子并加适用条件。当前报告的页数、格式与提交要求请看关联的 Canvas 要求卡；这里提供方法练习，不猜测教师尚未发布的安排。
+英文口述先定义指标，再说明机制，给一个例子并加适用条件。当前报告的页数、格式与提交要求请看网页“课程信息”中的研究报告说明；这里提供方法练习，不猜测教师尚未发布的安排。
 RECAP_EN: Define the metric, explain a mechanism, identify discriminating evidence, and state the scope of the conclusion. A model or measurement answers only the question its assumptions support.
 WORKED_Q: 测得某次网页总用时 2 秒，能断言网络带宽不足吗？ || A page takes two seconds to load. Does this establish insufficient network bandwidth?
 WORKED_A: 不能。应拆 DNS、连接、首字节等待与正文传输等阶段，并考虑页面依赖与服务器时间。 || No. Separate DNS, connection setup, time to first byte, and content transfer while considering dependencies and server processing.
@@ -214,7 +214,7 @@ TRANSFER_A: 性能依赖负载、时间、用户和路由政策，迁移流量�
 BRIDGE: 后续预习从应用扩展到可靠传输、IP、路由与链路层，再回到完整网页访问。
 
 @@ net12 | P2P 与 socket：资源共享也需要消息边界 | Distribution capacity and socket framing
-CARDS: N135-N148
+CARDS: N135,N136,N137,N138,N139,N140,N141,N142,N143,N144,N145,N146,N147,N148
 PREREQ: net04,net06,net09
 GOAL: 能解释文件分发下界，并理解 TCP 字节流为什么需要应用定界。
 EXPLAIN: 客户端—服务器分发 N 份大小 F 的文件，服务器至少上传 NF，最慢客户端至少下载 F，因此时间下界是 max(NF/us,F/dmin)。P2P 让客户端也贡献上传，增加总服务资源，但服务器仍至少要注入一份文件，最慢下载也仍是约束。
@@ -234,7 +234,7 @@ TRANSFER_A: 不一定，服务器注入和最慢下载可能成为主导限制�
 BRIDGE: 应用想要可靠消息，先看传输层怎样处理损坏、丢失和重复。
 
 @@ net13 | 可靠传输：为什么 ACK、序号、定时器缺一不可 | Reliability and sliding windows
-CARDS: N149-N166
+CARDS: N149,N150,N151,N152,N153,N154,N155,N156,N157,N158,N159,N160,N161,N162,N163,N164,N165,N166
 PREREQ: net03,net05,net06
 GOAL: 能解释每个机制解决的失败场景，并比较停等、GBN 与 SR。
 EXPLAIN: 校验和帮助检测损坏，却不保证检测一切错误，也不负责重传。ACK 告诉发送者接收进展；如果 ACK 丢了，发送者可能重发已送达数据，所以接收者还需要序号识别重复。数据或 ACK 完全丢失时，定时器让发送者最终再尝试。
@@ -253,7 +253,7 @@ TRANSFER_A: 发送者重传时，接收方无法分辨是新内容还是已收�
 BRIDGE: TCP 将这些思想用于可靠有序字节流，并加入连接与流量状态。
 
 @@ net14 | TCP：用字节编号描述接收进度 | TCP sequence space and flow control
-CARDS: N167-N177
+CARDS: N167,N168,N169,N170,N171,N172,N173,N174,N175,N176,N177
 PREREQ: net13
 GOAL: 能从字节范围推 ACK，并解释流量控制、定时器与握手。
 EXPLAIN: TCP 数据序号按字节计数。把接收想成按页拼好一本书：即使第 3 页先到了，第 2 页的缺口仍存在。累计 ACK 表示下一期待的字节号，不是最近见过的最大序号。后面的字节可以缓存，但只要前面有缺口，累计 ACK 就停在缺口起点，有序字节流也不能把这段后的内容提前交给应用。
@@ -273,7 +273,7 @@ TRANSFER_A: 连续前缀到 535，下一期待 536；ACK=536。后段到达不�
 BRIDGE: 接收者装得下，不代表网络送得动；接下来解释拥塞窗口怎样变化。
 
 @@ net15 | 拥塞控制：试探可用容量，响应拥塞 | Congestion windows and feedback
-CARDS: N178-N184
+CARDS: N178,N179,N180,N181,N182,N183,N184
 PREREQ: net04,net14
 GOAL: 能解释慢启动、加性增长和乘性减少，并说明教材模型边界。
 EXPLAIN: 发送者通常不知道路径当前能承受多少流量，需要根据确认、丢包或显式拥塞信号调整在途数据。经典慢启动在适当假设下每 RTT 近似翻倍；名字描述相对于立即大窗口发送的起步方式，并非线性慢增长。
@@ -292,7 +292,7 @@ TRANSFER_A: 不自动公平，A 可能获得十份、B 一份；公平的对象�
 BRIDGE: 端到端传输依赖 IP 跨网转发，下一节解释地址、前缀与分片。
 
 @@ net16 | IP：前缀决定下一跳，MTU 决定装多大 | Addressing, forwarding, and fragmentation
-CARDS: N185-N202
+CARDS: N185,N186,N187,N188,N189,N190,N191,N192,N193,N194,N195,N196,N197,N198,N199,N200,N201,N202
 PREREQ: net03,net05
 GOAL: 能手算子网范围与 IPv4 分片，并区分路由和逐包转发。
 EXPLAIN: 转发是按已有表把当前分组送到下一接口；路由是形成和更新这些路径信息。最长前缀匹配选择对目的地址描述最具体的条目，例如 /24 优先于同样匹配的 /16。IP 地址通常关联接口，不应机械等同整台设备或用户身份。
@@ -311,7 +311,7 @@ TRANSFER_A: 选 /24，因前缀最长，不是因为它在表里先出现或数�
 BRIDGE: 转发表从哪里来，需要路由算法与自治系统政策来解释。
 
 @@ net17 | 路由：局部下一步怎样形成整条路径 | Shortest paths and routing policy
-CARDS: N203-N216
+CARDS: N203,N204,N205,N206,N207,N208,N209,N210,N211,N212,N213,N214,N215,N216
 PREREQ: net16
 GOAL: 能手推 Dijkstra 与距离向量更新，并区分最短路与互联网政策。
 EXPLAIN: 链路状态方法让节点获得拓扑信息，再计算路径。Dijkstra 在非负边权下，每次选未确定节点中暂定距离最小者；它的距离已不会被绕远的未确定路径改善，然后松弛相邻边。前驱用于还原路径，转发表则需要从源开始的第一跳，两者不一定同一个节点。
@@ -330,7 +330,7 @@ TRANSFER_A: 路由政策和其他优先属性可能先于 AS 路径长度发挥�
 BRIDGE: 选好下一跳后，还要在本段链路交付帧并处理共享介质与错误。
 
 @@ net18 | 链路层：发现错误与争用信道是两类问题 | Error detection and shared-medium access
-CARDS: N217-N230
+CARDS: N217,N218,N219,N220,N221,N222,N223,N224,N225,N226,N227,N228,N229,N230
 PREREQ: net02,net05
 GOAL: 能解释校验、CRC 与随机接入分别解决什么问题。
 EXPLAIN: 链路层把数据交给本段邻居。差错检测增加冗余，判断传输是否破坏内容；纠错还需利用冗余恢复数据。偶校验能检测奇数个翻转，但两位同时翻转可能不被发现。二维校验将行列信息结合，单数据位出错时可由行列交点定位。
@@ -349,7 +349,7 @@ TRANSFER_A: 两次翻转使奇偶性改变两次又回原值，校验关系仍�
 BRIDGE: 历史教程把这些机制组合起来，下一节练习先辨认事件和状态，再读数字。
 
 @@ net19 | 往年教程：把状态画出来再答题 | Historical protocol and calculation clinic
-CARDS: N231-N259
+CARDS: N231,N232,N233,N234,N235,N236,N237,N238,N239,N240,N241,N242,N243,N244,N245,N246,N247,N248,N249,N250,N251,N252,N253,N254,N255,N256,N257,N258,N259
 PREREQ: net07,net09,net13,net15,net16,net17,net18
 GOAL: 能用事件表追踪包、ACK、窗口与交换机学习，不靠记图形答案。
 EXPLAIN: HTTP/DNS 题画依赖时间轴；GBN/SR/TCP 题画发送与接收两列，逐行写“哪个事件—收到什么—状态怎样变—发什么 ACK”。Reno 图先标重复 ACK、超时与门限，再读窗口。不同教程约定的 RTT 更新顺序也要按题明确，不能从记忆混入另一版本。
@@ -368,7 +368,7 @@ TRANSFER_A: 目的字段不告诉交换机 G 从哪个入端口发来；需要�
 BRIDGE: 最后用完整网页访问串起 DHCP、ARP、DNS、TCP 与 HTTP，并保留实验取证习惯。
 
 @@ net20 | 端到端串联：从空缓存到拿到网页 | From empty caches to a fetched page
-CARDS: N260-N279
+CARDS: N260,N261,N262,N263,N264,N265,N266,N267,N268,N269,N270,N271,N272,N273,N274,N275,N276,N277,N278,N279
 PREREQ: net09,net14,net16,net18
 RELATED: net19
 GOAL: 能从主机初始配置追到网页响应，并说明每步需要什么证据。

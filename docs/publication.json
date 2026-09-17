@@ -4,18 +4,34 @@
   "reading_revision": "2026-09-17",
   "reading_supplements": 26,
   "reading_figures": 14,
+  "notices": 14,
+  "moved_card_ids": [
+    "CS5222-N070",
+    "CS5222-N089",
+    "CS5222-N090",
+    "CS5222-N091",
+    "CS5222-N092",
+    "CS5489-M005",
+    "CS5489-M090",
+    "CS5489-M097",
+    "CS5489-M100",
+    "CS5489-M098",
+    "CS5489-M107",
+    "CS5489-M142",
+    "CS5489-M006"
+  ],
   "courses": {
     "CS5489": {
       "lessons": 30,
-      "cards": 326
+      "cards": 318
     },
     "CS5222": {
       "lessons": 20,
-      "cards": 279
+      "cards": 274
     }
   },
   "total_lessons": 50,
-  "total_cards": 605,
+  "total_cards": 592,
   "images": 62,
   "assets": [
     {
@@ -25,8 +41,8 @@
     },
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
-      "bytes": 7193210,
-      "sha256": "6eb346709c55e58d1c506636de2286425592f17bca916fe0f14f14565ce6c347"
+      "bytes": 7180922,
+      "sha256": "abc388df1b3830288637df94f780c716e71b31cd42d57f4d59f8c3e0eedf4ce0"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -225,8 +241,8 @@
     },
     {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
-      "bytes": 3246079,
-      "sha256": "2e6d34b007825bb314f4367d46460d729ba83823b98fbd0cdbfb74264102e228"
+      "bytes": 3229695,
+      "sha256": "73a3edded36df986e634b539024277b35a1afd4b67cf1e4c4f99030e6767fdc5"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -345,28 +361,28 @@
     },
     {
       "path": "cards.html",
-      "bytes": 18368,
-      "sha256": "4499971b8f754bc9cc08e7b1f0e44a9ed54357df78a18e786cc5029c18d357bd"
+      "bytes": 18746,
+      "sha256": "5c182da6ab42e08af5de4cfe7b053b0cd54cf06634eb8ec95d42ae872cf555ba"
     },
     {
       "path": "deck-introductions.json",
-      "bytes": 6132,
-      "sha256": "3392053a6d745b6d90505120f34d1bcd6c6b9d2897ee48afaa7f4bb4b376af94"
+      "bytes": 7262,
+      "sha256": "e2b978f04d668de200f9e96d9a61530102b1fe0d8f41936728964b6cfe2fcb08"
     },
     {
       "path": "guide.html",
-      "bytes": 9301,
-      "sha256": "9ee21216078e6d1d8114f0ae91800bd0527af520515fd1005a8d23d979284afc"
+      "bytes": 10716,
+      "sha256": "1922775457ac77a07c4fce1b741a8891fab9e0b8ec862270b09fc8cf28c2057a"
     },
     {
       "path": "index.html",
-      "bytes": 2108,
-      "sha256": "b856e4fecad181992038c7149c037dbacd71cadf77f03ae6f6123f87ae3ff58f"
+      "bytes": 2175,
+      "sha256": "ca611d6fbd4a542e3fc9213062c118aad7bddf820c27fd54451abbfa3d547c29"
     },
     {
       "path": "learning-data.js",
-      "bytes": 799959,
-      "sha256": "decef7d88c0491617af7c0f3a49d970fa2307e1c555b9d1d86b8633766b4c3f9"
+      "bytes": 792046,
+      "sha256": "005e80575ed85b51e16dbaa5ab280f9113fa36cc4491e852f2f6995b665037e9"
     },
     {
       "path": "learning-demos.js",
@@ -375,8 +391,8 @@
     },
     {
       "path": "learning-index.js",
-      "bytes": 73478,
-      "sha256": "db11355b67a7209ca6eb648f939d04291726ea766add2b214e830917329cfefc"
+      "bytes": 72101,
+      "sha256": "3a14bfc43d5dcb8ffd964ea18465d29220dd38e2c9a15ca6f7b2d16496637497"
     },
     {
       "path": "learning.css",
@@ -385,13 +401,28 @@
     },
     {
       "path": "learning.js",
-      "bytes": 12157,
-      "sha256": "c8fc81b64d5eb197d7f46faeefb1a7f170c1ebfaf4f2811588a76004e9112f65"
+      "bytes": 12368,
+      "sha256": "8c888350b8428d29c56307849b20c3776d96414afac7e932cdcb59115493e310"
+    },
+    {
+      "path": "notices-data.js",
+      "bytes": 28764,
+      "sha256": "85ae38d8958771b25b2b99af67044e9600a17a9e99f121e8709428df6b0aca07"
+    },
+    {
+      "path": "notices.html",
+      "bytes": 3021,
+      "sha256": "4782c1189076738f23e91832ab430e361eb5aa8eb5dcec399201791929e77e54"
+    },
+    {
+      "path": "notices.js",
+      "bytes": 2732,
+      "sha256": "076a7d1d7dd6cd63b022c8f96de6bc7ce97246cb4142277299f9ee1825fb9bbe"
     },
     {
       "path": "reader-data.js",
-      "bytes": 1727090,
-      "sha256": "d178385ce64a023385b657eb1019803badec707bc4f7b25bc8df1c771e854ca1"
+      "bytes": 1688937,
+      "sha256": "e569bf0efae40d62efb9f88356a736ce6d32fee9b01c916260dd5d865d8701d0"
     },
     {
       "path": "reading/figures/ml-margin.svg",

@@ -37,6 +37,16 @@ def main():
         for value in re.findall(r'url\([\'"]?([^\)\'" ]+)',file.read_text()):local_link(value,file.parent)
     reader=load_js(site/'reader-data.js');learning=load_js(site/'learning-data.js');index=load_js(site/'learning-index.js')
     cards={c['id']:c for c in reader['cards']};lessons={l['id']:l for l in learning['lessons']}
+    notices=load_js(site/'notices-data.js');notice_ids={n['id'] for n in notices['entries']}
+    assert len(notice_ids)==len(notices['entries'])==manifest['notices']
+    assert notices['moved_card_ids']==manifest['moved_card_ids']
+    assert set(notices['moved_card_ids']).isdisjoint(cards)
+    assert all(c['kind']!='admin' for c in cards.values())
+    for n in notices['entries']:
+        assert n['material_snapshot'] and n['sources'] and all(lid in lessons for lid in n['lesson_ids'])
+        for lang in ['zh','en']:assert n['body_'+lang] and n['body_'+lang+'_html'] and n['title_'+lang]
+        for s in n['sources']:assert 'path' not in s and (s['href'] is None or s['href'].startswith('https://'))
+    for name in ['notices.html','notices.js','notices-data.js']:local_link(name)
     assert len(cards)==len(reader['cards'])==manifest['total_cards']
     assert len(lessons)==len(learning['lessons'])==manifest['total_lessons']
     assert set(index['card_context'])==set(cards)

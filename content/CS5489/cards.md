@@ -24,18 +24,6 @@ Q_ZH: 参数和超参数有什么区别？
 A_EN: A parameter is learned from data, such as a class mean or word probability. A hyperparameter controls the learning procedure or model family, such as the smoothing value $\alpha$ or vocabulary cutoff. Fit parameters on the training split; compare hyperparameters using validation. Choosing a hyperparameter after looking at test scores makes the test less independent.
 A_ZH: 参数由数据估计，例如每类的均值或单词概率；超参数控制学习过程或模型形式，例如平滑系数 $\alpha$ 和词表筛选阈值。参数在训练集上拟合，超参数通过验证比较。看到测试分数后再改超参数，会破坏测试评估的独立性。
 
-@@ M005 | 01-map | admin | I:4-5,29
-Q_EN: What should I prioritize in the currently available CS5489 material?
-Q_ZH: 当前已有的 CS5489 材料应该怎样安排优先级？
-A_EN: Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–3 and Tutorials 1–2; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.
-A_ZH: 先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–3 和 Tutorial 1–2；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。
-
-@@ M006 | 01-map | check | I:23-28
-Q_EN: How should I use these cards to learn rather than only recognize answers?
-Q_ZH: 如何用这些卡片真正学会，而不是只觉得答案眼熟？
-A_EN: First read a module in order with answers visible. Then hide the answer and explain it aloud in English, using Chinese only to repair understanding. For calculation and coding cards, work on paper or type the code before revealing the answer. Finally change a number or assumption and solve again. This is a study strategy added for these cards, not an official assessment rule.
-A_ZH: 第一次按模块顺序阅读并展开答案；第二次遮住答案，用英语口述，理解卡住时再看中文。计算与编程卡先在纸上解或亲手写代码，再翻答案。最后改一个数值或假设重新做。本卡是为学习增加的方法建议，不是官方考核规定。
-
 @@ M007 | 02-python | learn | P1:1-14
 Q_EN: How does a Jupyter notebook execute, and why can execution order cause bugs?
 Q_ZH: Jupyter Notebook 如何执行？为什么运行顺序可能导致错误？
@@ -540,12 +528,6 @@ Q_ZH: 如何在 Gaussian、Bernoulli 和 Multinomial NB 之间选择？
 A_EN: Gaussian NB suits continuous features modeled as class-conditional Gaussians. Bernoulli NB suits binary occurrence indicators and scores both presence and absence. Multinomial NB suits nonnegative token counts; nonnegative TF-IDF is also commonly used in practice. Do not feed arbitrary negative standardized features into a multinomial count model. Match representation, assumptions and validation evidence.
 A_ZH: Gaussian NB 适合可用类条件高斯描述的连续特征；Bernoulli NB 适合二元出现指示，同时对出现与缺席计分；Multinomial NB 适合非负词频，实践中也常用于非负 TF-IDF。不能把任意含负值的标准化特征直接当成多项式计数输入。应同时匹配表示方式、假设与验证证据。
 
-@@ M090 | 09-assignment | admin | A1:2-5,10-12
-Q_EN: What is Assignment 1 asking me to predict?
-Q_ZH: Assignment 1 要预测什么？
-A_EN: Predict one of three SMS labels: 0 = normal, 1 = spam, 2 = smishing. Smishing is phishing conducted through SMS; it is a separate target label here. The supplied training file contains message text and labels. Use the documented validation/test usage split for evaluation. Class meaning must remain consistent in preprocessing, modeling, evaluation and exported predictions.
-A_ZH: 预测三类短信标签：0 为正常，1 为垃圾，2 为短信钓鱼。Smishing 指通过短信实施的钓鱼，在本作业中单独作为一类。训练文件提供文本与标签，评估时使用给定的验证/测试 Usage 划分。预处理、建模、评估和导出的类别含义必须始终一致。
-
 @@ M091 | 09-assignment | learn | A1:3
 Q_EN: What is balanced accuracy, and why is it used here?
 Q_ZH: 什么是平衡准确率？为什么本作业使用它？
@@ -582,29 +564,11 @@ Q_ZH: 除课堂基础方案外，可以怎样增加有意义的特征？
 A_EN: Candidate extensions include character n-grams, URL indicators, digit ratios or message length. Give each a hypothesis, such as character fragments handling spelling variants, then compare with the same baseline and validation protocol. Check representation compatibility: additional continuous features do not automatically fit a multinomial likelihood. Describe these as proposed experiments until tested.
 A_ZH: 候选扩展包括字符 n-gram、URL 指示、数字比例和短信长度。每项都应有假设，例如字符片段可能应对拼写变体，再用同样基线和验证流程比较。还要检查表示兼容性：额外连续特征不会自动适配多项式似然。未经测试时，应称为候选实验而非有效提升。
 
-@@ M097 | 09-assignment | admin | A1:3,5-14;AF:1-11
-Q_EN: What files and reproducibility details does Assignment 1 require?
-Q_ZH: Assignment 1 需要提交哪些文件与复现信息？
-A_EN: The brief requests the documented `Assignment1-Doc.ipynb`, its exported PDF, the final prediction CSV, and `Assignment1-Final.ipynb` that regenerates the CSV, compressed into one zip. Explain preprocessing, model choices, hyperparameter search and results. Record IDs/order, seeds and dependencies. The notebook's random-prediction example demonstrates file format only; it is not a trained solution.
-A_ZH: 要求将带说明的 `Assignment1-Doc.ipynb`、导出的 PDF、最终预测 CSV，以及能重新生成 CSV 的 `Assignment1-Final.ipynb` 打包为一个 zip。须说明预处理、模型选择、超参数搜索与结果，并记录 ID/顺序、种子及依赖。Notebook 中的随机预测仅用于示范文件格式，不是训练好的答案。
-
-@@ M098 | 09-assignment | admin | A1:3,5,10;AF:1-11
-Q_EN: What small inconsistencies in the supplied starter files should I check before running them?
-Q_ZH: 运行提供的起始文件前，应检查哪些小的不一致？
-A_EN: The explanatory text mentions `smishing_test.txt`, while the actual loading code and downloaded file use `smishing_val_test.txt`. The final notebook uses `pd.read_csv`, so make sure `import pandas as pd` is present in the runnable copy. Restart and run all cells to detect hidden imports. Preserve the original starter files and make changes in a working copy.
-A_ZH: 说明文字提到 `smishing_test.txt`，实际加载代码及下载文件使用 `smishing_val_test.txt`。Final Notebook 使用 `pd.read_csv`，应确保运行副本里有 `import pandas as pd`。重启并运行全部单元可发现隐藏依赖。保留原始模板，在工作副本中修正。
-
 @@ M099 | 09-assignment | learn | A1:3
 Q_EN: What should an informative classification error analysis contain?
 Q_ZH: 有价值的分类错误分析应包含什么？
 A_EN: Show confusion patterns and a few authorized evaluation examples, then propose reasons tied to features or assumptions: unseen vocabulary, ambiguous language, or overlapping spam/smishing signals. Distinguish an observation from a causal explanation. Use validation errors for model development; do not repeatedly tune on held-out test mistakes. A good report explains both improvements and unresolved failures.
 A_ZH: 展示混淆模式和少量符合评估流程的例子，再提出与特征或假设相关的可能原因，例如未见词、语义歧义、垃圾与钓鱼信号重叠。应区分观察事实与因果解释。模型开发使用验证错误，不应反复根据留出测试错误调参。好的报告同时解释改进与仍未解决的问题。
-
-@@ M100 | 09-assignment | admin | A1:3
-Q_EN: How is Assignment 1 graded, and what does that imply for my work?
-Q_ZH: Assignment 1 怎样评分？这对准备有什么启示？
-A_EN: The current brief allocates 45% to classifier/feature comparisons, 30% to features or classifiers beyond the lecture examples, 20% to the report, and 5% to final ranking. Reproducible code is required for ranking credit. Keep a comparison log with honest results and explanations. The assignment is individual; these cards support understanding and planning, and are not a submitted report.
-A_ZH: 当前说明中，分类器与特征比较占 45%，课堂例子以外的特征或分类器占 30%，报告占 20%，最终排名占 5%；排名得分要求代码可复现。应保留带真实结果及解释的比较记录。作业是个人作业，这些卡片用于理解与规划，不是已提交的报告。
 
 @@ M101 | 10-extension | extension | B2:93-99;NB:1.9.2
 Q_EN: Is a TF-IDF vector literally a multinomial count observation?
@@ -641,12 +605,6 @@ Q_EN: Design a small experiment that separates the effect of representation from
 Q_ZH: 怎样设计小实验，区分特征表示和分类器各自的影响？
 A_EN: Fix the split and metric. First compare count versus TF-IDF features with the same multinomial NB settings; then compare compatible classifiers under a fixed representation. Tune each method fairly within training/validation and report class recalls as well as balanced accuracy. Change one factor at a time for interpretation, while acknowledging possible interactions. This is an AI-added research habit, not a confirmed QE question.
 A_ZH: 固定划分与指标。先在相同多项式 NB 设置下比较计数与 TF-IDF，再在固定表示下比较兼容的分类器。训练/验证内部公平调参，同时报告各类召回率和平衡准确率。为便于解释，每次改变一个因素，但也承认因素之间可能有交互。这是 AI 补充的研究训练，不是已确认的 QE 考题。
-
-@@ M107 | 11-tutorial2 | classroom | T2:2-11
-Q_EN: What data does Tutorial 2 actually provide, and what are its labels?
-Q_ZH: Tutorial 2 实际提供了多少数据？标签分别是什么？
-A_EN: The supplied `dataAG.json` contains 2,000 training and 1,000 test documents, with labels 0 = World, 1 = Sports, 2 = Business, 3 = Sci/Tech. The notebook's prose says 2,034 and 1,353, but those counts do not match this downloaded file. Inspect the actual data and label mapping before constructing feature matrices. This tutorial uses ordinary classification accuracy.
-A_ZH: 提供的 `dataAG.json` 实际包含 2,000 篇训练文档和 1,000 篇测试文档，标签 0/1/2/3 分别为国际、体育、商业、科技。Notebook 文字中的 2,034 和 1,353 与本次文件不符，应先检查真实数据及标签映射，再构造特征矩阵。本教程使用普通分类准确率。
 
 @@ M108 | 11-tutorial2 | classroom | T2:10-18
 Q_EN: How should the Bernoulli and multinomial text-classification pipelines differ?
@@ -691,10 +649,10 @@ A_EN: Both rate sums equal 3. After dropping shared prior and factorial terms, s
 A_ZH: 两类参数和都是 3。省略共同先验和阶乘项后，分数为 $2\log2-3$ 与 $2\log1-3=-3$。第一类高出 $2\log2=\log4$，因此似然比为 4，第一类后验为 $4/(4+1)=0.8$。这是手算例子，不是 AGNews 实验成绩。
 
 @@ M115 | 11-tutorial2 | classroom | T2:31-32
-Q_EN: The PoissonNB template has an `alpha` parameter but no smoothing formula. What should I do?
-Q_ZH: PoissonNB 模板有 alpha 参数，但没有规定平滑公式，应该怎么办？
-A_EN: State an explicit choice instead of assuming Bernoulli's denominator applies. For example, use $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$, with positive pseudo-count $a$ and exposure $b$, and document the chosen values. This is an added smoothing convention, not a formula specified by the template. Positive rates prevent an unseen word from forcing a class likelihood to zero; validate the smoothing strength.
-A_ZH: 应明确说明采用的方案，不能照搬伯努利分母。例如用 $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$，其中 $a$ 是正的伪计数，$b$ 是额外暴露量，并记录取值。这是补充的平滑约定，不是模板规定的公式。正参数可避免未见词将某类似然直接压成零，平滑强度仍应验证。
+Q_EN: Why smooth Poisson count rates, and how do pseudo-counts differ from pseudo-exposure?
+Q_ZH: 为什么要平滑泊松计数率？伪计数与额外暴露量有什么区别？
+A_EN: An estimated rate of zero assigns zero probability to every positive count. One explicit smoothing rule is $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$, where $T_{cj}$ is the total feature count in class c, $N_c>0$ is the number of equal-exposure documents, $a>0$ is a pseudo-count, and $b\ge0$ is extra exposure measured in document units. The numerator adds events; the denominator adds exposure. This is not Bernoulli's two-outcome denominator. State the convention and select its strength using validation data.
+A_ZH: 若估计率为零，任何正计数都会得到零概率。一种明确的平滑规则为 $\tilde\mu_{cj}=(T_{cj}+a)/(N_c+b)$：$T_{cj}$ 是 c 类中该特征的总计数，$N_c>0$ 是等暴露量文档数，$a>0$ 为伪计数，$b\ge0$ 为以文档数计的额外暴露量。分子补事件，分母补暴露量；它不等于伯努利两种结果的分母。必须说明约定，并用验证数据选择强度。
 
 @@ M116 | 11-tutorial2 | check | T2:31-35
 Q_EN: Why might Poisson NB be a poor model for some document collections?
@@ -855,12 +813,6 @@ Q_EN: What can I infer from a positive learned coefficient, and what additional 
 Q_ZH: 学到正系数能说明什么？还需要哪些上下文？
 A_EN: Holding other inputs fixed, increasing that feature raises the positive-class logit under the model. Check the label mapping, feature scaling and whether other features are correlated. The coefficient's magnitude depends on units, so it is not automatically a comparable feature-importance score. The lecture's fitted Iris coefficients are one saved run, not universal constants.
 A_ZH: 在其他输入固定时，增加该特征会提高模型的正类 logit。还应检查标签映射、特征缩放和特征间相关性。系数大小依赖单位，不能自动当作可直接比较的特征重要性。课件中的 Iris 拟合系数只是一次保存的运行结果，不是通用常数。
-
-@@ M142 | 12-logistic | check | L3A:92;LRDOC:parameters
-Q_EN: Why might the notebook's `multi_class='multinomial'` example fail with a newer scikit-learn version?
-Q_ZH: 为什么 Notebook 的 `multi_class='multinomial'` 在较新 scikit-learn 中可能报错？
-A_EN: Library interfaces change. The current LogisticRegression documentation no longer includes that parameter. For three or more classes, choose a solver supporting multinomial loss and follow the installed version's documentation; use an explicit OneVsRestClassifier when that is the intended model. Record the version and adapt a working copy rather than changing the original course notebook.
-A_ZH: 软件接口会变化，当前 LogisticRegression 文档已不包含这个参数。三类及以上时，应选支持多项式损失的求解器并遵循安装版本文档；若目标是 OvR，则显式使用 OneVsRestClassifier。应记录版本，并在工作副本中适配，保留原始课程 Notebook。
 
 @@ M143 | 13-svm | learn | L3B:4-27;SVM:1
 Q_EN: What margin does a hard-margin SVM try to maximize?

@@ -3,7 +3,7 @@
 本稿是 AI 编写的串讲与教学例题，来源通过 CARDS 关联到原课件页/单元。卡片范围表示复习入口，不表示一节短课穷尽了这些卡片的所有细节。PREREQ 是概念先修；BRIDGE 解释联系。题答的 ` || ` 分隔中文与英文。
 
 @@ ml01 | 学习的对象：从短信到可检验的预测 | From messages to testable predictions
-CARDS: M001-M006
+CARDS: M001,M002,M003,M004
 PREREQ:
 GOAL: 能区分特征、标签、参数和超参数，并画出一次可信的训练流程。
 EXPLAIN: 想让计算机识别垃圾短信，先把每条短信变成特征 x，例如长度和 free 出现次数；训练时还知道标签 y，例如 spam 或 ham。模型 f 把 x 映射为预测。学习不是记住文件名，而是用训练样本决定 f 的参数，使新短信也能被正确处理。
@@ -22,7 +22,7 @@ TRANSFER_A: 会。词表已适应测试分布；严格归纳评估应在训练�
 BRIDGE: 下一步先把这条流程写成能够从干净状态运行的程序，之后再讨论模型公式。
 
 @@ ml02 | 让代码忠实执行你的想法 | Python and reproducible notebooks
-CARDS: M007-M020
+CARDS: M007,M008,M009,M010,M011,M012,M013,M014,M015,M016,M017,M018,M019,M020
 PREREQ: ml01
 GOAL: 能跟踪变量、函数返回值与 Notebook 状态，而不是靠反复点击运行。
 EXPLAIN: Notebook 的单元是界面顺序，内存中的变量却取决于实际执行顺序。先运行后面的单元，再改前面的变量，屏幕上可能同时保留不属于同一次运行的结果。重启内核并从头运行，才是在检查流程是否完整。
@@ -41,7 +41,7 @@ TRANSFER_A: 查该变量的赋值或导入是否在前面的实际执行路径�
 BRIDGE: 列表适合组织对象，机器学习计算则需要具有明确形状的数组。
 
 @@ ml03 | 先看形状，再看矩阵公式 | Shapes before matrix formulas
-CARDS: M021-M034
+CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034
 PREREQ: ml02
 GOAL: 能给矩阵乘法、广播和按轴统计逐步标出形状。
 EXPLAIN: 约定一行是一条样本，一列是一种特征。X 有 N 行 d 列，权重 w 有 d 个数；一条样本的预测是各特征乘对应权重后求和，全部样本一起写成 Xw。矩阵式只是把重复的标量运算打包，并没有增加新规则。
@@ -61,7 +61,7 @@ TRANSFER_A: 统一成 (3,) 或都成 (3,1)，并断言一致；否则广播会�
 BRIDGE: 内积不仅用于预测，也能衡量方向对齐程度；这就连接到投影、正交化和后来的 PCA。
 
 @@ ml04 | 投影：把一个向量拆成已有部分和新信息 | Projection and orthogonalization
-CARDS: M035-M041
+CARDS: M035,M036,M037,M038,M039,M040,M041
 PREREQ: ml03
 GOAL: 能解释 Gram–Schmidt 每次减掉什么，并手算两维例子。
 EXPLAIN: 想知道 v 中有多少已经沿着 u 的方向，可把投影写成 a u。选择 a 使剩余 r=v-au 与 u 垂直，即 u^T r=0。代入得到 a=(u^T v)/(u^T u)。分母是在校正 u 本身的长度；只有 u 已是单位向量时才能省掉。
@@ -80,7 +80,7 @@ TRANSFER_A: 它已在第一方向张成的直线上，没有第二个独立方�
 BRIDGE: 投影最小化剩余距离的思想会在最小二乘和 PCA 中再次出现。
 
 @@ ml05 | 贝叶斯公式就是重新数一遍可能的人群 | Bayes through concrete counts
-CARDS: M042-M049
+CARDS: M042,M043,M044,M045,M046,M047,M048,M049
 PREREQ: ml01
 GOAL: 能从人数表推回条件概率与后验公式。
 EXPLAIN: P(free|spam) 问的是“已经知道是垃圾短信，其中多少有 free”；P(spam|free) 问的是“已经看到 free，其中多少是垃圾”。它们筛选的分母人群不同，不能交换。
@@ -101,7 +101,7 @@ TRANSFER_A: 不能，还要比较正常邮件中的概率，以及先验。若�
 BRIDGE: 概率表通常未知，下一节用训练样本估计它们。
 
 @@ ml06 | MLE：选择最能解释已见数据的参数 | Maximum likelihood and generative classification
-CARDS: M050-M060
+CARDS: M050,M051,M052,M053,M054,M055,M056,M057,M058,M059,M060
 PREREQ: ml05
 GOAL: 能从样本似然推导伯努利均值，并解释高斯均值与方差估计。
 EXPLAIN: 生成式分类器分别学习类别比例和每类会生成什么样的特征，然后用贝叶斯公式做判断。最大似然把数据固定、参数视作待选量：哪个参数使这批观测联合出现的概率或密度最大，就选哪个。它不是“给参数直接求概率”，后者需要先验。
@@ -122,7 +122,7 @@ TRANSFER_A: 应比较加权分数：A 为 0.08，B 为 0.16，选 B。归一化�
 BRIDGE: 多特征数据还需要说明特征之间如何一起变化，这决定使用对角还是完整协方差。
 
 @@ ml07 | 协方差：椭圆的方向也是信息 | Gaussian models and covariance
-CARDS: M061-M074
+CARDS: M061,M062,M063,M064,M065,M066,M067,M068,M069,M070,M071,M072,M073,M074
 PREREQ: ml03,ml06
 GOAL: 能区分完整逐类协方差、对角 Gaussian NB 和共享协方差。
 EXPLAIN: 一维高斯描述围绕均值的散布；二维高斯还要描述两个特征是一起变大、反向变化，还是缺少线性关联。协方差矩阵的对角线是各自方差，非对角线描述共同变化，等密度线可形成倾斜椭圆。
@@ -141,7 +141,7 @@ TRANSFER_A: 相同的二次项抵消，留下线性分数，连接到 LDA 与逻
 BRIDGE: 对文本词频而言，高斯未必是合适的观测模型；先决定“出现”还是“出现次数”。
 
 @@ ml08 | 同一条短信，为什么有不同的 NB 模型 | Text representation and naive Bayes
-CARDS: M075-M089
+CARDS: M075,M076,M077,M078,M079,M080,M081,M082,M083,M084,M085,M086,M087,M088,M089
 PREREQ: ml02,ml06
 GOAL: 能从数据表示选择 Bernoulli 或 Multinomial NB，并算出平滑概率。
 EXPLAIN: 固定词表为 free、meeting、win。短信 free free win 的词频向量是 (2,0,1)，出现标记则是 (1,0,1)。这两种表示问的问题不同：Bernoulli NB 关注每个词是否出现，Multinomial NB 关注文档中各词元分配了多少次。
@@ -160,7 +160,7 @@ TRANSFER_A: 不是。Bernoulli 贡献 log(1-p)；多项式的该词次数项为 
 BRIDGE: 当每个词的出现次数被视为独立计数，Poisson NB 提供第三种建模思路。
 
 @@ ml09 | Poisson NB：把次数变成证据 | Count evidence with Poisson NB
-CARDS: M107-M118
+CARDS: M108,M109,M110,M111,M112,M113,M114,M115,M116,M117,M118
 PREREQ: ml08
 GOAL: 能从 Poisson 概率写出类分数，并解释文档长度与独立性假设。
 EXPLAIN: Poisson 分布以 lambda 表示计数的均值。对某类别的某个词，先统计每篇文档中出现几次，再求平均作为 MLE。它和多项式的差别是：多项式在给定总次数下分配词元，独立 Poisson 则对每个计数单独建模，也隐含了文档长度的结构。
@@ -179,7 +179,7 @@ TRANSFER_A: 分数为 -1 和 -10，支持均值 1 的类别。若错删负 lambd
 BRIDGE: 前面先建模“数据怎样生成”；下一节直接建模“给定数据属于哪类”。
 
 @@ ml10 | 逻辑回归：分数、概率、损失怎样连起来 | Logistic regression from score to update
-CARDS: M119-M132
+CARDS: M119,M120,M121,M122,M123,M124,M125,M126,M127,M128,M129,M130,M131,M132
 PREREQ: ml03,ml06
 GOAL: 能说出一次参数更新为什么朝这个方向，并手算梯度。
 EXPLAIN: 线性分数 z=w^T x+b 可以是任何实数，不能直接叫概率。sigmoid 将它映射为 $p=1/(1+e^{-z})$：z=0 对应 0.5，正分数更支持正类。反过来 $\log[p/(1-p)]=z$，所以加一单位分数是在给优势比乘 e。
@@ -200,7 +200,7 @@ TRANSFER_A: b 的梯度为 p-t=-0.5，新 b=0.05。两者应在同一组旧参�
 BRIDGE: 梯度能拟合一个模型；选择模型和推广到多类别，还需要交叉验证与 softmax。
 
 @@ ml11 | 模型选择与多类别概率 | Cross-validation and multiclass probabilities
-CARDS: M133-M142
+CARDS: M133,M134,M135,M136,M137,M138,M139,M140,M141
 PREREQ: ml10
 GOAL: 能区分训练一个模型、选择超参数、定义多类别概率这三件事。
 EXPLAIN: 比较两个 C 时，应在相同数据划分上公平比较。每一折中，词表、缩放和模型参数都只能用该折训练部分拟合；验证部分负责评分。选定设置后可以用全部开发数据重新拟合，最后只评一次保留测试集。C 与惩罚强度的具体换算依赖库的目标系数约定。
@@ -219,7 +219,7 @@ TRANSFER_A: 验证折已影响均值和尺度，评估过程提前看到了验�
 BRIDGE: 逻辑回归惩罚概率判断，SVM 则把“离边界多远”放到学习目标里。
 
 @@ ml12 | SVM：先看距离，再看优化式 | Margins and soft-margin SVM
-CARDS: M143-M146,M154-M156,M159-M164
+CARDS: M143,M144,M145,M146,M154,M155,M156,M159,M160,M161,M162,M163,M164
 PREREQ: ml04,ml10
 GOAL: 能用几何距离解释间隔，并判断松弛变量的含义。
 EXPLAIN: 设标签 y 为 -1 或 +1，决策边界是 $w^Tx+b=0$，w 非零。把 w 和 b 同乘正数不会移动边界，所以分数大小不是距离；点到边界的距离为 $|w^Tx+b|/\|w\|$。硬间隔要求两类可被线性完全分开，并规范分数使 $y_i(w^Tx_i+b)\ge1$。再最小化 $\frac12\|w\|^2$，相当于把两类之间最窄的“走廊”拓宽，单侧间隔是 $1/\|w\|$。
@@ -238,7 +238,7 @@ TRANSFER_A: 不会，距离分子和分母同时乘 10，抵消。分数改变�
 BRIDGE: 原始问题看 w 与 b；对偶从样本贡献出发，解释哪些点真正支撑边界。
 
 @@ ml13 | 对偶与 KKT：给约束配上价格 | Duality, multipliers, and support vectors
-CARDS: M147-M153,M157-M158
+CARDS: M147,M148,M149,M150,M151,M152,M153,M157,M158
 PREREQ: ml12
 GOAL: 能从拉格朗日函数推出 w 的样本展开，并避免 KKT 逆命题错误。
 EXPLAIN: 把硬间隔约束写成 $g_i=1-y_i(w^Tx_i+b)\le0$。最小化问题的拉格朗日函数为 $L=\frac12\|w\|^2+\sum_i\alpha_i g_i$，其中 alpha_i≥0。对任一可行 w,b，乘子项非正，所以先对 w,b 求下确界得到原问题最优值的下界；再最大化这个下界就是对偶。
@@ -257,7 +257,7 @@ TRANSFER_A: 不能；g_i=0 也满足乘积为零。应区分必要条件、充�
 BRIDGE: 对偶只通过样本内积计算，这为核方法提供了入口。
 
 @@ ml14 | 核：换一种比较样本的方式 | Kernels as implicit feature comparisons
-CARDS: M165-M172
+CARDS: M165,M166,M167,M168,M169,M170,M171,M172
 PREREQ: ml03,ml13
 GOAL: 能展开一个二次核，并解释 C 与 gamma 控制不同事情。
 EXPLAIN: 在原空间画不直的边界，变成更丰富的特征后可能是线性的。例如加入平方与交叉项，可以表达弯曲关系。如果算法只需要新特征的内积，就不一定要真正存出这些特征：用 k(x,z)=phi(x)^T phi(z) 直接计算即可。
@@ -276,7 +276,7 @@ TRANSFER_A: 不是。C 改变间隔违约的惩罚权重；gamma 改变样本间
 BRIDGE: 模型看到的几何结构来自特征表示，因此缩放和编码也是模型的一部分。
 
 @@ ml15 | 特征与评估：别让表示偷偷改变问题 | Features, scale, and fair comparison
-CARDS: M173-M182
+CARDS: M173,M174,M175,M176,M177,M178,M179,M180,M181,M182
 PREREQ: ml11,ml14
 GOAL: 能解释变换如何影响距离和惩罚，并建立公平比较流程。
 EXPLAIN: 假设两个特征是身高和收入，数值单位不同。依赖欧氏距离或 L2 权重惩罚的模型会受单位影响；标准化用训练均值和标准差构造可比尺度。但标准化不是删除信息，也不意味着每个特征都一定应被等权对待。
@@ -295,14 +295,14 @@ TRANSFER_A: 在相同划分和调参预算下比较旧特征与新特征，固�
 BRIDGE: 将这一流程落实到短信作业，比先尝试很多复杂模型更容易定位问题。
 
 @@ ml16 | 从基线到可解释的短信实验 | A reproducible assignment workflow
-CARDS: M090-M100
+CARDS: M091,M092,M093,M094,M095,M096,M099
 PREREQ: ml08,ml11
 GOAL: 能独立建立短信分类基线，并用混淆矩阵解释失败。
 EXPLAIN: 作业先拆为数据、特征、训练、选择、评价、交付六步。先让简单词袋加 NB 的基线端到端运行，再改变一个因素。记录训练样本数、标签映射、随机种子、词表拟合位置和评价函数，才能确定两个成绩来自可比较的实验。
 
 混淆矩阵把“错了”细分为哪一类被判成哪一类。Recall 看该真实类别中找回多少；precision 看预测为该类的结果中多少正确。Balanced accuracy 对各类 recall 做算术平均，使多数类不能仅靠数量掩盖少数类失败。
 
-错误分析应回到具体短信：是否分词错误、否定词缺失、稀有词未覆盖、内容本就模糊？提出可检验改动，而不是只抄一个更高分。提交要求和评分细节以当前 Assignment 1 卡片链接的原 Notebook 为准；这里的小例子不是代做实验或报告实际成绩。
+错误分析应回到具体短信：是否分词错误、否定词缺失、稀有词未覆盖、内容本就模糊？提出可检验改动，而不是只抄一个更高分。提交要求和评分细节见网页“课程信息”中的 Assignment 1 说明，并以最新 Canvas 原 Notebook 为准；这里的小例子不是代做实验或报告实际成绩。
 RECAP_EN: Build a complete baseline before optimizing components. Use per-class errors to formulate testable improvements and preserve the distinction between validation choices and final evaluation.
 WORKED_Q: 三类召回率 0.95、0.60、0.40，balanced accuracy 是多少？ || What is balanced accuracy for recalls 0.95,0.60,0.40?
 WORKED_A: (0.95+0.60+0.40)/3=0.65。它给三个类别相同权重，不是把正确样本数直接除总数。 || The mean recall is 0.65. Each class receives equal weight, unlike ordinary accuracy based on total sample counts.
@@ -314,7 +314,7 @@ TRANSFER_A: 不能。固定划分，分开比较改动，保留可复现配置�
 BRIDGE: QE 需要从实验与公式上升到“为什么、何时成立、何时失败”的解释。
 
 @@ ml17 | QE 口述：把模型讲成可追问的论证 | Explaining assumptions and decisions
-CARDS: M101-M106
+CARDS: M101,M102,M103,M104,M105,M106
 PREREQ: ml07,ml08,ml10,ml16
 GOAL: 能用英文连续解释任务、模型、假设、决策规则和局限。
 EXPLAIN: 一个完整解释可以按五句话展开：解决什么任务；用什么表示；模型假设什么；怎样训练和预测；什么情况下会失败。公式应嵌在这条论证中，而不是突然背出来。比如朴素贝叶斯的 fast 来自可分解的统计量，局限也正来自条件独立等建模假设。
@@ -333,7 +333,7 @@ TRANSFER_A: 概率依赖模型与数据分布，独立假设错误或分布变�
 BRIDGE: 后续 Extra Resources 可用于预习新模型；始终将它们映射回任务、假设、目标与验证这四个问题。
 
 @@ ml18 | k-NN：先用附近的例子回答 | Nearest-neighbor reasoning
-CARDS: M183-M186
+CARDS: M183,M184,M185,M186
 PREREQ: ml03,ml15
 GOAL: 能手算多数投票，并解释为什么尺度会改变邻居。
 EXPLAIN: k-NN 在预测时找离查询点最近的 k 条训练样本，再用标签投票。它把复杂的全局边界变成局部问题，但“最近”完全依赖距离与表示：若一个特征的单位变大，它就可能主导欧氏距离。
@@ -350,7 +350,7 @@ TRANSFER_A: 它的平方距离贡献放大一百万倍，邻居可能改变。�
 BRIDGE: k-NN 直接查例子；回归则用参数概括输入与连续输出的关系。
 
 @@ ml19 | 最小二乘：从每个误差推到正规方程 | Least squares without skipping the derivative
-CARDS: M187-M202
+CARDS: M187,M188,M189,M190,M191,M192,M193,M194,M195,M196,M197,M198,M199,M200,M201,M202
 PREREQ: ml03,ml04,ml10
 GOAL: 能逐项求导得到正规方程，说明何时唯一以及正则化改了什么。
 EXPLAIN: 约定 X 的每行是一条样本，包含常数列时也可学习截距。令 $J(w)=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$。先只对第 k 个系数求导：第 i 个残差的导数为 X_ik，所以 $\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$。把所有 k 的结果排列起来，恰好就是 $X^T(Xw-y)$。
@@ -370,7 +370,7 @@ TRANSFER_A: 不唯一；两列的权重可一增一减而不改变预测。列�
 BRIDGE: 平方残差惩罚大错误特别重，因此下一节讨论异常点和不同损失。
 
 @@ ml20 | 鲁棒回归：一个异常点为什么能拉走直线 | Outliers and robust fitting
-CARDS: M203-M210
+CARDS: M203,M204,M205,M206,M207,M208,M209,M210
 PREREQ: ml19
 GOAL: 能比较平方损失、epsilon 不敏感损失与 RANSAC 的假设。
 EXPLAIN: 残差从 1 增到 10，平方损失从 1 增到 100，梯度幅度也变大。一个远离主体的数据点可能明显拉动拟合结果。换损失是在改变错误代价；RANSAC 则先反复用小子集拟合候选模型，再寻找符合容差的内点集合。
@@ -389,7 +389,7 @@ TRANSFER_A: 将 x² 视为已知特征后，未知 a、b 只以一次线性组�
 BRIDGE: 聚类同样用距离，但没有标签告诉我们哪条预测对错。
 
 @@ ml21 | k-means：分组与代表点为什么交替更新 | Why k-means alternates
-CARDS: M211-M216
+CARDS: M211,M212,M213,M214,M215,M216
 PREREQ: ml03,ml19
 GOAL: 能从平方距离目标推导均值更新，解释下降与全局最优的区别。
 EXPLAIN: 分类有标签，聚类需要自己定义怎样算“同一组”。k-means 让每个点只属于一个组，并选择组中心，使点到自己中心的平方距离总和尽量小：$J=\sum_i\|x_i-\mu_{z_i}\|^2$。
@@ -410,7 +410,7 @@ TRANSFER_A: 不同起点可进入不同局部解；单次下降只比较同一�
 BRIDGE: 点在两组边缘时，硬分配太绝对；GMM 用责任度表示软归属。
 
 @@ ml22 | EM：先估计归属，再重估模型 | Soft clustering and EM
-CARDS: M217-M226
+CARDS: M217,M218,M219,M220,M221,M222,M223,M224,M225,M226
 PREREQ: ml07,ml21
 GOAL: 能计算责任度与加权均值，并区分密度值和归属概率。
 EXPLAIN: 想象两台机器都生产零件，但记录里没写每件来自哪台。GMM 假设先按混合权重选择成分，再从该成分的高斯分布生成观测；不知道成分标签，就不能直接按组统计。E 步计算“这一件有多大可能来自每台机器”：$r_{ik}=\pi_k\mathcal N(x_i;\mu_k,\Sigma_k)/\sum_j\pi_j\mathcal N(x_i;\mu_j,\Sigma_j)$。这叫责任度，对每个点跨成分求和为一。
@@ -429,7 +429,7 @@ TRANSFER_A: 责任度回答的是某一个点来自哪一成分，应在成分�
 BRIDGE: 聚类找组，PCA 找能保留主要变化的坐标方向；两者都不直接等于分类目标。
 
 @@ ml23 | PCA：用少数方向保留数据的变化 | PCA, projection, and SVD
-CARDS: M227-M240
+CARDS: M227,M228,M229,M230,M231,M232,M233,M234,M235,M236,M237,M238,M239,M240
 PREREQ: ml04,ml19
 GOAL: 能解释中心化、最大方差方向和低秩重构之间的联系。
 EXPLAIN: 先把每列减去训练均值，PCA 才是在解释围绕数据中心的变化。选择单位方向 v 后，每个点的投影是 x_i^T v，投影方差为 $v^T S v$，其中 S 是中心化样本协方差。限制 ||v||=1，避免仅靠把方向放大就增加方差。
@@ -448,7 +448,7 @@ TRANSFER_A: 会，该特征方差放大一百万倍，并改变协方差结构�
 BRIDGE: PCA 通过线性投影提取特征；神经网络通过多层可学习变换得到更丰富的表示。
 
 @@ ml24 | 反向传播：沿计算图分配责任 | Backpropagation through a computation graph
-CARDS: M241-M254
+CARDS: M241,M242,M243,M244,M245,M246,M247,M248,M249,M250,M251,M252,M253,M254
 PREREQ: ml03,ml10
 GOAL: 能区分前向、反向、更新，并手算局部导数如何相乘与相加。
 EXPLAIN: 常叫“线性层”的 $XW+b$ 严格说是仿射变换，因为含偏置。若中间没有非线性，连续两层仍可合并：$(XW_1+b_1)W_2+b_2=X(W_1W_2)+(b_1W_2+b_2)$。加层并未跳出仿射函数族；加入 ReLU，即 $\max(0,z)$ 这样的非线性，才改变表达能力。输出还需匹配任务：分类常用交叉熵，回归可用平方损失。
@@ -467,7 +467,7 @@ TRANSFER_A: W 有 4×3=12 个，b 有 3 个，总计 15。样本批量大小不�
 BRIDGE: CNN 在局部空间位置共享同一组参数，把图像结构融入网络。
 
 @@ ml25 | CNN：同一个小检测器在图上滑动 | Convolution, shape, and receptive field
-CARDS: M255-M264
+CARDS: M255,M256,M257,M258,M259,M260,M261,M262,M263,M264
 PREREQ: ml24
 GOAL: 能手算滑动内积、输出尺寸和参数数目。
 EXPLAIN: 卷积层在一个小窗口内，将像素与滤波器权重逐项相乘再求和，然后把同一滤波器移动到别的位置。一个滤波器产生一个输出通道；多个输入通道的贡献在该输出通道内相加。空间位置共享权重，参数数目通常不随图像宽高增长。
@@ -486,7 +486,7 @@ TRANSFER_A: 5×5。第二层汇聚第一层相邻三格，各自看三格，最�
 BRIDGE: 网络结构定义能表示什么；优化与训练模式决定如何学到参数。
 
 @@ ml26 | 训练网络：梯度、状态和正则化分别做什么 | Optimization and training state
-CARDS: M265-M276
+CARDS: M265,M266,M267,M268,M269,M270,M271,M272,M273,M274,M275,M276
 PREREQ: ml24,ml25
 GOAL: 能区分优化器状态、数据统计与训练/评估模式。
 EXPLAIN: mini-batch SGD 每步用一部分样本估计梯度；一个 epoch 表示看完一遍训练集，不等于一次更新。Momentum 累积方向，Adam 还维护梯度及平方梯度的移动平均，并做初期偏差修正。它们改变更新规则，不会自动消除数据泄漏或错误标签。
@@ -505,7 +505,7 @@ TRANSFER_A: 不一定；先检查是否仍开着训练模式的 dropout、随机
 BRIDGE: 视觉任务的输出与评价标准不同，不能只按网络名称判断方法优劣。
 
 @@ ml27 | 视觉任务：输出决定损失与评价 | Vision tasks and evaluation
-CARDS: M277-M284
+CARDS: M277,M278,M279,M280,M281,M282,M283,M284
 PREREQ: ml25,ml26
 GOAL: 能区分类别、框、像素与实例输出，并解释重构指标的局限。
 EXPLAIN: 分类给整图标签；检测还要给对象位置；语义分割给每个像素语义类别；实例分割还分开同类的不同对象。输出结构不同，所以头部、损失和评价标准不能直接混用。残差连接把变换结果与输入相加，需要形状兼容，目的是提供额外的信息和梯度路径。
@@ -524,7 +524,7 @@ TRANSFER_A: 不一定，还要看用了多少码率、视觉质量、任务需�
 BRIDGE: 恢复试图解释观测，生成模型则尝试从随机变量采样新的数据。
 
 @@ ml28 | 生成模型：采样不等于计算密度 | GANs and diffusion models
-CARDS: M285-M294
+CARDS: M285,M286,M287,M288,M289,M290,M291,M292,M293,M294
 PREREQ: ml06,ml24,ml26
 GOAL: 能分别说明 GAN 的对抗训练与扩散的加噪/去噪过程。
 EXPLAIN: 生成器可以把简单随机 z 映射为图像 G(z)，因此能采样，却未必能高效给某张图计算精确概率密度。GAN 训练判别器区分真实与生成样本，再训练生成器改变这种判断；双方改变彼此面对的目标，所以不能把两个损失都当作固定函数的普通下降。
@@ -543,7 +543,7 @@ TRANSFER_A: 它可能只覆盖少数模式，缺少多样性；需检验分布�
 BRIDGE: Transformer 的注意力是一种信息组合运算，可用于判别或生成，并不由任务名称决定。
 
 @@ ml29 | 注意力：每个位置向其他位置取信息 | Attention, dimensions, and robustness
-CARDS: M295-M302
+CARDS: M295,M296,M297,M298,M299,M300,M301,M302
 PREREQ: ml03,ml11,ml24
 GOAL: 能区分 query/key/value，手算注意力加权，并核对矩阵维度。
 EXPLAIN: 把 token 暂时看作一个词块或图像小块。像查资料一样，query 是查询条件，key 是可匹配的索引，value 是取回后要组合的内容；它们都是学出来的向量，不是人工填写的文字。标准注意力为 $\operatorname{softmax}(QK^T/\sqrt{d_k})V$：对每个 query 的行归一化，再加权组合 values。权重和为一，输出仍通常是特征，不是类别概率。
@@ -562,7 +562,7 @@ TRANSFER_A: 从 n² 变成 (2n)²=4n²，为 4 倍；不能据此断言整网运
 BRIDGE: 进入往年综合题时，先识别需要哪条知识链，再开始推导。
 
 @@ ml30 | 综合题诊所：拆条件、补中间式、找反例 | A clinic for historical derivations
-CARDS: M303-M326
+CARDS: M303,M304,M305,M306,M307,M308,M309,M310,M311,M312,M313,M314,M315,M316,M317,M318,M319,M320,M321,M322,M323,M324,M325,M326
 PREREQ: ml04,ml06,ml19,ml24
 RELATED: ml13,ml23,ml25
 GOAL: 能给长题列出条件和小步骤，并识别数值答案依赖的隐含约定。

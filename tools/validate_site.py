@@ -50,8 +50,17 @@ def main():
     assert len(cards)==len(reader['cards'])==manifest['total_cards']
     assert len(lessons)==len(learning['lessons'])==manifest['total_lessons']
     assert set(index['card_context'])==set(cards)
-    linked=[];images=set();reading_figures=set();reading_count=0
+    linked=[];images=set();reading_figures=set();reading_count=0;beginner_figures=set()
     for lesson in lessons.values():
+        beginner=lesson['first_pass']
+        assert len(beginner['steps'])==len(beginner['steps_html'])==3,lesson['id']
+        for pair in [beginner['start'],beginner['trap'],*beginner['steps']]:
+            assert re.search('[\u3400-\u9fff]',pair['zh']) and len(re.findall('[A-Za-z]+',pair['en']))>=4,lesson['id']
+        for figure in beginner['figures']:
+            local_link(figure['src']);beginner_figures.add(figure['src'])
+            assert figure['alt'] and figure['caption_zh'] and figure['caption_en']
+            svg=(site/figure['src']).read_text()
+            assert '<title ' in svg and '<desc ' in svg and '<script' not in svg
         linked.extend(lesson['card_ids'])
         assert all(x in lessons for x in lesson['prerequisites']+lesson['related'])
         assert all(c in cards for c in lesson['card_ids'])
@@ -90,6 +99,8 @@ def main():
     assert len(images)==manifest['images']
     assert reading_count==manifest['reading_supplements']
     assert len(reading_figures)==manifest['reading_figures']
+    assert len(beginner_figures)==manifest['beginner_figures']
+    assert manifest['beginner_entries']==len(lessons)
     introductions=json.loads((site/'deck-introductions.json').read_text())
     assert set(introductions['courses'])==set(manifest['courses'])
     for course,intro in introductions['courses'].items():

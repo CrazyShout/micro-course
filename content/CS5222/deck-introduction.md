@@ -6,9 +6,9 @@ CS5222 · Bilingual computer networking cards
 
 ## 这套牌组用来做什么 / Purpose
 
-280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。
+280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。
 
-These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation.
+These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front.
 
 ## 当前内容与往年预习 / Current scope and historical preview
 

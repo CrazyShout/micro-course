@@ -29,6 +29,8 @@ EXPLAIN: Notebook 的单元是界面顺序，内存中的变量却取决于实�
 
 先掌握三个动作：用变量保存值，用循环逐个处理对象，用函数把输入变成输出。print 是给人看，return 才把结果交给后续计算。列表保存有序对象；字典把词映射到计数；集合帮助去重。类把一组状态和相关方法放在一起，后面分类器的 fit 会存参数，predict 再使用这些参数。
 
+先跑一个完整小函数：`def count_factors(n): return sum(n % d == 0 for d in range(2,n))`。读的时候拆开：range 产生候选因数，% 求余，== 得到真假，sum 把 True 当作 1 累加，return 把最终整数交回调用者。`count_factors(12)` 得 4。这里的一行写法只是压缩了循环，不是另一套数学。
+
 注意对象共享：b = a 通常让两个名字指向同一个可变列表，修改 b 也会影响 a。复制、视图和随机数状态都可能让“公式没错”的实验产生错误结果。
 RECAP_EN: A notebook is a stateful program. Track data flow, distinguish printing from returning, and verify the complete workflow by restarting and running all cells in order.
 WORKED_Q: a=[1,2]；b=a；b[0]=9；a 是什么？ || After a=[1,2], b=a, and b[0]=9, what is a?
@@ -41,7 +43,7 @@ TRANSFER_A: 查该变量的赋值或导入是否在前面的实际执行路径�
 BRIDGE: 列表适合组织对象，机器学习计算则需要具有明确形状的数组。
 
 @@ ml03 | 先看形状，再看矩阵公式 | Shapes before matrix formulas
-CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034,M329,M330
+CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034,M329,M330,M035,M036
 PREREQ: ml02
 GOAL: 能给矩阵乘法、广播和按轴统计逐步标出形状。
 EXPLAIN: 约定一行是一条样本，一列是一种特征。X 有 N 行 d 列，权重 w 有 d 个数；一条样本的预测是各特征乘对应权重后求和，全部样本一起写成 Xw。矩阵式只是把重复的标量运算打包，并没有增加新规则。
@@ -49,6 +51,10 @@ EXPLAIN: 约定一行是一条样本，一列是一种特征。X 有 N 行 d 列
 axis=0 的均值把样本轴压掉，得到每个特征的均值；axis=1 则得到每条样本内部的平均值。转置把行列交换，reshape 只是按元素顺序重新安排形状，两者通常不同。NumPy 的 * 是逐元素乘，@ 才是矩阵乘。
 
 广播从末尾维度对齐：相等或有一个为 1 才兼容。因此 (N,1) 减 (N,) 会被当作列向量减行向量，得到 N×N 个两两差，而不是 N 个样本残差。每一步先写预期 shape，再运行确认。
+
+把 Tutorial 1 的绘图任务也放在这里：对每个 n=2,…,100，计算不含 1 和 n 的正因数个数 f(n)。散点图用 (n,f(n))，一个点对应一个整数；直方图对 f(n) 分组，一个柱的高度表示有多少整数具有该计数。例如 12 的非平凡因数为 2、3、4、6，因此散点含 (12,4)，直方图中“4 个因数”这一组多计一个。因为一共有 99 个整数，各箱频数之和应为 99。
+
+另一个绘图练习给出形状 (120,2) 的数组，每行就是一个二维点。`mydata[:,0]` 取全部横坐标，`mydata[:,1]` 取全部纵坐标，再交给 scatter。这里要学的是“数组的行怎样对应观察对象”，不需要先读其他文件才能理解问题。
 SYMBOLS: X | 数据矩阵，N×d；w | 权重向量，d；Xw | 预测，N；X^T X | d×d 特征内积矩阵
 RECAP_EN: Matrix notation packages scalar operations. With samples in rows, X has shape N by d and Xw contains N predictions. Broadcasting compatibility does not guarantee the intended meaning.
 WORKED_Q: X 的两行为 (1,2)、(3,4)，w=(2,-1)，求 Xw。 || X has rows (1,2) and (3,4), and w=(2,-1). Compute Xw.
@@ -61,7 +67,7 @@ TRANSFER_A: 统一成 (3,) 或都成 (3,1)，并断言一致；否则广播会�
 BRIDGE: 内积不仅用于预测，也能衡量方向对齐程度；这就连接到投影、正交化和后来的 PCA。
 
 @@ ml04 | 投影：把一个向量拆成已有部分和新信息 | Projection and orthogonalization
-CARDS: M035,M036,M037,M038,M039,M040,M041
+CARDS: M037,M038,M039,M040,M041
 PREREQ: ml03
 GOAL: 能解释 Gram–Schmidt 每次减掉什么，并手算两维例子。
 EXPLAIN: 想知道 v 中有多少已经沿着 u 的方向，可把投影写成 a u。选择 a 使剩余 r=v-au 与 u 垂直，即 u^T r=0。代入得到 a=(u^T v)/(u^T u)。分母是在校正 u 本身的长度；只有 u 已是单位向量时才能省掉。
@@ -167,7 +173,7 @@ EXPLAIN: Poisson 分布以 lambda 表示计数的均值。对某类别的某个�
 
 单词概率为 $e^{-\lambda}\lambda^x/x!$。多个词取对数相加，类分数为 $\log\pi_c+\sum_j[x_j\log\lambda_{cj}-\lambda_{cj}-\log(x_j!)]$。对于同一文档，各类的阶乘项相同，比较类别时可以去掉；负 lambda 项依赖类别，不能漏。
 
-当前 Tutorial 2 模板带 alpha，却未规定其数学定义，不能自行加一个平滑公式又称为老师原式。先说明采用的约定，再检查零计数、类别标签顺序、特征形状与训练/测试隔离。实际 AGNews 文件为训练 2000、测试 1000；教学小例子不是实验成绩。
+若训练中某词总计数为零，直接估出的率也是零，新的正计数会被判为不可能。平滑的直觉是补一点伪事件和观察量；怎样补必须先定义模型，不能照搬伯努利分母。实现时还要检查类别标签顺序、特征形状和训练/测试隔离。模板参数与文件规模等具体提醒已放在课程信息栏。
 RECAP_EN: Poisson NB scores independent counts using log priors, count-weighted log rates, and negative rates. Drop only terms that are identical across classes for the same observation.
 WORKED_Q: 等先验，A 的均值 (2,1)，B 为 (1,2)，x=(2,0)，哪个分数大？ || With equal priors, rates (2,1) for A and (1,2) for B, which class scores higher for x=(2,0)?
 WORKED_A: 忽略共同项，A 为 2log2-3，B 为 -3；差为 2log2>0，选 A。两个类别的总均值恰好相同，这一次负 lambda 和才抵消。 || A scores 2log2-3 and B scores -3, so A wins by 2log2. The negative-rate sums cancel here only because their totals match.

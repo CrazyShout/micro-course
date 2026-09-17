@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="792pt" height="216pt" viewBox="0 0 792 216" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title id="title">Diffusion starts with a defined noising process</title><desc id="desc">Original teaching diagram: 信号逐渐被噪声淹没；这里展示前向加噪，不是模型生成结果. Interpret with the lesson assumptions.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.6, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 216 
+L 792 216 
+L 792 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g clip-path="url(#pd9d1f1b711)">
+    <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAMkAAADJCAYAAACJxhYFAAACN0lEQVR4nO3VwQ3CMBQFwYBSmEtLae4MKgiLxMERmbnah39ZvcdxHK8NOPU8fwJEAl+wJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCYa8PdzfG2P7dnHP1CZdmSSCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiASCSCCIBIJIIIgEgkggiAREAr+xJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQRAJBJBBEAkEkEEQCQSQQ9vpwd3PO1SewmCWBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSASCCKBIBIIIoEgEggigSAS2D57A/i3CVVMYlogAAAAAElFTkSuQmCC" id="image3c491e6394" transform="scale(1 -1) translate(0 -144.72)" x="31.678696" y="-58.32" width="144.72" height="144.72"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 14.4px; font-family: 'DejaVu Sans'; text-anchor: middle" x="103.86" y="52.677391" transform="rotate(-0 103.86 52.677391)">signal weight² = 1</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g clip-path="url(#p02158db37c)">
+    <image xlink:href="data:image/png;base64,
+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" id="imagec7417bfed5" transform="scale(1 -1) translate(0 -144.72)" x="226.438696" y="-58.32" width="144.72" height="144.72"/>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 14.4px; font-family: 'DejaVu Sans'; text-anchor: middle" x="298.62" y="52.677391" transform="rotate(-0 298.62 52.677391)">signal weight² = 0.8</text>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g clip-path="url(#p962d820c02)">
+    <image xlink:href="data:image/png;base64,
+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" id="image61bda95ebd" transform="scale(1 -1) translate(0 -144.72)" x="421.198696" y="-58.32" width="144.72" height="144.72"/>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 14.4px; font-family: 'DejaVu Sans'; text-anchor: middle" x="493.38" y="52.677391" transform="rotate(-0 493.38 52.677391)">signal weight² = 0.4</text>
+   </g>
+  </g>
+  <g id="axes_4">
+   <g clip-path="url(#p36f2d0a960)">
+    <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAMkAAADJCAYAAACJxhYFAAAGGklEQVR4nO3cz0uUbRyF8e+YIKUrGWwWFkRmYTAhpalUhELQwk0thEQjaFk7kZQIiSLClQaBEFiYqwQhDElMMiFb+ANEIkJImkAEkUoiqBjDf+A9cIJn816f/eEW9Ore3D2pfD6/HYaGhoZw1dTUWLva2lpr9/bt23BduXLF2nV3d1u7y5cvh6utrc3ajYyM2Gdub1t/PrGxsWHtfv/+Ha58Pm/tCuwTgf8JIgEEIgEEIgEEIgEEIgEEIgEEIgEEIgEEIgEEIgEEIgEEIgGEVDqdtp5xdnV1haugwGvz/fv31m7fvn3hevLkibV79uyZtZubmwvXzMyMtauurrbP/PXrl7Wbnp62duPj45E0bhJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJAIBJASC0sLFhP5SsqKsL18uVLa/fixQtrt3v37nDV1dVZu8ePH0fSHyKvqqqydul02j5zbGws0Z/1zJkz4ZqamrJ23CSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAUJjL5cKxd+/ecH38+NHaDQ0NWbu2trZwuS+I29vbrd3W1la4Dh06ZO2+fv2a+MvabDZr7W7evBmu06dPWztuEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkAgEkBInT9/3voW8Llz58J18OBBazc7O2vtMplMuAoKvH9HioqKEn2p+i+veefm5uwzKysrrd3w8LC1+/79e7i+fftm7bhJAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIAIFIACE1MTFhPZW/evVquKanp63dgQMHrN3q6mq4amtrrV1nZ6e1O378eLjm5+et3ejoqH1mf3+/tWtqarJ26XQ6XM+fP7d23CSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAQCSAkGpqarJeAU9OToarq6vL2pWVlVm7tbW1cF28eNHaPX361No9ePAgXO5r3pWVFfvMpaUla1dTU2PtNjc3w3Xjxg1rx00CCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCEQCCIXuR6j//PkTrtevXyf68epsNhuu5eXlRJ/1f/nyJVz19fXWrri42D7zxIkT1m5qasraTUxMhKunp8facZMAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAQmF5eXk4hoaGwpXL5axdJpNJ9KPOO1paWqzd4cOHrV1zc3O4Lly4YO2OHj1qn1lSUpLoK+Dr16+H6+HDh9aOmwQQiAQQiAQQiAQQiAQQiAQgEuDfcJMAApEAApEAApEAApEAApEAQurVq1fbYbhz50646urqrN3q6qq1a2hoCFdpaam16+3ttXaLi4vhGhgYsHbv3r2zz1xbW7N2R44cSfT3saOiosLacZMAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAQqqjo8N6Kr+yshKura0ta5fNZq3dp0+fwjU6OmrtGhsbrV1RUVG4qqurrd2xY8fsM2dnZ63d8vKytduzZ0+43I/Dc5MAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAApEAQuGpU6fC8ebNm3Bdu3bN2j169MjaLSwshOvSpUvWLpfLWbtbt26Fy33t/PPnT/vMsrIya1dZWWntMplMuM6ePWvtuEkAgUgAgUgAgUgAgUgAgUgAgUgAgUgAgUgAgUgAgUgAgUgAgUgAoXDXrl3haG1tDdfY2Ji1GxgYsHb3798P1+3bt63d3bt3rd36+nq4BgcHE/9Wcnd3t7XL5/OJfu94x71796wdNwkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgpJqbm7fD0NjYGC736XpfX5+1279/f7jcj3SfPHnS2v348SNcHz58sHafP3+2zxwfH0/0Zx0eHo6k/9sDNwkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkgEAkQ/+0vrAotzdcwMFAAAAAASUVORK5CYII=" id="image565221002d" transform="scale(1 -1) translate(0 -144.72)" x="615.958696" y="-58.32" width="144.72" height="144.72"/>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 14.4px; font-family: 'DejaVu Sans'; text-anchor: middle" x="688.14" y="52.677391" transform="rotate(-0 688.14 52.677391)">signal weight² = 0.04</text>
+   </g>
+  </g>
+  <g id="text_5">
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="396" y="17.237344" transform="rotate(-0 396 17.237344)">Diffusion starts with a defined noising process</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd9d1f1b711">
+   <rect x="31.678696" y="58.677391" width="144.362609" height="144.362609"/>
+  </clipPath>
+  <clipPath id="p02158db37c">
+   <rect x="226.438696" y="58.677391" width="144.362609" height="144.362609"/>
+  </clipPath>
+  <clipPath id="p962d820c02">
+   <rect x="421.198696" y="58.677391" width="144.362609" height="144.362609"/>
+  </clipPath>
+  <clipPath id="p36f2d0a960">
+   <rect x="615.958696" y="58.677391" width="144.362609" height="144.362609"/>
+  </clipPath>
+ </defs>
+</svg>

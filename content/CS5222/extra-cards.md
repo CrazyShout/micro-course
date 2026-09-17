@@ -25,8 +25,8 @@ A_EN: Let server upload be us, peer uploads ui and minimum peer download dmin. C
 A_ZH: 设服务器上传速率为 us、节点上传为 ui、最慢下载为 dmin。客户端—服务器模式至少需 $\max(NF/u_s,F/d_{\min})$；P2P 至少需 $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$。这些流体模型下界忽略分组开销、分块可用性和调度限制，不自动等于实际可达到的时间。
 
 @@ N139 | x01-applications | worked | XN2:73-75
-Q_EN: For F=1 Gbit, N=10, us=100 Mbps, every peer upload=10 Mbps and dmin=50 Mbps, compute the ideal distribution bounds.
-Q_ZH: F=1 Gbit、N=10、us=100 Mbps，各节点上传 10 Mbps，dmin=50 Mbps，求理想分发时间下界。
+Q_EN: Distribute a file F=1 Gbit to N=10 clients. Server upload us=100 Mbps, each client upload is 10 Mbps, and the slowest client download dmin=50 Mbps. Find ideal client–server and P2P distribution-time lower bounds.
+Q_ZH: 把 F=1 Gbit 文件分发给 N=10 个客户端。服务器上传 us=100 Mbps，各客户端上传 10 Mbps，最慢客户端下载 dmin=50 Mbps。求客户端—服务器与 P2P 的理想分发时间下界。
 A_EN: Client-server terms are 100 s and 20 s, giving 100 s. P2P terms are 10 s, 20 s and $10\,\text{Gbit}/200\,\text{Mbps}=50$ s, giving 50 s. All rates use bits per second. This added example illustrates capacity constraints, not an actual BitTorrent measurement.
 A_ZH: 客户端—服务器的两项为 100 s、20 s，取最大值得 100 s。P2P 的三项为 10 s、20 s，以及 $10\,\text{Gbit}/200\,\text{Mbps}=50$ s，得到 50 s。各速率均以 bit/s 计，这是容量约束的补充例子，不是实际 BitTorrent 测量。
 
@@ -223,8 +223,8 @@ A_EN: A timeout close to the mean can expire prematurely when delay fluctuates. 
 A_ZH: 延迟波动时，接近均值的超时值容易提前触发。课件模型平滑样本得到 EstimatedRTT，并加安全余量：RTO=EstimatedRTT+4 DevRTT。较长超时可减少误重传，却延缓真正丢包后的恢复。用新样本同时更新两个估计时，应说明更新顺序。
 
 @@ N172 | x03-tcp | worked | XN3:69-70
-Q_EN: EstimatedRTT is 100 ms and a sample is 140 ms with alpha=0.125. Find the new estimate; if DevRTT is 10 ms, find the stated-model RTO.
-Q_ZH: EstimatedRTT=100 ms，新样本 140 ms，alpha=0.125，更新后的估计是多少？若 DevRTT=10 ms，按给定模型求 RTO。
+Q_EN: TCP smooths RTT by new E=(1−alpha)old E+alpha×sample. With old E=100 ms, sample=140 ms and alpha=0.125, find new E. For this exercise keep DevRTT=10 ms fixed and use RTO=E+4DevRTT; find RTO.
+Q_ZH: TCP 按新 E=(1−alpha)旧 E+alpha×样本平滑 RTT。旧 E=100 ms、样本 140 ms、alpha=0.125，求新 E。本题固定 DevRTT=10 ms，不再更新，按 RTO=E+4DevRTT 求 RTO。
 A_EN: The estimate becomes $0.875(100)+0.125(140)=105$ ms. Using the separately given DevRTT=10 ms, RTO is $105+4(10)=145$ ms. This question holds DevRTT fixed at the supplied value; computing a new deviation estimate would require an additional formula and an update-order convention.
 A_ZH: 新估计为 $0.875(100)+0.125(140)=105$ ms。使用题中另给的 DevRTT=10 ms，得到 RTO=$105+4(10)=145$ ms。本题直接使用给定偏差值；若要更新偏差，还需额外公式及更新顺序约定。
 
@@ -283,8 +283,8 @@ A_EN: Three duplicate ACKs suggest three later segments have left the network an
 A_ZH: 三个重复 ACK 表明可能有三个后续数据段已离开网络并到达接收者。Reno 在降低阈值后，通过暂时膨胀 cwnd 反映这些离网数据。更多重复 ACK 可允许继续发送，适当的新 ACK 则结束恢复并缩减窗口。具体转移取决于 Reno 版本与 ACK 事件。
 
 @@ N182 | x03-tcp | worked | XN3:114
-Q_EN: Under the lecture's steady AIMD sawtooth model, W=64 kB and RTT=0.1 s. What is approximate average throughput?
-Q_ZH: 按课件稳定 AIMD 锯齿模型，W=64 kB、RTT=0.1 s，平均吞吐量约为多少？
+Q_EN: In an ideal AIMD model, the congestion window rises linearly from W/2 to maximum W, with constant RTT and no timeout periods. If W=64 kB and RTT=0.1 s, estimate the mean throughput using decimal units.
+Q_ZH: 理想 AIMD 模型中，拥塞窗口从 W/2 线性增加到最大 W，RTT 固定且忽略超时阶段。若 W=64 kB、RTT=0.1 s，按十进制单位估计平均吞吐量。
 A_EN: Average window is $(3/4)W=48$ kB, so throughput is 480 kB/s, or 3.84 Mbit/s with decimal units. This model assumes a roughly linear sawtooth between W/2 and W, fixed RTT, continuous data and negligible slow-start time. Variable delay, timeouts or application limits can invalidate the estimate.
 A_ZH: 平均窗口为 $(3/4)W=48$ kB，因此吞吐量为 480 kB/s，按十进制单位即 3.84 Mbit/s。模型假设窗口在 W/2 与 W 之间近似线性变化、RTT 固定、数据持续可用且忽略慢启动时间。变动时延、超时或应用限制都可能使估计失效。
 
@@ -719,10 +719,11 @@ A_EN: In order: eBGP, iBGP, eBGP, iBGP. Information crosses AS4→AS3 at 3c, spr
 A_ZH: 依次为 eBGP、iBGP、eBGP、iBGP。信息从 AS4 跨入 AS3 到达 3c，在 AS3 内传播到 3a；再从 AS3 跨入 AS1 到达 1c，在 AS1 内传播到 1d。OSPF/RIP 负责内部路由及下一跳可达性，本题问的前缀通告会话由 BGP 完成。
 
 @@ N254 | x07-tutorials | historical | XNT11:1; XNT11S:3; XPARITY:9
-Q_EN: Arrange data 1110 0110 1001 1101 as a 4×4 grid. What are its even row/column parity bits, and why does the course solution count nine extra bits?
-Q_ZH: 将数据 1110 0110 1001 1101 排成 4×4 网格。偶校验的行、列校验位是什么？为什么例解计为九个额外位？
+Q_EN: Place data 1110 0110 1001 1101 row by row in a 4×4 grid. Extend it to 5×5 so every row and column, including the parity row/column, has even parity. Fill the missing bits. Why does this specified format transmit nine extra bits?
+Q_ZH: 把 1110 0110 1001 1101 逐行放入 4×4 数据格，再扩成 5×5，使每行每列（包括校验行/列）都满足偶校验。补齐空位，并解释为何此指定格式发送九个额外位。
 A_EN: Row parity is 1,0,0,1 and column parity is 1,1,0,0. The full 5×5 format also transmits corner parity 0, totaling 4+4+1=9 check bits. The corner makes the parity row and column even too. Although its value is determined by other parity values, it is part of this code: omitting it changes the format and lowers minimum Hamming distance from 4 to 3. Do not replace the course's nine-bit answer with eight by calling the corner redundant.
 A_ZH: 行校验为 1,0,0,1，列校验为 1,1,0,0。完整 5×5 格式还发送角落校验 0，共 4+4+1=9 个校验位，使校验行和校验列也满足偶校验。角落位虽可由其他校验值算出，却是此编码的一部分；省略它会改变格式，使最小汉明距离从 4 降为 3。不能因它可被推算，就把课程要求的九位答案改成八位。
+MEDIA_FRONT: parity-grid-question.png
 
 @@ N255 | x07-tutorials | historical | XNT11:1; XNT11S:5
 Q_EN: Two saturated slotted-ALOHA nodes transmit independently with probabilities pA and pB. Does pA=2pB give A twice B's throughput? How should pA be chosen for that target?
@@ -743,15 +744,15 @@ A_EN: Signals take time to propagate. B may sense idle and start before A's earl
 A_ZH: 信号传播需要时间；A 已发送但信号尚未到 B 时，B 仍可能认为空闲并开始发送。碰撞检测使发送者在传输期间发现冲突并中止，减少浪费。这属于历史共享介质以太网模型，普通全双工交换式以太网不是共享碰撞信道。虽然现有 Chapter 6 课件止于 ALOHA，Tutorial 11 确实包含这些内容。
 
 @@ N258 | x07-tutorials | historical | XNT11:2; XNT11S:11
-Q_EN: In the original multi-switch tree, all forwarding tables are initially empty. A sends a frame to G. Which switches learn A, and is S2 involved even though G is attached to S3?
-Q_ZH: 原多交换机树中，初始转发表均为空。A 向 G 发送帧。哪些交换机学到 A？尽管 G 接在 S3，S2 是否也会参与？
+Q_EN: In the pictured tree, S4 connects S1,S2,S3; A/B/C attach to S1, D/E/F to S2, G/H/I to S3. All switch tables start empty. A sends a frame to G. Which switches learn A, and why does S2 receive a flooded copy?
+Q_ZH: 图中 S4 连接 S1、S2、S3；A/B/C 接 S1，D/E/F 接 S2，G/H/I 接 S3。所有交换表初始为空，A 向 G 发帧。哪些交换机会学到 A？为什么 S2 也收到泛洪副本？
 MEDIA_FRONT: extra-t11-switches.png
 A_EN: Every switch learns a source-MAC→incoming-port entry. S1 learns A on its A-facing port; S4 learns A toward S1; S2 and S3 learn A toward S4. Unknown-destination flooding goes through S1→S4 and onward to both S2 and S3, excluding each incoming port. S2 floods toward D/E/F; those hosts discard the frame. The provided solution's short path summary omits this flooded branch, but its S2 table confirms A was learned.
 A_ZH: 每台交换机记录“源 MAC→入端口”。S1 学到 A 朝 A，S4 学到 A 朝 S1，S2 和 S3 学到 A 朝 S4。目的未知时，泛洪经 S1→S4 后同时进入 S2、S3，各交换机均不向入端口回发。S2 向 D/E/F 泛洪，这些主机丢弃该帧。例解的简短路径描述漏写了该分支，但其 S2 表确实记录了 A。
 
 @@ N259 | x07-tutorials | historical | XNT11:2; XNT11S:11
-Q_EN: After A's initial flooded frame, G replies to A in the same switch tree. What path is used, and which switches learn G?
-Q_ZH: 在同一交换机树中，A 的首帧泛洪后，G 回复 A。使用什么路径？哪些交换机学到 G？
+Q_EN: S4 connects S1,S2,S3; A attaches to S1 and G to S3. Initially empty tables have just learned A from A’s flooded frame to G. Using the pictured tree, G now replies to A. Give the path and the switches that learn G; does S2 learn G from this reply?
+Q_ZH: S4 连接 S1、S2、S3，A 接 S1、G 接 S3。初始空表刚通过 A 向 G 的泛洪帧学到 A。现在 G 按图回复 A：经过哪条路径？哪些交换机会学到 G？S2 会由这次回复学到 G 吗？
 MEDIA_FRONT: extra-t11-switches.png
 A_EN: The reply follows G→S3→S4→S1→A because A's location has been learned. S3 learns G on its G-facing port; S4 learns G toward S3; S1 learns G toward S4. S2 does not receive this known-destination unicast and therefore does not learn G from it. Switches learn from the source of frames they receive, not from every destination appearing anywhere in the network.
 A_ZH: 回复沿 G→S3→S4→S1→A，因为各沿途交换机已学到 A。S3 学到 G 朝 G，S4 学到 G 朝 S3，S1 学到 G 朝 S4。S2 不接收这次已知目的单播，因此不会由此学到 G。交换机根据自己实际接收帧的源地址学习，而不是看到全网任何目的地址就能学习。
@@ -775,8 +776,8 @@ A_EN: For delete mode, issue DELE 1, RETR 2, DELE 2, then QUIT after the relevan
 A_ZH: 删除模式在收到相应回复后依次 DELE 1、RETR 2、DELE 2、QUIT；保留模式则 RETR 2、QUIT，不发 DELE。若无新邮件，下次保留模式会话仍可列出和下载原来两封。DELE 请求删除，正常结束会话的更新阶段才提交；RETR 本身不会删除邮件。
 
 @@ N263 | x08-assignments | historical | XNA1:3; XNA1S:6-8; XUDP:Format
-Q_EN: When answering the historical Zoom architecture question, which parts require product-specific evidence, and what is wrong with saying “UDP has no error checking”?
-Q_ZH: 回答往年的 Zoom 架构题时，哪些部分需要具体产品证据？“UDP 没有差错检测”错在哪里？
+Q_EN: A student claims: “Video conferencing using UDP has no error detection, and media packets must be sent directly to the teacher’s computer.” What is wrong with these claims, and what deployment evidence would be needed?
+Q_ZH: 有人声称：“视频会议用 UDP，所以没有差错检测，而且媒体分组一定直接发往老师的电脑。”这两句话哪里有问题？还需要什么部署证据？
 A_EN: Protocol names, media relay versus P2P choices, and fallback behavior need dated official evidence for the client/mode studied. A cloud-relayed call need not use the lecturer's IP as the student's media destination. UDP has a checksum; it lacks built-in reliable retransmission and ordering. The old solution confuses error checking with reliable delivery. Record observations and deployment assumptions instead of treating every old vendor claim as universal.
 A_ZH: 协议名称、媒体中继或 P2P 选择、回退行为都需与所研究客户端和模式对应的有日期官方证据。云中继通话中，学生的媒体目的地址不必是教师电脑 IP。UDP 有校验和，缺少的是内建可靠重传和排序；旧例解混淆了差错检测与可靠交付。应记录观测及部署假设，不把旧产品描述当作普遍定律。
 
@@ -817,8 +818,8 @@ A_EN: G has degree four, so append four zeros to D before modulo-2 division. The
 A_ZH: G 为四次，因此先在 D 后补四个零再作模二除法。余数是 0100，保留前导零，发送 10101010100100。将该码字除以 10011 余数为零。五位生成多项式产生四个校验位，位数与次数相差一。
 
 @@ N270 | x08-assignments | historical | XNA3:1; XNA3S:3
-Q_EN: In the assignment topology, E sends to F on its own subnet, then to B on another subnet. What IP and Ethernet destinations are used on E's first link? Treat the left router as switch S1, as instructed in the question.
-Q_ZH: 作业拓扑中，E 先向同子网 F 发送，再向另一子网 B 发送。E 所在首段链路的 IP、以太网目的地址分别是什么？按题干要求将左边路由器视为交换机 S1。
+Q_EN: In the pictured topology, E and F share a subnet and B is remote. For this question replace the left router by switch S1 and call the right router R1; assume no NAT. On E’s first link, give source/destination IP and MAC roles for E→F and E→B.
+Q_ZH: 图中 E、F 在同一子网，B 在远端。本题把左路由器替换为交换机 S1，右路由器称 R1，并假设无 NAT。E→F、E→B 时，E 首段链路上的源/目的 IP 与 MAC 各指向谁？
 MEDIA_FRONT: extra-a3-subnets.png
 A_EN: E→F: source/destination IPs are E/F and MACs are E/F; no router is needed. E→B: IPs are E/B but the Ethernet MAC destination is R1's interface on E's subnet, with source MAC E. E resolves the next-hop gateway's MAC, not remote B's MAC. IP identifies the remote endpoint; link-layer addressing reaches the next hop. Assume no NAT in this exercise.
 A_ZH: E→F 时，源/目的 IP 是 E/F，MAC 也是 E/F，不需路由器。E→B 时，IP 是 E/B，但以太网目的 MAC 是 R1 在 E 子网的接口，源 MAC 仍为 E。E 解析下一跳网关的 MAC，而非远端 B 的 MAC。IP 指向远端端点，链路层地址负责抵达下一跳；本题不含 NAT。
@@ -855,8 +856,8 @@ A_EN: Record query name/type, transaction ID, query/response endpoints, answer r
 A_ZH: 记录查询名/类型、事务 ID、查询与回复端点、答案记录、标志和耗时。向主机回复的可能是从缓存回答的递归解析器，并非 NS 记录所指的权威服务器。应把每个回复对应到查询。DNS 答案及 TTL 随时间和缓存状态变化，应学习分析方法而非背旧网站数字地址。
 
 @@ N276 | x08-assignments | historical | XW:8
-Q_EN: The old lab asks about SSL/TLS records and ClientHello/ServerHello. What distinctions prevent incorrect answers when inspecting a trace?
-Q_ZH: 旧实验询问 SSL/TLS 记录及 ClientHello/ServerHello。分析抓包时，哪些区别能避免错误答案？
+Q_EN: In a captured TLS-over-TCP connection, a student treats each Ethernet frame as exactly one TLS handshake message. Why is this unsafe, and what version, reassembly and encryption information must be checked before interpreting ClientHello/ServerHello?
+Q_ZH: 抓到一条 TLS-over-TCP 连接后，有人把每个以太网帧都当成恰好一条 TLS 握手消息。为什么不可靠？解释 ClientHello/ServerHello 前，应检查哪些版本、重组和加密信息？
 A_EN: A TCP segment, TLS record and handshake message are different units: one may span or contain another. Inspect the negotiated version and the actual trace before describing cipher suites, certificates or session behavior. Packet loss/reassembly and encryption can hide details. Report “not visible in this capture” when appropriate; do not force every TLS version to match the old SSL example or equate one Ethernet frame with one handshake record.
 A_ZH: TCP 段、TLS 记录、握手消息是不同单位，可能跨越或包含彼此。先看协商版本和实际抓包，再描述密码套件、证书或会话行为。丢包、重组和加密可能使细节不可见，必要时明确写“本抓包不可见”。不能强行让所有 TLS 版本匹配旧 SSL 示例，也不能把一个以太网帧当作一条握手记录。
 
@@ -867,8 +868,8 @@ A_EN: Identify a transmitted segment and the ACK that acknowledges its data; sub
 A_ZH: 找到某次发送及确认其数据的 ACK，在同一观察点用时间戳相减。重传会让 ACK 对应关系不明确，应选无歧义样本并说明延迟 ACK 影响。长度要写清采用的是捕获帧长度、TCP 首部还是 tcp.len 载荷。实验的具体数值必须来自指定抓包，不能从通用握手图猜测。
 
 @@ N278 | x08-assignments | historical | XPROJ:1-2; XPROJ:5
-Q_EN: In the 2024 message-board client project, what protocol states are needed for POST, GET, DELETE and QUIT?
-Q_ZH: 在 2024 年留言板客户端项目中，POST、GET、DELETE、QUIT 需要怎样的协议状态？
+Q_EN: A TCP message-board protocol uses POST/DELETE followed by lines ending with a line containing only #; GET/QUIT are single-line commands, and QUIT requires an OK reply before closing. What client states and receive-buffer behavior implement these rules?
+Q_ZH: 一个 TCP 留言板协议规定：POST/DELETE 后接多行，单独一行 # 结束；GET/QUIT 是单行命令，QUIT 要等 OK 回复后关闭。客户端应怎样组织状态与接收缓冲？
 A_EN: Connect, await user command, assemble/send that command, receive a complete response, then return to the command state. POST/DELETE collect lines until a line containing only #; GET/QUIT send only the command. After QUIT, wait for the specified OK reply and close. Keep a receive buffer because TCP is a byte stream. These are historical protocol requirements; future Canvas specifications decide any changed terminator or response format.
 A_ZH: 先连接，等待用户命令，组装并发送命令，接收完整回复，再回到命令状态。POST/DELETE 收集多行直至仅含 # 的行；GET/QUIT 只发命令。QUIT 后等待规定的 OK 回复再关闭。TCP 是字节流，因此需要接收缓冲。以上是历史协议要求，终止符或回复格式若有变化，以后续 Canvas 说明为准。
 

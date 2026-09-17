@@ -409,8 +409,8 @@ A_EN: The total derivative includes every path from that value to the loss. For 
 A_ZH: 总导数必须包含从该数值到损失的全部路径。例如 $f=x^2+3x$ 的两条支路分别贡献 2x 和 3，总梯度是 $2x+3$。只保留最新一条支路会丢失信息。同样的累加原则也适用于卷积位置之间或多次使用之间共享的参数。
 
 @@ M251 | x06-networks | learn | XCNN:3-15
-Q_EN: For $Z=XW+b$ with upstream gradient G, what are the dense-layer gradients under the row-batch convention?
-Q_ZH: 对 $Z=XW+b$，若上游梯度为 G，在逐行存样本的约定下各梯度是什么？
+Q_EN: For a batch layer $Z=XW+b$, rows of X are samples and the row-vector bias b is added to every row. Given upstream gradient $G=\partial L/\partial Z$, find gradients with respect to X, W and b.
+Q_ZH: 批量层为 $Z=XW+b$，X 逐行存样本，行向量偏置 b 加到每一行。已知上游梯度 $G=\partial L/\partial Z$，求对 X、W、b 的梯度。
 A_EN: The gradients are $\nabla_W L=X^TG$, $\nabla_X L=GW^T$, and $\nabla_b L=\sum_i G_{i,:}$. Check their shapes against W, X and b. If an activation follows Z, G must already include that activation's local derivative. A mean-loss reduction must be reflected consistently in G.
 A_ZH: 梯度为 $\nabla_W L=X^TG$、$\nabla_X L=GW^T$，偏置梯度为 $\nabla_b L=\sum_i G_{i,:}$。形状应分别与 W、X、b 对应。若 Z 后还有激活函数，G 必须已包含其局部导数；损失取平均时，相应缩放也应体现在 G 中。
 
@@ -847,15 +847,15 @@ A_EN: Choose an orthonormal eigenbasis with $\lambda_1\ge\cdots\ge\lambda_d$. A 
 A_ZH: 选取正交归一特征基，使 $\lambda_1\ge\cdots\ge\lambda_d$。与前 k-1 个基向量正交的单位向量可写成 $v=\sum_{j\ge k}c_ju_j$，且 $\sum c_j^2=1$。其方差为 $\sum_{j\ge k}\lambda_jc_j^2\le\lambda_k$，取 $v=u_k$ 即达到上界。出现相同特征值时，最大化方向可能不唯一。
 
 @@ M324 | x12-problems | historical | XHA4:1,3; XHA4S:4,7
-Q_EN: For the historical linear system shown, express x4 using x1,x2,x3, find y4, and test time invariance.
-Q_ZH: 对图示往年线性系统，用 x1、x2、x3 表示 x4，求 y4，并判断是否时不变。
+Q_EN: The two figures provide three input/output pairs and a fourth input x4 for a linear discrete-time system; unmarked samples are zero. Express x4 as a combination of x1,x2,x3, derive y4, and test whether the given responses are time invariant.
+Q_ZH: 两张图给出一个线性离散时间系统的三组输入/输出及第四个输入 x4，未标出的采样值均为零。用 x1、x2、x3 组合出 x4，求 y4，并判断所给响应是否满足时不变性。
 MEDIA_FRONT: extra-ha4-page3-image1.png;extra-ha4-page3-image2.png
 A_EN: The inputs give $x_4=2x_1-2x_2+x_3$, so linearity gives $y_4=2y_1-2y_2+y_3$. Its nonzero values at n=(-1,0,1,2) are (2,1,2,-2). The system is not time invariant: $x_2=x_1[n]+x_1[n-1]$, but the supplied y2 is not $y_1[n]+y_1[n-1]$. Linearity alone does not imply shift invariance.
 A_ZH: 由输入可得 $x_4=2x_1-2x_2+x_3$，线性性给出 $y_4=2y_1-2y_2+y_3$。在 n=(-1,0,1,2) 处的非零值为 (2,1,2,-2)。系统并非时不变：虽然 $x_2=x_1[n]+x_1[n-1]$，题给 y2 却不等于 $y_1[n]+y_1[n-1]$。线性并不蕴含平移不变。
 
 @@ M325 | x12-problems | historical | XHA4:1-2,4; XHA4S:5,8
-Q_EN: Compute the two historical convolution examples in the figures, preserving their starting indices.
-Q_ZH: 计算图中的两个往年卷积例题，并保留正确起始下标。
+Q_EN: Compute full discrete convolution in two cases: (1) x=(1,1,1,1), h=(2,2,2,2), both starting at n=0; (2) x[n]=0.5δ[n−2], h=(1,2,3,2,1) starting at n=0. Samples outside the stated support are zero. Give output values and indices.
+Q_ZH: 求两例完整离散卷积：(1) x=(1,1,1,1)、h=(2,2,2,2)，均从 n=0 开始；(2) x[n]=0.5δ[n−2]，h=(1,2,3,2,1) 从 n=0 开始。所述支撑外均为零。写出输出值和对应下标。
 MEDIA_FRONT: extra-ha4-page4-image1.png;extra-ha4-page4-image2.png
 A_EN: First, x is four ones and h is four twos, both supported at n=0..3. Their convolution at n=0..6 is (2,4,6,8,6,4,2). Second, $x[n]=0.5\delta[n-2]$, so $y[n]=0.5h[n-2]$. With h=(1,2,3,2,1) at n=0..4, y=(0.5,1,1.5,1,0.5) at n=2..6, and zero elsewhere.
 A_ZH: 第一例中，x 为四个 1，h 为四个 2，支撑均为 n=0..3，卷积在 n=0..6 处为 (2,4,6,8,6,4,2)。第二例 $x[n]=0.5\delta[n-2]$，故 $y[n]=0.5h[n-2]$。h 在 n=0..4 为 (1,2,3,2,1)，所以 y 在 n=2..6 为 (0.5,1,1.5,1,0.5)，其余位置为零。

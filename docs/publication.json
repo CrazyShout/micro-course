@@ -1,6 +1,9 @@
 {
   "schema_version": 1,
   "source_snapshot": "2026-09-15",
+  "beginner_revision": "2026-09-18",
+  "beginner_entries": 50,
+  "beginner_figures": 22,
   "reading_revision": "2026-09-17",
   "reading_supplements": 26,
   "reading_figures": 14,
@@ -32,7 +35,7 @@
   },
   "total_lessons": 50,
   "total_cards": 605,
-  "images": 62,
+  "images": 66,
   "assets": [
     {
       "path": ".nojekyll",
@@ -41,8 +44,8 @@
     },
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
-      "bytes": 7193210,
-      "sha256": "802cfb7d08659ca9dd11ea0fc00125e2f8b361323c0a5139690ae28ad1788360"
+      "bytes": 7249023,
+      "sha256": "b597747e77d94e7c3ead3e6df0a591f43550cf7e72c4ac579ae1c0f3f0076b71"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -240,9 +243,19 @@
       "sha256": "e2a27249c193c7a148fa5d94689891fc78dc9119cde54a8e828999975573a891"
     },
     {
+      "path": "CS5222/media/parity-grid-question.png",
+      "bytes": 24658,
+      "sha256": "9e2cfa3f66c1bbe4b975c733afcd714dbe77c50e63e8cdef67dab60c1133c585"
+    },
+    {
+      "path": "CS5222/media/square-circuits-teaching.png",
+      "bytes": 30909,
+      "sha256": "bab80032217fb66d518a2fd8cf938bae1667bda05797b5c6d469339b85fd7c8c"
+    },
+    {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
-      "bytes": 3246079,
-      "sha256": "921df8637770b2921c42bc496187650924a6566560f85f26c363427f0690eec9"
+      "bytes": 3363449,
+      "sha256": "72719ed28a8ad18d067682dad509e26b9f6aaa35e8f6641e660a625a043d19e2"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -360,19 +373,29 @@
       "sha256": "770b892e8ad051279d76a69da28fdf6e86d1b53e8876fd64e2ba4eb57f4cfd44"
     },
     {
+      "path": "CS5489/media/rows-to-points-teaching.png",
+      "bytes": 51565,
+      "sha256": "422ea14366f3583f65da0886bdd5c184c8b38bac6cb3bb111db09a07fc9d9890"
+    },
+    {
+      "path": "CS5489/media/tutorial1-factor-counts-teaching.png",
+      "bytes": 65548,
+      "sha256": "5e773f7d2552aafd45b600b7d54a92f089b39ab248facb9e55cfac1a6f65f270"
+    },
+    {
       "path": "cards.html",
-      "bytes": 18746,
-      "sha256": "5c182da6ab42e08af5de4cfe7b053b0cd54cf06634eb8ec95d42ae872cf555ba"
+      "bytes": 18712,
+      "sha256": "b475c589a145994fb5d5a96aad72511729e643681ecaea2087b17b354ff59d3c"
     },
     {
       "path": "deck-introductions.json",
-      "bytes": 7262,
-      "sha256": "ff1521c71caeeb6abd7d96a815d0daa34be8941325835a3979ec5023b20d45c1"
+      "bytes": 7950,
+      "sha256": "2145b7a5f70da98e21b18e985e84342ed481a1f1254c7751562b0641af2c134a"
     },
     {
       "path": "guide.html",
-      "bytes": 10716,
-      "sha256": "8fa5e3b3d4567eac5e6e76136c8f6bc6c84bb0e5fddb6ed70f12098efdcc3e6d"
+      "bytes": 11479,
+      "sha256": "9da425b10c5a391ebe4767ec06bb32049eafe2b5738af6f507fe0b6c6639ec38"
     },
     {
       "path": "index.html",
@@ -380,9 +403,119 @@
       "sha256": "ca611d6fbd4a542e3fc9213062c118aad7bddf820c27fd54451abbfa3d547c29"
     },
     {
+      "path": "learning/figures/attention-values.svg",
+      "bytes": 5616,
+      "sha256": "65b92fd27d90164bb788bad6627c07c3127a6cd5337a68728dd1000382701c5e"
+    },
+    {
+      "path": "learning/figures/backprop-graph.svg",
+      "bytes": 6389,
+      "sha256": "e999f1c0a778517b817c442aa18ac7c64ef97d29601cf206c160bcbff228e1aa"
+    },
+    {
+      "path": "learning/figures/bayes-filter.svg",
+      "bytes": 11092,
+      "sha256": "f0551684a604ddb90affb56bd000a7fd27e09e3070d392075da9c45eb8260b40"
+    },
+    {
+      "path": "learning/figures/circuit-square.svg",
+      "bytes": 5904,
+      "sha256": "d6dd33e08fc3646717c2610a18c84b3d415db318441954f7bb84c534f0f23236"
+    },
+    {
+      "path": "learning/figures/coin-likelihood.svg",
+      "bytes": 11573,
+      "sha256": "a4f19446c1dc3bdbae7816461b66b4e3a094421a135ad3e5c8a5a292923be406"
+    },
+    {
+      "path": "learning/figures/covariance-ellipses.svg",
+      "bytes": 19637,
+      "sha256": "004fde5cbabd149e893892735671db31425d0577ded041d9b4ec655b46c542c0"
+    },
+    {
+      "path": "learning/figures/dns-exchanges.svg",
+      "bytes": 8085,
+      "sha256": "ee495b0b437c7a0dc333c47ac8a1fb920c2862a4e8b95b0bb988d11a545ef060"
+    },
+    {
+      "path": "learning/figures/em-responsibility.svg",
+      "bytes": 9704,
+      "sha256": "226d5f4cbcea31252087fbd0271be62c3354f8916c13210ff95906317c32b2f6"
+    },
+    {
+      "path": "learning/figures/factor-counts.svg",
+      "bytes": 27164,
+      "sha256": "d673a52c0561bc8169703ae57304a258ce50506bf535eff72bc4403e54039ef4"
+    },
+    {
+      "path": "learning/figures/forward-noising.svg",
+      "bytes": 11026,
+      "sha256": "4362a3aafcc3d9fd85e4f6a003e9e0b02905101862aba6f06838cd4766886b32"
+    },
+    {
+      "path": "learning/figures/mail-route.svg",
+      "bytes": 5052,
+      "sha256": "ddebc569745a6760c462b4d1d87d78ac3a8210845281ad41e755db94f6b01cbc"
+    },
+    {
+      "path": "learning/figures/nested-headers.svg",
+      "bytes": 3490,
+      "sha256": "c11702b63e9bb7fca8e991674bd1f8a15dc234421ef4a3735b83dac920ca671c"
+    },
+    {
+      "path": "learning/figures/poisson-counts.svg",
+      "bytes": 16156,
+      "sha256": "e949e0cc92fd50bc54b859dba8bfe224571f3992f6ab73c246021d3ed7621363"
+    },
+    {
+      "path": "learning/figures/projection-shadow.svg",
+      "bytes": 8218,
+      "sha256": "21989c2e4b1160f86da22e298034423ffa3451dd2c9f7c14cfaf528c3bf32d67"
+    },
+    {
+      "path": "learning/figures/rows-to-points.svg",
+      "bytes": 13244,
+      "sha256": "9edc1938c2f631443147072723cba8fe39e5fe58d95bd63812c39f097b597970"
+    },
+    {
+      "path": "learning/figures/score-to-probability.svg",
+      "bytes": 9982,
+      "sha256": "11e4bfd4fea55dfda8d37a4bb33f52300a0878bc61f60b3dcfb2cb965d0b06ef"
+    },
+    {
+      "path": "learning/figures/shared-list.svg",
+      "bytes": 3977,
+      "sha256": "19c9078e498613e7b320b5755a0101ebf06519270381e9f0968e913eab02ea5a"
+    },
+    {
+      "path": "learning/figures/sliding-window.svg",
+      "bytes": 4120,
+      "sha256": "95add53879af07aec01dcb174038a4a58dcc15ecbbf952625105f0e8398f454e"
+    },
+    {
+      "path": "learning/figures/softmax-shares.svg",
+      "bytes": 6120,
+      "sha256": "194d5410a5401471f1da29858fd68142a73ce928b546738877d98c1ae9206d34"
+    },
+    {
+      "path": "learning/figures/squared-feature.svg",
+      "bytes": 12472,
+      "sha256": "a7e58b364068b69e3eb50b4652bfb6651032d2682e5a86aca00353e727ef9f43"
+    },
+    {
+      "path": "learning/figures/web-path.svg",
+      "bytes": 5042,
+      "sha256": "9474e0ec46e29ca2d59fb3dac7b15eb9603fd79984c319e0436fccb2f34d6d21"
+    },
+    {
+      "path": "learning/figures/window-growth.svg",
+      "bytes": 11696,
+      "sha256": "15e9f147a83b6fb3dd979562516c5d256fba9771644a2716fa5c740966118464"
+    },
+    {
       "path": "learning-data.js",
-      "bytes": 801659,
-      "sha256": "2b72278d25919b30da6cc7605175bb3fbd34ac563800cf480481d1e1805e2496"
+      "bytes": 956927,
+      "sha256": "d3c1460701a64d3db13a23b8a18afbbcf0d7f154fd591650738babf11c956e7b"
     },
     {
       "path": "learning-demos.js",
@@ -392,17 +525,17 @@
     {
       "path": "learning-index.js",
       "bytes": 73518,
-      "sha256": "6a73d3319c96b43007fcf557cdbb6ae2cef5af775ea4fc060ee660f9e9d52a93"
+      "sha256": "228ab1ebd60e474b611719e95fede0e4b548f493b0e9bc58b3b60857237b83a9"
     },
     {
       "path": "learning.css",
-      "bytes": 9276,
-      "sha256": "eb9609151768eaa4fc2c4f112261796374a8208f43f32c97d6ad584a0aff26d9"
+      "bytes": 10312,
+      "sha256": "b7ace26db4be364f8961d006009808425d713a616adcc2d160103ed7fb9665e9"
     },
     {
       "path": "learning.js",
-      "bytes": 12368,
-      "sha256": "8c888350b8428d29c56307849b20c3776d96414afac7e932cdcb59115493e310"
+      "bytes": 13768,
+      "sha256": "985cda019bf578e8ec5fd4d3b9ceb2ac87c6ec277a8d20cd3da60264a36923bf"
     },
     {
       "path": "notices-data.js",
@@ -421,8 +554,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1734625,
-      "sha256": "6a49597131b06935701b311ae3050fddcbc8533a5e191253f7512f8dff5bedee"
+      "bytes": 1745966,
+      "sha256": "e31a1cd1ffc66127dc6656b69466b7fba90c93349a0d6e15dabffe5c83f586af"
     },
     {
       "path": "reading/figures/ml-margin.svg",

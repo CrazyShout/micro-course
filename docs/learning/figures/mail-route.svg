@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="792pt" height="216pt" viewBox="0 0 792 216" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title id="title">Mail delivery and mailbox access</title><desc id="desc">Original teaching diagram: 投递到服务器与用户读取是不同事件. Interpret with the lesson assumptions.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.6, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 216 
+L 792 216 
+L 792 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.44 159.624 
+L 199.008 159.624 
+L 199.008 101.736 
+L 49.44 101.736 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 203.196966 130.68 
+Q 215.059125 130.68 225.244233 130.68 
+" clip-path="url(#p86414df9bb)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 219.244233 127.68 
+L 225.244233 130.68 
+L 219.244233 133.68 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 231.84 159.624 
+L 381.408 159.624 
+L 381.408 101.736 
+L 231.84 101.736 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 385.596966 130.68 
+Q 397.459125 130.68 407.644233 130.68 
+" clip-path="url(#p86414df9bb)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 401.644233 127.68 
+L 407.644233 130.68 
+L 401.644233 133.68 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 414.24 159.624 
+L 563.808 159.624 
+L 563.808 101.736 
+L 414.24 101.736 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 567.996966 130.68 
+Q 579.859125 130.68 590.044233 130.68 
+" clip-path="url(#p86414df9bb)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 584.044233 127.68 
+L 590.044233 130.68 
+L 584.044233 133.68 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 596.64 159.624 
+L 746.208 159.624 
+L 746.208 101.736 
+L 596.64 101.736 
+z
+" clip-path="url(#p86414df9bb)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(102.953062 127.272563)">Sender</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(91.898062 140.709938)">user agent</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(270.591187 127.272563)">Sender mail</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(287.63025 140.709938)">server</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(446.38275 127.272563)">Recipient mail</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(470.03025 140.709938)">server</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(643.544625 127.272563)">Recipient</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(629.183063 140.709938)">reads mailbox</text>
+   </g>
+  </g>
+  <g id="text_5">
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="396" y="17.237344" transform="rotate(-0 396 17.237344)">Mail delivery and mailbox access</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p86414df9bb">
+   <rect x="12.96" y="58.32" width="766.08" height="144.72"/>
+  </clipPath>
+ </defs>
+</svg>

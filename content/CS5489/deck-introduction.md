@@ -6,9 +6,9 @@ CS5489 · Bilingual machine learning cards
 
 ## 这套牌组用来做什么 / Purpose
 
-面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。325 张卡与 30 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。
+面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。325 张卡与 30 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。
 
-These 325 cards connect to 30 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus.
+These 325 cards connect to 30 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front.
 
 ## 当前内容与往年预习 / Current scope and historical preview
 

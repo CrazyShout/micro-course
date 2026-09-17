@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="576pt" height="288pt" viewBox="0 0 576 288" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title id="title">A score is not yet a probability</title><desc id="desc">Original teaching diagram: 分数可为任意实数，sigmoid 把它映射成概率. Interpret with the lesson assumptions.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.6, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 288 
+L 576 288 
+L 576 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 55.91 238.12 
+L 563.04 238.12 
+L 563.04 63.36 
+L 55.91 63.36 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="PathCollection_1">
+    <defs>
+     <path id="C0_0_0f4fbf5bba" d="M 0 4.031129 
+C 1.069068 4.031129 2.094493 3.606384 2.850439 2.850439 
+C 3.606384 2.094493 4.031129 1.069068 4.031129 -0 
+C 4.031129 -1.069068 3.606384 -2.094493 2.850439 -2.850439 
+C 2.094493 -3.606384 1.069068 -4.031129 0 -4.031129 
+C -1.069068 -4.031129 -2.094493 -3.606384 -2.850439 -2.850439 
+C -3.606384 -2.094493 -4.031129 -1.069068 -4.031129 0 
+C -4.031129 1.069068 -3.606384 2.094493 -2.850439 2.850439 
+C -2.094493 3.606384 -1.069068 4.031129 0 4.031129 
+z
+"/>
+    </defs>
+    <g clip-path="url(#pcf5ad14aea)">
+     <use xlink:href="#C0_0_0f4fbf5bba" x="309.475" y="150.74" style="fill: #cc8b34; stroke: #cc8b34"/>
+    </g>
+    <g clip-path="url(#pcf5ad14aea)">
+     <use xlink:href="#C0_0_0f4fbf5bba" x="318.695545" y="142.822737" style="fill: #087c75; stroke: #087c75"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="mfa82481146" d="M 0 0 
+L 0 3.5 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mfa82481146" x="125.064091" y="238.12" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="125.064091" y="254.238125" transform="rotate(-0 125.064091 254.238125)">−4</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#mfa82481146" x="217.269545" y="238.12" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="217.269545" y="254.238125" transform="rotate(-0 217.269545 254.238125)">−2</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#mfa82481146" x="309.475" y="238.12" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="309.475" y="254.238125" transform="rotate(-0 309.475 254.238125)">0</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#mfa82481146" x="401.680455" y="238.12" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="401.680455" y="254.238125" transform="rotate(-0 401.680455 254.238125)">2</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#mfa82481146" x="493.885909" y="238.12" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="493.885909" y="254.238125" transform="rotate(-0 493.885909 254.238125)">4</text>
+     </g>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="309.475" y="269.851875" transform="rotate(-0 309.475 269.851875)">Score z</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_6">
+      <defs>
+       <path id="m66c914c0c8" d="M 0 0 
+L -3.5 0 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="230.176364" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="234.735426" transform="rotate(-0 48.91 234.735426)">0.0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="198.401818" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="202.960881" transform="rotate(-0 48.91 202.960881)">0.2</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="166.627273" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="171.186335" transform="rotate(-0 48.91 171.186335)">0.4</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="134.852727" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="139.41179" transform="rotate(-0 48.91 139.41179)">0.6</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="103.078182" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="107.637244" transform="rotate(-0 48.91 107.637244)">0.8</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m66c914c0c8" x="55.91" y="71.303636" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: end" x="48.91" y="75.862699" transform="rotate(-0 48.91 75.862699)">1.0</text>
+     </g>
+    </g>
+    <g id="text_13">
+     <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="23.330625" y="150.74" transform="rotate(-90 23.330625 150.74)">Positive-class probability</text>
+    </g>
+   </g>
+   <g id="line2d_12">
+    <path d="M 78.961364 229.113052 
+L 98.939212 228.542254 
+L 115.843545 227.829173 
+L 129.674364 227.02428 
+L 141.968424 226.08579 
+L 152.725727 225.045495 
+L 161.946273 223.953998 
+L 171.166818 222.641686 
+L 178.850606 221.351101 
+L 186.534394 219.854535 
+L 194.218182 218.124568 
+L 201.90197 216.132066 
+L 208.049 214.328731 
+L 214.19603 212.322388 
+L 220.343061 210.097696 
+L 226.490091 207.640098 
+L 232.637121 204.936396 
+L 238.784152 201.975421 
+L 244.931182 198.748779 
+L 251.078212 195.251627 
+L 257.225242 191.483472 
+L 263.372273 187.448907 
+L 269.519303 183.158239 
+L 275.666333 178.627934 
+L 283.350121 172.663431 
+L 291.033909 166.418778 
+L 301.791212 157.344416 
+L 329.452848 133.793148 
+L 337.136636 127.599185 
+L 344.820424 121.698163 
+L 350.967455 117.225877 
+L 357.114485 112.997937 
+L 363.261515 109.029241 
+L 369.408545 105.328617 
+L 375.555576 101.899321 
+L 381.702606 98.739702 
+L 387.849636 95.843954 
+L 393.996667 93.202916 
+L 400.143697 90.804846 
+L 406.290727 88.636146 
+L 412.437758 86.682012 
+L 418.584788 84.926989 
+L 426.268576 82.989389 
+L 433.952364 81.308385 
+L 441.636152 79.855146 
+L 449.319939 78.602647 
+L 458.540485 77.329746 
+L 467.76103 76.271555 
+L 478.518333 75.263448 
+L 490.812394 74.354367 
+L 504.643212 73.574977 
+L 520.010788 72.937746 
+L 538.451879 72.40274 
+L 539.988636 72.366948 
+L 539.988636 72.366948 
+" clip-path="url(#pcf5ad14aea)" style="fill: none; stroke: #087c75; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 55.91 238.12 
+L 55.91 63.36 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 55.91 238.12 
+L 563.04 238.12 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 390.30532 175.333953 
+Q 355.411727 159.479226 321.53602 144.087 
+" style="fill: none; stroke: #000000; stroke-linecap: round"/>
+    <path d="M 324.913246 148.257653 
+L 321.53602 144.087 
+L 326.898877 143.887611 
+" style="fill: none; stroke: #000000; stroke-linecap: round"/>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="341.746909" y="187.280727" transform="rotate(-0 341.746909 187.280727)">one update: z 0 -&gt; 0.2</text>
+   </g>
+  </g>
+  <g id="text_15">
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="288" y="18.677344" transform="rotate(-0 288 18.677344)">A score is not yet a probability</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pcf5ad14aea">
+   <rect x="55.91" y="63.36" width="507.13" height="174.76"/>
+  </clipPath>
+ </defs>
+</svg>

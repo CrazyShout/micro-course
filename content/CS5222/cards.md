@@ -436,91 +436,92 @@ A_ZH: 在课堂基本模型中，协议不要求服务器必须记住之前请�
 @@ N071 | 07-exercises | classroom | NT1:1;NT1S:3;HT1:1a
 Q_EN: Tutorial 1 (2026A) Q1a: one packet of $L$ bits crosses two store-and-forward links of rates $R_1,R_2$. Ignore other delays. Find completion time.
 Q_ZH: 本学期 Tutorial 1 Q1a：$L$ 比特分组经过速率 $R_1,R_2$ 的两条存储转发链路，忽略其他时延，求完成时间。
-A_EN: The switch first receives all $L$ bits in $L/R_1$, then sends them in $L/R_2$. Total time is $D=L/R_1+L/R_2$. Do not replace this by $L/\min(R_1,R_2)$: the bottleneck rate describes sustained throughput, while this question asks for the first complete packet's latency. Current Tutorial 1 answer: C.
-A_ZH: 交换设备先用 $L/R_1$ 收齐，再用 $L/R_2$ 发完，总时间为 $D=L/R_1+L/R_2$。不能替换为 $L/\min(R_1,R_2)$：瓶颈速率描述持续吞吐量，这里问的是首个完整分组的时延。 本学期 Tutorial 1 选 C。
+A_EN: The switch first receives all $L$ bits in $L/R_1$, then sends them in $L/R_2$. Total time is $D=L/R_1+L/R_2$. Do not replace this by $L/\min(R_1,R_2)$: the bottleneck rate describes sustained throughput, while this question asks for the first complete packet's latency.
+A_ZH: 交换设备先用 $L/R_1$ 收齐，再用 $L/R_2$ 发完，总时间为 $D=L/R_1+L/R_2$。不能替换为 $L/\min(R_1,R_2)$：瓶颈速率描述持续吞吐量，这里问的是首个完整分组的时延。
 
 
 @@ N072 | 07-exercises | classroom | NT1:1;NT1S:4;NQA:3;HT1:1b
 Q_EN: Tutorial 1 (2026A) Q1b: three equal packets cross two equal-rate store-and-forward links. Ignore other delays. How long until all arrive?
 Q_ZH: 本学期 Tutorial 1 Q1b：三个等长分组经过两条等速率存储转发链路，忽略其他时延，全部到达需多久？
-A_EN: Let $t=L/R$. During successive intervals, link 1 sends packets 1, 2 and 3; link 2 sends them one interval later. Arrival times are $2t,3t,4t$, so completion is $4L/R$. Summing $2L/R$ separately for all three gives $6L/R$ and incorrectly forbids pipelining. Tutorial 1 Q1b: D; Chapter 1 Q&A slide 3: B (the option ordering differs).
-A_ZH: 令 $t=L/R$。链路 1 依次发送分组 1、2、3；链路 2 比它晚一个时间段依次发送。到达时刻为 $2t,3t,4t$，所以完成需 $4L/R$。把三次 $2L/R$ 相加得到 $6L/R$，错误地禁止了流水线重叠。 Tutorial 1 Q1b 选 D；第 1 章 Q&A 第 3 张选 B，选项顺序不同。
+A_EN: Let $t=L/R$. During successive intervals, link 1 sends packets 1, 2 and 3; link 2 sends them one interval later. Arrival times are $2t,3t,4t$, so completion is $4L/R$. Summing $2L/R$ separately for all three gives $6L/R$ and incorrectly forbids pipelining.
+A_ZH: 令 $t=L/R$。链路 1 依次发送分组 1、2、3；链路 2 比它晚一个时间段依次发送。到达时刻为 $2t,3t,4t$，所以完成需 $4L/R$。把三次 $2L/R$ 相加得到 $6L/R$，错误地禁止了流水线重叠。
 
 
 @@ N073 | 07-exercises | classroom | NT1:2;NT1S:6;HT1:2a
 Q_EN: Tutorial 1 (2026A) Q2a: a square A–B–C–D–A has four circuits on each edge. What is the maximum number of simultaneous connections if endpoints are unrestricted?
 Q_ZH: 本学期 Tutorial 1 Q2a：方环 A–B–C–D–A 每条边有 4 条电路，端点不受限时最多多少个同时连接？
-A_EN: Use four one-edge connections on each of the four edges, giving $4\times4=16$ connections. This achieves the upper bound because every connection consumes at least one edge circuit and there are 16 total. Connections between opposite corners consume two edges and would use more of the same finite resources per connection. Current answer: C.
-A_ZH: 每条边放 4 个只走一条边的连接，四条边共 $4\times4=16$ 个。这达到上界，因为每个连接至少消耗一条边上的电路，总共只有 16 个边电路资源。对角顶点之间的连接需走两条边，每个连接消耗更多资源。 本学期选 C。
-
+A_EN: Use four one-edge connections on each of the four edges, giving $4\times4=16$ connections. This achieves the upper bound because every connection consumes at least one edge circuit and there are 16 total. Connections between opposite corners consume two edges and would use more of the same finite resources per connection.
+A_ZH: 每条边放 4 个只走一条边的连接，四条边共 $4\times4=16$ 个。这达到上界，因为每个连接至少消耗一条边上的电路，总共只有 16 个边电路资源。对角顶点之间的连接需走两条边，每个连接消耗更多资源。
+MEDIA_FRONT: square-circuits-teaching.png
 
 @@ N074 | 07-exercises | classroom | NT1:2;NT1S:6;HT1:2b
 Q_EN: A square network A–B–C–D–A has four circuits on every edge. What is the maximum number of simultaneous connections from A to opposite corner C?
 Q_ZH: 方环网络 A–B–C–D–A 的每条边有四条电路。从 A 到对角 C 最多能同时建立多少个连接？
-A_EN: There are two edge-disjoint two-hop paths: A–B–C and A–D–C. Each supports four connections, so eight are feasible. The two edges leaving A together have only eight circuits, giving an upper bound of eight. Showing both a construction and a bound proves the maximum. Current answer: B.
-A_ZH: 有两条边不重合的两跳路径：A–B–C 与 A–D–C，每条支持 4 个，因此可实现 8 个。A 发出的两条边合计也只有 8 条电路，构成上界。既给出可行安排又给出上界，就证明了最大值。 本学期选 B。
+A_EN: There are two edge-disjoint two-hop paths: A–B–C and A–D–C. Each supports four connections, so eight are feasible. The two edges leaving A together have only eight circuits, giving an upper bound of eight. Showing both a construction and a bound proves the maximum.
+A_ZH: 有两条边不重合的两跳路径：A–B–C 与 A–D–C，每条支持 4 个，因此可实现 8 个。A 发出的两条边合计也只有 8 条电路，构成上界。既给出可行安排又给出上界，就证明了最大值。
+MEDIA_FRONT: square-circuits-teaching.png
 
 @@ N075 | 07-exercises | classroom | NT1:2;NT1S:7;HT1:2c
 Q_EN: A square A–B–C–D–A has four circuits per edge. Can it simultaneously carry four A–C and four B–D connections?
 Q_ZH: 方环 A–B–C–D–A 每条边 4 条电路，能否同时承载 4 个 A–C 连接和 4 个 B–D 连接？
-A_EN: Yes. Split A–C traffic as two via B and two via D. Split B–D traffic as two via A and two via C. Each edge then carries exactly four connections, within its capacity. Routing all connections for a pair along one side can falsely make the demand look infeasible; count use on each individual edge. Current answer: B.
-A_ZH: 可以。A–C 中 2 个经 B、2 个经 D；B–D 中 2 个经 A、2 个经 C。这样每条边恰好承载 4 个连接，不超容量。若把某对端点全部流量压在同一侧，可能误判不可行；应逐边统计占用。 本学期选 B。
-
+A_EN: Yes. Split A–C traffic as two via B and two via D. Split B–D traffic as two via A and two via C. Each edge then carries exactly four connections, within its capacity. Routing all connections for a pair along one side can falsely make the demand look infeasible; count use on each individual edge.
+A_ZH: 可以。A–C 中 2 个经 B、2 个经 D；B–D 中 2 个经 A、2 个经 C。这样每条边恰好承载 4 个连接，不超容量。若把某对端点全部流量压在同一侧，可能误判不可行；应逐边统计占用。
+MEDIA_FRONT: square-circuits-teaching.png
 
 @@ N076 | 07-exercises | classroom | NT1:2-3;NT1S:9;HT1:3
 Q_EN: Tutorial 1 (2026A) Q3: send 160,000 bits on a 1.536 Mbps link divided into 12 equal FDM circuits; setup takes 600 ms. Find total time.
 Q_ZH: 本学期 Tutorial 1 Q3：1.536 Mbps 链路均分为 12 条 FDM 电路，发送 160,000 比特，建立连接需 600 毫秒，总时间是多少？
-A_EN: Each circuit gets $1.536\times10^6/12=128000$ bit/s. Data transmission takes $160000/128000=1.25$ s. Add setup: $D=0.6+1.25=1.85$ s, under the question's ignored propagation and other delays. Using the full 1.536 Mbps for one reserved circuit would overestimate its available rate. Current answer: A.
-A_ZH: 每条电路速率为 $1.536\times10^6/12=128000$ 比特/秒，数据发送需 $160000/128000=1.25$ 秒。加建立时间，总共 $D=0.6+1.25=1.85$ 秒，这里按题意忽略传播等时延。若对单条电路使用全链路 1.536 Mbps，就高估了可用速率。 本学期选 A。
+A_EN: Each circuit gets $1.536\times10^6/12=128000$ bit/s. Data transmission takes $160000/128000=1.25$ s. Add setup: $D=0.6+1.25=1.85$ s, under the question's ignored propagation and other delays. Using the full 1.536 Mbps for one reserved circuit would overestimate its available rate.
+A_ZH: 每条电路速率为 $1.536\times10^6/12=128000$ 比特/秒，数据发送需 $160000/128000=1.25$ 秒。加建立时间，总共 $D=0.6+1.25=1.85$ 秒，这里按题意忽略传播等时延。若对单条电路使用全链路 1.536 Mbps，就高估了可用速率。
 
 
 @@ N077 | 07-exercises | classroom | NT1:3;NT1S:10;HT1:4a-4b
 Q_EN: Tutorial 1 (2026A) Q4: a 3 Mbps link serves users needing 150 kbps while active, with activity probability 0.1. How many circuits fit, and what is one user's activity probability?
 Q_ZH: 本学期 Tutorial 1 Q4：3 Mbps 链路、每人活跃时需 150 kbps、活跃概率 0.1，最多多少条电路？单人活跃概率是多少？
-A_EN: Fixed circuits fit $3000/150=20$ users. A given user's activity probability is the stated 0.1. These answer different questions: the first is a resource-reservation bound, the second a traffic-model parameter. Multiplying 20 by 10 does not establish a guaranteed 200-user capacity under packet switching. Current answers: Q4a B, Q4b A.
-A_ZH: 固定电路可容纳 $3000/150=20$ 人。某个用户的活跃概率就是给定的 0.1。两者回答不同问题：前者是资源预留上界，后者是流量模型参数。把 20 乘 10 并不能证明分组交换保证支持 200 人。 本学期 Q4a 选 B，Q4b 选 A。
+A_EN: Fixed circuits fit $3000/150=20$ users. A given user's activity probability is the stated 0.1. These answer different questions: the first is a resource-reservation bound, the second a traffic-model parameter. Multiplying 20 by 10 does not establish a guaranteed 200-user capacity under packet switching.
+A_ZH: 固定电路可容纳 $3000/150=20$ 人。某个用户的活跃概率就是给定的 0.1。两者回答不同问题：前者是资源预留上界，后者是流量模型参数。把 20 乘 10 并不能证明分组交换保证支持 200 人。
 
 
 @@ N078 | 07-exercises | classroom | NT1:3;NT1S:10;HT1:4c
 Q_EN: With 120 independent users each active with probability 0.1, what is the probability exactly $n$ are active?
 Q_ZH: 120 个独立用户每人以 0.1 概率活跃，恰有 $n$ 人活跃的概率是多少？
-A_EN: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$ for $n=0,\ldots,120$. The combination counts which users are active; the other terms give the probability of one such pattern. Expected active users are $E[K]=120\times0.1=12$. An overload probability requires summing the tail above capacity, not substituting the mean. Current answer: B.
-A_ZH: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$，其中 $n=0,\ldots,120$。组合数统计哪些用户活跃，其余项表示一种具体组合的概率。期望活跃人数为 $E[K]=120\times0.1=12$。过载概率要对超过容量的尾部求和，不能用均值直接代替。 本学期选 B。
+A_EN: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$ for $n=0,\ldots,120$. The combination counts which users are active; the other terms give the probability of one such pattern. Expected active users are $E[K]=120\times0.1=12$. An overload probability requires summing the tail above capacity, not substituting the mean.
+A_ZH: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$，其中 $n=0,\ldots,120$。组合数统计哪些用户活跃，其余项表示一种具体组合的概率。期望活跃人数为 $E[K]=120\times0.1=12$。过载概率要对超过容量的尾部求和，不能用均值直接代替。
 
 
 @@ N079 | 07-exercises | classroom | NT2:1;HT2:1
 Q_EN: Tutorial 2 (2026A) Q1: voice is encoded at 128 kbps into 64-byte packets, sent at 4 Mbps with 8 ms propagation. Measured from the start of packetization, when can playback of the first encoded bit start if the receiver waits for the complete packet?
 Q_ZH: 本学期 Tutorial 2 Q1：语音以 128 kbps 编码，组成 64 字节分组，以 4 Mbps 发送，传播 8 毫秒。若接收端等完整分组到齐后播放，最早编码的比特从开始组包到可播放需多久？
-A_EN: Packetization needs $512/128000=4$ ms; transmission needs $512/(4\times10^6)=0.128$ ms; propagation is 8 ms. Total is 12.128 ms under the whole-packet playback model. The phrase “a bit” is ambiguous: the earliest encoded bit waits about the full packetization interval, while a typical bit's average assembly wait is about half, 2 ms. Under the question’s whole-packet playback convention, the intended option is D.
-A_ZH: 组包需 $512/128000=4$ 毫秒，发送需 $512/(4\times10^6)=0.128$ 毫秒，传播为 8 毫秒。按完整分组到达后播放的模型，总共 12.128 毫秒。原题“某个比特”略有歧义：最早编码的比特约等待完整组包时间，而任意典型比特的平均组包等待约为一半，即 2 毫秒。 按题目完整分组播放的约定，预期选项为 D。
+A_EN: Packetization needs $512/128000=4$ ms; transmission needs $512/(4\times10^6)=0.128$ ms; propagation is 8 ms. Total is 12.128 ms under the whole-packet playback model. The phrase “a bit” is ambiguous: the earliest encoded bit waits about the full packetization interval, while a typical bit's average assembly wait is about half, 2 ms.
+A_ZH: 组包需 $512/128000=4$ 毫秒，发送需 $512/(4\times10^6)=0.128$ 毫秒，传播为 8 毫秒。按完整分组到达后播放的模型，总共 12.128 毫秒。原题“某个比特”略有歧义：最早编码的比特约等待完整组包时间，而任意典型比特的平均组包等待约为一半，即 2 毫秒。
 
 
 @@ N080 | 07-exercises | classroom | NT2:1;HT2:2a
 Q_EN: Tutorial 2 (2026A) Q2a: one packet traverses three links and two store-and-forward routers. Express delay when each router has processing delay $d_{proc}$ and no queueing.
 Q_ZH: 本学期 Tutorial 2 Q2a：一个分组经过三条链路和两个存储转发路由器，每路由器处理时延为 $d_{proc}$、无排队，写总时延。
-A_EN: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$. There are three serialization terms because each link transmits the whole packet, three propagation terms, and two router-processing terms. If the problem adds source or destination processing, include those separately; do not infer them when the stated model excludes them. Current answer: B.
-A_ZH: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$。三条链路各发完整分组，因此有三个串行化项、三个传播项，以及两个路由处理项。若题目另加源端或目的端处理，应单独计入；模型未要求时不要自行添加。 本学期选 B。
+A_EN: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$. There are three serialization terms because each link transmits the whole packet, three propagation terms, and two router-processing terms. If the problem adds source or destination processing, include those separately; do not infer them when the stated model excludes them.
+A_ZH: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$。三条链路各发完整分组，因此有三个串行化项、三个传播项，以及两个路由处理项。若题目另加源端或目的端处理，应单独计入；模型未要求时不要自行添加。
 
 
 @@ N081 | 07-exercises | classroom | NT2:1;HT2:2b
 Q_EN: One packet crosses three store-and-forward links and two routers. Use $L=1500$ bytes, each $R=2$ Mbps, $s=2.5\times10^8$ m/s, distances 5,000/4,000/1,000 km, and 3 ms processing per router. Find delay.
 Q_ZH: 一个分组经过三条存储转发链路和两个路由器，分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒，求时延。
-A_EN: Each serialization takes 6 ms, so three give 18 ms. Total distance is $10^7$ m, giving 40 ms propagation. Two routers add 6 ms. Total: $18+40+6=64$ ms. Keep all three components visible; the result is easy to miscalculate if kilometers, bytes and milliseconds are mixed without conversion. Current answer: B.
-A_ZH: 每条链路串行化 6 毫秒，三条共 18 毫秒。总距离 $10^7$ 米，传播共 40 毫秒；两个路由器再加 6 毫秒。总计 $18+40+6=64$ 毫秒。应保留分项，避免把千米、字节和毫秒不经换算直接混用。 本学期选 B。
+A_EN: Each serialization takes 6 ms, so three give 18 ms. Total distance is $10^7$ m, giving 40 ms propagation. Two routers add 6 ms. Total: $18+40+6=64$ ms. Keep all three components visible; the result is easy to miscalculate if kilometers, bytes and milliseconds are mixed without conversion.
+A_ZH: 每条链路串行化 6 毫秒，三条共 18 毫秒。总距离 $10^7$ 米，传播共 40 毫秒；两个路由器再加 6 毫秒。总计 $18+40+6=64$ 毫秒。应保留分项，避免把千米、字节和毫秒不经换算直接混用。
 
 
 @@ N082 | 07-exercises | classroom | NT2:2;HT2:3
 Q_EN: A 1,500-byte packet crosses three 2 Mbps links with total propagation 40 ms. If routers forward each bit immediately with zero processing, what is the ideal delay?
 Q_ZH: 1500 字节分组经过三条 2 Mbps 链路，总传播为 40 毫秒，路由器逐比特立即转发且处理为零，理想时延是多少？
-A_EN: With all links at the same rate, serialization overlaps across links: count one $L/R=6$ ms plus total propagation of 40 ms. The result is 46 ms. This is the question's ideal cut-through model; actual forwarding may need enough header bits to choose an output, so do not apply the ideal formula to every real device without checking assumptions. Current answer: D.
-A_ZH: 各链路同速时，串行化在各链路间重叠，只计一次 $L/R=6$ 毫秒，再加总传播 40 毫秒，得 46 毫秒。这是题目的理想直通模型；真实转发可能先需要足够的首部比特来决定出口，不能无条件套用到所有设备。 本学期选 D。
+A_EN: With all links at the same rate, serialization overlaps across links: count one $L/R=6$ ms plus total propagation of 40 ms. The result is 46 ms. This is the question's ideal cut-through model; actual forwarding may need enough header bits to choose an output, so do not apply the ideal formula to every real device without checking assumptions.
+A_ZH: 各链路同速时，串行化在各链路间重叠，只计一次 $L/R=6$ 毫秒，再加总传播 40 毫秒，得 46 毫秒。这是题目的理想直通模型；真实转发可能先需要足够的首部比特来决定出口，不能无条件套用到所有设备。
 
 
 @@ N083 | 07-exercises | classroom | NT2:2;HT2:4
 Q_EN: A 2 Mbps output link is halfway through a 1,500-byte packet and has four more equal packets waiting. What is a newly arriving packet's queueing delay?
 Q_ZH: 2 Mbps 输出链路已发送完一个 1500 字节分组的一半，队列中另有四个等长分组等待。新到分组需排队多久？
-A_EN: One full serialization takes 6 ms. The new packet waits for half the current packet plus four queued packets: $(0.5+4)\times6=27$ ms, assuming FIFO and no priority changes. This is waiting until its own transmission starts; add another 6 ms if asked when its own serialization finishes. Current answer: A.
-A_ZH: 一个完整分组发送需 6 毫秒。新分组要等当前剩余半个与已排队的四个，所以 $(0.5+4)\times6=27$ 毫秒，假设先到先服务且无优先级变化。这里算到自身开始发送；若问自身发完，还要再加 6 毫秒。 本学期选 A。
+A_EN: One full serialization takes 6 ms. The new packet waits for half the current packet plus four queued packets: $(0.5+4)\times6=27$ ms, assuming FIFO and no priority changes. This is waiting until its own transmission starts; add another 6 ms if asked when its own serialization finishes.
+A_ZH: 一个完整分组发送需 6 毫秒。新分组要等当前剩余半个与已排队的四个，所以 $(0.5+4)\times6=27$ 毫秒，假设先到先服务且无优先级变化。这里算到自身开始发送；若问自身发完，还要再加 6 毫秒。
 
 @@ N084 | 07-exercises | classroom | NT2:2;HT2:4
 Q_EN: Generalize queueing delay when $x$ bits of the current $L$-bit packet have already been sent and $n$ full packets are waiting.
@@ -591,8 +592,8 @@ A_EN: Only option B, Layer 4, is correct under bottom-up numbering. UDP shows tr
 A_ZH: 按自下而上的编号，只有 B“第 4 层”正确。UDP 表明传输服务并非总可靠。传输层向上面的应用层提供服务，使用下面的网络层。发送时给应用数据加传输首部，再把报文段交给网络层；接收时反向处理并移除相应首部。
 
 @@ N099 | 07-exercises | classroom | NT2:3
-Q_EN: Tutorial 2 Q5a–b: what do the traceroute columns mean, and how should an asterisk be interpreted?
-Q_ZH: Tutorial 2 Q5a–b：traceroute 各列表示什么？星号应怎样理解？
+Q_EN: Consider this illustrative traceroute row: `4  203.0.113.1  10.2 ms  *  11.0 ms`. It uses hop number, responding IP, then three probe results. What do the fields and the asterisk mean? Can you conclude ordinary forwarded packets are being lost?
+Q_ZH: 观察这条教学用 traceroute 行：`4  203.0.113.1  10.2 ms  *  11.0 ms`。格式为跳号、回复 IP、三次探测结果。各字段和星号表示什么？能据此断定普通转发分组丢失吗？
 A_EN: A typical row contains hop number, round-trip times for several probes (often three), and the responding router's name or IP address; exact display order varies by system. An asterisk means no reply arrived before that probe's timeout. It can reflect filtering or reply rate-limiting, so it is not by itself proof that the router drops ordinary forwarded traffic. RTTs include a return trip.
 A_ZH: 典型一行包括跳号、数次探测的往返时间（常见三次），以及回复路由器的名称或 IP；不同系统的列顺序可能不同。星号表示该次探测超时未收到回复，可能来自过滤或回复限速，不能单独证明路由器丢弃普通转发流量。RTT 包含返回路程。
 

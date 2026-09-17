@@ -181,7 +181,7 @@ PREREQ: net02,net03,net04
 GOAL: 能独立列出网络数值题的单位、路径、完成事件和忽略项。
 EXPLAIN: 每题先写四行：图中几条链路、包或报文多大、从哪个时刻到哪个事件、忽略了哪些项。再把 byte 转 bit、km 转 m，最后才选公式。链路数和路由器数通常差一；每个分组完整到达与整段文件全部到达也不是同一事件。
 
-切包题先求首包经过所有链路的时间，再数后续包到达间隔。若有不等速链路、首部、交叉流量或处理延迟，应按具体时间轴重新分析，不能继续套最简等速式。当前教程图题和官方解的原图都保留在卡片里。
+切包题先求首包经过所有链路的时间，再数后续包到达间隔。若有不等速链路、首部、交叉流量或处理延迟，应按具体时间轴重新分析，不能继续套最简等速式。图题的正面给出原图或按原条件重绘的示意，题干同时写清必要条件；不要只记选项字母。
 
 Traceroute 表中的时间是各次探测的往返观测。不同探测可能经历不同排队或返回路径，星号也可能只是未及时收到 ICMP 回复。计算之前先识别每列真正测量的对象。
 RECAP_EN: Define path, units, completion event, and ignored costs before calculating. A correct formula with the wrong event or units still answers the wrong question.

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="792pt" height="288pt" viewBox="0 0 792 288" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title id="title">A small computation graph</title><desc id="desc">Original teaching diagram: 先计算中间值，再沿依赖反向计算导数. Interpret with the lesson assumptions.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.6, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 288 
+L 792 288 
+L 792 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 20.6208 140.976 
+L 135.5328 140.976 
+L 135.5328 84.528 
+L 20.6208 84.528 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 20.6208 253.872 
+L 135.5328 253.872 
+L 135.5328 197.424 
+L 20.6208 197.424 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 242.784 204.48 
+L 365.3568 204.48 
+L 365.3568 133.92 
+L 242.784 133.92 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 472.608 204.48 
+L 595.1808 204.48 
+L 595.1808 133.92 
+L 472.608 133.92 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 472.608 105.696 
+L 595.1808 105.696 
+L 595.1808 66.888 
+L 472.608 66.888 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 137.395164 113.487144 
+Q 189.158488 133.920035 239.361895 153.737169 
+" clip-path="url(#pae35b158c5)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 234.882464 148.743704 
+L 239.361895 153.737169 
+L 232.679465 154.324636 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 137.395164 224.912856 
+Q 189.158488 204.479965 239.361895 184.662831 
+" clip-path="url(#pae35b158c5)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 232.679465 184.075364 
+L 239.361895 184.662831 
+L 234.882464 189.656296 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 367.356632 169.2 
+Q 418.981773 169.2 468.929863 169.2 
+" clip-path="url(#pae35b158c5)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 462.929863 166.2 
+L 468.929863 169.2 
+L 462.929863 172.2 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 533.8944 107.697727 
+Q 533.8944 119.808563 533.8944 130.242348 
+" clip-path="url(#pae35b158c5)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 536.8944 124.242348 
+L 533.8944 130.242348 
+L 530.8944 124.242348 
+z
+" clip-path="url(#pae35b158c5)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="78.0768" y="116.06325" transform="rotate(-0 78.0768 116.06325)">x = -2</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="78.0768" y="228.95925" transform="rotate(-0 78.0768 228.95925)">y = 5</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(279.296025 165.792562)">u = x+y</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(293.318212 179.229938)">= 3</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(512.989087 165.792562)">f = u*z</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #203940" transform="translate(517.160025 179.229938)">= -12</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="533.8944" y="89.60325" transform="rotate(-0 533.8944 89.60325)">z = -4</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(625.824 144.961875)">df/dx = -4</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(625.824 158.39925)">df/dy = -4</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(625.824 171.836625)">df/dz = 3</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="396" y="264.456" transform="rotate(-0 396 264.456)">Forward: compute values. Backward: multiply local derivatives.</text>
+   </g>
+  </g>
+  <g id="text_8">
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="396" y="18.677344" transform="rotate(-0 396 18.677344)">A small computation graph</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pae35b158c5">
+   <rect x="12.96" y="63.36" width="766.08" height="211.68"/>
+  </clipPath>
+ </defs>
+</svg>

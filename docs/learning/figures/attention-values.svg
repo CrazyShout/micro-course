@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="720pt" height="252pt" viewBox="0 0 720 252" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title id="title">Attention combines values using query-specific weights</title><desc id="desc">Original teaching diagram: 权重决定取多少，value 提供被组合的内容. Interpret with the lesson assumptions.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.6, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 252 
+L 720 252 
+L 720 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 33.7824 179.64 
+L 144.8352 179.64 
+L 144.8352 120.24 
+L 33.7824 120.24 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 255.888 126.18 
+L 394.704 126.18 
+L 394.704 84.6 
+L 255.888 84.6 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 255.888 215.28 
+L 394.704 215.28 
+L 394.704 173.7 
+L 255.888 173.7 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #cc8b34; fill-opacity: 0.082353; stroke: #cc8b34; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 533.52 179.64 
+L 672.336 179.64 
+L 672.336 120.24 
+L 533.52 120.24 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #087c75; fill-opacity: 0.082353; stroke: #087c75; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 146.689017 149.196322 
+Q 200.360411 127.665477 252.475325 106.759031 
+" clip-path="url(#p2f1fcaf2b3)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 245.789739 106.20863 
+L 252.475325 106.759031 
+L 248.023653 111.777259 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 146.689017 150.683678 
+Q 200.360411 172.214523 252.475325 193.120969 
+" clip-path="url(#p2f1fcaf2b3)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 248.023653 188.102741 
+L 252.475325 193.120969 
+L 245.789739 193.67137 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 396.631529 105.926119 
+Q 464.11285 124.695236 529.978452 143.014961 
+" clip-path="url(#p2f1fcaf2b3)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 525.00178 138.51688 
+L 529.978452 143.014961 
+L 523.393984 144.29745 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 396.631529 193.953881 
+Q 464.11285 175.184764 529.978452 156.865039 
+" clip-path="url(#p2f1fcaf2b3)" style="fill: none; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 523.393984 155.58255 
+L 529.978452 156.865039 
+L 525.00178 161.36312 
+z
+" clip-path="url(#p2f1fcaf2b3)" style="fill: #71848a; stroke: #71848a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="89.3088" y="153.25125" transform="rotate(-0 89.3088 153.25125)">one query</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="325.296" y="108.70125" transform="rotate(-0 325.296 108.70125)">value = 2</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="325.296" y="197.80125" transform="rotate(-0 325.296 197.80125)">value = 10</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="602.928" y="153.25125" transform="rotate(-0 602.928 153.25125)">output = 4</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="200.3616" y="116.973" transform="rotate(-0 200.3616 116.973)">weight 3/4</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="200.3616" y="161.523" transform="rotate(-0 200.3616 161.523)">weight 1/4</text>
+   </g>
+  </g>
+  <g id="text_7">
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #203940" x="360" y="17.957344" transform="rotate(-0 360 17.957344)">Attention combines values using query-specific weights</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2f1fcaf2b3">
+   <rect x="12.96" y="60.84" width="694.08" height="178.2"/>
+  </clipPath>
+ </defs>
+</svg>

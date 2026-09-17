@@ -193,16 +193,18 @@ A_EN: A seed makes a pseudorandom sequence repeat under the same algorithm and e
 A_ZH: 在相同算法和环境下，种子使伪随机序列可重复，便于复现数据划分或模拟样本。它不能证明模型好、消除抽样不确定性，也不能保证所有库和设备上结果完全相同。应记录种子、划分与软件版本，并用同一划分比较模型。
 
 @@ M035 | 04-tutorial | classroom | T1:14-24
-Q_EN: What do the factor-count plot and histogram in Tutorial 1 each show?
-Q_ZH: Tutorial 1 的因数计数图和直方图分别表示什么？
+Q_EN: For every integer n=2,...,100, count its positive divisors excluding 1 and n. The plots below show these 99 counts. What does a point in A represent, what does a bar in B represent, and why must B’s frequencies total 99?
+Q_ZH: 对整数 n=2,…,100，统计除 1 和 n 自身外的正因数个数。下图展示这 99 个计数。A 图的一个点、B 图的一根柱各表示什么？为什么 B 的频数总和必须是 99？
 A_EN: For each integer n from 2 through 100, count divisors excluding 1 and n. The first plot uses n on the x-axis and this nontrivial-divisor count on the y-axis. The histogram instead groups those counts: its x-axis is a count bin and its y-axis is how many integers fall there. Check 2→0, 4→1, 12→4; all histogram frequencies together must account for 99 integers.
 A_ZH: 对 2 到 100 的每个整数 n，统计除 1 和 n 外的非平凡因数个数。第一张图横轴是 n，纵轴是它的因数个数；直方图则把这些计数分箱，横轴是因数个数区间，纵轴是落入该区间的整数数量。先检查 2→0、4→1、12→4；直方图各箱频数合计应覆盖 99 个整数。
+MEDIA_FRONT: tutorial1-factor-counts-teaching.png
 
 @@ M036 | 04-tutorial | classroom | T1:26-33
-Q_EN: How should I approach the data1.pickle plotting exercise?
-Q_ZH: 应该怎样完成 data1.pickle 的绘图练习？
+Q_EN: A trusted file has been loaded into NumPy array mydata of shape (120,2): one sample per row, x in column 0 and y in column 1. How do you plot all 120 points? The figure shows how three illustrative rows become points; they are not extra class labels.
+Q_ZH: 已把可信文件读入 NumPy 数组 mydata，形状为 (120,2)：每行一个样本，第 0 列是 x、第 1 列是 y。怎样画出全部 120 个点？图中仅用三行示例说明“行→点”的关系，不是额外的类别标签。
 A_EN: Load the trusted tutorial file and verify that mydata has shape (120,2): each row is one sample and each column one coordinate. Use `plt.scatter(mydata[:,0], mydata[:,1])` and label the coordinate axes. The supplied exercise has no class-label column or grouping requirement. Swapping rows and columns changes which objects are treated as samples.
 A_ZH: 读取可信的教程文件，确认 mydata 形状为 (120,2)：每行一个样本，每列一个坐标。用 `plt.scatter(mydata[:,0], mydata[:,1])` 绘图并标注坐标轴。原题没有类别标签列，也没有按类别分组要求。把行列颠倒，会改变哪些对象被当作样本。
+MEDIA_FRONT: rows-to-points-teaching.png
 
 @@ M037 | 04-tutorial | learn | T1:35-36
 Q_EN: What is the projection of $v$ onto a nonzero vector $u$?
@@ -223,8 +225,8 @@ A_EN: First, $e_1=(1,1)/\sqrt2$. Then $e_1^Tv_2=1/\sqrt2$, so $r_2=(1,0)-(1/2,1/
 A_ZH: 先得 $e_1=(1,1)/\sqrt2$。因为 $e_1^Tv_2=1/\sqrt2$，所以 $r_2=(1,0)-(1/2,1/2)=(1/2,-1/2)$。其范数为 $1/\sqrt2$，故 $e_2=(1,-1)/\sqrt2$。检查 $e_1^Te_2=0$，范数均为 1；输出向量与输入张成相同平面。
 
 @@ M040 | 04-tutorial | classroom | T1:37-45
-Q_EN: What should `myGS(V)` return for the tutorial's test matrix, and how do I check it?
-Q_ZH: 对教程的测试矩阵，`myGS(V)` 应返回什么，怎样检查？
+Q_EN: Let $V=\begin{bmatrix}1&-1&2\\0&2&3\\-1&2&1\\4&-1&-3\end{bmatrix}$. A function myGS applies Gram–Schmidt to its columns and returns E. What shape should E have, and how do you check both orthonormality and preservation of V’s column span?
+Q_ZH: 给定 $V=\begin{bmatrix}1&-1&2\\0&2&3\\-1&2&1\\4&-1&-3\end{bmatrix}$。函数 myGS 对它的列向量做 Gram–Schmidt，返回 E。E 应是什么形状？怎样同时检查正交归一和保留原列空间？
 A_EN: The notebook transposes a $3\times4$ literal, giving $V$ shape $(4,3)$: three vectors in four-dimensional space. Return $E$ with shape $(4,3)$. Check `np.allclose(E.T @ E, np.eye(3))`, and check that projecting $V$ onto the output span reconstructs it: `E @ (E.T @ V)` should match $V$. Orthonormality alone does not prove preservation of the intended span.
 A_ZH: Notebook 将一个 $3\times4$ 字面矩阵转置，得到形状 $(4,3)$ 的 $V$，即四维空间中的三个向量。返回的 $E$ 应为 $(4,3)$。用 `np.allclose(E.T @ E, np.eye(3))` 检查正交归一，还应验证 `E @ (E.T @ V)` 能重构 $V$。仅有正交归一不能证明保留了原来的子空间。
 
@@ -414,8 +416,8 @@ A_ZH: 令 $\Sigma_{reg}=\hat\Sigma+\alpha I$，其中 $\alpha>0$。每个特征�
 MEDIA: Lecture2b-cell-42.png
 
 @@ M071 | 07-gaussian | learn | B2:44-52
-Q_EN: Does the lecture's custom `GaussianBayes` use a shared covariance across classes?
-Q_ZH: 课堂自定义的 `GaussianBayes` 是否在所有类别间共享协方差？
+Q_EN: Xc contains the feature rows for class c. A Gaussian classifier separately computes `cov(Xc, rowvar=False) + alpha*I` for each class, with alpha>0. Does it share covariance across classes? How can its boundary differ from a shared-covariance model?
+Q_ZH: Xc 存放 c 类样本的特征行。高斯分类器对每一类分别计算 `cov(Xc, rowvar=False) + alpha*I`，alpha>0。这是共享协方差吗？它的边界与共享协方差模型可能有何不同？
 A_EN: No. Its `fit` method computes a separate `cov(Xc, rowvar=False)` for each class, then adds `alpha*I`. The resulting model is a class-specific full-covariance Gaussian classifier, with generally quadratic boundaries. A shared-covariance model can produce linear discriminants. Historical notes about a shared-covariance model should not be silently substituted for this implementation.
 A_ZH: 不共享。其 `fit` 对每个类别分别计算 `cov(Xc, rowvar=False)`，然后加 `alpha*I`。得到的是各类具有独立完整协方差的高斯分类器，通常有二次决策边界。共享协方差模型可产生线性判别。因此不能把往年笔记中的共享协方差模型直接当成本次代码实现。
 MEDIA: Lecture2b-cell-52.png
@@ -427,8 +429,8 @@ A_EN: Given log joint scores $s_c$, compute $\log p(c\mid x)=s_c-\operatorname{L
 A_ZH: 已有对数联合分数 $s_c$ 时，计算 $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$，其中 $\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$、$m=\max_c s_c$。先减最大值可避免指数过大。分数为 $(-1000,-1001)$ 时，后验约为 $(0.7311,0.2689)$，直接对原分数取指数却可能下溢。
 
 @@ M073 | 07-gaussian | check | B2:44
-Q_EN: What assumptions in the custom classifier's code should I inspect before reusing it?
-Q_ZH: 复用课堂自定义分类器前，应检查哪些代码假设？
+Q_EN: You want to reuse a custom Gaussian classifier that estimates class means/covariances and predicts from log posterior scores. Before trusting it on a new dataset, which assumptions about labels, shapes and numerical stability should you inspect?
+Q_ZH: 准备复用一个估计类别均值、协方差，并根据对数后验分数预测的自定义高斯分类器。用于新数据前，应检查哪些标签、数组形状和数值稳定性假设？
 A_EN: It sets `K = max(y)+1` and loops through `range(K)`, assuming consecutive integer labels starting at zero. Each class must contain enough observations for covariance estimation, and covariance must be numerically usable. The assignment labels 0, 1, 2 fit the label convention; arbitrary strings or labels 1, 3 do not. Map labels explicitly when generalizing the code.
 A_ZH: 它用 `K = max(y)+1` 并遍历 `range(K)`，假设标签为从 0 开始的连续整数。每类还须有足够观测估计协方差，协方差必须数值可用。作业标签 0、1、2 满足约定，任意字符串或 1、3 这样的标签则不满足。推广代码时应显式映射标签。
 
@@ -529,8 +531,8 @@ A_EN: Gaussian NB suits continuous features modeled as class-conditional Gaussia
 A_ZH: Gaussian NB 适合可用类条件高斯描述的连续特征；Bernoulli NB 适合二元出现指示，同时对出现与缺席计分；Multinomial NB 适合非负词频，实践中也常用于非负 TF-IDF。不能把任意含负值的标准化特征直接当成多项式计数输入。应同时匹配表示方式、假设与验证证据。
 
 @@ M091 | 09-assignment | learn | A1:3; METRIC:Classification metrics
-Q_EN: What is balanced accuracy, and why is it used here?
-Q_ZH: 什么是平衡准确率？为什么本作业使用它？
+Q_EN: In a three-class SMS task (normal, spam, smishing), normal messages are much more common. What is balanced accuracy, and why can it be more informative than ordinary accuracy?
+Q_ZH: 短信分为正常、垃圾、钓鱼三类，正常短信远多于另外两类。什么是平衡准确率？为什么它可能比普通准确率更有参考价值？
 A_EN: For $C$ classes, balanced accuracy is mean class recall: $BA=\frac1C\sum_c TP_c/(TP_c+FN_c)$. Each class contributes equally, even when sample counts differ. Ordinary accuracy weights frequent classes more heavily through their sample counts. Here the normal class is much more common, so balanced accuracy helps expose failure on spam or smishing.
 A_ZH: 对 $C$ 个类别，平衡准确率是各类召回率的平均：$BA=\frac1C\sum_c TP_c/(TP_c+FN_c)$。即使各类样本数不同，每类也有相同权重。普通准确率因样本数量而更偏向常见类。这里正常短信占多数，平衡准确率能更好地暴露模型对垃圾或钓鱼短信的失效。
 
@@ -547,8 +549,8 @@ A_EN: First state the axes; a common convention uses true classes as rows and pr
 A_ZH: 先说明坐标约定，常见方式是行表示真实类，列表示预测类。对类别 $c$，召回率 $TP_c/(TP_c+FN_c)$ 回答“真实该类找回多少”；精确率 $TP_c/(TP_c+FP_c)$ 回答“预测为该类的有多少正确”。平衡准确率平均的是召回率，不是精确率。
 
 @@ M094 | 09-assignment | learn | A1:3;B2:61-71
-Q_EN: What is a defensible first baseline for Assignment 1?
-Q_ZH: Assignment 1 怎样建立合理的第一个基线？
+Q_EN: You have labeled normal/spam/smishing SMS and a fixed training/validation split. How would you build a simple text-classification baseline before trying more complex features?
+Q_ZH: 已有正常、垃圾、钓鱼短信的带标签数据，并固定了训练/验证划分。尝试复杂特征前，怎样建立一个简单的文本分类基线？
 A_EN: Start with a majority-class baseline to reveal the effect of imbalance, then a training-only word vectorizer plus a smoothed NB classifier. Compare count/Bernoulli and count or TF-IDF/multinomial variants on the same validation split. Record feature settings, smoothing, class recalls and balanced accuracy. This is an experiment plan; actual performance must come from your runs.
 A_ZH: 先用多数类基线观察类别不平衡的影响，再用仅在训练集拟合的词向量器配合平滑 NB。使用同一验证划分，比较计数/伯努利，以及计数或 TF-IDF/多项式方案。记录特征设置、平滑参数、各类召回率和平衡准确率。这是实验方案，实际效果须来自你的运行结果。
 
@@ -559,8 +561,8 @@ A_EN: A vocabulary, IDF weights, normalization statistics or feature selection c
 A_ZH: 如果先用全体数据学习词表、IDF、归一化统计量或特征选择，再划分数据，仍会泄漏评估信息。交叉验证中，每个需学习的预处理步骤都应只在该折训练子集拟合。Pipeline 有助于保证顺序。预先固定的转小写规则，与从全体数据学到的统计量不同。
 
 @@ M096 | 09-assignment | learn | A1:3
-Q_EN: How can I add meaningful features beyond the basic lecture baseline?
-Q_ZH: 除课堂基础方案外，可以怎样增加有意义的特征？
+Q_EN: Your SMS baseline uses a training-fitted word-count vectorizer and Naive Bayes. Which extra features could you test, and how would you tell whether an improvement comes from those features?
+Q_ZH: 短信基线采用仅在训练集拟合的词频向量器与朴素贝叶斯。可以测试哪些额外特征？怎样判断改进是否来自这些特征？
 A_EN: Candidate extensions include character n-grams, URL indicators, digit ratios or message length. Give each a hypothesis, such as character fragments handling spelling variants, then compare with the same baseline and validation protocol. Check representation compatibility: additional continuous features do not automatically fit a multinomial likelihood. Describe these as proposed experiments until tested.
 A_ZH: 候选扩展包括字符 n-gram、URL 指示、数字比例和短信长度。每项都应有假设，例如字符片段可能应对拼写变体，再用同样基线和验证流程比较。还要检查表示兼容性：额外连续特征不会自动适配多项式似然。未经测试时，应称为候选实验而非有效提升。
 
@@ -667,8 +669,8 @@ A_EN: Confirm nonnegative integer inputs, one rate per class/feature, and normal
 A_ZH: 检查输入是非负整数、每类每特征有一个参数、先验已归一化。用小数据对比矩阵分数与逐项泊松对数概率之和。验证后验每行和为 1，预测标签对应最大后验，并显式映射任意类别标签。使用稀疏词频时，应直接计算 $X\log\mu_c$，避免把大文档矩阵全变成稠密数组。
 
 @@ M118 | 11-tutorial2 | check | T2:21-28,35
-Q_EN: What belongs in the tutorial's final comparison and misclassification explanation?
-Q_ZH: 教程最后的模型比较与错分解释应包括什么？
+Q_EN: You compared Bernoulli, Multinomial and Poisson NB on the same labeled news dataset and saved predictions. What should you record, and how should actual misclassified articles support your explanation?
+Q_ZH: 你在同一带标签新闻数据集上比较了伯努利、多项式和泊松 NB，并保存了预测。应记录什么信息？怎样用实际错分文章支持解释？
 A_EN: Record model, representation, vocabulary size, smoothing, selection protocol and measured accuracy. Inspect a few errors for overlapping topics, missing vocabulary or misleading common words. “Business versus Sci/Tech overlap may explain this case” is a hypothesis; point to the actual text before presenting it as an explanation. Keep observed scores separate from expected behavior and untested improvements.
 A_ZH: 记录模型、表示、词表大小、平滑、选参流程与实测准确率。观察少量错误是否涉及主题交叉、词表缺词或常用词误导。“商业与科技交叉可能导致此例错分”是假设，必须结合实际文本说明。应区分观测分数、预期行为和未测试的改进。
 
@@ -692,8 +694,8 @@ A_ZH: 分数为正预测 +1，为负预测 -1，等于零时须约定规则。�
 MEDIA: Lecture3a-cell-29-output-1.png
 
 @@ M122 | 12-logistic | worked | L3A:24-30
-Q_EN: For $w=(2,1)$ and $b=-3$, classify $(2,0)$ and $(0,1)$ and describe the boundary.
-Q_ZH: 若 $w=(2,1)$、$b=-3$，如何分类 $(2,0)$ 与 $(0,1)$？边界是什么？
+Q_EN: Use $f(x)=w^Tx+b$ and predict +1 for f>0, −1 for f<0. With $w=(2,1)$ and $b=-3$, classify (2,0) and (0,1), and write the decision boundary.
+Q_ZH: 用 $f(x)=w^Tx+b$，f>0 预测 +1，f<0 预测 −1。给定 $w=(2,1)$、$b=-3$，如何分类 (2,0)、(0,1)？决策边界是什么？
 A_EN: Scores are $2(2)+0-3=1$ and $0+1-3=-2$, so predict +1 and -1. The boundary is $2x_1+x_2-3=0$, or $x_2=3-2x_1$. Its normal vector is $(2,1)$. Multiplying both $w$ and $b$ by the same positive number preserves these labels and the boundary, though it changes raw scores.
 A_ZH: 两个分数为 $2(2)+0-3=1$ 与 $0+1-3=-2$，因此分别预测 +1、-1。边界为 $2x_1+x_2-3=0$，即 $x_2=3-2x_1$，法向量是 $(2,1)$。将 $w,b$ 同时乘同一个正数，会保持边界和标签，但改变原始分数。
 
@@ -736,8 +738,8 @@ A_EN: With a 0/1 target $t$, score $z=w^Tx+b$ and $p=\sigma(z)$, the chain rule 
 A_ZH: 对 0/1 标签 $t$、分数 $z=w^Tx+b$ 与 $p=\sigma(z)$，链式法则给出 $\partial\ell/\partial z=p-t$，所以 $\nabla_w\ell=(p-t)x$、$\partial\ell/\partial b=p-t$。特征向量决定更新方向，预测误差决定符号和大小。跨样本求和或平均时须保持一致，再加入正则项梯度。
 
 @@ M129 | 12-logistic | worked | L3A:52
-Q_EN: Perform one gradient step for $x=2,t=1,w=0$, holding $b=0$, with learning rate 0.1 and no regularization.
-Q_ZH: 对 $x=2,t=1,w=0$，固定 $b=0$，学习率 0.1、无正则，做一步梯度下降。
+Q_EN: A binary logistic model is p=sigmoid(wx+b), with target t and binary cross-entropy loss. For x=2,t=1,w=0, fixed b=0, learning rate 0.1 and no regularization, perform one gradient-descent update of w.
+Q_ZH: 二分类逻辑模型为 p=sigmoid(wx+b)，目标标签为 t，采用二元交叉熵。给定 x=2、t=1、w=0，固定 b=0，学习率 0.1、无正则，对 w 做一次梯度下降。
 A_EN: Initially $p=\sigma(0)=0.5$. The weight gradient is $(0.5-1)\times2=-1$. Thus $w_{new}=0-0.1(-1)=0.1$. The new score is 0.2, so $p_{new}\approx0.5498$, moving toward the positive target. The bias is held fixed in this example; updating it would be a different calculation.
 A_ZH: 初始概率为 $p=\sigma(0)=0.5$，权重梯度是 $(0.5-1)\times2=-1$，故 $w_{new}=0-0.1(-1)=0.1$。新分数为 0.2，概率约为 0.5498，向正类目标移动。本例固定偏置，若连偏置一起更新，计算结果会不同。
 
@@ -760,8 +762,8 @@ A_EN: If one separating direction makes every $y_if(x_i)>0$, scaling its weights
 A_ZH: 若某分隔方向让所有 $y_if(x_i)>0$，不断放大权重和偏置，就会使损失 $\log(1+e^{-y_if(x_i)})$ 趋向零。损失逼近下确界时，参数范数却可能发散。权重惩罚会抑制这种增长。因此目标凸，并不单独保证存在有限参数的最小点。
 
 @@ M133 | 12-logistic | classroom | L3A:68-73
-Q_EN: How does the lecture select $C$ by cross-validation?
-Q_ZH: 课堂如何用交叉验证选择 $C$？
+Q_EN: For logistic regression, C controls inverse regularization strength under the chosen implementation. Given candidate C values, training data and a held-out test set, how should cross-validation select C and produce the final fitted model?
+Q_ZH: 逻辑回归中，C 按所用实现控制正则化强度的倒数。已有候选 C、训练数据和留出测试集，应怎样通过交叉验证选择 C，再得到最终拟合模型？
 A_EN: Choose candidate values, split the training data into folds, fit each candidate using each fold's training portion, and evaluate on that fold's validation portion. Average validation scores and choose the best candidate. Refit it on the entire training set before evaluating the held-out test set. The held-out test samples are excluded from both selection and refitting.
 A_ZH: 先选候选值，将训练数据分折；每个候选都在各折训练部分拟合，在对应验证部分评估。平均验证分数后选最佳候选，再用整个训练集重训，最后评估留出测试集。测试样本既不参与选参，也不参与这里的重训。
 MEDIA: Lecture3-10_fold_cv.png
@@ -864,8 +866,8 @@ A_EN: The conditions are primal feasibility $g_i(x)\ge0$, dual feasibility $\lam
 A_ZH: 条件为原始可行性 $g_i(x)\ge0$、对偶可行性 $\lambda_i\ge0$、驻点条件 $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$，以及互补松弛 $\lambda_i g_i(x)=0$。适当约束资格下，它们是最优点的必要条件。若 f 凸、各 g_i 凹，满足这些条件的点及乘子就能证明该点全局最优。互补松弛不要求每个约束都取等号。
 
 @@ M151 | 13-svm | check | L3B:38,41,44;SVM:2,4
-Q_EN: Does a zero multiplier prove that a constraint is strictly inactive?
-Q_ZH: 乘子等于零，能否证明约束严格不活跃？
+Q_EN: For a KKT inequality $g_i(x)\ge0$ with multiplier $\lambda_i\ge0$ and $\lambda_i g_i(x)=0$, does $\lambda_i=0$ prove $g_i(x)>0$? Explain or give a counterexample.
+Q_ZH: KKT 不等式写为 $g_i(x)\ge0$，乘子 $\lambda_i\ge0$，并满足 $\lambda_i g_i(x)=0$。能否由 $\lambda_i=0$ 证明 $g_i(x)>0$？解释或给反例。
 A_EN: No. Under the lecture convention $g_i(x)\ge0$ with nonnegative multipliers, complementary slackness implies $g_i>0\Rightarrow\lambda_i=0$ and $\lambda_i>0\Rightarrow g_i=0$, but the converse implications need not hold. For $\min x^2$ subject to $x\ge0$, the optimum is $x=0$ with multiplier 0: the constraint is active despite a zero multiplier. This clarifies the lecture's simplified active/inactive descriptions.
 A_ZH: 不能。按课件的 $g_i(x)\ge0$ 和非负乘子约定，互补松弛可推出 $g_i>0\Rightarrow\lambda_i=0$、$\lambda_i>0\Rightarrow g_i=0$，但反向不一定成立。最小化 $x^2$、约束 $x\ge0$ 时，最优为 $x=0$，乘子也为 0，但约束仍是活跃的。这补清了课件中活跃/不活跃描述的简写。
 
@@ -895,8 +897,8 @@ A_EN: At an optimum with $C>0$, minimal slack is $\xi_i=\max(0,1-y_if(x_i))$. Ze
 A_ZH: $C>0$ 的最优解处，最小松弛量为 $\xi_i=\max(0,1-y_if(x_i))$。零表示位于正确间隔边缘或外侧；$0<\xi_i<1$ 表示在间隔内但类别仍正确；$\xi_i=1$ 表示在决策面上；$\xi_i>1$ 才表示错分。因此违反间隔不一定就是分类错误。
 
 @@ M156 | 13-svm | learn | L3B:54,58;SVM:3
-Q_EN: How is the slack-variable objective related to hinge loss, and where does the factor 1/2 go?
-Q_ZH: 松弛变量目标怎样对应 hinge loss？其中的 1/2 因子去了哪里？
+Q_EN: For soft-margin SVM, minimize $\frac12\|w\|^2+C\sum_i\xi_i$ subject to $y_if(x_i)\ge1-\xi_i$ and $\xi_i\ge0$. Eliminate the slacks, then divide by C. What hinge-loss objective results, and where is the 1/2 factor?
+Q_ZH: 软间隔 SVM 最小化 $\frac12\|w\|^2+C\sum_i\xi_i$，约束为 $y_if(x_i)\ge1-\xi_i$、$\xi_i\ge0$。消去松弛量，再整体除以 C，得到什么 hinge loss 目标？1/2 因子在哪里？
 A_EN: Eliminating minimal slacks gives $\frac12\|w\|^2+C\sum_i\max(0,1-y_if(x_i))$. Dividing by $C$ gives $\|w\|^2/(2C)+\sum_i\mathrm{hinge}_i$. The notebook later writes $1/C$ instead of $1/(2C)$: that can describe the same family after redefining $C$, but is not algebraically identical at the same numerical $C$. State your objective convention.
 A_ZH: 消去最小松弛量得到 $\frac12\|w\|^2+C\sum_i\max(0,1-y_if(x_i))$；除以 $C$ 后为 $\|w\|^2/(2C)+\sum_i\mathrm{hinge}_i$。Notebook 后面写成 $1/C$ 而非 $1/(2C)$，可通过重定义 $C$ 表示同一家族，但在相同数值 $C$ 下不严格等价。应说明所用目标约定。
 
@@ -926,8 +928,8 @@ A_EN: The constraints are $w-b\ge1$ and $w+b\ge1$, implying $w\ge1+|b|$. Minimum
 A_ZH: 约束为 $w-b\ge1$、$w+b\ge1$，因此 $w\ge1+|b|$。最小范数解为 $w=1,b=0$，单侧间隔为 1，目标值为 0.5。对偶中取 $\alpha_1=\alpha_2=0.5$，得到 $w=\sum_i\alpha_i y_i x_i=1$，对偶值也为 0.5，与原问题相同。
 
 @@ M161 | 13-svm | check | L3B:58-60;L3C:44-46
-Q_EN: How do logistic loss and hinge loss treat a correctly classified point with signed score $z=2$?
-Q_ZH: 带标签分数 $z=2$ 的正确分类点，在逻辑损失与 hinge loss 下分别怎样计分？
+Q_EN: For labels y∈{−1,+1}, let the signed score z=yf(x)=2. Compare logistic loss log(1+exp(−z)) with hinge loss max(0,1−z) for this correctly classified point.
+Q_ZH: 标签 y∈{−1,+1}，带标签分数 z=yf(x)=2。比较这个正确分类点的逻辑损失 log(1+exp(−z)) 与 hinge loss max(0,1−z)。
 A_EN: Hinge loss is $\max(0,1-2)=0$, because the point is beyond the unit margin. Logistic loss is $\log(1+e^{-2})\approx0.1269$, still positive and decreasing as confidence grows. Thus logistic loss keeps rewarding larger positive scores, while hinge loss becomes flat once the margin is satisfied. Both still interact with the regularizer.
 A_ZH: Hinge loss 为 $\max(0,1-2)=0$，因为该点已超过单位间隔；逻辑损失为 $\log(1+e^{-2})\approx0.1269$，仍为正且会随置信增大继续下降。因此逻辑损失还奖励更大正分数，hinge 在满足间隔后变平。两者仍都受正则项影响。
 MEDIA: Lecture3c-cell-46.png

@@ -1,0 +1,167 @@
+{
+  "lesson_id": "ml27",
+  "title": {
+    "zh": "同一张街景，四种问题需要四种答案",
+    "en": "One street image can require four different outputs"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "画面里有两辆相邻的汽车。你可能只想知道有没有车，也可能要知道每辆车在哪里，或者精确统计每辆车占了哪些像素。输入同一张图，并不意味着这是同一个任务。历史 Lecture11 先区分视觉输出，再讨论恢复与评价；本篇从“最终需要交付什么”开始选方法。",
+    "en": "The same street image contains two adjacent cars. Do we need to know whether cars exist, where each car is, or which pixels belong to each one? These are different output requirements. Following historical Lecture11, start with the required answer before choosing a method, then examine restoration and evaluation."
+  },
+  "sections": [
+    {
+      "id": "specify-output",
+      "title": {
+        "zh": "别先选网络，先把答案的样子说清楚",
+        "en": "Specify the output before selecting a network"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "图像分类给整张图一个或多个类别判断；目标检测通常给带类别的框；语义分割给每个像素一个类别；实例分割还要区分同类的不同个体。两辆汽车可以有完全相同的语义 car 标签，却需要两个实例身份。\n\n这不是名称越来越长、算法就越来越高级的排行榜，而是目标信息不同。分类器把“有车”判断正确，仍可能完全没有回答车在哪里。下面沿用两辆车的完整问题，把需求逐项映射到输出；也顺便想想每种任务需要什么标注才能训练与评价。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "spatial-correspondence",
+      "title": {
+        "zh": "需要轮廓，就不能只交一张类别清单",
+        "en": "A contour requires spatially aligned predictions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "分类可以把整张图压成一个类别向量，分割必须保留或恢复像素与预测的位置对应。检测框包含目标和周围背景，不等于精确轮廓。历史 Lecture11.1 第 21、29、31、34 页依次解释这些输出以及分割的空间结构。\n\n上采样能把数组变大，却不能凭空补回未学到的细节；跳跃连接与区域对齐也各有用途。残差块把变换结果与输入相加，需要形状兼容，为信息和梯度提供额外路径。这里的“加回来”是一种结构设计，不是只要画了箭头，模型就自动恢复所有边缘。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "instance-identity",
+      "title": {
+        "zh": "两个对象挨在一起，连通块不等于人数",
+        "en": "Connected pixels do not determine object identity"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把需求改成“分别统计每个人”，输出里就必须有逐对象归属。即使一片区域全都被正确标为 person，哪部分属于左边的人、哪部分属于右边的人，仍可能没有记录。\n\n下一题故意让两个人的语义区域连在一起。判断能否唯一回答时，应检查给定输出包含什么信息，而不是靠肉眼补充题目没有提供的分离结果。这个思路也适用于评估：你要评价实例是否分对，就不能只拿整图分类准确率当证据。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "restore-an-image",
+      "title": {
+        "zh": "恢复一张图，为什么不只是把模糊倒放？",
+        "en": "Image restoration needs more than reversing blur"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史 Lecture11.2 把低层视觉写成 $y=Ax+e$：y 是已观察图像，x 是希望恢复的信号，A 表示退化，e 是噪声。去噪时 A 可为单位映射；去模糊时 A 是模糊算子；超分辨率还包含下采样。这里先定义对象，才谈“恢复”。\n\n多个清晰图像可能生成同一份低分辨率观测，因此恢复往往依赖先验。补出看似清晰的纹理，不等于找回了原图的真实纹理。模型可以生成一种合理解释，但评价时要区分数值接近、视觉可信和任务信息正确。"
+        }
+      ]
+    },
+    {
+      "id": "rate-and-distortion",
+      "title": {
+        "zh": "看起来好，和用得更少，要分开算",
+        "en": "Compare quality together with bitrate"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "像素 MSE 计算各位置数值误差的平方平均，能提供明确账本，却不能完整描述感知和语义。两个系统若码率不同，直接比较 MSE 也不公平；花十倍比特换来略小误差，是否值得取决于实际约束。\n\n下面专题先算重构误差，再用不同码率检验比较是否成立。Lecture11.2 第 20、31、34、44 页将压缩和损失选择放在一起，正提示我们先说明数值范围、码率、参考图与评价目标。MSE 也不必然满足数学距离的三角不等式，课件使用 metric 一词时要识别上下文。"
+        },
+        {
+          "type": "unit",
+          "ref": "reconstruction-mse",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "comparison-and-return",
+      "title": {
+        "zh": "回到模型比较：平均分之外还要找什么",
+        "en": "Look beyond a repeatedly consulted benchmark"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一个固定测试集上的平均分回答“在这份样本和这套协议下表现怎样”。反复围绕同一榜单开发，方案可能间接适应基准；少见失败与分布变化也可能样本不足。历史 Lecture11.1 的最大差异思路寻找模型分歧明显的样本，再结合合适的参考判断，帮助暴露平均分没有讲清的区别。\n\n因此比较前先固定任务、数据、度量和测试协议，展示失败也说明采样条件。几张好看的结果图不是全场景可靠性证明。本篇不展开所有历史架构或逐项推导 PSNR/SSIM；这些仍是明确的后续学习范围。首轮先能分清输出、空间对应与评价证据，再让原卡帮助巩固。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "从需求判断分类、检测、语义与实例分割的信息差异",
+      "sections": [
+        "specify-output",
+        "spatial-correspondence",
+        "instance-identity"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M277",
+        "CS5489-M280"
+      ]
+    },
+    {
+      "goal": "说明固定基准、平均分与有针对性失败分析的边界",
+      "sections": [
+        "comparison-and-return"
+      ],
+      "practice": "card:CS5489-M284",
+      "cards": [
+        "CS5489-M284"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture11.1.pdf",
+      "locator": "PDF pp. 3, 11, 21, 23, 29, 31, 34, 37–40",
+      "kind": "historical",
+      "note": "历史视觉任务、残差与模型比较。已核对关键任务定义；原架构细节未逐项重写。"
+    },
+    {
+      "name": "Lecture11.2.pdf",
+      "locator": "PDF pp. 4, 8, 10, 14, 17, 20, 22, 31, 34, 44",
+      "kind": "historical",
+      "note": "历史恢复方程、不同退化、压缩与质量评价；数字变式复用已有重构专题。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml27 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "lesson_id": "net08",
+  "title": {
+    "zh": "点了“发送邮件”，对方就已经读到了吗？",
+    "en": "Mail delivery versus mailbox access"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Alice在网页邮箱给Bob发邮件，Bob晚一点才打开本地邮件软件。消息从浏览器到服务器，再到Bob的邮箱，这几段并不是同一个协议，也不是同一个完成事件。",
+    "en": "Alice sends through webmail, while Bob reads later in a desktop mail client. Follow the browser, inter-server delivery and mailbox-access legs as separate exchanges."
+  },
+  "sections": [
+    {
+      "id": "three-stages",
+      "title": {
+        "zh": "把“寄出”“投递”“读取”拆开",
+        "en": "Separate composing, delivery and reading"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "老师part2第17–21张先引入用户代理、邮件服务器和SMTP，再用Alice向Bob发信串起来。用户代理是写信读信的程序；邮件服务器有接收邮件的邮箱，也有等待投递的发件队列。服务器可暂存未完成的工作，收件人不必刚好在线等这封信。\n\n所以“服务器接受了消息”“收件服务器接收了消息”“Bob打开并阅读了消息”是不同事件。通信日志在哪一段结束，就只能直接说明到哪一步。邮件没有读心术，成功状态码也没有。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/mail-route.svg"
+        }
+      ]
+    },
+    {
+      "id": "smtp-conversation",
+      "title": {
+        "zh": "SMTP先谈收件安排，再交内容",
+        "en": "SMTP separates the envelope from content"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "SMTP是邮件系统间投递的应用协议。课件的服务器间例子通过TCP的25端口交流，经历问候、传送、结束；可在一个连接上向同一服务器传多封信。这里描述服务器间教学模型，不是给所有个人邮件客户端推荐的配置端口。\n\n对话中的MAIL FROM给出信封发件人，RCPT TO给出信封收件人。对方回复后，DATA开始邮件内容；示例中单独一行的点结束数据块，QUIT结束会话。每一步都有状态回复，因此命令与正文不是混成一长串随意解释。\n\nDATA里的From、To是消息首部，与投递信封的字段职责不同。它们可能相同，也可能不同；只截一张显示收件人姓名的截图，不足以还原全部投递端点。补充单元用具体信封与首部练这个区别。"
+        }
+      ]
+    },
+    {
+      "id": "read-the-mailbox",
+      "title": {
+        "zh": "邮箱已经有信，客户端怎样读取？",
+        "en": "Accessing a mailbox is another task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "POP3可以下载邮件，再由客户端请求删除或保留；IMAP支持更丰富的服务器邮箱状态和跨会话组织，例如文件夹与标记。不要把课件简化对比里的“无状态”理解成服务器会把存着的邮件忘掉。\n\nWebmail则在浏览器与网页服务之间使用HTTP相关交互，常有HTTPS保护；服务背后的邮件系统仍可用SMTP投递。Bob看到网页界面不意味着他的浏览器必须亲自发IMAP命令，后台如何读邮箱是另一段实现。判断协议时，先在图上圈定正在对话的两个实体。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "switch-the-interface",
+      "title": {
+        "zh": "只换收件界面，哪些协议会变？",
+        "en": "Change the reading interface"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面Alice仍用网页邮箱，邮件系统之间仍用SMTP，只把Bob的读取方式换成网页。先按三个通信区段逐一检查，不要因为人物没变就照抄上一题，也不要因为都看网页就把中间一段SMTP删掉。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "完成后再回想老师第24–29张的SMTP、POP3、IMAP与Webmail对照：它们是在解决不同阶段的问题，不是四个可以不加条件互换的名字。"
+        }
+      ]
+    },
+    {
+      "id": "what-success-proves",
+      "title": {
+        "zh": "从协议成功，回到真正的问题",
+        "en": "Interpret success at the correct stage"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一次SMTP成功接受不证明人已读信，一次浏览器页面加载也不证明所有后台投递完成。这和前面网络分层的边界相同：下层或中间一步完成，不会自动替你证明端到端用户目标完成。\n\n首轮卡应能让你复述邮件的三个组成、解释几条SMTP命令、区分读取安排。技术正文先掌握这条主线；信封细节、协议限制和安全配置可按实际问题补，不需要把历史示例命令机械当成当前完整部署指南。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha2_2026_student_part2.pptx",
+      "locator": "slides 17–29",
+      "kind": "course",
+      "note": "Alice/Bob路径、SMTP示例、消息格式与邮箱访问；按part2本身页码。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net08 worked/practice/transfer",
+      "kind": "derived",
+      "note": "依课程机制写成的解释与数值/情境变式，不冒称真实测量或教师原题。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能按发送界面、服务器投递、收件读取追踪邮件协议；信封与邮件头见补充单元。",
+      "sections": [
+        "three-stages",
+        "smtp-conversation",
+        "read-the-mailbox",
+        "switch-the-interface",
+        "what-success-proves"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N118"
+      ]
+    },
+    {
+      "goal": "课堂模型中，互联网电子邮件的主要组成是什么？",
+      "sections": [
+        "three-stages"
+      ],
+      "practice": "card:CS5222-N111",
+      "cards": [
+        "CS5222-N111"
+      ]
+    },
+    {
+      "goal": "基础服务器间 SMTP 示例使用什么传输、端口和阶段？",
+      "sections": [
+        "smtp-conversation"
+      ],
+      "practice": "card:CS5222-N112",
+      "cards": [
+        "CS5222-N112"
+      ]
+    },
+    {
+      "goal": "SMTP 对话中的 `MAIL FROM`、`RCPT TO`、`DATA` 和单独一行的点分别表示什么？",
+      "sections": [
+        "smtp-conversation"
+      ],
+      "practice": "card:CS5222-N113",
+      "cards": [
+        "CS5222-N113"
+      ]
+    },
+    {
+      "goal": "POP3 的下载模式与 IMAP 的服务器端组织有什么区别？",
+      "sections": [
+        "read-the-mailbox"
+      ],
+      "practice": "card:CS5222-N117",
+      "cards": [
+        "CS5222-N117"
+      ]
+    }
+  ]
+}

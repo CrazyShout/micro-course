@@ -1,0 +1,177 @@
+{
+  "lesson_id": "ml25",
+  "title": {
+    "zh": "同一个边缘探测器，怎样看完整张图？",
+    "en": "Slide the same local detector across an image"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "历史 Lecture9.2 从一张 32×32 的 RGB 图像开始：邻近像素组成边缘、角点和纹理，若直接摊成长向量，局部关系就不够明显。我们希望一个小检测器看遍各个位置，而且看到左上角的边缘后，不用为右下角再学一份完全独立的规则。",
+    "en": "Historical Lecture9.2 starts with a 32-by-32 RGB image. Nearby pixels form edges, corners and textures, relationships that flattening alone does not explicitly preserve. We want one local detector to examine every position, sharing its rule instead of learning unrelated copies for opposite corners."
+  },
+  "sections": [
+    {
+      "id": "one-window",
+      "title": {
+        "zh": "一次只看一个小窗口，但看全输入通道",
+        "en": "A local window still spans all input channels"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "普通非分组卷积的一个滤波器，覆盖一个小空间窗口和全部输入通道。RGB 输入有三通道，因此一个 5×5 的滤波器实际有 5×5×3 个权重；把图像块和权重逐项相乘、求和、加偏置，产生一个输出数值。滤波器滑到下一处，重复使用同一套权重。\n\n局部连接减少每次关注的范围，参数共享让各位置共用检测规则。一个滤波器在所有位置的结果组成一个输出通道，多个滤波器形成多个输出通道；输入有三个通道，并不意味着输出也只能有三个。下图先看窗口怎样移动，别急着背尺寸公式。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/sliding-window.svg"
+        }
+      ]
+    },
+    {
+      "id": "count-positions",
+      "title": {
+        "zh": "输出宽度，就是窗口能站住的次数",
+        "en": "Count the legal window positions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "沿一个轴看，输入长 n、核宽 k、左右各填充 p、步长 s，膨胀率为 1。可用长度是 n+2p，最左合法起点之后，每隔 s 放一次窗口；最后一个起点不能超过 n+2p−k。因此输出长度为 $\\lfloor(n+2p-k)/s\\rfloor+1$。高度与宽度各算一次。\n\n填充是为边界之外指定数值，不是新测到的像素；零填充、镜像填充意味着不同假设。步长控制相邻输出之间移动多远，会影响采样。若加入膨胀率 d，有效核宽变为 $d(k-1)+1$，再代入数窗口的过程即可，不必把每一种设置都当作孤立口诀。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "count-weights",
+      "title": {
+        "zh": "输出点很多，为什么参数没有一起暴涨？",
+        "en": "Many output positions share a small parameter set"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "刚才的尺寸正对应历史 Lecture9.2 第 20、23、25 页的图示：32×32×3 输入，六个 5×5×3 滤波器，输出 28×28×6。每个输出通道只有一组核和一个偏置，所有 28×28 个位置共享它；因此参数不能再乘输出宽高。图像变大通常会增加计算与激活存储，却不自动增加这一层的核参数。\n\n下面改成单通道小图，让你独立数窗口和权重。答题时注明尺寸顺序是高×宽×通道，避免把本来正确的数字因记法不同看成两个答案。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "stride-padding",
+      "title": {
+        "zh": "只改走路步幅，工具本身没变",
+        "en": "Change the stride without changing the filter"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在保持输入通道、核大小、滤波器数量不变，只改步长与填充。先把核想成一把固定的尺子：走得更远、边缘垫得更多，改变它能站的位置；尺子上有多少刻度，并不会因此增加。\n\n这道变式同时检查两个容易混淆的量：特征图尺寸和可学习参数量。不要用“输出更小”推出“模型参数更少”，也不要把名称为 same 的填充理解成任意步长下都与输入尺寸完全一样。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "convolution-convention",
+      "title": {
+        "zh": "叫卷积，不代表手算时可以忽略翻核",
+        "en": "Check whether the stated operation flips the kernel"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "数学离散卷积包含核翻转，常见深度学习层实际执行互相关，不翻转核。因为权重由学习决定，两种参数化能表示同一组滤波器；但对一个已给定数值的核，它们的输出可能不同。课程第 38 页的信号序列操作明确先翻转，不能把网络里的习惯直接搬过去。\n\n下面的短序列专题让你真正移动核、逐项相乘，再比较翻核后的结果。这能把“名称相近”与“运算约定相同”分开。手算题首先写约定、边界和索引，错误不一定出在乘法，有时从第一步就用了另一种运算。"
+        },
+        {
+          "type": "unit",
+          "ref": "sliding-products",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "pooling-and-return",
+      "title": {
+        "zh": "位置共享带来的能力，也有边界",
+        "en": "Understand what position sharing does and does not imply"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "池化也是局部汇聚，例如窗口内取最大值，但通常没有像卷积核那样的可学习权重。平移等变表示输入移动，输出相应移动；平移不变表示输出不变，两者不同。边界、步长和下采样还会限制严格的等变关系，不能说“用了卷积就完全不怕位置变化”。\n\n回看原课从全连接到局部滤波的图，你应能解释每条尺寸标注从哪里来，也能说明共享参数为何有用。首轮五张卡对应窗口计算、尺寸、原课数字、步长填充和翻核约定；更复杂的架构与代码实现放在后续复习，不拿这一层的算例冒充已掌握整套视觉网络。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释局部连接、通道与参数共享",
+      "sections": [
+        "one-window",
+        "count-weights"
+      ],
+      "practice": "card:CS5489-M255",
+      "cards": [
+        "CS5489-M255"
+      ]
+    },
+    {
+      "goal": "独立计算改变步长填充后的形状和参数量",
+      "sections": [
+        "count-positions",
+        "count-weights",
+        "stride-padding"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M256",
+        "CS5489-M257",
+        "CS5489-M259"
+      ]
+    },
+    {
+      "goal": "按给定翻核约定计算序列并解释差异",
+      "sections": [
+        "convolution-convention"
+      ],
+      "practice": "unit:sliding-products:transfer",
+      "cards": [
+        "CS5489-M263"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture9.2.pdf",
+      "locator": "PDF pp. 17, 20, 23, 25, 29, 38",
+      "kind": "historical",
+      "note": "历史图像局部结构、32×32×3卷积示范、步长/池化与离散卷积翻核；第25页输出六通道图已目视核对。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing exercises",
+      "locator": "ml25 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+    }
+  ]
+}

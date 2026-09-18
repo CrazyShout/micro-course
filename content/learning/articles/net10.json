@@ -1,0 +1,186 @@
+{
+  "lesson_id": "net10",
+  "title": {
+    "zh": "做网络题之前，先把“什么时候算完成”说清楚",
+    "en": "A method for current tutorial problems"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "一份8 Mbit（8×10⁶比特）的文件要依次经过三条2 Mbps链路，中间设备收齐一个分组后才能向下一跳发送。忽略传播、处理、排队和首部开销：整份作为一个报文转发，或拆成800个10000比特的包连续发送，最后一比特分别何时到齐？这是教学变式，算清后再回到Tutorial原题。",
+    "en": "An 8 Mbit file (8×10⁶ bits) crosses three 2 Mbps links. Each intermediate device receives a complete packet before forwarding it. Ignore propagation, processing, queueing and header overhead. When does the final bit arrive if the file is one whole message, versus 800 back-to-back packets of 10000 bits? This is a teaching variation; then return to the original tutorial tasks."
+  },
+  "sections": [
+    {
+      "id": "write-four-lines",
+      "title": {
+        "zh": "先把题目翻译成四行条件",
+        "en": "Turn the question into four conditions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "拿到一道题，先写：谁经过哪些链路；数据有多少；从哪一刻算到哪一刻；哪些开销忽略。把这四行写齐，常常比立即翻公式快，因为它能防止你算出一个数字，却回答了另一件事。\n\nTutorial 1 Q1(a)是一包经过两条存储转发链路；Q1(b)是三个包全部到齐。第一题逐跳等整包，第二题允许不同包同时占不同链路。老师原解给出前者两项发送时间相加、后者四个发送时段；不是把每包两跳时间乘三。原题、图与双语原卡在Chapter 1下对应活动入口。"
+        }
+      ]
+    },
+    {
+      "id": "different-clocks",
+      "title": {
+        "zh": "同一张网络图，可能有不同计时起点",
+        "en": "Different clocks measure different tasks"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Tutorial 1 Q3先建一条电路，再发送文件。总链路1.536 Mbps分成12份，自己的份额只有128 kbps；发送160000比特需1.25秒，再加0.6秒建立，共1.85秒。把全链路速率借给自己，会把等待算得过于乐观。\n\nTutorial 2 Q1还有“组包”：128 kbps的声音先产生足够64字节，才能发出整包；题设发送链路为4 Mbps，单向传播8毫秒。以最早编码的比特、从开始组包计时，先等4毫秒组包，再加0.128毫秒发送与8毫秒传播。较晚产生的比特并没有等满同样的组包时间；所以我们必须明确题目的那个比特。\n\nTutorial 2 Q2换成三链路、两路由器，账本是三次发送、三段传播、两次处理。题设1500字节，各链路2 Mbps，距离为5000、4000、1000千米，传播速度2.5×10⁸米/秒，每路由处理3毫秒。将包长变12000比特、总距离变10⁷米，得到发送18、传播40、处理6毫秒，总64毫秒。"
+        }
+      ]
+    },
+    {
+      "id": "make-a-pipeline",
+      "title": {
+        "zh": "把整份数据切开，找重叠在哪里",
+        "en": "Locate the pipeline overlap"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面的800包例子是本微课的教学变式，不是Tutorial 1或2原题。它把老师Q1的流水线思想放大，让你看见“每个包更早开始下一跳”怎样改变整份文件的完成时刻。先比较两种切分方式，别只记最终秒数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "prose",
+          "text": "逐行核对：整报文每段必须先收完整8 Mbit才继续；分包后，第一包通过三段时，后续包已能在前面的段上传输。最后的增加量由瓶颈发送间隔决定。本例等速、无额外开销，才可以用简洁的流水线计数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "headers-change-the-bill",
+      "title": {
+        "zh": "切小一点也会增加开销",
+        "en": "Packet headers change the trade-off"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果每个包都带首部，分包不是免费操作。下面保持包数与载荷不变，只给每包增加100比特首部；发送时间必须用载荷加首部，而不是以为“应用数据没变”就继续沿用旧结果。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "如果进一步让各链路不等速、加入排队或重传，就应按到齐时间和可用发送时间逐步推进，不继续套一个不满足前提的等速公式。"
+        }
+      ]
+    },
+    {
+      "id": "return-to-the-sheet",
+      "title": {
+        "zh": "带着方法回原题，而不是用样例代替原题",
+        "en": "Return to the original activities"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Tutorial 1还包括方环资源分配与恰好活跃人数，分别回NET02；Tutorial 2还有理想逐比特转发、FIFO排队和traceroute，分别回NET03、NET04。它们不是同一种公式题，“先写对象、事件、单位、假设”才是通用部分。\n\ntraceroute的每行是独立探测的往返观测；星号可能只是没有及时收到回复，不能凭一个符号证明普通数据在该跳丢失。实践入口可以检验时间轴实现，但必须自己执行和解释结果；本页推导不替代实做。首轮先做五张对应基础题，再按原活动逐题推进。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "tutorial-1_semA2026.pdf; tutorial-1-solution_semA2026.pptx",
+      "locator": "question pages 1–3; solution slides 3–4, 9–10",
+      "kind": "course",
+      "note": "当前原题顺序和教师解答，800包例不是原题。"
+    },
+    {
+      "name": "tutorial-2_semA2026.pdf",
+      "locator": "pages 1–3",
+      "kind": "course",
+      "note": "当前题干；网页推导不是声称存在的教师solution。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net10 worked/practice/transfer",
+      "kind": "derived",
+      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能独立列出网络数值题的单位、路径、完成事件和忽略项。",
+      "sections": [
+        "write-four-lines",
+        "different-clocks",
+        "make-a-pipeline",
+        "headers-change-the-bill",
+        "return-to-the-sheet"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N072"
+      ]
+    },
+    {
+      "goal": "本学期 Tutorial 1 Q1a：L 比特分组经过两条存储转发链路，速率为 $R_1,R_2$ 比特/秒。忽略其他时延，从开始发送到最后一比特到达目的地需多久？",
+      "sections": [
+        "write-four-lines"
+      ],
+      "practice": "card:CS5222-N071",
+      "cards": [
+        "CS5222-N071"
+      ]
+    },
+    {
+      "goal": "Tutorial 1 Q3：在 1.536 Mbps 链路均分的十二条 FDM 电路中使用一条，发送 160000 比特。连接建立需 600 毫秒，忽略传播等其他时延。从开始建连计时，总共需多久？",
+      "sections": [
+        "different-clocks"
+      ],
+      "practice": "card:CS5222-N076",
+      "cards": [
+        "CS5222-N076"
+      ]
+    },
+    {
+      "goal": "本学期 Tutorial 2 Q1：语音以 128 kbps 编码，组成 64 字节分组，以 4 Mbps 发送，传播 8 毫秒。若接收端等完整分组到齐后播放，最早编码的比特从开始组包到可播放需多久？",
+      "sections": [
+        "different-clocks"
+      ],
+      "practice": "card:CS5222-N079",
+      "cards": [
+        "CS5222-N079"
+      ]
+    },
+    {
+      "goal": "一个分组经过三条存储转发链路和两个路由器，无排队与端点处理。分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒。求整个分组到齐的时延。",
+      "sections": [
+        "different-clocks"
+      ],
+      "practice": "card:CS5222-N081",
+      "cards": [
+        "CS5222-N081"
+      ]
+    }
+  ]
+}

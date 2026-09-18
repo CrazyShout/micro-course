@@ -1,0 +1,172 @@
+{
+  "lesson_id": "ml21",
+  "title": {
+    "zh": "没有标签的鸢尾花，该怎样分成几组？",
+    "en": "Group unlabelled iris measurements with k-means"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "历史 Lecture6.2 第 5 页提出：只看鸢尾花的测量尺寸，能不能把相似的花放在一起，并找一个代表点概括每组？这里先不给品种标签。我们不是让机器猜一道已有标准标签的题，而是在选定的特征与距离下寻找分组结构。",
+    "en": "Historical Lecture6.2, page 5, asks whether iris flowers can be grouped by their measurements and summarised with representative points. Species labels are withheld. The task is to discover a grouping under a chosen representation and distance, not to predict an already supplied target label."
+  },
+  "sections": [
+    {
+      "id": "group-without-labels",
+      "title": {
+        "zh": "先说明什么叫“同一组”",
+        "en": "Say what similarity means before clustering"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "分类用训练标签告诉算法要预测哪类；聚类只有输入记录，分组好不好取决于你选的相似性标准。即使最后碰巧得到三个簇，也不能直接宣称发现了三个真实物种。簇编号 1、2、3 是方便记账的名字，对调名字不改变分组。\n\nk-means 先给定组数 k，每组用一个中心 $\\mu_j$ 代表。每条样本 $x_i$ 只分到一个中心，$z_i$ 记录它的组号，目标是让 $J=\\sum_i\\|x_i-\\mu_{z_i}\\|^2$ 尽量小。这里使用当前特征尺度下的平方欧氏距离；“紧凑”已经由这个公式明确定义，而不是泛指一切有意义的结构。"
+        }
+      ]
+    },
+    {
+      "id": "chicken-and-egg",
+      "title": {
+        "zh": "不知道分组，怎知中心；不知道中心，怎分组？",
+        "en": "Break the dependence between groups and centres"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture6.2 第 15 页把困难叫作鸡和蛋问题。一次同时找全部分组与中心很难，但先固定一半，另一半就简单了：中心固定时，每点选最近的；分组固定时，每个非空组取平均值作新中心。这种交替更新常称 Lloyd 算法。\n\n为什么偏偏是平均值？以一组 0、2 为例，中心 c 的损失是 $c^2+(2-c)^2=2(c-1)^2+2$，c=1 显然最好。一般情形把各维分别求导，得到同样结论。均值不是聚类算法的万能口令，它是平方欧氏目标的解；若目标换了，更新可能也要换。"
+        }
+      ]
+    },
+    {
+      "id": "follow-one-round",
+      "title": {
+        "zh": "亲手走一轮，观察哪里真的变好了",
+        "en": "Follow one assignment and update"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先把二维花尺寸暂时压成一条数轴，以便每一步能手算；这是一组教学数字，不是原始鸢尾花数据。读下面例题时，明确区分旧中心、按照旧中心得到的分组，以及新中心。先分完组，再一起更新，别算到第二个点就偷偷替换第一个中心。\n\n比较前后目标时，要使用各自那一阶段的中心。一次更新之后，还应重新分配；本例恰好分组不变，但这不是一般保证。数值下降给了我们一个可以检查程序的量，而不是只凭“图上看着不错”。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "demo",
+          "ref": "kmeans"
+        }
+      ]
+    },
+    {
+      "id": "try-another-group",
+      "title": {
+        "zh": "换一组点，沿同样两步前进",
+        "en": "Repeat the two steps on another dataset"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面改变点的位置，组的大小不再相等。中心仍是各自组内平均数，不能因为两组都叫“一个簇”，就让它们分走相同数量的点。计算完成后，分别核对组内和、点数、均值，以及总平方距离。\n\n若出现空簇，平均值的分母为零，算法需要明确保留旧中心或重置中心的规则；若距离平局，也需要稳定的分配约定。本题避开这两种边界，目的是先把标准一轮算对。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "local-not-global",
+      "title": {
+        "zh": "每一步下山，不等于走到了最低山谷",
+        "en": "Descending on one path does not find every valley"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史第 18 页用坐标下降解释算法：两步各自精确优化同一目标的一部分，因此 J 不会增加，又被零下界约束。但这不能证明找到了所有可能分组中最小的 J。不同初始化可能走进不同局部解；应尝试多个起点并比较最终目标，同时考虑任务含义。\n\n增加 k 也通常能降低训练目标，极端地每点一个中心就可把误差降成零。这显然没有告诉你最有用的分组数。特征尺度、组数、初始化、空簇处理，都属于报告结果时应说明的选择。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "shape-and-return",
+      "title": {
+        "zh": "回看原来的花：几何分组有自己的边界",
+        "en": "Return to the flowers and the limits of the geometry"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture6.2 第 23 页用圆形与拉长簇的对比提醒我们：每组只有一个中心、并按相同欧氏尺度比较距离，对拉长、弯曲或密度不同的结构可能不合适。不是任何椭圆数据都必定失败，而是算法不会单独学习每个簇的方向与方差。下一篇混合高斯会明确建模这些量。\n\n书本补充用 (0,0,9) 比较平方距离与绝对距离，说明改目标为何会把“均值”换成“中位数”。本篇首轮卡只抓住分类与聚类区别、目标、两步更新及手算；图上的彩色区域再漂亮，也不能代替这些解释。旧资料仅供预习，课堂实际要求仍待当前 Canvas 确认。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "区分聚类目标与已有分类标签",
+      "sections": [
+        "group-without-labels"
+      ],
+      "practice": "card:CS5489-M211",
+      "cards": [
+        "CS5489-M211"
+      ]
+    },
+    {
+      "goal": "解释平方欧氏目标及单调下降不能保证全局最优",
+      "sections": [
+        "chicken-and-egg",
+        "local-not-global"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M212",
+        "CS5489-M213"
+      ]
+    },
+    {
+      "goal": "完整完成一次分配和均值更新",
+      "sections": [
+        "follow-one-round",
+        "try-another-group"
+      ],
+      "practice": "card:CS5489-M214",
+      "cards": [
+        "CS5489-M214"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture6.2.pdf",
+      "locator": "PDF pp. 3, 5, 13, 15, 18, 23",
+      "kind": "historical",
+      "note": "历史监督/无监督区别、鸢尾花聚类、两步更新、平方距离目标及形状局限；数轴四点为已有教学算例。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml21 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲、说明性反例和数值练习用于理解历史材料，不冒充教师原题或用户实际实验。"
+    }
+  ]
+}

@@ -225,8 +225,8 @@ WORKED_A: 忽略共同项，A 为 2log2-3，B 为 -3；差为 2log2>0，选 A。
 PRACTICE_Q: 等先验独立 Poisson 模型：A 的率为 (2,1)，B 为 (1,2)，新文档计数 x=(0,2)。使用 sum[xj log(lambda_j)−lambda_j] 比较分数。 || For equal-prior independent Poisson models with rates A=(2,1), B=(1,2), score x=(0,2) using sum[xj log(lambda_j)−lambda_j].
 HINT: 分别代入两个词的次数；log 1=0。 || Substitute both counts; log 1 is zero.
 PRACTICE_A: A 为 −2+(2 log1−1)=−3；B 为 −1+(2 log2−2)=2 log2−3；B 更大 2 log2，所以选 B。 || A scores −3 and B scores 2 log2−3, so B wins by 2 log2.
-TRANSFER_Q: 两类单词均值为 1 和 10，空计数 x=0、更支持哪类？ || With one feature, equal priors, and rates 1 and 10, which class does x=0 support?
-TRANSFER_A: 分数为 -1 和 -10，支持均值 1 的类别。若错删负 lambda 项，就会把这两类误判为平局。 || The scores are -1 and -10, favoring rate 1. Dropping the negative-rate term incorrectly creates a tie.
+TRANSFER_Q: 单特征 Poisson 模型中，两类先验相等，计数均值分别为 1 和 10。观察到 x=0 时更支持哪类？ || In a one-feature Poisson model with equal class priors and rates 1 and 10, which class does x=0 support?
+TRANSFER_A: 略去共同的 log 先验后，分数为 -1 和 -10，支持均值 1 的类别。若错删负 lambda 项，就会把这两类误判为平局。 || Omitting the common log prior gives scores -1 and -10, favoring rate 1. Dropping the negative-rate term incorrectly creates a tie.
 BRIDGE: 前面先建模“数据怎样生成”；下一节直接建模“给定数据属于哪类”。
 
 @@ ml10 | 逻辑回归：分数、概率、损失怎样连起来 | Logistic regression from score to update
@@ -247,7 +247,7 @@ PRACTICE_Q: x=2、w=0、固定 b=0、标签 t=0、学习率 eta=0.1，无正则�
 HINT: 只改变 p-t 的符号。 || Check the sign of p-t.
 PRACTICE_A: 梯度为 1，新 w=-0.1，正类概率下降到约 0.4502。 || The gradient is 1, so w=-0.1 and the positive-class probability falls to about 0.4502.
 TRANSFER_Q: x=2、t=1、初始 w=b=0、eta=0.1，无正则，同时训练权重与偏置。分别求两个梯度、新参数与新分数。 || With x=2, t=1, initial w=b=0, eta=0.1, and no regularization, train both weight and bias. Find both gradients, new parameters, and new score.
-TRANSFER_A: b 的梯度为 p-t=-0.5，新 b=0.05。两者应在同一组旧参数上计算；此时新 z=0.25，不是固定偏置版本的 0.2。 || The bias gradient is -0.5 and b becomes 0.05. Both gradients use the old parameters; the new score is 0.25.
+TRANSFER_A: 旧参数给 p=0.5。权重梯度 (p-t)x=-1，偏置梯度 p-t=-0.5；两者都用旧参数计算。一起更新得 w=0.1、b=0.05，新分数 z=0.1×2+0.05=0.25，不是固定偏置版本的 0.2。 || The old parameters give p=0.5. The weight gradient (p-t)x is -1 and the bias gradient p-t is -0.5, both evaluated before updating. The new parameters are w=0.1 and b=0.05, giving z=0.1×2+0.05=0.25 rather than the fixed-bias value 0.2.
 BRIDGE: 梯度能拟合一个模型；选择模型和推广到多类别，还需要交叉验证与 softmax。
 
 @@ ml11 | 模型选择与多类别概率 | Cross-validation and multiclass probabilities
@@ -292,11 +292,11 @@ BRIDGE: 原始问题看 w 与 b；对偶从样本贡献出发，解释哪些点�
 CARDS: M147,M148,M149,M150,M151,M152,M153,M157,M158
 PREREQ: ml12
 GOAL: 能逐项求拉格朗日函数的导数、求两点硬间隔乘子，并正确使用互补松弛。
-EXPLAIN: 把硬间隔约束写成 $g_i=1-y_i(w^Tx_i+b)\le0$。最小化问题的拉格朗日函数为 $L=\frac12\|w\|^2+\sum_i\alpha_i g_i$，其中 alpha_i≥0。对任一可行 w,b，乘子项非正，所以先对 w,b 求下确界得到原问题最优值的下界；再最大化这个下界就是对偶。
+EXPLAIN: 把硬间隔约束写成 $h_i=1-y_i(w^Tx_i+b)\le0$。最小化问题的拉格朗日函数为 $L=\frac12\|w\|^2+\sum_i\alpha_i h_i$，其中 alpha_i≥0。对任一可行 w,b，乘子项非正，所以先对 w,b 求下确界得到原问题最优值的下界；再最大化这个下界就是对偶。
 
-符号约定先对齐：这里写 g≤0、L=f+αg；若基础补课写 h=−g≥0，则 L=f−αh 完全相同，乘子仍非负。只可把不等式与拉格朗日项的符号一起转换。
+符号约定先对齐：这里写 h≤0、L=f+αh；课堂与基础补课采用 g=−h≥0，则 L=f−αg 完全相同，乘子仍非负。只可把不等式与拉格朗日项的符号一起转换。
 
-对 w 求导得 $w=\sum_i\alpha_i y_i x_i$，对 b 求导得 $\sum_i\alpha_i y_i=0$。代回后，对偶目标是最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_j y_i y_j x_i^Tx_j$，同时满足这些约束。乘子像约束的“价格”；不挤压最优解的约束不必付价。互补松弛 $\alpha_i g_i=0$ 表示：g_i<0 时 alpha_i=0；反向却不一定成立。
+对 w 求导得 $w=\sum_i\alpha_i y_i x_i$，对 b 求导得 $\sum_i\alpha_i y_i=0$。代回后，对偶目标是最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_j y_i y_j x_i^Tx_j$，同时满足这些约束。乘子像约束的“价格”；不挤压最优解的约束不必付价。互补松弛 $\alpha_i h_i=0$ 表示：h_i<0 时 alpha_i=0；反向却不一定成立。
 
 软间隔加上线性松弛惩罚后得到 0≤alpha_i≤C。0<alpha_i<C 的点落在间隔边界，可用于求 b；alpha_i=C 也可能仍正确分类。硬间隔在线性可分时可放大分离超平面，使约束严格满足；结合凸性可用强对偶说明最优值相等。这是本问题的条件，不能推广为任意优化问题都成立。
 
@@ -310,8 +310,8 @@ WORKED_A: 对 w：½w² 给 w，两个约束项分别给 −α₁、−α₂，�
 PRACTICE_Q: 将样本改成 (−2,−1)、(2,+1)，其最优 w=1/2、b=0。L=½w²+α₁(1−2w+b)+α₂(1−2w−b)。补出两个驻点方程并求乘子。 || For points (−2,−1),(2,+1), the optimum is w=1/2,b=0. Using L=½w²+α₁(1−2w+b)+α₂(1−2w−b), derive both stationarity equations and multipliers.
 HINT: w 的两个约束导数现在各带系数 −2；b 条件仍使两个乘子相等。 || Each constraint now contributes −2 to its w derivative; the b condition still equates the multipliers.
 PRACTICE_A: ∂L/∂w=w−2α₁−2α₂=0，∂L/∂b=α₁−α₂=0。令二者为 a，1/2=4a，因此 α₁=α₂=1/8。 || Stationarity gives w−2α₁−2α₂=0 and α₁−α₂=0. With both equal to a, 1/2=4a, so each is 1/8.
-TRANSFER_Q: 从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 ∂L/∂w 和 ∂L/∂b，推出 w 的展开。再判断：gᵢ<0 能推出 αᵢ=0 吗？αᵢ=0 能推出 gᵢ<0 吗？ || For general L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)], derive both derivatives and the expansion of w. Under complementary slackness, does gᵢ<0 imply αᵢ=0, and does αᵢ=0 imply gᵢ<0?
-TRANSFER_A: ∂L/∂w=w−Σᵢαᵢyᵢxᵢ=0，故 w=Σᵢαᵢyᵢxᵢ；∂L/∂b=−Σᵢαᵢyᵢ=0。因 αᵢgᵢ=0，gᵢ<0 必使 αᵢ=0；逆向不成立，因为 αᵢ=0、gᵢ=0 也满足条件。 || The derivatives are w−Σᵢαᵢyᵢxᵢ=0 and −Σᵢαᵢyᵢ=0. Hence w is the weighted sample sum. Complementary slackness forces αᵢ=0 when gᵢ<0, but αᵢ=0 permits either an inactive or an active constraint.
+TRANSFER_Q: 从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 ∂L/∂w 和 ∂L/∂b，推出 w 的展开。再令 hᵢ=1−yᵢ(wᵀxᵢ+b)≤0，在 KKT 互补松弛成立时判断：hᵢ<0 能推出 αᵢ=0 吗？αᵢ=0 能推出 hᵢ<0 吗？ || For general L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)], derive both derivatives and the expansion of w. Define hᵢ=1−yᵢ(wᵀxᵢ+b)≤0. Under complementary slackness, does hᵢ<0 imply αᵢ=0, and does αᵢ=0 imply hᵢ<0?
+TRANSFER_A: ∂L/∂w=w−Σᵢαᵢyᵢxᵢ=0，故 w=Σᵢαᵢyᵢxᵢ；∂L/∂b=−Σᵢαᵢyᵢ=0。因 αᵢhᵢ=0，hᵢ<0 必使 αᵢ=0；逆向不成立，因为 αᵢ=0、hᵢ=0 也满足条件。 || The derivatives are w−Σᵢαᵢyᵢxᵢ=0 and −Σᵢαᵢyᵢ=0. Hence w is the weighted sample sum. Complementary slackness forces αᵢ=0 when hᵢ<0, but αᵢ=0 permits either an inactive or an active constraint.
 BRIDGE: 对偶只通过样本内积计算，这为核方法提供了入口。
 
 @@ ml14 | 核：换一种比较样本的方式 | Kernels as implicit feature comparisons

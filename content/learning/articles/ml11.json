@@ -1,0 +1,180 @@
+{
+  "lesson_id": "ml11",
+  "title": {
+    "zh": "两个分类器都说自己更好，该信哪次成绩？",
+    "en": "Which score should decide between two classifiers?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "你已经用带标签的花朵数据训练了分类器，但正则化设置不同，结果也不同。一个设置在一次划分上很出色，换一批验证花就掉分；怎样公平挑选设置，并留下一次真正没参与选择的检验？",
+    "en": "Different regularization settings produce different flower classifiers. One looks excellent on a single split but weaker on another. How can settings be compared fairly while preserving an independent final evaluation?"
+  },
+  "sections": [
+    {
+      "id": "do-not-select-on-test",
+      "title": {
+        "zh": "先分清要选什么、用什么来选",
+        "en": "Separate selection data from final evaluation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "权重从训练数据学习，正则化 C 等设置需要比较选择。在本课所用实现中，C 越大通常对应较弱正则化，但具体系数约定不能脱离库的目标函数。选 C 的目的，是找到在未参与拟合的数据上表现合理的流程，而不是把训练答案记得最熟。\n\nLecture3a 单元 65 展示 C 对结果有影响，68–69 随即给出交叉验证。先保留最终测试集；其余开发数据再轮流分成训练折和验证折。这里“全部数据重新拟合”指选择所用的开发数据，不是连保留测试标签一起吃进去。"
+        }
+      ]
+    },
+    {
+      "id": "each-fold-is-a-small-experiment",
+      "title": {
+        "zh": "每一折都要重新搭一个干净的小实验",
+        "en": "Refit the complete procedure inside each fold"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "K 折交叉验证把开发数据分为 K 份。某轮留一份评分，其余份拟合；轮换后，每个候选收集 K 个验证分数，再按预先约定规则比较。所有候选应使用相同划分、指标和合理一致的搜索预算，否则成绩差异可能来自题卷不同。\n\n词表、IDF、缩放均值也从数据学出来，因此每折只能用该折训练部分拟合。若先用全开发集算均值再分折，验证样本已经影响表示，类似考试前“只偷看一下题目、不看答案”——仍然把检验条件改了。Pipeline 可帮助保持操作顺序，但名称本身不能替代检查。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "average-the-right-scores",
+      "title": {
+        "zh": "别只挑最漂亮的那一折",
+        "en": "Compare the agreed summary, not the prettiest fold"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "本例各折大小相同，规则是验证准确率算术平均。平均数把各折都计入；不是取最大值，也不保证胜者在任何未来数据都最好。若数据有时间依赖、重复个体或同源样本，划分本身还需要相应约束，普通随机折不总合适。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "rebuild-the-comparison",
+      "title": {
+        "zh": "分数高一点，但流程泄漏了怎么办？",
+        "en": "Repair a leaked comparison before selecting"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "比较设置前，先检查分数是否来自同一种有效流程。较高分若用了验证折统计量，不能把偏差当成模型优势，也不能凭空减一个“泄漏罚分”修正。独立写出需要重做的训练、变换和评分顺序。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "选完后用全部开发数据重拟合已选流程，最后在保留测试集上评价。失败了可以重新研究，但那份被反复反馈的测试集已不再是原意义上的独立最终证据，要如实描述。"
+        }
+      ]
+    },
+    {
+      "id": "more-than-two-species",
+      "title": {
+        "zh": "老师接下来加入第三类花，概率怎样组织？",
+        "en": "Extend the model beyond two species"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3a 单元 74–90 转向多类。有一种办法训练 K 个 one-vs-rest 分类器，各问“是不是这一类”；另一种为每类打分 $z_k$，用 $p_k=e^{z_k}/\\sum_j e^{z_j}$ 联合归一化，这叫 softmax。后者各类在同一个分布里竞争，概率和为 1；多个二元任务的训练目标与它不同。\n\n数值上先减共同最大分数再取 exp，可以避免溢出，概率比不变。one-hot 标签只有真实类位置为 1，交叉熵因此只留下真实类概率的负对数。这个支线用下面小专题完成手算；它没有把本节验证题变成已经检验了多类实现能力。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/softmax-shares.svg"
+        },
+        {
+          "type": "unit",
+          "ref": "softmax",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "what-the-result-means",
+      "title": {
+        "zh": "最后解释的是流程，而不是一个神奇 C",
+        "en": "Explain the procedure behind the chosen setting"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到老师的 iris 示例，你应能指出哪部分拟合权重、哪部分选 C，以及从二分类到多分类改了什么。讲解拟合系数时也要检查类别编码和尺度：二分类中其他输入固定，正系数提高正类 logit，但它不证明因果关系；多类 softmax 更不能只看一个系数而忽略其他类的竞争。\n\n首轮回忆先守住交叉验证与防泄漏，做完再进入多类概率专题。这样既能解释选择，也不把所有课程细节塞进一次复习。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3a.ipynb",
+      "locator": "cells 65–74, 86–98",
+      "kind": "course",
+      "note": "C 选择、交叉验证、one-vs-rest 与 softmax。 / Selection, cross-validation and multiclass models."
+    },
+    {
+      "name": "推理桥接与手算 / Teaching derivation and hand calculation",
+      "locator": "ml11",
+      "kind": "derived",
+      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "逻辑回归中，C 按所用实现控制正则化强度的倒数。已有候选 C、训练数据和留出测试集，应怎样通过交叉验证选择 C，再得到最终拟合模型？",
+      "sections": [
+        "do-not-select-on-test",
+        "each-fold-is-a-small-experiment",
+        "rebuild-the-comparison"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M133"
+      ]
+    },
+    {
+      "goal": "$C=0.1$ 的三折验证准确率为 $(0.82,0.86,0.84)$，$C=10$ 为 $(0.90,0.74,0.79)$。规则选择算术平均准确率更高者，应选哪个 C？",
+      "sections": [
+        "average-the-right-scores",
+        "each-fold-is-a-small-experiment"
+      ],
+      "practice": "card:CS5489-M134",
+      "cards": [
+        "CS5489-M134"
+      ]
+    },
+    {
+      "goal": "如果交叉验证前先统一拟合标准化，会泄漏什么信息？",
+      "sections": [
+        "each-fold-is-a-small-experiment",
+        "rebuild-the-comparison"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M135"
+      ]
+    }
+  ]
+}

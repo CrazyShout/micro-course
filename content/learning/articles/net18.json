@@ -1,0 +1,167 @@
+{
+  "lesson_id": "net18",
+  "title": {
+    "zh": "收到一串0和1，怎样知道途中有没有变样？",
+    "en": "Error detection and shared-medium access"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "设备A要把数据交给相邻设备B。线路可能把某一位翻转；如果接收者只拿到一串看似正常的比特，怎么发现变化？先给数据加可检查的约束，再讨论共享线路上谁能发。",
+    "en": "Node A sends bits to adjacent node B. Add checkable redundancy to detect corruption, then separately consider which node may transmit on a shared medium. This follows historical link-layer material."
+  },
+  "sections": [
+    {
+      "id": "one-link-two-problems",
+      "title": {
+        "zh": "本跳送对内容，与安排发送是两件事",
+        "en": "Content protection differs from channel coordination"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "链路层把IP数据报封装成帧，在相邻节点间传递；整条端到端路径可能跨多种链路，路由器会更换本地链路封装。不同技术提供的服务不同，局部检错或重传不自动构成完整端到端可靠性。\n\n往年Chapter 6第4–16张先讲成帧与检错，第18张以后再讲共享介质。一个问题是“内容变了没有”，另一个是“多人什么时候能发”。碰撞和缓冲溢出也不同：没有共享介质碰撞的点对点链路，同样可以因为到达太快而队列装满。"
+        }
+      ]
+    },
+    {
+      "id": "redundancy-is-a-constraint",
+      "title": {
+        "zh": "多发的位不是装饰，而是检验条件",
+        "en": "Extra bits impose a checkable condition"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "偶校验加一位，让整体1的数量为偶数。奇数次翻转会改变奇偶，偶数次翻转却可能躲过去。二维校验联合行和列，在所述单数据位错误模型里可由不一致的行列交点定位。检出意味着违反合法规则；纠错还要能在限定错误模式下推回原数据。\n\nCRC选择更丰富的约束：把位串看作只含0、1系数的多项式。例如1011表示三次项、一次项和常数项；系数加减用XOR，相同位为0、不同位为1，不借位也不进位。先接受这套运算规则，再做长除法，不要拿十进制减法掺进来。"
+        }
+      ]
+    },
+    {
+      "id": "build-the-codeword",
+      "title": {
+        "zh": "先补零求余，再把校验位接回去",
+        "en": "Append zeros, divide, then attach the remainder"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "生成式G最高次数为r、首位为1，决定要加r个校验位。先在数据D后补r个零，每步让G的最高1对齐当前剩余串的最高1，再XOR；余数不足r位时补前导零。把它接在原数据后，构成能被G整除的发送码字。\n\n接收者对整个收到的码字作同样除法。非零余数表示检出错误；余数0只是没有检出，不证明一定没损坏。下面使用小生成式1011，让每一次对齐都能看见；真实链路可采用不同生成式，保证也依赖它与错误类别。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "what-crc-cannot-say",
+      "title": {
+        "zh": "校验通过，不等于一切都被证明",
+        "en": "Understand the limit of a zero remainder"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果错误模式本身也可被G整除，原合法码字XOR这个错误后，仍可能余数0。书本补充给出可复算的具体反例。这不意味着CRC没用，而是任何保证都应说明处理哪些错误；r位CRC不等于能纠正任意r个翻转，也不等于对恶意改写提供身份认证。"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    },
+    {
+      "id": "one-sender-in-a-slot",
+      "title": {
+        "zh": "要成功传一帧，还得安排谁在说话",
+        "en": "Successful access needs a suitable sending event"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "共享介质可用资源划分、随机接入或轮流访问。时隙ALOHA的理想模型让N个有包待发节点独立以概率p在槽首发送，一槽恰好一人发送才成功。某指定节点成功需自己发、其余全不发，概率为 $p(1-p)^{N-1}$；任一节点都可成功，所以总和是 $Np(1-p)^{N-1}$。"
+        },
+        {
+          "type": "prose",
+          "text": "没发会空闲，发得太积极又会碰撞；成功、空闲、碰撞三种事件应加成1。纯ALOHA不把开始时刻对齐，易冲突区间更长；其经典效率结论还要指定Poisson尝试模型，不能与时隙模型混用。偶校验和ALOHA各有自己的示范—变式补充，不能用CRC例题冒充已练完两种能力。\n\n局域网地址、ARP和交换机学习见后续原卡及NET19/20。现有历史Chapter 6只有前29张，目录提到的后续内容不等于完整课件已到齐。本页先把检错算法算清，再按主题推进历史练习，不把预习当本学期全覆盖。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha6_2025_student_part1.pptx",
+      "locator": "slides 4–29",
+      "kind": "historical",
+      "note": "已下载历史部分：链路服务、奇偶校验/CRC、共享介质与ALOHA，非完整Chapter6。"
+    },
+    {
+      "name": "tutorial-11.pdf",
+      "locator": "pages 1–2, P1–3",
+      "kind": "historical",
+      "note": "历史二维偶校验、时隙ALOHA与CSMA题；与本文CRC练习分开。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net18 worked/practice/transfer",
+      "kind": "derived",
+      "note": "本文小例是原理练习，历史原题另循原卡/图；不补造缺失题目或实测结果。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能用XOR长除法构造并检查CRC码字；偶校验和ALOHA使用独立练习单元。",
+      "sections": [
+        "one-link-two-problems",
+        "redundancy-is-a-constraint",
+        "build-the-codeword",
+        "what-crc-cannot-say",
+        "one-sender-in-a-slot"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N223",
+        "CS5222-N224",
+        "CS5222-N225"
+      ]
+    },
+    {
+      "goal": "检测错误与纠正错误有什么区别？",
+      "sections": [
+        "redundancy-is-a-constraint"
+      ],
+      "practice": "card:CS5222-N219",
+      "cards": [
+        "CS5222-N219"
+      ]
+    },
+    {
+      "goal": "CRC 如何解释位串与生成多项式？",
+      "sections": [
+        "redundancy-is-a-constraint"
+      ],
+      "practice": "card:CS5222-N222",
+      "cards": [
+        "CS5222-N222"
+      ]
+    }
+  ]
+}

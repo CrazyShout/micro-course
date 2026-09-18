@@ -1,0 +1,192 @@
+{
+  "lesson_id": "ml05",
+  "title": {
+    "zh": "看到 free 就拦？先数清短信来自哪里",
+    "en": "Should every message containing “free” be blocked?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "你的短信箱里有正常通知，也有垃圾广告。现在一条新短信出现了 free：这是免费披萨的邀请，还是中奖诱饵？手里只有各类短信的比例和这个词在各类里的出现比例，该怎样利用这些记录判断？",
+    "en": "Your inbox contains legitimate messages and spam. A new message says “free”: pizza from a friend or a prize scam? Given class proportions and the word’s frequency in each class, how should those records inform the judgment?"
+  },
+  "sections": [
+    {
+      "id": "which-group",
+      "title": {
+        "zh": "同一句“有 free”，可能在问两件事",
+        "en": "The conditioning group changes the question"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "“垃圾短信里有多少含 free”先把人群限定为垃圾，再数 free；“含 free 的短信里有多少是垃圾”先筛出 free，再数垃圾。符号分别是 $P(F\\mid S)$ 与 $P(S\\mid F)$，S 表示垃圾、F 表示含 free，竖线读作“给定”。它不是除号，更不能左右交换。\n\n例如在 100 条固定短信中有 20 条垃圾，其中 10 条含 free，那么 $P(F\\mid S)=10/20$。这里还不知道正常短信中有多少含 free，所以尚不能算 $P(S\\mid F)$。缺少的不是更厉害的公式，而是另一类也会提供这条证据的信息。"
+        },
+        {
+          "type": "foundation",
+          "ref": "probability"
+        }
+      ]
+    },
+    {
+      "id": "count-the-survivors",
+      "title": {
+        "zh": "把关键词当筛子，看留下哪两堆",
+        "en": "Count both groups that pass the filter"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "free 可以筛出中奖广告，也可以筛出导师发来的免费披萨通知；它没有拿到“一票封号”的执照。先把垃圾原本有多少，乘以垃圾通过筛子的比例；再对正常短信同样做一次。两堆加起来，才是所有含 free 的短信。\n\n同时满足“垃圾且含 free”的比例叫联合概率 $P(S\\cap F)$，等于 $P(S)P(F\\mid S)$。不管是不是垃圾、只问含 free 的比例，是边缘概率 $P(F)$，可以把两类的联合概率相加。这两个名字分别对应“看交集”与“忽略另一维汇总”，不是额外增加的数据。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/bayes-filter.svg"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "the-name-of-the-count",
+      "title": {
+        "zh": "把这次计数压缩成 Bayes 公式",
+        "en": "Bayes’ rule records the same counting argument"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把刚才人数计算约掉总体大小，就得到 $P(c\\mid F)=P(F\\mid c)P(c)/\\sum_k P(F\\mid k)P(k)$。c 是正在比较的类别，k 遍历全部互斥且穷尽的类别；分母必须大于零。先验 $P(c)$ 是看到证据前的底数，似然 $P(F\\mid c)$ 表示各类产生证据的可能程度，后验是筛选后的类别占比，分母也叫证据概率。\n\n改变底数会影响结论。同样有很多垃圾含 free，如果垃圾在这个总体里本来罕见，筛完也可能留下不少正常短信。下面只改先验，不改关键词在两类中的出现率；沿刚才计数的路线再走一次。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "when-evidence-does-nothing",
+      "title": {
+        "zh": "一个词什么时候没有带来新消息？",
+        "en": "When does observing a word add no information?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "若两类都同样容易出现 F，它无法改变两类的相对比例。这是判断“证据有没有区分力”的直接办法，而不是看到一个醒目词就默认它重要。下面请先预测后验是否变化，再算数验证。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "还要区分独立和条件独立。独立说不作额外筛选时，知道一个事件不改变另一个事件的概率；条件独立则是在已知某个类别或条件之后成立。例如 NB 简化的是“给定花种或文本类别后，各特征独立”，不能自动推广到所有样本混合后的总体。这里的单词筛选只需要两类条件概率，还没引入多个词的独立假设。"
+        }
+      ]
+    },
+    {
+      "id": "back-to-the-lecture",
+      "title": {
+        "zh": "从人数表，回到老师的概率语言",
+        "en": "Return from counts to the lecture notation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture1b 单元 134–137 依次讲联合、边缘、条件概率和 Bayes；我们的短信计数把这些符号接到了可见的人群。Lecture2a 单元 34、41 再把它用于分类：同一个新观察下，比较各类“似然×先验”就够，公共分母不会改变谁最大。\n\n交互里可以改变先验，先猜哪一堆会增减，再核对后验；它只改变演示，不改变上面题干。连续测量时要用密度代替事件概率，密度值可大于 1，某区域的积分才是概率；后续花朵分类会具体用到这个区别。"
+        },
+        {
+          "type": "demo",
+          "ref": "bayes"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture1b.ipynb",
+      "locator": "cells 128–137",
+      "kind": "course",
+      "note": "概率与 Bayes 基础。 / Probability and Bayes foundations."
+    },
+    {
+      "name": "Lecture2a.ipynb",
+      "locator": "cells 4, 32–41",
+      "kind": "course",
+      "note": "邮件分类情境与 Bayes 决策。 / Email example and Bayes decision rule."
+    },
+    {
+      "name": "串讲与教学小例 / Teaching synthesis",
+      "locator": "ml05",
+      "kind": "derived",
+      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "联合概率、边缘概率与条件概率是什么？",
+      "sections": [
+        "which-group",
+        "count-the-survivors"
+      ],
+      "practice": "card:CS5489-M043",
+      "cards": [
+        "CS5489-M043"
+      ]
+    },
+    {
+      "goal": "100 条短信中有 20 条垃圾短信，其中 10 条包含 free，$P(\\text{free}\\mid\\text{spam})$ 是多少？",
+      "sections": [
+        "which-group"
+      ],
+      "practice": "card:CS5489-M044",
+      "cards": [
+        "CS5489-M044"
+      ]
+    },
+    {
+      "goal": "写出贝叶斯公式，并解释先验、似然、证据与后验。",
+      "sections": [
+        "the-name-of-the-count"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M045"
+      ]
+    },
+    {
+      "goal": "在只有垃圾/正常两类的模型中，垃圾短信先验为 0.2，free 在两类中的出现概率分别为 0.6、0.1。看到 free 后垃圾短信的后验是多少？",
+      "sections": [
+        "count-the-survivors",
+        "when-evidence-does-nothing"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M046"
+      ]
+    },
+    {
+      "goal": "独立与条件独立有什么区别？",
+      "sections": [
+        "when-evidence-does-nothing"
+      ],
+      "practice": "card:CS5489-M047",
+      "cards": [
+        "CS5489-M047"
+      ]
+    }
+  ]
+}

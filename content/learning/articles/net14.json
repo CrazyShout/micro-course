@@ -1,0 +1,173 @@
+{
+  "lesson_id": "net14",
+  "title": {
+    "zh": "收到后半段，为什么TCP还在确认同一个数？",
+    "en": "TCP sequence space and flow control"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "一个文件分段到达：前面收到字节0–535，后面又收到900–1000，中间还空着。接收者应该说“我已收到1000”，还是“我还等536”？本节按往年TCP课件追踪这笔字节账。",
+    "en": "A receiver has bytes 0–535 and 900–1000, leaving a gap. Follow the historical TCP lesson to distinguish the highest byte seen from the next byte expected."
+  },
+  "sections": [
+    {
+      "id": "bytes-have-positions",
+      "title": {
+        "zh": "先给字节编号，不给包编号",
+        "en": "Number byte positions, not packets"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "TCP向应用提供有序字节流。发送者可以把数据切成不同长度的段，但字节在本方向流里的位置连续编号。一个数据段的序号指它的第一个字节；长度500不表示500个包，而是从起点往后500个字节。\n\n确认号ACK表示下一期待字节，累计确认此前连续收到的部分。往年Chapter 3第63–64张用具体字节范围解释这件事。它与上一节GBN“ACK k确认截至包k”的教学约定不同，必须先读题目采用什么计数单位。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "a-gap-stops-the-prefix",
+      "title": {
+        "zh": "后段可缓存，连续前缀仍被缺口卡住",
+        "en": "A later range does not fill an earlier gap"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把已经按序拼好的数据想成书的连续页：第3页先到，不能当作第2页已经存在。TCP可以保留后来的乱序数据，选择性确认也可额外描述收到的范围，但累计ACK仍指第一个缺失字节；有序服务不能把缺口之后的内容提前作为连续流交给应用。\n\n这叫传输层的队头阻塞，与路由器输入队列中首包挡住后包的内部交换问题不同。名称相似不代表位置和原因一样。下面亲手移动接收区间，再检查ACK跳到哪里；演示不代替对题设“是否缓存乱序段”的确认。"
+        },
+        {
+          "type": "demo",
+          "ref": "tcp"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "two-window-limits",
+      "title": {
+        "zh": "收到得下，也要送得动",
+        "en": "Respect receiver and network limits"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "发送者不能无限堆在途字节。接收窗口rwnd保护接收端缓冲与应用读取能力；拥塞窗口cwnd约束发送者对网络的占用。二者都用字节量计，允许在途上限取较小值，不是相加。若已有数据未确认，简化新增额度还要减掉它，并截断在0以上。\n\n例如cwnd=12 kB、rwnd=8 kB，已有5 kB在途，最多再放3 kB。接收端缓冲已占用多少和发送端未确认多少是不同账本，不能重复扣除。相应补充单元还练窗口缩小：不能因为算出负差额就“发送负字节”把在途数据拉回来。"
+        },
+        {
+          "type": "unit",
+          "ref": "window-budget",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "when-to-retry",
+      "title": {
+        "zh": "等待太久，怎样决定重传？",
+        "en": "Balance late feedback against genuine loss"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "重传超时太短容易误重传，太长又让真丢失恢复慢。课件用平滑EstimatedRTT描述常见往返时间，再用DevRTT表示波动余量，教学式为RTO=EstimatedRTT+4DevRTT。若新旧样本加权更新，权重和先后顺序应按题明确；重传后的确认还可能无法唯一对应哪次发送。\n\n单独给旧估计100 ms、样本140 ms、样本权重0.125时，新估计是105 ms；若题设固定DevRTT=10 ms而不更新，RTO才是145 ms。这不授权把同一数字套进另一种更新顺序。重复ACK还可在定时器前触发快速重传，但乱序也会产生重复ACK，并非丢包的绝对证明。"
+        }
+      ]
+    },
+    {
+      "id": "state-has-a-lifetime",
+      "title": {
+        "zh": "字节账从建立连接开始，到关闭后才收尾",
+        "en": "Connection state has a lifecycle"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "握手交换两个方向的初始序号并确认参与连接：SYN各消耗一个序号。FIN表示一个方向不再发送，也消耗一个；纯ACK若没有载荷及这些标志，不额外推进自己的数据序号。确认对方的进度与发送自己的数据必须分开记。\n\n两个方向可以分别关闭，TIME_WAIT帮助处理最后ACK丢失后重来的FIN，并降低旧段混入复用连接的风险。这些概念来自往年材料，细节按具体协议与版本确认，不能把握手说成人类身份认证。\n\n首轮先掌握字节范围、缺口和双窗口；后续卡再细查RTO与连接事件。每次都画“已连续收到／缓存但未接上／仍缺失”，比看到新段就把ACK跳到最大编号可靠。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha3_2025_student.pptx",
+      "locator": "slides 61–88, 103–104",
+      "kind": "historical",
+      "note": "原字节范围、超时估计、重传、流量控制与连接状态。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net14 worked/practice/transfer",
+      "kind": "derived",
+      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能从字节范围和缺口推累计 ACK；接收与拥塞窗口限额见补充单元。",
+      "sections": [
+        "bytes-have-positions",
+        "a-gap-stops-the-prefix",
+        "two-window-limits",
+        "when-to-retry",
+        "state-has-a-lifetime"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N169",
+        "CS5222-N170"
+      ]
+    },
+    {
+      "goal": "TCP 的序号和确认号统计的是什么？",
+      "sections": [
+        "bytes-have-positions"
+      ],
+      "practice": "card:CS5222-N167",
+      "cards": [
+        "CS5222-N167"
+      ]
+    },
+    {
+      "goal": "数据段序号为 1,000，携带 500 byte，且之前字节均已到达，随后确认号是多少？",
+      "sections": [
+        "bytes-have-positions"
+      ],
+      "practice": "card:CS5222-N168",
+      "cards": [
+        "CS5222-N168"
+      ]
+    },
+    {
+      "goal": "发送端拥塞窗口 cwnd=12 kB，接收端通告窗口 rwnd=8 kB；已有 5 kB 未确认。简化窗口规则允许再发多少数据？",
+      "sections": [
+        "two-window-limits"
+      ],
+      "practice": "card:CS5222-N175",
+      "cards": [
+        "CS5222-N175"
+      ]
+    }
+  ]
+}

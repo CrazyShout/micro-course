@@ -1,0 +1,188 @@
+{
+  "lesson_id": "ml02",
+  "title": {
+    "zh": "让程序数因数：一句“找得到”怎样变成代码？",
+    "en": "Turn a divisor rule into a working program"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Tutorial 1 要你给 2 到 100 的每个整数数因数，而且不能把 1 和自身算进去。你可能一眼就知道 6 的答案是 2，但电脑需要一套能对每个数重复执行的明确步骤。",
+    "en": "Tutorial 1 asks for divisor counts for integers 2 through 100, excluding 1 and the number itself. You may know that 6 has two such divisors, but the computer needs repeatable, explicit steps."
+  },
+  "sections": [
+    {
+      "id": "one-candidate-at-a-time",
+      "title": {
+        "zh": "先判断一个候选数能不能整除",
+        "en": "Test one possible divisor"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对于整数 n，候选 d 必须从 2 开始，到 n−1 结束。判断能否整除，需要余数：7/2 得 3.5，7//2 是向下取整的商 3，7%2 是余数 1；正整数例中 7=3×2+1。我们要检查 n%d 是否为 0，而不是检查商是不是“看起来接近整数”。\n\n`count = 0` 是把值存进变量，`n % d == 0` 才是在比较两边是否相等，结果为 True 或 False。一个等号发命令，两个等号问问题，别让电脑把盘问听成安排。运算符与比较对应 Lecture1a 单元 76–79。"
+        },
+        {
+          "type": "foundation",
+          "ref": "python"
+        }
+      ]
+    },
+    {
+      "id": "write-the-long-version",
+      "title": {
+        "zh": "先写清楚，再考虑写短",
+        "en": "Write the steps before compressing them"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "我们需要三个动作：循环提供候选、条件决定是否计数、函数把最后结果交回来。缩进告诉 Python 哪些动作属于循环或判断；它不是排版偏好。下面代码假设 n 是至少为 2 的整数。\n\n```python\ndef count_factors(n):\n    count = 0\n    for d in range(2, n):\n        if n % d == 0:\n            count = count + 1\n    return count\n```\n\n`range(2,n)` 包含 2 而不包含 n。每一轮先算余数，只有整除才增加 count。最后的 return 与 for 对齐，表示要等循环全部完成；如果缩进到循环里，就可能试了第一个候选便提前交卷。定义函数只保存规则，调用 `count_factors(6)` 才会执行。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "trace-before-trust",
+      "title": {
+        "zh": "用手算的小整数，抓住隐藏的跳步",
+        "en": "Trace a small case before trusting the loop"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "跟踪代码时，列三列就够：d、余数、count。count 没有增加并不表示循环没运行，而是这轮条件不成立。下面先把输入换成 8；不要改函数，看看同一条规则是否还能解释每一步。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "掌握多行版本后，可以把规则写成 `sum(n % d == 0 for d in range(2,n))`。这是依次产生布尔值并把 True 计为 1，不是一种新的因数算法。列表推导式则把每轮结果收集为列表；写得短不保证更容易检查。"
+        }
+      ]
+    },
+    {
+      "id": "return-to-the-notebook",
+      "title": {
+        "zh": "屏幕显示了，不等于变量拿到了",
+        "en": "Printed output is not a returned value"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "`print(count)` 给人看，`return count` 把值交给调用者，所以 `answer = count_factors(6)` 依赖 return。没有明确返回值的函数会返回 None；屏幕上显示 2 并不证明 answer 就是 2。Lecture1a 单元 126 的函数同时 print 和 return，正适合对照两者。\n\nNotebook 又多一层陷阱：单元的显示顺序不等于执行顺序。Tutorial 1 单元 10 先设 x=0，单元 12 每运行一次便加 1；重启 kernel 后变量会消失，但旧输出可能仍留在页面。做下面题时，先想内存里有没有函数定义。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "finish-the-real-task",
+      "title": {
+        "zh": "把单个数的规则扩展到原 Tutorial",
+        "en": "Finish the original tutorial task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到原题，把函数用于 n=2,…,100，保存 99 个结果，再按 Tutorial 要求画点图和直方图。检查 2→0、4→1、12→4 比只看“没有报错”可靠得多。程序正确还包括端点、输出数量和图轴含义；学习不是让电脑吐出一张漂亮图片就收工。\n\n下一步会用数组批量组织这些结果。列表、字典和类也各有用处：列表保留顺序，字典把键映射到值，类让状态与操作待在一起。它们可按需补学，首轮先把循环、条件、函数返回和干净运行掌握。\n\n还要留意对象共享：`b = a` 对可变列表通常只是增加一个名字，不是复制内容，因此修改 b 可能同时改变 a。遇到意外状态变化时，先画清名字指向哪个对象；复制与类的实例状态可以在补充图和对象专题继续检查。"
+        },
+        {
+          "type": "task",
+          "ref": "python-factor-program"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture1a.ipynb",
+      "locator": "cells 76–79, 96–106, 120–126",
+      "kind": "course",
+      "note": "运算、循环、条件与函数。 / Operators, control flow and functions."
+    },
+    {
+      "name": "Tutorial1.ipynb",
+      "locator": "cells 3–24",
+      "kind": "course",
+      "note": "Notebook 状态与因数计数原任务。 / Notebook state and divisor task."
+    },
+    {
+      "name": "串讲与配套教学例 / Teaching synthesis",
+      "locator": "ml02",
+      "kind": "derived",
+      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "执行 `x = 3` 后，`x == 3` 和 `x == 4` 分别返回什么？`==` 与 `=` 有何不同？",
+      "sections": [
+        "one-candidate-at-a-time"
+      ],
+      "practice": "card:CS5489-M008",
+      "cards": [
+        "CS5489-M008"
+      ]
+    },
+    {
+      "goal": "Python 中 `7 / 2`、`7 // 2`、`7 % 2` 分别返回什么？商与余数有什么关系？",
+      "sections": [
+        "one-candidate-at-a-time"
+      ],
+      "practice": "card:CS5489-M334",
+      "cards": [
+        "CS5489-M334"
+      ]
+    },
+    {
+      "goal": "条件、循环和列表推导式怎样表达计算？",
+      "sections": [
+        "write-the-long-version",
+        "trace-before-trust"
+      ],
+      "practice": "card:CS5489-M012",
+      "cards": [
+        "CS5489-M012"
+      ]
+    },
+    {
+      "goal": "函数中的 return 和 print 有什么区别？",
+      "sections": [
+        "return-to-the-notebook"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M013"
+      ]
+    },
+    {
+      "goal": "怎样统计整数 $n>1$ 的非平凡正因数（不含 1 和 n）？",
+      "sections": [
+        "write-the-long-version",
+        "finish-the-real-task"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M020"
+      ]
+    }
+  ]
+}

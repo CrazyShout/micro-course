@@ -1,0 +1,195 @@
+{
+  "lesson_id": "ml03",
+  "title": {
+    "zh": "一行数据对应谁？先把数组摆对再预测",
+    "en": "Who does each row represent?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Tutorial 1 给你一个 120 行、2 列的数组，每行是一条二维样本，要把它们画成点。你还会把同样的“行是样本、列是特征”约定用于分类计算；第一关是别让数字在数组里坐错位置。",
+    "en": "Tutorial 1 provides 120 rows with two features per sample to plot as points. The same row/sample and column/feature convention supports classification; first make sure each number occupies the right position."
+  },
+  "sections": [
+    {
+      "id": "read-the-table",
+      "title": {
+        "zh": "先看表的形状和每列含义",
+        "en": "Read the table before calculating"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "NumPy 的 ndarray 是统一元素类型的多维数组。shape 说明各轴长度，ndim 说明轴数，dtype 说明元素类型；例如 shape=(120,2)、ndim=2，表示 120 行、每行 2 项，不能理解成 120 个类别。数字表没有自动知道“谁是样本”，这个约定需要我们明确。\n\n在二维数组里，`X[:,1]` 取全部行中索引为 1 的列，即第二列（从 0 编号），得到一维形状 (N,)；`X[:,1:2]` 取一个仍保留列轴的切片，形状为 (N,1)。数值可能相同，形状却不同，后面的运算就可能不同。下图把行与点一一连起来。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/rows-to-points.svg"
+        },
+        {
+          "type": "foundation",
+          "ref": "vectors-matrices"
+        }
+      ]
+    },
+    {
+      "id": "one-row-one-score",
+      "title": {
+        "zh": "先算一行，再把重复步骤打包",
+        "en": "Calculate one row before batching it"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设一条样本有两项特征 $(x_1,x_2)$，权重为 $(w_1,w_2)$，分数就是 $x_1w_1+x_2w_2$。这叫内积：对应位置相乘再相加；$x^Tw$ 中的 $T$ 是转置。向量长度则是 $\\|x\\|_2=\\sqrt{x_1^2+x_2^2}$，例如 (3,4) 的长度是 5，和“有两个元素”不是同一件事。\n\n把 N 行一起计算，写成 $Xw$，数学形状是 $(N\\times d)(d\\times1)=(N\\times1)$；NumPy 若把 w 存成 (d,)，`X @ w` 通常得到 (N,)。这只是重复做 N 次内积，不是另一个神秘公式。\n\n对 ndarray，`*` 逐元素相乘，`@` 才是矩阵乘。`X * w` 可以得到逐列缩放后的二维表，`X @ w` 才把每行压成一个分数。先写预期输出，再选运算符。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "check-the-pairing",
+      "title": {
+        "zh": "预测与答案，要按同一条样本配对",
+        "en": "Match each prediction to its own target"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "得到预测后，用“预测−真实值”形成残差；这里 y 只是题设给定的目标数，不必先假定某种分类器。第 i 个预测应只减第 i 个目标。下面把样本数改成 3，先手算第一行，再检查其余行与最终 shape。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "求平均也要说清对谁平均。`axis=0` 消去行轴，得到每个特征在样本间的均值；`axis=1` 消去列轴，得到每条样本内部各项的均值。若单位不同，后一种均值甚至未必有意义；代码能执行，不等于统计问题合理。"
+        },
+        {
+          "type": "unit",
+          "ref": "axis-means",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "broadcasting-trap",
+      "title": {
+        "zh": "不报错的运算，也可能错得很整齐",
+        "en": "A wrong operation may still run perfectly"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "广播从最右边对齐维度：大小相同或其中一个为 1 时兼容，缺少的前导轴可看成 1。因此一列 (N,1) 和一排 (N,) 相减，会产生所有行与所有列的两两差。电脑很努力地算出了 N² 个结果，可我们只需要 N 个。\n\n解决办法不是把多余结果随便取对角，而是先确认数据约定，把预测与目标统一成相同的一维或列形状。reshape 重新安排元素形状，转置交换轴，两者不是通用替身。独立解释下面的形状变化，再想该在哪一步修正。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "return-to-plots",
+      "title": {
+        "zh": "回到老师的数组与绘图练习",
+        "en": "Return to arrays and plots in the tutorial"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture1b 从索引、形状和逐元素运算走到广播，再讲内积与矩阵乘法；这些知识最后应让你能读懂代码里的数据流。Tutorial 1 的散点图用 `mydata[:,0]` 与 `mydata[:,1]`，同一行的两项必须配成同一个点。\n\n因数图则换了图轴问题：点图的 x 是整数 n，y 是该数的因数个数；直方图的柱高是“有多少个整数落在这个计数箱”。99 个整数各贡献一次，频数之和应为 99。不是所有横轴上的数字都代表同一种东西。旧参考书还可能使用 `matrix` 类型，读代码时可展开下面的 ndarray 对照。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture1b.ipynb",
+      "locator": "cells 3–5, 20–54, 57–72, 84–108, 122",
+      "kind": "course",
+      "note": "数组、形状、广播与矩阵运算。 / Arrays, shapes, broadcasting and matrix operations."
+    },
+    {
+      "name": "Tutorial1.ipynb",
+      "locator": "cells 19–33",
+      "kind": "course",
+      "note": "两类图与二维数组散点。 / Plotting and rows-to-points exercise."
+    },
+    {
+      "name": "串讲与配套教学例 / Teaching synthesis",
+      "locator": "ml03",
+      "kind": "derived",
+      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "什么是 NumPy 数组？shape、ndim 和 dtype 分别描述什么？",
+      "sections": [
+        "read-the-table"
+      ],
+      "practice": "card:CS5489-M021",
+      "cards": [
+        "CS5489-M021"
+      ]
+    },
+    {
+      "goal": "什么是向量的内积和欧几里得范数？",
+      "sections": [
+        "one-row-one-score"
+      ],
+      "practice": "card:CS5489-M029",
+      "cards": [
+        "CS5489-M029"
+      ]
+    },
+    {
+      "goal": "逐元素乘法与矩阵乘法有什么区别？",
+      "sections": [
+        "one-row-one-score"
+      ],
+      "practice": "card:CS5489-M030",
+      "cards": [
+        "CS5489-M030"
+      ]
+    },
+    {
+      "goal": "数据矩阵 $X$ 的形状为 $(100,4)$，`X[:,1]` 与 `X[:,1:2]` 返回什么？",
+      "sections": [
+        "read-the-table"
+      ],
+      "practice": "card:CS5489-M023",
+      "cards": [
+        "CS5489-M023"
+      ]
+    },
+    {
+      "goal": "为什么形状为 $(N,1)$ 和 $(N,)$ 的数组相减，可能不报错却算错？",
+      "sections": [
+        "broadcasting-trap"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M028"
+      ]
+    }
+  ]
+}

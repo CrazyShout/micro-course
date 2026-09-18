@@ -1,0 +1,191 @@
+{
+  "lesson_id": "ml26",
+  "title": {
+    "zh": "权重没有变，为什么两次预测还不一样？",
+    "en": "Why can fixed weights still produce different predictions?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "你训练了一个网络，保存权重后用同一个输入重复预测，却发现结果有时变化。先别宣布电脑具有自由意志：除了权重，训练与评估的运行规则、随机掩码和归一化统计也会影响输出。历史 Lecture10 将更新方法、正则化与训练技巧并列介绍，本篇先把这些职责分开，再用 dropout 算清一个具体差异。",
+    "en": "After saving network weights, the same input can still give different predictions. Training versus evaluation rules, random masks and normalisation statistics also affect the output. Historical Lecture10 discusses optimisers, regularisation and practical training; we will separate their roles and calculate one concrete dropout example."
+  },
+  "sections": [
+    {
+      "id": "training-clock",
+      "title": {
+        "zh": "先分清数据走一遍，和参数动一步",
+        "en": "Separate a pass through data from a parameter update"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "全批量梯度下降用整个训练集算一次梯度，小批量 SGD 每次使用一个子集。一个 epoch 表示遍历一次训练数据；一次 optimizer step 表示真正更新参数。若 1000 个样本、每批 100、每批更新一次且无丢弃尾批，一轮就是十次更新。两者不能互换。\n\n梯度累积把几批的贡献合起来才更新一次，因此看过几批与更新几次又可能不同。历史 Lecture10.1 第 4 页算法中的计数 t 是迭代步；Lecture10.2 第 33 页谈的是 epoch。下面专题专门练这个区别，日志里看到“训练了十次”时，先问十次什么。"
+        },
+        {
+          "type": "unit",
+          "ref": "training-steps",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "optimizer-state",
+      "title": {
+        "zh": "优化器不只拿着今天这一张梯度单",
+        "en": "An optimiser may remember more than the latest gradient"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "最简单的更新是参数减学习率乘当前梯度。Momentum 还保留一个逐渐衰减的历史方向，减少某些来回摆动；Nesterov 用向前试探的位置计算梯度。Adam 维护梯度与平方梯度的移动平均，并修正它们从零开始造成的初期偏差。这些是“怎样利用梯度”的规则，不负责判断标签或数据划分是否正确。\n\n历史 Lecture10.1 第 9、13、16、23 页分别给出这些状态和步骤。不能把它们压成“Adam比较高级所以不用选学习率”。学习率计划决定步子怎样随过程变化；early stopping 则根据验证表现决定何时停下。它们可以配合，但回答的是不同问题。"
+        }
+      ]
+    },
+    {
+      "id": "dropout-contract",
+      "title": {
+        "zh": "随机丢掉一部分，为什么留下的要放大？",
+        "en": "Understand the scaling contract of inverted dropout"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "固定一个激活 h，训练时以保留概率 $0<q\\le1$ 抽掩码 $m\\sim\\mathrm{Bernoulli}(q)$，采用 inverted dropout：$\\tilde h=mh/q$。保留时除以 q、丢弃时变零，对掩码取平均就有 $E[\\tilde h]=h$。这里除的是保留概率，不是丢弃概率；丢弃率 0.2 对应 q=0.8。\n\n历史 Lecture10.2 第 15、17 页用另一种“训练不放大、测试补尺度”的讲法。本篇与现有卡片明确采用 inverted 约定，评估时直接传 h，不能把两套缩放同时做。下面只有两种可能结果，列成小表即可算期望，无需想象整座网络。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "same-rule-new-number",
+      "title": {
+        "zh": "用同一约定，再算一个激活",
+        "en": "Apply the same convention to another activation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下一题改变激活与保留概率。先列训练保留值、训练丢弃值及各自概率，再写评估输出；不要把“训练期望是多少”与“某次训练究竟抽中了什么”混成一项。\n\n期望是对许多可能掩码的加权平均，不承诺每次输出都相同。固定权重但仍处在训练模式，随机性完全可能存在；关闭梯度记录只是停止保存求导信息，也不自动把 dropout 或 BatchNorm 切到评估模式。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "nonlinear-boundary",
+      "title": {
+        "zh": "平均后再平方，与平方后再平均不同",
+        "en": "A nonlinearity changes what expectation preserves"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "单个激活期望不变，能否推广为整座网络的平均输出不变？下一题在 dropout 后紧接一个平方函数，只用两个可能值就能检验。不要先对输入取期望再代入平方，除非已经证明两种顺序可以交换。\n\n这是一个小反例，限制的是推理，不是在说 dropout 没用。它提醒我们：某一步的局部性质，通过后续非线性后未必保留。用一句“期望不变”解释整个网络训练与评估完全等价，会漏掉这个条件。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "normalisation",
+      "title": {
+        "zh": "相同权重，不一定使用相同统计量",
+        "en": "Normalisation can use different statistics at evaluation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "常见 BatchNorm 训练时按通道汇集当前批的均值与方差；卷积层通常还汇集空间位置。评估时一般改用运行统计，所以同一输入即使权重固定，训练与评估仍可能不同。统计量固定后，这一步是带可学习缩放与平移的仿射变换。LayerNorm 则通常在每个样本或 token 的指定特征维内归一化，不依赖其他样本的批统计。\n\nLecture10.2 第 21、23 页的示意要配合轴来读：先问哪些元素共同计算均值，再问 gamma、beta 怎样广播。名字里都有 Norm，不代表它们可以在任意轴互换。"
+        }
+      ]
+    },
+    {
+      "id": "return-to-experiment",
+      "title": {
+        "zh": "回到实验：先查流程，再追逐技巧",
+        "en": "Return to a controlled training experiment"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "初始化要避免隐藏单元完全相同而一直得到相同更新；随机初始化也应与激活和输入连接规模匹配。正则化控制学习偏好：在 Adam 中给损失加 L2，与 AdamW 将权重衰减单独应用，并不能机械等同。数据增强还必须保留标签含义；把数字 6 翻成 9，不是白捡了一张新的 6。\n\n先用干净小子集检查能否拟合，再扩大实验、恢复验证划分，逐项记录学习率、更新步数、运行模式和增强。历史第 40 页的小样本调试是诊断起点，不是泛化证明。本篇首轮三张卡抓住步数、dropout约定和模式差异；各优化器完整推导、初始化细节与迁移学习策略放在后续原卡，正文没有假装已逐项实现所有算法。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "区分epoch、批次、更新和梯度累积",
+      "sections": [
+        "training-clock"
+      ],
+      "practice": "unit:training-steps:transfer",
+      "cards": [
+        "CS5489-M265"
+      ]
+    },
+    {
+      "goal": "计算inverted dropout并用非线性反例说明期望边界",
+      "sections": [
+        "dropout-contract",
+        "same-rule-new-number",
+        "nonlinear-boundary"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M271"
+      ]
+    },
+    {
+      "goal": "解释训练/评估与梯度记录不是同一开关",
+      "sections": [
+        "normalisation",
+        "return-to-experiment"
+      ],
+      "practice": "card:CS5489-M273",
+      "cards": [
+        "CS5489-M273"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture10.1.pdf",
+      "locator": "PDF pp. 4, 9, 13, 16, 18, 21, 23, 25",
+      "kind": "historical",
+      "note": "历史更新方法与优化器状态；不沿用算法流行度或一定改善泛化的无条件说法。"
+    },
+    {
+      "name": "Lecture10.2.pdf",
+      "locator": "PDF pp. 3, 12, 15, 17, 21, 23, 33–35, 37, 40",
+      "kind": "historical",
+      "note": "历史增强、停止、dropout、BN和实践；本篇明确采用inverted dropout，避免混用原课另一缩放约定。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml26 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+    }
+  ]
+}

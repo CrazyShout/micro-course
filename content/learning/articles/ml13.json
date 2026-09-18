@@ -1,0 +1,207 @@
+{
+  "lesson_id": "ml13",
+  "title": {
+    "zh": "最宽间隔已经写成约束，怎样把它解出来？",
+    "en": "How can the margin constraints lead to a solvable dual?"
+  },
+  "minutes": "18–25",
+  "lede": {
+    "zh": "你已经给两类训练点写出“边界要分对、还要留出间隔”的条件。现在要找满足全部条件且权重范数最小的 w、b；原问题里每个训练点都有一道限制，能不能把这些限制变成另一组更好处理的未知数？",
+    "en": "You have margin constraints for labeled training points and want the smallest-norm feasible w and b. Can the constraints themselves supply another set of variables for solving the problem?"
+  },
+  "sections": [
+    {
+      "id": "align-the-sign",
+      "title": {
+        "zh": "先统一约束方向，别让正负号暗中换题",
+        "en": "Keep the inequality and Lagrangian signs together"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "硬间隔约束可写成 $h_i=1-y_i(w^Tx_i+b)\\le0$，目标是最小化 $\\frac12\\|w\\|^2$。给每道限制配一个非负乘子 $\\alpha_i$，构造 $L=\\frac12\\|w\\|^2+\\sum_i\\alpha_i h_i$。乘子是待求变量，不是预先人工指定的样本重要性。\n\n课堂单元 37–41 用的是 $g_i=-h_i\\ge0$，所以写 $L=f-\\sum_i\\alpha_i g_i$。两者完全相同：翻转不等式，乘子项的符号也必须一起翻，$\\alpha_i\\ge0$ 保持。符号看上去不同，不意味着谁推导错了；只换一半才会错。"
+        },
+        {
+          "type": "foundation",
+          "ref": "optimization"
+        }
+      ]
+    },
+    {
+      "id": "why-a-lower-bound",
+      "title": {
+        "zh": "先造一个不会超过最优值的下界",
+        "en": "Build a valid lower bound first"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对任何可行 w、b，$h_i\\le0$ 且 $\\alpha_i\\ge0$，所以乘子项非正，L 不大于原目标。固定 α，再对所有 w、b 取下确界得到 $q(\\alpha)=\\inf_{w,b}L$，只会更小，因此仍是原问题最优值的下界。最大化 q，就是把这个下界尽量抬高，这才是“对偶最大化”的由来。\n\n弱对偶只保证下界不超过原最优；强对偶表示两者相等。不能说凡是优化问题都相等，也不能只见“凸”就省掉条件。可分硬间隔 SVM 可以把分离超平面放大到严格满足约束，配合凸性得到这里常用的强对偶保证。"
+        }
+      ]
+    },
+    {
+      "id": "differentiate-the-two-variables",
+      "title": {
+        "zh": "对 w、b 各求一次导数，会留下什么？",
+        "en": "Differentiate with respect to both primal variables"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对 w 求导，平方范数给 w，每个约束项给 $-\\alpha_i y_i x_i$；令其为零，得 $w=\\sum_i\\alpha_i y_i x_i$。对 b 求导得 $-\\sum_i\\alpha_i y_i=0$。第一式用训练点表示 w，第二式让正负类的带标签乘子平衡。\n\n把第一式代回 L，关于 w 的二次项化简后得到对偶目标 $\\sum_i\\alpha_i-\\frac12\\sum_{i,j}\\alpha_i\\alpha_jy_iy_jx_i^Tx_j$，约束是 α 非负及刚才的平衡式。每个样本只通过内积参与，这正是后面核方法的接口。先用两点的小问题把导数逐项写出来。"
+        },
+        {
+          "type": "foundation",
+          "ref": "derivatives"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "check-a-new-spacing",
+      "title": {
+        "zh": "样本挪远后，乘子会怎样跟着变？",
+        "en": "Recompute the multipliers after moving the points"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "同一套导数规则用于下一题，但 x 的系数变了；不要把上题乘子的 1/2 当成某个通用常数。先列 w 和 b 的两个驻点方程，再带入已知最优 w 解出乘子。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "four-conditions",
+      "title": {
+        "zh": "KKT 要同时检查四件事",
+        "en": "Check all four KKT conditions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "KKT 在当前 $h_i\\le0$ 约定下要求：原始可行 $h_i\\le0$；对偶可行 $\\alpha_i\\ge0$；关于原变量的驻点条件；互补松弛 $\\alpha_i h_i=0$。对可微问题，它们成为最优必要条件需要合适的约束资格；对凸问题加合适条件可用它们证明全局最优，不能只检查一条乘积等式。\n\n互补松弛不是每道约束都取等号。若 h_i<0，乘子必须为 0；若 α_i>0，约束必须恰好等号。但 α_i=0 允许 h_i=0，比如最小化 $x^2$、约束 x≥0，最优 x=0 的乘子也可为 0。这个反例补清课堂“活跃/不活跃”的简写，不能把箭头倒过来。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "back-to-the-classifier",
+      "title": {
+        "zh": "求出乘子以后，怎样预测？",
+        "en": "Recover the classifier from the multipliers"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到 Lecture3b 单元 42–45，用 $w=\\sum_i\\alpha_i y_i x_i$ 预测时，α 为零的点不贡献。硬间隔活跃支持点满足 $y_if(x_i)=1$，因此可求 $b=y_i-w^Tx_i$；这些点支持了最后的边界，不是所有点都同等参与。\n\n软间隔加线性松弛惩罚后，多出上界 $0\\le\\alpha_i\\le C$。只有 $0<\\alpha_i<C$ 的自由支持向量保证在间隔边界；α=C 的点也可能仍分对，不能只凭乘子等于 C 判它错。更深入的边界情况放下面选读，首轮先把推导与 KKT 四条件讲顺。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    },
+    {
+      "id": "no-free-support-vector",
+      "title": {
+        "zh": "选读：没有自由支持向量时，不要随便求 b",
+        "en": "Optional: when no free support vector exists"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "若所有乘子都在 0 或 C，不能随便取一点套等号公式。用 KKT 给 b 求区间：α=0 的正类要求 $b\\ge1-w^Tx$，负类要求 $b\\le-1-w^Tx$；α=C 时方向反过来。取同时满足上下界的 b；若数值结果冲突，先检查优化结果和容差。\n\n例如 w=0.5，两点 (x,y)=(1,1)、(−1,−1)，乘子都为 C=0.25，则 −0.5≤b≤0.5，b=0 可用。这是既有主稿的边界补充。参考书中的 SMO 进一步解释为什么常一起调整两个乘子：必须保留 $\\sum_i\\alpha_i y_i=0$。"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3b.ipynb",
+      "locator": "cells 37–45, 49–54",
+      "kind": "course",
+      "note": "课堂拉格朗日、对偶、恢复分类器及软间隔。 / Lagrangians, duality, recovery and soft margins."
+    },
+    {
+      "name": "推理桥接与手算 / Teaching derivation and hand calculation",
+      "locator": "ml13",
+      "kind": "derived",
+      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "不等式约束的拉格朗日乘子项应选什么符号？",
+      "sections": [
+        "align-the-sign"
+      ],
+      "practice": "card:CS5489-M147",
+      "cards": [
+        "CS5489-M147"
+      ]
+    },
+    {
+      "goal": "SVM 推导中，对 $w$ 和 $b$ 的驻点条件给出什么？",
+      "sections": [
+        "differentiate-the-two-variables"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M148"
+      ]
+    },
+    {
+      "goal": "写出硬间隔 SVM 对偶问题，并解释变量含义。",
+      "sections": [
+        "differentiate-the-two-variables"
+      ],
+      "practice": "card:CS5489-M149",
+      "cards": [
+        "CS5489-M149"
+      ]
+    },
+    {
+      "goal": "对仅带不等式约束 $g_i(x)\\ge0$ 的可微最小化问题 min f(x)，KKT 条件是什么？",
+      "sections": [
+        "four-conditions"
+      ],
+      "practice": "card:CS5489-M150",
+      "cards": [
+        "CS5489-M150"
+      ]
+    },
+    {
+      "goal": "KKT 不等式写为 $g_i(x)\\ge0$，乘子 $\\lambda_i\\ge0$，并满足 $\\lambda_i g_i(x)=0$。能否由 $\\lambda_i=0$ 证明 $g_i(x)>0$？解释或给反例。",
+      "sections": [
+        "four-conditions"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M151"
+      ]
+    }
+  ]
+}

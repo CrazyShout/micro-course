@@ -1,0 +1,197 @@
+{
+  "lesson_id": "ml12",
+  "title": {
+    "zh": "两类点都分对了，哪条线更稳妥？",
+    "en": "Which separating line leaves more room?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "课堂先给两类可以被直线完全分开的点。你画一条线分对了，同学画另一条也分对了；若测量稍微波动，哪条线更有余地？先找离线最近的点，再决定该优化什么。",
+    "en": "The lecture begins with two classes that a line can separate perfectly. Two different lines both classify the training points correctly. Which leaves more room for small changes? Start with the nearest points."
+  },
+  "sections": [
+    {
+      "id": "closest-point",
+      "title": {
+        "zh": "安全余量由最近的点决定",
+        "en": "The nearest point limits the margin"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "SVM 的硬间隔目标不是平均把点推得很远，而是尽量增大最小的垂直距离。就像一条通道，最窄处决定还能容纳多少偏移；远处空旷并不能补偿脚边的一块绊脚石。这里是几何余量，不是预测正确概率。\n\n设边界 $f(x)=w^Tx+b=0$，w 非零，标签 y 为 −1 或 +1。点到边界的距离为 $|f(x)|/\\|w\\|$。仅看分数会误导：把 w、b 同乘正数，边界位置不变，分数却一起放大，距离中的分子分母会相消。Lecture3b 单元 7、11、27 逐步从选线走到这个距离。"
+        },
+        {
+          "type": "foundation",
+          "ref": "vectors-matrices"
+        }
+      ]
+    },
+    {
+      "id": "fix-the-scale",
+      "title": {
+        "zh": "先固定刻度，才能比较间隔",
+        "en": "Normalize the score before optimizing the margin"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对正确分开的训练点，可以把分数缩放到最近点满足 $y_if(x_i)=1$，其余点满足 $y_if(x_i)\\ge1$。$y_if$ 把两类合成一条条件：正类应在正侧，负类应在负侧，而且离开零线足够远。\n\n在这个规范下，单侧间隔为 $1/\\|w\\|$，两条支撑边界之间总宽度为 $2/\\|w\\|$。最大化间隔等价于最小化 $\\frac12\\|w\\|^2$，同时满足所有训练约束。这是硬间隔原问题：目标负责余量，约束负责正确分开。若数据不可线性分开，这组约束可能根本无解。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "scale-the-points",
+      "title": {
+        "zh": "样本离得更开，最优权重如何变化？",
+        "en": "Move the points and recompute the normalized solution"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面仍是一维两点，只把它们向两边移远。先从每个点写出不等式，再找最小权重范数，别把“点更远”直觉翻成“w 一定更大”；规范化的 w 和几何间隔是倒数关系。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    },
+    {
+      "id": "allow-violations",
+      "title": {
+        "zh": "数据重叠时，给违约明确记账",
+        "en": "Allow violations and charge for them"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "真实数据可能重叠或错标，要求全部分开会失败。软间隔引入 $\\xi_i\\ge0$，把约束放宽为 $y_if(x_i)\\ge1-\\xi_i$，优化 $\\frac12\\|w\\|^2+C\\sum_i\\xi_i$，其中 C>0。它允许付出一定违约代价，换取合理的边界。\n\n固定模型后，满足约束所需的最小松弛是 $\\xi_i=\\max(0,1-y_if(x_i))$，也叫 hinge loss。用这份最小值解释：0 表示满足间隔；0<ξ<1 表示仍分对但进入间隔；ξ=1 在决策线上；ξ>1 才落到错误一侧。分类正确和满足间隔不是一回事。"
+        },
+        {
+          "type": "unit",
+          "ref": "slack",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "same-line-different-numbers",
+      "title": {
+        "zh": "把方程放大十倍，点有没有移动？",
+        "en": "Rescale the equation without moving the boundary"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "独立题只检验几何距离与分数尺度。先用原参数算，再整体放大参数重算；若得到两种距离，就要检查是否忘了分母。此处的点未必是训练支持点，不能随便用 1/||w|| 代替任意点距。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "back-to-the-svm",
+      "title": {
+        "zh": "回到老师的目标与模型选择",
+        "en": "Return to the lecture objective"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3b 单元 32–36 固定尺度并写硬间隔，49–58 再加入松弛。C 大在上述目标约定下更重视违约惩罚，它不是优化器的学习率，也不保证泛化更好；仍需交叉验证。SVM 分数主要用于判别，若要当概率使用，需要另行校准与检验。\n\n后续对偶课会问哪些样本真正影响边界、如何换一种变量求解；现在先把“哪个距离、采用何种规范、允许何种违约”讲清。软间隔细节通过既有专题和卡片检索检查，不把一题缩放计算冒称成完整 SVM 实现验证。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3b.ipynb",
+      "locator": "cells 4–11, 27–36, 49–58",
+      "kind": "course",
+      "note": "选线、间隔、规范化及软间隔。 / Choosing a boundary, margins, normalization and slack."
+    },
+    {
+      "name": "推理桥接与手算 / Teaching derivation and hand calculation",
+      "locator": "ml12",
+      "kind": "derived",
+      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "硬间隔 SVM 要最大化什么间隔？",
+      "sections": [
+        "closest-point",
+        "fix-the-scale"
+      ],
+      "practice": "card:CS5489-M143",
+      "cards": [
+        "CS5489-M143"
+      ]
+    },
+    {
+      "goal": "求 $(2,0)$ 到 $2x_1+x_2-3=0$ 的距离。为什么缩放方程不改变距离？",
+      "sections": [
+        "closest-point",
+        "same-line-different-numbers"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M144"
+      ]
+    },
+    {
+      "goal": "写出硬间隔 SVM 的原始优化问题，并解释约束。",
+      "sections": [
+        "fix-the-scale"
+      ],
+      "practice": "card:CS5489-M145",
+      "cards": [
+        "CS5489-M145"
+      ]
+    },
+    {
+      "goal": "软间隔 SVM 怎样处理不能完全分开的数据？",
+      "sections": [
+        "allow-violations"
+      ],
+      "practice": "card:CS5489-M154",
+      "cards": [
+        "CS5489-M154"
+      ]
+    },
+    {
+      "goal": "如何理解松弛量为 0、介于 0 与 1、以及大于 1 的情况？",
+      "sections": [
+        "allow-violations"
+      ],
+      "practice": "card:CS5489-M155",
+      "cards": [
+        "CS5489-M155"
+      ]
+    }
+  ]
+}

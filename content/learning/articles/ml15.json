@@ -1,0 +1,176 @@
+{
+  "lesson_id": "ml15",
+  "title": {
+    "zh": "花没有变，只换单位，分类器为什么会变？",
+    "en": "Why can changing units change a classifier?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "同一批花的长度，记录成厘米或毫米，实物当然没有变化。但如果直接用这些数计算距离、惩罚权重，程序会把“数字放大十倍”当作真的变化。怎样处理特征，才能知道结果改变来自哪里？",
+    "en": "The same flowers can be measured in centimetres or millimetres. The objects do not change, but distances and weight penalties see different numbers. How should features be processed so changes in results can be interpreted?"
+  },
+  "sections": [
+    {
+      "id": "scale-the-ruler",
+      "title": {
+        "zh": "先把尺子的影响与信息本身分开",
+        "en": "Separate units from information"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "依赖欧氏距离或 L2 惩罚的模型会受尺度影响。标准化用训练均值 m 和标准差 s>0 定义 $z=(x-m)/s$，让这一维在训练集具有零均值和相应的单位尺度；它不是删掉这项信息，也不表示所有特征应该同等重要。常数特征 s=0 需要另外处理，不能直接除零。\n\nLecture3c 单元 8–9 先在 trainX 上 fit_transform，再对 testX 用同一 scaler.transform。测试数据的新均值不必为零；如果为了让它也“漂亮”而重拟合，就改变了正在检验的流程。"
+        }
+      ]
+    },
+    {
+      "id": "a-fixed-range",
+      "title": {
+        "zh": "把训练范围映到两端，新值会不会越界？",
+        "en": "Map the training range without refitting on new values"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "另一种方法用训练最小值 a、最大值 b（b>a），定义 $z=2(x-a)/(b-a)-1$。先把 [a,b] 缩到 [0,1]，乘 2 再减 1，就得到 [−1,1]。这解释每一步，而不是要求记一串孤立符号。\n\n范围由训练资料决定；未来的新值可能超出，所以变换后也可能越界。除非另加明确的截断规则，公式并不会派保安把所有新点赶回 −1 到 1 之间。下面算两个位置，并分清拟合参数与应用参数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "do-not-remeasure-the-test",
+      "title": {
+        "zh": "把测试极值也加入，连训练表示都变了",
+        "en": "A peek at test extremes changes the training representation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "独立题让同一个训练值经过两种范围计算。问题不只是测试值变好看了：当测试值参与估计最大值时，旧训练点的坐标也改变，模型随后是在另一种表示上学习。请算出两个结果，再用这条因果链解释泄漏。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "category-is-not-a-distance",
+      "title": {
+        "zh": "猫、狗、马，不是一把等距刻度",
+        "en": "Do not impose an artificial order on categories"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3c 单元 18 用 cat、dog、horse 说明 one-hot。若简单编码 0、1、2，线性模型或距离可能把马看作猫到狗的两倍跨度，但这些数字只是标签，没有这种数量含义。one-hot 分别用 (1,0,0)、(0,1,0)、(0,0,1)，避免硬塞入大小与等距关系。\n\n这不保证获得所有真实语义，只是去掉一个未经授权的伪几何。无序类别、连续数值与有序等级要分别处理；把类别数字直接拿去标准化，也不会自动修复它最初的错误含义。"
+        }
+      ]
+    },
+    {
+      "id": "what-does-a-transform-forget",
+      "title": {
+        "zh": "换表示时，也要数清丢掉的信息",
+        "en": "Ask what a transformation preserves and loses"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "分箱 binning 把连续值分到区间，再用箱号或 one-hot 表示。例如规定 [0,10) 与 [10,20) 两个箱，2 和 9 可能得到同一箱标记，9.9 与 10.1 却跨箱。它舍弃箱内细节，也引入边界，因此不是无代价的压缩。\n\n多项式特征增加平方或交叉项，以表达相互作用；log 变换可压缩大动态范围，但普通实数 log 要求输入为正。每个变换都应问：为什么这种关系适合任务、参数从哪部分数据确定。不能看到一个函数名字就默认它会提升准确率。"
+        }
+      ]
+    },
+    {
+      "id": "return-to-the-comparison",
+      "title": {
+        "zh": "老师最后把特征与模型放回同一张桌子",
+        "en": "Return representation to the model comparison"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3c 由预处理与特征工程走向不平衡与模型总结。类别样本少，与漏判代价大不是同一问题；类别权重改变训练目标，阈值改变预测行动，最终仍应采用任务相关评价。\n\n比较模型时固定划分、指标与调参预算，才能辨认改进来自表示还是分类器。首轮先检查尺度、训练统计量、one-hot 与分箱；树的划分是书本对照而非本讲核心流水线，放在选读中。把这些判断用于 Assignment 1 时，要记录实际验证结果，不能用“通常更好”代替实验。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3c.ipynb",
+      "locator": "cells 7–24, 25–53",
+      "kind": "course",
+      "note": "缩放、类别编码、分箱、其他变换与模型评价。 / Scaling, encoding, transformations and model comparison."
+    },
+    {
+      "name": "串讲与教学演练 / Teaching synthesis",
+      "locator": "ml15",
+      "kind": "derived",
+      "note": "按所列课堂或任务资料组织；简化算例与口述框架是学习辅助，不是实测成绩或已确认 QE 题型。 / Teaching examples and oral prompts, not measured performance or a confirmed QE format."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "标准化怎样进行？统计量应由哪些数据确定？",
+      "sections": [
+        "scale-the-ruler"
+      ],
+      "practice": "card:CS5489-M173",
+      "cards": [
+        "CS5489-M173"
+      ]
+    },
+    {
+      "goal": "用训练最小值 2、最大值 6 将 $x=4$ 映射到 [-1,1]，新值 8 会怎样？",
+      "sections": [
+        "a-fixed-range",
+        "do-not-remeasure-the-test"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M174"
+      ]
+    },
+    {
+      "goal": "为什么无序类别直接编码成整数可能误导模型？One-hot 改善什么？",
+      "sections": [
+        "category-is-not-a-distance"
+      ],
+      "practice": "card:CS5489-M175",
+      "cards": [
+        "CS5489-M175"
+      ]
+    },
+    {
+      "goal": "对连续特征分箱会做什么？可能损失哪些信息？",
+      "sections": [
+        "what-does-a-transform-forget"
+      ],
+      "practice": "card:CS5489-M176",
+      "cards": [
+        "CS5489-M176"
+      ]
+    }
+  ]
+}

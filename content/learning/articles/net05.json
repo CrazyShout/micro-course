@@ -1,0 +1,171 @@
+{
+  "lesson_id": "net05",
+  "title": {
+    "zh": "同一份网页数据，为什么一路要加几层“说明”？",
+    "en": "Layering and encapsulation"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "浏览器要把一条请求送到服务器。沿途设备既要知道交给哪个程序，又要知道下一段交给谁；这些不同问题如果都塞进一份万能规则，系统会怎样变得难维护？",
+    "en": "Layering and encapsulation. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+  },
+  "sections": [
+    {
+      "id": "divide-the-jobs",
+      "title": {
+        "zh": "先按要解决的问题分工",
+        "en": "Separate responsibilities before naming layers"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "老师在 Chapter 1 第57–60张先问怎样组织复杂网络，再借购票、行李、登机、航路说明分工：一个环节使用另一个环节提供的服务，不必每次重做全部细节。这个类比解释接口，不是说网络封装真的发生在机场柜台。\n\n网络分层也一样。若下层在保留接口含义的情况下换一种实现，上层往往不必整体重写。分层的代价可能是额外开销和重复功能；它是职责组织方式，不要求一层对应一台单独物理设备。"
+        }
+      ]
+    },
+    {
+      "id": "five-questions",
+      "title": {
+        "zh": "五层分别回答什么问题？",
+        "en": "Five layers answer different questions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "应用层说明要交换什么消息及怎样解释；传输层把通信交给进程；网络层跨网络送分组；链路层负责相邻接口之间的本段交付；物理层把比特变成可传输的信号。按自上而下顺序可写成应用、传输、网络、链路、物理。\n\n一条网页请求可用HTTP、TCP、IP、以太网成帧和电/光信号作例子。这不是声称所有网页都使用这套具体协议，而是给职责找到可辨认的实例。端口帮助区分程序端点，IP用于跨网目的，本地链路地址用于下一跳；不要让一种地址兼职所有工作。"
+        }
+      ]
+    },
+    {
+      "id": "wrap-and-unwrap",
+      "title": {
+        "zh": "首部跟着职责加，接收端按层读",
+        "en": "Add control information and interpret it by layer"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "应用数据向下交付时，某层把上层整体当作载荷，加入自己的控制信息，通常是首部，有些协议还有尾部。这叫封装。接收端按相应规则解释并移除控制信息，再把载荷向上交付。首部不是随手贴的装饰：每层需要的信息决定它为什么存在。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/nested-headers.svg"
+        },
+        {
+          "type": "prose",
+          "text": "图中嵌套用于区分职责，并非所有首部长度按图比例。老师第63–65张把同一消息一路标成message、segment、datagram、frame；练习时一边写层名，一边写当前载荷是谁。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "router-is-not-browser",
+      "title": {
+        "zh": "路由器转发，不必重读整张网页",
+        "en": "A router forwards without becoming the browser"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "普通主机为自己的应用使用完整五层；普通路由器转发时主要处理网络、链路、物理信息，普通链路层交换机主要处理链路与物理层。这里说的是常规转发职责，现实设备还可能运行管理或安全服务。\n\n因此一包到路由器时，当前链路封装会被处理，出下一接口时又形成适合下一段的帧。路由器并没有因此成为这次HTTP请求的收件应用。它可以更新IP转发相关字段，但不该每跳再给应用正文加一个新的HTTP请求头。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "what-the-model-does-not-promise",
+      "title": {
+        "zh": "分层也帮助把保障分清",
+        "en": "Keep different guarantees separate"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "基本IP交付是尽力而为，不承诺一定到达或固定时延；更高层可增加可靠机制。这与安全也不同：加密解决旁人能否看懂，认证涉及身份或来源，完整性涉及内容是否被改。某个源IP写在包里并不等于身份已认证。\n\nOSI七层是另一种职责划分，它单列表示与会话层；课堂五层不单列它们，不代表相关功能无法存在。原课的安全与历史概览可在章末活动按需要复习，现代安全传输说明放书本补充。\n\n回到本节目标，先用一条消息解释每层加了什么、路由器换了什么、应用载荷仍是什么。再回忆层名，比只背一个五行列表更容易在换题时使用。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 57–65, 67–77",
+      "kind": "course",
+      "note": "航空分工引入、五层/OSI、封装与章末安全历史概览。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net05 worked/practice/transfer",
+      "kind": "derived",
+      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能按应用—传输—网络—链路的封装顺序追踪消息，并计算载荷与首部开销。",
+      "sections": [
+        "divide-the-jobs",
+        "five-questions",
+        "wrap-and-unwrap",
+        "router-is-not-browser",
+        "what-the-model-does-not-promise"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N044",
+        "CS5222-N045"
+      ]
+    },
+    {
+      "goal": "为什么把网络功能组织成不同层？",
+      "sections": [
+        "divide-the-jobs"
+      ],
+      "practice": "card:CS5222-N041",
+      "cards": [
+        "CS5222-N041"
+      ]
+    },
+    {
+      "goal": "自上而下列出互联网五层，并说明主要职责。",
+      "sections": [
+        "five-questions"
+      ],
+      "practice": "card:CS5222-N042",
+      "cards": [
+        "CS5222-N042"
+      ]
+    },
+    {
+      "goal": "应用数据 1,000 字节，三层各加 20 字节首部，最终数据中载荷占比是多少？",
+      "sections": [
+        "wrap-and-unwrap"
+      ],
+      "practice": "card:CS5222-N046",
+      "cards": [
+        "CS5222-N046"
+      ]
+    }
+  ]
+}

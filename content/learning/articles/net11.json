@@ -1,0 +1,166 @@
+{
+  "lesson_id": "net11",
+  "title": {
+    "zh": "网页慢了两秒，你真的知道原因了吗？",
+    "en": "Evidence and explanation in networking"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "你测到一次网页访问用了两秒，第一反应是“网速太慢”。但时间也可能花在查名字、建连接、服务器处理或排队上。怎样把一个猜测变成能用证据回答的问题？",
+    "en": "A page takes two seconds and you suspect insufficient bandwidth. Separate possible causes and design measurements that can distinguish them before claiming a diagnosis."
+  },
+  "sections": [
+    {
+      "id": "observation-is-not-cause",
+      "title": {
+        "zh": "先把看见的事，与猜的原因分开",
+        "en": "Separate observation from explanation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "“这次用了两秒”是观察；“带宽不足造成两秒”是因果解释。只测总时长，没有直接观察各阶段，就可能把服务器忙、DNS等待或本机渲染都记到网络头上。一个总秒数像账单总额，不会自动告诉你钱花在哪一道菜。\n\n本节是连接课程机制与研究表达的方法补充，不是已确认的QE考题。课程级Research Report希望你解释遇到的网络技术、原理、证据与局限；具体题目范围和提交说明在课程活动与信息栏，不能由这页自行扩展。"
+        }
+      ]
+    },
+    {
+      "id": "split-the-measurement",
+      "title": {
+        "zh": "从机制提出可区分的测量",
+        "en": "Choose measurements that separate mechanisms"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先画一次访问的步骤：是否要DNS，是否已有连接，是否要等服务器，正文有多大，缓存能省哪一步。再记录这些阶段所需证据，并说明计时起终点。HTTP请求到响应的间隔可能含服务端处理，不应直接命名为纯网络RTT。\n\n视频通话卡顿也不能只看平均吞吐量。检查时延波动、丢包、竞争流量、本地接入稳定性，还应查看应用与设备负载。只有被升级的链路确实构成瓶颈，增加其容量才有理由对症；这是一套排查框架，不是对你当前设备的实测诊断。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "numbers-need-definitions",
+      "title": {
+        "zh": "数字有单位，还得有定义",
+        "en": "Numbers need a definition as well as units"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一个容易混淆的例子是带宽时延积。速率 $R$（bit/s）乘时间（s）得到比特数。$R d_{prop}$ 描述连续填满一条单向链路时在路上的比特；$R RTT$ 用于讨论一个往返期间的未确认数据量。它们不是因为同样叫“时延”就能互换。"
+        },
+        {
+          "type": "prose",
+          "text": "100 Mbps乘20毫秒RTT得到2 Mbit，即十进制250 kB。若题目给的是单向传播时间，就必须按相应问题解释乘积；不能为了得到熟悉答案偷偷换成往返。做研究时，指标定义写不清，后面的精确小数通常只是把误会算得更精确。"
+        }
+      ]
+    },
+    {
+      "id": "make-a-fair-comparison",
+      "title": {
+        "zh": "变好了一次，不代表改动造成改善",
+        "en": "A better run does not establish causality"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "访问同一资源，热缓存更快是合理线索，但两次网络负载、服务器状态或资源版本也可能不同。先报告真实观察，再列混杂因素，最后设计可比条件和重复测量。不要把期望机制写成已经由实验验证的结论。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "下面换成另一条路径在夜间更快。你的方案要控制比较时段、端点、流量等条件，也考虑改路由本身会改变拥塞；没有测过的变化不能靠肯定语气补齐。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "explain-with-boundaries",
+      "title": {
+        "zh": "用英语把机制与边界一起讲出来",
+        "en": "Explain the mechanism and its scope"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一个短回答可以按“现象—机制—区分证据—适用边界”展开。比较电路与分组交换时，先讲固定预留与按需共享，再讲空闲利用与竞争等待，最后说清速率与活动假设；不要只贴一个“更高效”的标签。\n\n读原始论文也照此看：问题是什么，实验条件是什么，数据支持哪一句话，还有哪些解释未排除。协议名称也有版本边界：课堂HTTP-over-TCP与现代扩展并非同一模型，历史SSL名称也应按对应资料解释；相关原卡保留规范出处，按需要查。\n\n先用三句英文表达观察、不能断言的结论和下一步测量，再回首轮卡巩固。真实编程、抓包、论文阅读与核验仍要自己完成，本页示范不生成这些经历。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "CS5222 Research Report 2026.pdf",
+      "locator": "pages 1–2, Goal / Part A / Reflection",
+      "kind": "course",
+      "note": "跨章任务要求理解、解释、核验和反思；本页是方法支持。"
+    },
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 21–31, 45–55",
+      "kind": "course",
+      "note": "交换机制、时延和吞吐量提供诊断的概念依据。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net11 worked/practice/transfer",
+      "kind": "derived",
+      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能用英文区分测量现象与因果结论，并设计有控制条件的网络比较。",
+      "sections": [
+        "observation-is-not-cause",
+        "split-the-measurement",
+        "numbers-need-definitions",
+        "make-a-fair-comparison",
+        "explain-with-boundaries"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N094"
+      ]
+    },
+    {
+      "goal": "用一分钟英语比较电路交换与分组交换。",
+      "sections": [
+        "explain-with-boundaries"
+      ],
+      "practice": "card:CS5222-N093",
+      "cards": [
+        "CS5222-N093"
+      ]
+    },
+    {
+      "goal": "什么是带宽时延积？为什么要说明采用哪种时延？",
+      "sections": [
+        "numbers-need-definitions"
+      ],
+      "practice": "card:CS5222-N086",
+      "cards": [
+        "CS5222-N086"
+      ]
+    }
+  ]
+}

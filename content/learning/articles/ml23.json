@@ -1,0 +1,187 @@
+{
+  "lesson_id": "ml23",
+  "title": {
+    "zh": "一份上千维的记录，怎样用几把新尺子概括？",
+    "en": "Summarise a high-dimensional record with a few new axes"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "历史 Lecture7.2 用文档向量引出降维：一篇文档可以有上千个词的计数，存储、观察和后续计算都不方便。能否把许多共同变化的量概括为少数坐标？PCA 给出一个明确答案：先约定以保留总体变化、减少平方重构误差为目标，再找适合读数的新方向。",
+    "en": "Historical Lecture7.2 motivates dimensionality reduction with document vectors containing thousands of word counts. Can a few coordinates summarise quantities that vary together? PCA gives a precise answer by choosing directions that retain overall variation and minimise squared reconstruction error."
+  },
+  "sections": [
+    {
+      "id": "centre-first",
+      "title": {
+        "zh": "先把平均位置放下，才看得见变化",
+        "en": "Separate average location from variation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设一组二维测量都围在 (100,100) 附近，只沿某个方向轻微摇摆。若直接看相对原点的大小，巨大的整体偏移可能压过真正的变化。标准 PCA 先用训练均值 $\\mu$ 居中，得到 $x_i-\\mu$；验证和新样本也减同一个训练均值，不重新找各自中心。\n\n这是把坐标尺移到数据云中心，不是删掉均值信息。以后重构还要加回去。尺度则是另一个决定：是否标准化各列取决于变量含义；不能把“已经减均值”当成“所有单位已经统一”。历史 Lecture8.1 第 17 页的第一步正是居中。"
+        }
+      ]
+    },
+    {
+      "id": "new-ruler",
+      "title": {
+        "zh": "把尺子转到变化最大的方向",
+        "en": "Rotate the ruler toward the largest variation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "给一个单位方向 v，每点的新坐标是 $v^T(x_i-\\mu)$。为什么要求 $v^Tv=1$？不固定尺子长度，只需把 v 放大十倍，读数和方差也会变大，却没有保留更多信息。若 S 是居中数据的协方差，沿 v 的方差是 $v^TSv$。\n\n对约束优化写 $L=v^TSv-\\lambda(v^Tv-1)$，求导给出 $Sv=\\lambda v$。实对称 S 有正交特征向量基；任意单位方向都可写成这些基的组合，其方差是特征值的加权平均，权重非负且和为一。因此选最大特征值的方向，才取得最大方差，而不是“看到矩阵就习惯性做特征分解”。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "how-many-directions",
+      "title": {
+        "zh": "保留多少，先把分母算完整",
+        "en": "Choose how many directions to retain"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "解释方差比的分母是全部特征值之和，分子是所保留方向的特征值之和。按从大到小累加，第一次达到目标比例才停。下一题只考这一步，数字并不代表某份实际文档数据。\n\n解释方差是无监督标准：它告诉你保留了多少总体波动，而不是保留了多少分类能力。若标签差异恰好藏在很小的方向，丢掉它仍会影响预测。因此历史 Lecture8.1 第 21 页给出的两种选择——方差比例与下游任务表现——应分开报告。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "scores-and-reconstruction",
+      "title": {
+        "zh": "坐标不是方向，重构还要搬回原处",
+        "en": "Distinguish directions, scores and reconstruction"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "X 有 n 行样本、d 列特征，$X_c=X-\\mathbf1\\mu^T$ 是居中矩阵。把 k 个单位主方向排成 $d×k$ 的 $V_k$，新坐标即得分矩阵 $Z=X_cV_k$，尺寸为 $n×k$；重构为 $\\hat X=ZV_k^T+\\mathbf1\\mu^T$。方向、每点的得分、恢复后的原空间近似，是三个不同对象。\n\n把一张照片投影到一条轴，有点像只保留一道影子：可以用影子和方向拼回近似，但垂直方向的细节无法凭空恢复。下面专题用一个点手算投影与误差，避免只会背 X 乘 V。"
+        },
+        {
+          "type": "unit",
+          "ref": "pca-reconstruction",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "unit-change",
+      "title": {
+        "zh": "米改成毫米，哪一维突然成了主角？",
+        "en": "A unit change can change the selected component"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "方差平方地响应尺度变化。下一题只换第二特征的单位，不增加任何新信息，却改变未经标准化的 PCA 所优化的数值目标。先写新协方差，再判断最大方向；不要从“物理对象没变”推断数值解必定不变。\n\n去相关也不等于统计独立：PCA 让二阶协方差变成对角，但一般分布中还可能有高阶依赖。联合高斯下不相关推出独立，是带额外条件的特例。用这两条边界保护自己，便不会把降维说成万能去噪或必然改善分类。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "svd-and-return",
+      "title": {
+        "zh": "回到课件里的 SVD 与核方法",
+        "en": "Connect the directions to SVD and kernel PCA"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "居中矩阵的 SVD 写成 $X_c=U\\Sigma V^T$，V 的列给出主方向。这里 $\\Sigma$ 是奇异值对角阵，不要与别处同名的协方差混淆。若样本协方差采用 n−1 分母，其特征值为 $\\sigma_j^2/(n-1)$。截断前 k 项得到平方重构误差下的最佳低秩近似；遇到重复的边界特征值，最优方向未必唯一。\n\nLecture7.2 的 SVD 与 Lecture8.1 的 PCA 在这里接上。书本补充进一步算存储量；核 PCA 专题说明在特征空间居中，而非先在原空间减均值就算完。这些放在第二遍展开，第一遍先能解释均值、方向、得分、重构和单位变化，再复习已有五张首轮卡。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "unit",
+          "ref": "kernel-pca-center-and-scale",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释居中与最大方差方向的特征向量推理",
+      "sections": [
+        "centre-first",
+        "new-ruler"
+      ],
+      "practice": "card:CS5489-M232",
+      "cards": [
+        "CS5489-M231",
+        "CS5489-M232"
+      ]
+    },
+    {
+      "goal": "区分得分、重构，并完成换方向的独立计算",
+      "sections": [
+        "scores-and-reconstruction"
+      ],
+      "practice": "unit:pca-reconstruction:transfer",
+      "cards": [
+        "CS5489-M233"
+      ]
+    },
+    {
+      "goal": "计算累计方差比例并限定其与预测的关系",
+      "sections": [
+        "how-many-directions",
+        "unit-change"
+      ],
+      "practice": "card:CS5489-M234",
+      "cards": [
+        "CS5489-M234",
+        "CS5489-M236"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture7.2.pdf",
+      "locator": "PDF pp. 3, 5, 18, 21–22",
+      "kind": "historical",
+      "note": "历史文档向量降维与SVD低秩近似；重复奇异值时不能无条件声称最优近似唯一。"
+    },
+    {
+      "name": "Lecture8.1.pdf",
+      "locator": "PDF pp. 7, 10, 14, 17, 21, 28",
+      "kind": "historical",
+      "note": "历史正交特征基、方向方差、PCA步骤、维数选择和SVD联系；核PCA细节保留既有专题出处。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing exercises",
+      "locator": "ml23 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "lesson_id": "ml20",
+  "title": {
+    "zh": "少数坏点把直线拉歪了，怎么办？",
+    "en": "When a few bad points pull the fitted line away"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "你正在从一批测量点拟合直线，大多数点围着同一条趋势，少数点远远偏离。先别急着删掉“不听话”的点：它们可能是传感器故障，也可能是真实的少数情况。历史 Lecture6.1 讨论平方误差的弱点与 RANSAC；本篇要分清改变损失和寻找一致子集各在解决什么。",
+    "en": "Most measured points follow one line, but a few lie far away. Before deleting them, ask whether they are measurement faults or genuine uncommon cases. Historical Lecture6.1 discusses squared error and RANSAC. We will distinguish changing the error penalty from finding a consistent subset."
+  },
+  "sections": [
+    {
+      "id": "large-errors",
+      "title": {
+        "zh": "一个很大的误差，为什么特别有话语权",
+        "en": "Why a large residual gets so much influence"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "平方损失下，残差从 1 变成 10，代价从 1 变成 100，对预测值的导数幅度也从 2 变成 20。拟合器为了安抚一个极端点，可能牺牲许多普通点。历史 Lecture6.1 第 5 页强调的正是这个取舍，而不是宣判所有偏远点都必须删除。\n\n先核实单位、录入、测量过程和问题目标。若异常是总体中真实的重要现象，简单去掉会改变你想预测的人群。Ridge 限制的是系数大小；它与“这条观测是否受污染”不是同一道判断题。正则化不能自动成为异常数据的橡皮擦。"
+        }
+      ]
+    },
+    {
+      "id": "consensus",
+      "title": {
+        "zh": "先找一小撮能达成共识的点",
+        "en": "Start with a small consistent subset"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "RANSAC 的思路是反复试小样本：抽一组足以拟合模型的点，拟合候选，再数全体数据里有多少点的残差低于给定阈值。符合阈值的叫内点，保留共识较强的候选，最后用其内点重新拟合。二维直线通常用两点确定，但两点重合就退化；“点数够了”和“几何上够用”仍是两回事。\n\n阈值要结合误差尺度来定。太窄会把真实噪声当离群点，太宽则谁都能加入共识。算法依赖足够大的相容内点集合，也可能找到与任务无关但人数更多的一群，所以最后仍要回到测量背景解释结果。"
+        }
+      ]
+    },
+    {
+      "id": "how-many",
+      "title": {
+        "zh": "要抽多少次，才能比较有把握？",
+        "en": "How many attempts give a useful chance of success?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "令 w 是一次取点属于内点的概率，s 是每组点数。理想模型假设组内独立取点，则全组都是内点的概率为 $w^s$。一次没抽好的概率是 $1-w^s$；再假设各轮独立，K 轮全失败为 $(1-w^s)^K$。我们想要的是“至少一次成功”，所以用 1 减全失败概率，比枚举哪一轮成功简单。\n\n若目标成功概率至少为 p，就求 $(1-w^s)^K\\le1-p$，取对数再向上取整。注意两边对数通常都为负，不要凭直觉乱翻不等号；也不要四舍五入，差一点达不到仍然是达不到。这个公式只计算抽到全内点组的概率。若把它称为“得到有效候选”的概率，还要假设所有全内点最小集都不退化；否则成功率还受退化概率影响。它更不保证最终模型或阈值绝对正确。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "change-inlier-rate",
+      "title": {
+        "zh": "内点更多，需要的耐心就少一点",
+        "en": "More inliers can mean fewer attempts"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下一题只把内点比例与目标把握程度改变。先算单次成功、单次失败，再检查相邻整数轮数，比只在计算器上输入一串 log 更容易发现错误。Lecture6.1 第 8 页用的是离群比例 e，因此课件里的 $1-e$ 就是这里的 w，符号不同但事件相同。\n\n边界也要用人话处理：w=0 时反复抽也没有全内点组；w=1 且不会退化，一次就够，不应把这两端硬塞进包含 log(0) 的通式。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "without-replacement",
+      "title": {
+        "zh": "小样本无放回，不能假装彼此独立",
+        "en": "Sampling without replacement changes the probability"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现实常从有限数据里抽不重复的点。先拿走一个内点，剩下的内点比例会改变，因此组内事件不再独立。若 N 个点中有 I 个内点，均匀抽 s 个不同点，全内点概率应为 $\\binom{I}{s}/\\binom{N}{s}$。当总体很大而抽样组很小时，$w^s$ 才常被用作近似。\n\n下面只剩四个点，近似就会明显改变答案。每轮抽完后重新从同一批数据选择子集，仍可假设不同轮独立；不要把“组内无放回”和“所有轮永远不再使用某个点”混为一谈。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "other-tools",
+      "title": {
+        "zh": "不要把所有不准都归咎于坏点",
+        "en": "Different errors need different remedies"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史 Lecture6.1 第 12、15 页还讨论特征映射与多项式：$b+a_1x+a_2x^2$ 对输入有曲线形状，但对未知系数仍是线性的；可以继续构造设计矩阵求解。若真实趋势是弯的，仅换一个鲁棒估计器并不保证直线变合适。核岭回归则以核计算映射后特征的内积，扩展函数表达；它不会因此自动挑出 RANSAC 的内点集合。\n\n第 23–24 页的 SVR 则定义容差带：$\\max(0,|r|-\\epsilon)$ 在带内不罚、带外线性增加。它改的是误差代价，不等同于 RANSAC 的内点搜索。下面用同一个残差比较损失，供第二遍阅读；第一遍重点是解释平方损失、RANSAC步骤、概率事件与抽样假设，再去复习四张原卡。"
+        },
+        {
+          "type": "unit",
+          "ref": "loss-comparison",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释平方损失的离群点影响与RANSAC流程",
+      "sections": [
+        "large-errors",
+        "consensus"
+      ],
+      "practice": "card:CS5489-M204",
+      "cards": [
+        "CS5489-M203",
+        "CS5489-M204"
+      ]
+    },
+    {
+      "goal": "区分理想独立取点与有限无放回概率并计算轮数",
+      "sections": [
+        "how-many",
+        "change-inlier-rate",
+        "without-replacement"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M205",
+        "CS5489-M206"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture6.1.pdf",
+      "locator": "PDF pp. 5, 8, 12, 15, 23–24",
+      "kind": "historical",
+      "note": "历史离群点、RANSAC迭代数、特征映射与SVR；无放回小样本变式为对课堂近似条件的教学补充。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml20 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲、说明性反例和数值练习用于理解历史材料，不冒充教师原题或用户实际实验。"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "lesson_id": "ml22",
+  "title": {
+    "zh": "零件来自哪台机器？先分配可能性，再修正估计",
+    "en": "Unknown machine labels: alternate between responsibility and estimation"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "两台机器都生产同一种零件，留下的记录只有测量值，没有记每件来自哪台。想知道两台机器各自通常做出什么尺寸、各占多少产量，直接按机器分组求平均做不到。这个已有教学情境把历史 Lecture6.2 的高斯混合与 EM 变成两个可以交替回答的问题。",
+    "en": "Two machines produce the same kind of part, but the records contain measurements without machine labels. We want to estimate each source distribution and production share, so direct group averages are unavailable. This existing teaching example turns historical Lecture6.2 on Gaussian mixtures and EM into two alternating questions."
+  },
+  "sections": [
+    {
+      "id": "missing-label",
+      "title": {
+        "zh": "未知的归属，为什么挡住了简单统计",
+        "en": "An unobserved label prevents direct averaging"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果每件零件都附机器编号，就能分别计数、求均值和方差；现在缺的是那个编号，不是测量本身。高斯混合模型（GMM）假设生成时先按比例 $\\pi_k$ 选择成分 k，再由均值 $\\mu_k$、协方差 $\\Sigma_k$ 的高斯分布产生测量。k 只是成分名字，不保证与真实机器一一对应。\n\n观测密度是 $p(x)=\\sum_k\\pi_k\\mathcal N(x;\\mu_k,\\Sigma_k)$，权重非负且和为一。这里要相加，因为来源未知的样本可能由任一成分产生，不能只保留最像的那项。历史 Lecture6.2 第 25、28 页从椭圆簇的形状进入这个模型，再用数据似然衡量参数是否合适。"
+        }
+      ]
+    },
+    {
+      "id": "fractional-membership",
+      "title": {
+        "zh": "先别判死：给每个来源一份可能性",
+        "en": "Replace a hard label with responsibility"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先有一组暂时参数，便可问：看到这个测量后，各个成分有多可能？对样本 i，责任度是 $r_{ik}=\\pi_k\\mathcal N(x_i;\\mu_k,\\Sigma_k)/\\sum_j\\pi_j\\mathcal N(x_i;\\mu_j,\\Sigma_j)$。这一步仍是熟悉的贝叶斯归一化，叫 E 步。密度可以大于一，责任度是概率，必须在零与一之间。\n\n若两项加权密度为 0.12、0.08，总和 0.20，责任度就是 0.6、0.4。硬分组会把第二项扔掉，EM 暂时保留它：这个点向两组各贡献一部分有效计数。下图的每一行对应一个点；同一行跨成分加起来是一，而一列跨样本加起来通常不是一。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/em-responsibility.svg"
+        }
+      ]
+    },
+    {
+      "id": "weighted-estimates",
+      "title": {
+        "zh": "半个名额也能参与求平均",
+        "en": "Re-estimate using fractional counts"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "固定刚才的责任度，M 步重估参数。共有 N 个样本，成分 k 的有效计数 $N_k=\\sum_i r_{ik}$；它在全部观测中的份额是 $\\pi_k=N_k/N$，均值为 $\\mu_k=\\sum_i r_{ik}x_i/N_k$。两个分母做的事情不同：一个问“占总量多少”，一个问“这一组的加权平均在哪里”。\n\n若也学习协方差，用新均值计算 $\\Sigma_k=\\sum_i r_{ik}(x_i-\\mu_k)(x_i-\\mu_k)^T/N_k$。下面先固定方差，只更新权重与均值，让一次完整计算保持小巧；不要把未更新方差误以为忘算。参数更新完，下一轮 E 步才用新参数重算责任度，而不是在同一轮中途混用旧新数值。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "same-shape",
+      "title": {
+        "zh": "把尺子拉长，哪些数应该跟着变？",
+        "en": "Check the update under a change of scale"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面把观测、初始均值同时放大两倍，方差放大四倍。标准化距离保持相同，因此 E 步的相对归属不变；M 步均值应随长度单位同比改变。这个检查把算法从机械求和变成一套能解释的运算。\n\n有效计数并不一定是整数，不是偷偷补了假数据，而是把“在当前参数下有多少权重属于它”压缩成一个总和。若某一列权重全为零或极小，除法会失效或非常不稳定；实现需要恢复失效成分或采取明确约束。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "change-prior",
+      "title": {
+        "zh": "不一样常见的机器，会改变归属",
+        "en": "Change the mixing weights and recompute"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "两台机器产量不同，即使尺寸分布不变，观察到一个零件后也应把来源常见程度考虑进去。下面保持观测、均值和方差不变，只修改初始混合权重，独立完成 E 步和 M 步。先用未舍入值计算，最后再保留四位小数。\n\n检查三件事：每点责任度之和是否为一、各成分有效计数之和是否为样本总数、更新权重之和是否为一。均值应落在有正权重的观测范围内；这些比只核对一个小数更能帮助定位错在分子还是分母。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "limits-and-return",
+      "title": {
+        "zh": "像在分组，但不只是软化版 k-means",
+        "en": "Return to the likelihood and its limits"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "GMM 还学习混合比例与散布方向，不能简单说“k-means 的标签变软就是任意 GMM”。Lecture6.2 第 31 页固定等权重与单位协方差，才给出特定的 soft k-means 形式；第 33 页的对角或球形协方差是不同的约束选择。\n\nLecture7.1 第 12、14 页通过似然下界解释精确 EM 的单调性：E 步用当前后验配好下界，M 步提高固定责任度下的目标。单调上升不保证全局最优，更不保证泛化。无约束高斯可能把一个成分收缩到单个样本、方差趋零，制造异常大的密度。实际需要初始化、协方差约束或正则，以及有效计数检查；完整下界推导属于后续进阶，不能用背两步更新冒充已经证明。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释混合密度、责任度与有效计数的不同分母",
+      "sections": [
+        "missing-label",
+        "fractional-membership",
+        "weighted-estimates"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M217",
+        "CS5489-M218",
+        "CS5489-M219",
+        "CS5489-M220",
+        "CS5489-M225"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture6.2.pdf",
+      "locator": "PDF pp. 25, 28–31, 33",
+      "kind": "historical",
+      "note": "历史GMM生成解释、责任度、加权参数更新、受限soft k-means与协方差结构。"
+    },
+    {
+      "name": "Lecture7.1.pdf",
+      "locator": "PDF pp. 12, 14, 21–22",
+      "kind": "historical",
+      "note": "历史EM下界及聚类总结；本文解释单调性边界，没有把简短串讲当作完整证明。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing exercises",
+      "locator": "ml22 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+    }
+  ]
+}

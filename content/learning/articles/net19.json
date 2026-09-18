@@ -1,0 +1,149 @@
+{
+  "lesson_id": "net19",
+  "title": {
+    "zh": "交换机刚开机，怎么知道一帧该从哪个口出去？",
+    "en": "Historical protocol and calculation clinic"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "一台交换机有端口1、2、3，地址表还是空的。端口1进来一帧，源是A、目的G。交换机连G在哪里都不知道，第一步应该学什么、第二步又该发给谁？",
+    "en": "A switch starts with an empty table. A frame from A to G arrives on port 1. Determine what it can learn and where it forwards before returning to the historical multi-switch tutorial."
+  },
+  "sections": [
+    {
+      "id": "learn-only-what-you-observe",
+      "title": {
+        "zh": "只从实际看到的帧学习",
+        "en": "Learn only from an observed arrival"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "这页是历史Tutorial 3–11的综合练习入口，不是说所有题都在讲交换机。我们先用Tutorial 11 P4的自学习思想，缩成三端口小例，让状态更新看得清；HTTP、TCP、路由等题仍须回相应机制课。\n\n交换机看到帧从端口1进入，可以推知源A在那个方向，记录A→1。目的写着G只能说明A想找G，并没有告诉交换机G从哪个口可达。学习看源地址，转发查目的地址，这两个动作先后分开，几乎能消灭这一类题最常见的误判。"
+        }
+      ]
+    },
+    {
+      "id": "unknown-known-same-port",
+      "title": {
+        "zh": "未知、已知、同入口：三种转发结果",
+        "en": "Three cases for the destination lookup"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "在本题无环、同一LAN的假设下，目的未知就向除入端口外的其他可用端口泛洪；目的已知且在另一端口，只向该端口发；目的与入端口相同，则无需再转发给其他口。泛洪不是收到多少副本就必定重复交付，主机还会检查帧是否发给自己。\n\n因此交换表不是一次性填好的全网名单，而是根据接收事件更新的局部知识。表项可老化，主机移动后新源帧也会改变方向。不要让交换机“知道”一个它根本没收到的回复。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "return-to-four-switches",
+      "title": {
+        "zh": "回到原图，非目的分支也可能学到A",
+        "en": "Return to the original multi-switch topology"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史Tutorial 11第2页P4的原图由S4连接S1、S2、S3；A/B/C在S1，D/E/F在S2，G/H/I在S3。所有表初始为空，A发给G。S1先学A，再因G未知泛洪到S4和其他本地口；S4学A在S1方向，又泛洪到S2与S3。\n\n所以S2虽然不在最终到G的单播路径上，也实际收到了泛洪副本，并学到A朝S4。G随后回A时，沿G→S3→S4→S1→A定向返回；S2没收到这次回复，就不会凭空学到G。对照原卡N258/N259的正面图，逐台写“入端口—学源—查目的—出端口”，不只背经过哪些交换机。"
+        }
+      ]
+    },
+    {
+      "id": "a-host-moves",
+      "title": {
+        "zh": "地址表会变，重新按事件更新",
+        "en": "Update stale state when a host moves"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面A换了接入端口，随后又来一帧目的与入端口同侧。照同一处理顺序独立写出学习和转发，别因为A曾经在端口1就把旧表当永久真相。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "完成后，尝试解释“收到帧才能学到源”这个不变量。它比记住某张拓扑里S2是否学到G更有用；初始表一变、广播范围一变，原数字答案就可能不再成立。"
+        }
+      ]
+    },
+    {
+      "id": "choose-the-right-worksheet",
+      "title": {
+        "zh": "其他旧题，先选适合的状态表示",
+        "en": "Use the right representation for each historical task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "HTTP/DNS题画依赖时间轴；GBN/SR/TCP题列发送与接收事件，写清ACK计包还是计字节。Reno曲线要先认协议版本、重复ACK或超时以及观察时刻；RTT均值与偏差更新也要按题设顺序，不混入另一规范约定。\n\n子网分配先定块大小与对齐，再检查区间不重叠；Dijkstra在非负权图里每步核对暂定值，平局可有不同合法顺序。二维校验必须看清原图行列，不把文字抽取缺掉的格子自行补造。\n\n特别是历史Tutorial 8第2页P4仍有输入/表格疑点，提取文本里一个所谓32位地址的字节段长度异常，原范围表也需图像校勘。现在不提供自造确定答案；先练已核实的小题，保留缺口。历史题集不是已确认QE范围，原图和条件决定能答到哪一步。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "tutorial-11.pdf",
+      "locator": "page 2 P4",
+      "kind": "historical",
+      "note": "历史多交换机自学习原题；三端口worked/practice/transfer是教学缩例。"
+    },
+    {
+      "name": "tutorial-11-solution.pdf",
+      "locator": "page 11, P4",
+      "kind": "historical",
+      "note": "P4交换机自学习解答，结合原卡已有图与题设；第6–10页是CSMA，不作本题来源。"
+    },
+    {
+      "name": "tutorial-3.pdf through tutorial-10.pdf",
+      "locator": "各专题原题；Tutorial 8 page 2 P4待校勘",
+      "kind": "historical",
+      "note": "跨主题旧题入口；不把缺失或异常输入改写成确定答案。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net19 worked/practice/transfer",
+      "kind": "derived",
+      "note": "本文小例是原理练习，历史原题另循原卡/图；不补造缺失题目或实测结果。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能按帧到达事件更新交换机MAC表，并区分已知单播、未知泛洪和同端口过滤。",
+      "sections": [
+        "learn-only-what-you-observe",
+        "unknown-known-same-port",
+        "return-to-four-switches",
+        "a-host-moves",
+        "choose-the-right-worksheet"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N258",
+        "CS5222-N259"
+      ]
+    }
+  ]
+}

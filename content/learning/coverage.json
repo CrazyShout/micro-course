@@ -476,8 +476,8 @@
         "en": "With equal priors, rates (2,1) for A and (1,2) for B, which class scores higher for x=(2,0)?"
       },
       "independent": {
-        "zh": "两类单词均值为 1 和 10，空计数 x=0、更支持哪类？",
-        "en": "With one feature, equal priors, and rates 1 and 10, which class does x=0 support?"
+        "zh": "单特征 Poisson 模型中，两类先验相等，计数均值分别为 1 和 10。观察到 x=0 时更支持哪类？",
+        "en": "In a one-feature Poisson model with equal class priors and rates 1 and 10, which class does x=0 support?"
       },
       "card_ids": [
         "CS5489-M108",
@@ -646,8 +646,8 @@
         "en": "For (x₁,y₁)=(−1,−1),(x₂,y₂)=(1,+1), use L=½w²+α₁(1−w+b)+α₂(1−w−b). Differentiate in w,b and find multipliers at the optimum w=1,b=0."
       },
       "independent": {
-        "zh": "从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 ∂L/∂w 和 ∂L/∂b，推出 w 的展开。再判断：gᵢ<0 能推出 αᵢ=0 吗？αᵢ=0 能推出 gᵢ<0 吗？",
-        "en": "For general L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)], derive both derivatives and the expansion of w. Under complementary slackness, does gᵢ<0 imply αᵢ=0, and does αᵢ=0 imply gᵢ<0?"
+        "zh": "从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 ∂L/∂w 和 ∂L/∂b，推出 w 的展开。再令 hᵢ=1−yᵢ(wᵀxᵢ+b)≤0，在 KKT 互补松弛成立时判断：hᵢ<0 能推出 αᵢ=0 吗？αᵢ=0 能推出 hᵢ<0 吗？",
+        "en": "For general L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)], derive both derivatives and the expansion of w. Define hᵢ=1−yᵢ(wᵀxᵢ+b)≤0. Under complementary slackness, does hᵢ<0 imply αᵢ=0, and does αᵢ=0 imply hᵢ<0?"
       },
       "card_ids": [
         "CS5489-M147",
@@ -2298,8 +2298,8 @@
         "en": "An IPv4 Ethernet host starts with no configuration or caches. It uses remote DNS and HTTP servers through a default gateway, without NAT. Outline the simplified sequence from startup to response, including the next-hop MAC needed for DNS."
       },
       "independent": {
-        "zh": "主机配置有效，网站IP已缓存，但该网站现在与主机同一子网，ARP缓存为空、TCP未连接；IPv4以太网，无代理、无NAT。独立列必要步骤，并给第一帧目的IP与MAC指向谁。",
-        "en": "Configuration and website IP cache are valid; the website is now on the same IPv4 Ethernet subnet, ARP cache empty and TCP closed, with no proxy or NAT. List required steps and identify first-hop destination IP and MAC."
+        "zh": "主机配置有效，网站IP已缓存，但该网站现在与主机同一子网，ARP缓存为空、TCP未连接；IPv4以太网，无代理、无NAT。独立列必要步骤。ARP解析完成后，首个发往网站的IP包及承载它的以太网帧，其目的IP与目的MAC分别指向谁？",
+        "en": "Configuration and website IP cache are valid; the website is now on the same IPv4 Ethernet subnet, ARP cache empty and TCP closed, with no proxy or NAT. List the required steps. After ARP resolution, identify the destination IP of the first website IP packet and the destination MAC of its enclosing Ethernet frame."
       },
       "card_ids": [
         "CS5222-N260",

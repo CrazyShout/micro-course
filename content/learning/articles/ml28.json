@@ -1,0 +1,182 @@
+{
+  "lesson_id": "ml28",
+  "title": {
+    "zh": "从随机数出发，怎样画出一张像样的新图？",
+    "en": "How can random numbers become a plausible new image?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "手里有一批训练图像，希望程序产生新的、像这一类数据的图，而不是只复制某一张。先区分两件事：会生成样本，不等于会给任意图计算精确概率密度。历史 Lecture12.1 介绍 GAN 与扩散两种路线；本篇先讲它们分别给训练过程安排了什么任务，再算清扩散的一次加噪。",
+    "en": "Given a collection of training images, we want new samples resembling that distribution, not copies of one picture. Sampling and evaluating an exact density are different capabilities. Historical Lecture12.1 introduces GANs and diffusion; we will identify their training tasks and calculate a forward-noising step."
+  },
+  "sections": [
+    {
+      "id": "sampling-and-density",
+      "title": {
+        "zh": "会掷骰子，不代表会写出结果的密度公式",
+        "en": "Sampling and evaluating a density are different capabilities"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "从简单随机输入 z 出发，用生成器 $G_\\theta(z)$ 得到图像，就可以通过重复采样定义一个分布。即使难以高效求某张输出图的精确密度 $p_\\theta(x)$，生成这张图的过程仍然可执行，这类模型常称隐式生成模型。\n\n“生成得很像”也不证明覆盖了完整数据分布。若每次都产生几乎同一张逼真脸，单图观感可能好，多样性却差。历史 Lecture12.1 第 3、11、19 页把分布学习、隐式 GAN 和模式坍塌放在这条线上，评价时必须把逼真程度、覆盖与条件符合度分开。"
+        }
+      ]
+    },
+    {
+      "id": "gan-game",
+      "title": {
+        "zh": "一方辨真假，一方练习改变判断",
+        "en": "Understand the two changing objectives in a GAN"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "GAN 的判别器 D 区分真实样本与 $G(z)$，生成器 G 则调整生成过程，让生成样本更像真实来源。更新 D 时固定 G，更新 G 时固定 D 的参数，但仍沿 D 的计算关系给 G 传梯度。双方改变彼此面对的数据与目标，因此不是两个互不相关的固定损失都按下降就万事大吉。\n\n历史第 13 页写的是 minimax 形式；下面既有专题使用常见非饱和生成器损失 $-\\log D(G(z))$，二者不能直接当作同一公式。先分清谁在更新，再讨论梯度与模式坍塌。"
+        },
+        {
+          "type": "unit",
+          "ref": "gan-roles",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "forward-process",
+      "title": {
+        "zh": "扩散先把“怎样弄脏”明确写下来",
+        "en": "Define the noising process before learning to reverse it"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "在这里采用的 DDPM 高斯前向模型中，$x_0$ 是干净数据，第 t 步用 $x_t=\\sqrt{1-\\beta_t}x_{t-1}+\\sqrt{\\beta_t}\\epsilon_t$，其中 $0<\\beta_t<1$，各步噪声独立且服从标准高斯。计划 beta 控制每一步噪声方差，前向规则本身由我们指定。\n\n设 $\\alpha_t=1-\\beta_t$，$\\bar\\alpha_t=\\prod_{s=1}^{t}\\alpha_s$，便可直接采样 $x_t=\\sqrt{\\bar\\alpha_t}x_0+\\sqrt{1-\\bar\\alpha_t}\\epsilon$，其中无下标的 $\\epsilon$ 是重新采样、独立于 $x_0$ 的标准高斯噪声；训练时不必逐步模拟全部中间状态。这保证条件分布正确，不要求复现某一次加噪轨迹。下图先看信号与噪声的变化方向；当乘积很小时，观测主要由噪声决定。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/forward-noising.svg"
+        }
+      ]
+    },
+    {
+      "id": "noise-coefficients",
+      "title": {
+        "zh": "两个平方根，别按普通百分比混图",
+        "en": "Use the square-root coefficients correctly"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "为了手算，以下只取一个标量，并把 $\\bar\\alpha_t$ 简写为 a。信号系数是 $\\sqrt a$，噪声系数是 $\\sqrt{1-a}$，两者平方和为一；它们本身通常不相加为一。这个安排控制方差尺度，不是普通的两幅图片透明度叠加。\n\n先在例题中计算两个系数，再把带符号的噪声乘进去。下一题只改 a 与噪声符号，正好检查你有没有把 $\\sqrt{1-a}$ 误写成 $1-\\sqrt a$。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "learn-to-denoise",
+      "title": {
+        "zh": "生成时，没有那张新图的“真实噪声答案”",
+        "en": "Generation does not come with the true forward noise"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "训练时有干净样本，也知道自己刚抽的噪声，所以能让网络 $\\epsilon_\\theta(x_t,t)$ 学习预测它。生成时则从标准高斯噪声开始，根据学习到的预测逐步构造反向均值，并按采样器约定加入随机性；课程的 DDPM 算法最后一步不再加新噪声。\n\n下面一个方程只有观测值和 a，却有干净值与噪声两个未知量，检验为什么不能把生成说成“知道真实噪声后直接相减”。网络提供的是从数据学到的统计关系，不是每个新样本随身携带的标准答案。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "conditions-and-return",
+      "title": {
+        "zh": "回到原课，分清条件和近似",
+        "en": "Keep the conditioning assumptions visible"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture12.1 第 37 页关于联合高斯的说法需要限定。给定 $x_0$ 和 $x_t$ 的前向一步后验可以写成高斯；只给 $x_t$、而 $x_0$ 来自任意数据分布时，真实反向条件不因此必定是精确高斯。DDPM 用可学习高斯转移作参数化，原论文式 (1)、(4)、(6) 区分了这些对象。\n\n文字或类别可作为条件影响去噪。Classifier-free guidance 组合无条件预测 $\\epsilon_u$ 与条件预测 $\\epsilon_c$，例如按约定使用 $\\epsilon_u+s(\\epsilon_c-\\epsilon_u)$；s 调整条件作用，不能只凭更强引导就宣布所有质量都变好。历史第 43、50–51 页还区分需要额外分类器的引导。首轮先复习采样与密度、前向过程、直接采样和反向生成；更长采样器推导放在后续。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "区分隐式采样、密度计算与分布覆盖",
+      "sections": [
+        "sampling-and-density",
+        "gan-game"
+      ],
+      "practice": "unit:gan-roles:transfer",
+      "cards": [
+        "CS5489-M285"
+      ]
+    },
+    {
+      "goal": "说明DDPM前向假设并正确进行直接采样",
+      "sections": [
+        "forward-process",
+        "noise-coefficients"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M290",
+        "CS5489-M291"
+      ]
+    },
+    {
+      "goal": "解释噪声预测与生成时真实噪声未知的区别",
+      "sections": [
+        "learn-to-denoise",
+        "conditions-and-return"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M293"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture12.1.pdf",
+      "locator": "PDF pp. 3, 11, 13, 19, 33, 36–39, 43, 50–51",
+      "kind": "historical",
+      "note": "历史GAN和DDPM、条件引导；正文限定第37页联合高斯推断，区分minimax与专题非饱和损失。"
+    },
+    {
+      "name": "Ho et al., Denoising Diffusion Probabilistic Models",
+      "locator": "https://arxiv.org/pdf/2006.11239 · Sections 2–3, equations (1), (4), (6)",
+      "kind": "reference",
+      "note": "原始论文核对前向闭式采样与q(x[t−1]|x[t],x[0])的条件；不将任意数据分布下的真实反向过程误称精确高斯。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml28 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "lesson_id": "net01",
+  "title": {
+    "zh": "你点开一个网页，请求究竟交给了谁？",
+    "en": "The actors in a web request"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "手机已经连上 Wi-Fi，你输入一个网站名字，希望看到网页。浏览器在手机里，网页文件却在远处的电脑上：中间是谁接力，哪些规则让两端听得懂？",
+    "en": "The actors in a web request. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+  },
+  "sections": [
+    {
+      "id": "follow-the-message",
+      "title": {
+        "zh": "先跟着一条请求走",
+        "en": "Follow one request"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先不管网速，想清楚要送什么：浏览器发出一条“请给我这个资源”的消息，远端服务收到后返回内容。运行这些程序的手机、笔记本和服务器都叫主机，也叫端系统。服务器不是互联网的总开关，它只是另一端运行服务程序的主机。\n\n如果只画两个电脑图标和一根长线，会漏掉真正的路：你的设备先经过接入网连到第一个路由器，再经过其他网络到达服务器。路由器是途中接力的设备，链路是相邻设备之间承载数据的通信通道。网络会把消息组织成分组，路由器将分组送向下一段。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/web-path.svg"
+        },
+        {
+          "type": "prose",
+          "text": "图中箭头表示逻辑路径，不声称知道你此刻访问的真实路线；响应也不一定沿完全相同的路回来。先把“应用在哪运行”和“数据从哪里通过”分清，后面的协议名字才有位置可放。"
+        }
+      ]
+    },
+    {
+      "id": "two-views",
+      "title": {
+        "zh": "互联网既是设施，也提供服务",
+        "en": "Infrastructure and service"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "老师的 Chapter 1 第4–7张先给互联网两种视角。基础设施视角看到主机、链路、路由器和彼此相连的网络；服务视角问这些设施让应用能做什么，例如网页访问、语音通话与文件传递。Web 是其中一种应用，不能与整个 Internet 画等号。\n\n接入网解决最初的一段连接，可以用以太网、Wi-Fi、光纤等技术。光纤传光信号，铜线传电信号，无线通过空间传播电磁信号；介质不同不改变两端仍需交流信息这个任务。校园里一个无线接入点不等于远端网站，Wi-Fi 信号满格也不证明后面的所有链路都很快。"
+        }
+      ]
+    },
+    {
+      "id": "agree-on-rules",
+      "title": {
+        "zh": "送到了，还得读得懂",
+        "en": "Delivery still needs shared meaning"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设你发出中文请求，对方却把同一串比特按另一套格式解释：物理连通并没有产生有效交流。协议规定消息长什么样、按什么顺序交换、收到消息或超时后做什么。老师第8–9张用人类问候与计算机请求并排说明这一点：双方的“下一步”要能接上。\n\n因此协议不只是一个端口号或一根线。格式告诉对方哪里是字段，顺序告诉它当前处于哪一步，动作告诉它怎样应答。标准文档与共同实现让不同厂商设备有机会协作；具体协议允许什么，仍要按它的定义判断。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "two-kinds-of-fast",
+      "title": {
+        "zh": "先别把两种“快”混成一个数",
+        "en": "Rate is not propagation speed"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "链路标着 100 Mbps，说的是每秒能把多少比特送上链路，叫传输速率，单位 bit/s。信号在介质中移动得多快叫传播速度，单位 m/s。增加前者可让整份数据更快发完，却不意味着信号在光纤里突然跑得更快。\n\n把不同单位写在名称旁边，比记两个近似的中文词可靠。后续NET03会计算“全部比特发完”和“最后一比特到达”之间的关系；本节先能指出设备、路径与规则就够。"
+        }
+      ]
+    },
+    {
+      "id": "when-delivery-is-not-enough",
+      "title": {
+        "zh": "换个失败方式，检查你是否分清职责",
+        "en": "Change the failure, identify the responsibility"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面数据已经送达，问题出在应用解释。请先自己判断哪一层职责尚未完成，再展开答案。这个变式不要求记某个真实HTTP状态码，而是检验你是否把输送与共同规则分开。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "回到老师的引入目标：你现在应能画出端系统—接入网—路由器—其他网络—服务器，并用协议解释为什么“连通”不等于“理解”。首轮卡用来复述这张关系图与两种速度；不是让你把所有接入技术一次背完。下一节才讨论多人争用同一条链路时怎样安排资源。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 4–19",
+      "kind": "course",
+      "note": "基础设施/服务视角、人类与计算机协议例、接入网及物理介质。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net01 worked/practice/transfer",
+      "kind": "derived",
+      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能在主机、接入网、路由器与链路图上追踪一条消息。",
+      "sections": [
+        "follow-the-message",
+        "two-views",
+        "agree-on-rules",
+        "two-kinds-of-fast",
+        "when-delivery-is-not-enough"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N003"
+      ]
+    },
+    {
+      "goal": "从基础设施和服务两个角度看，互联网是什么？",
+      "sections": [
+        "two-views"
+      ],
+      "practice": "card:CS5222-N001",
+      "cards": [
+        "CS5222-N001"
+      ]
+    },
+    {
+      "goal": "端系统、接入网和网络核心分别是什么？",
+      "sections": [
+        "follow-the-message"
+      ],
+      "practice": "card:CS5222-N002",
+      "cards": [
+        "CS5222-N002"
+      ]
+    },
+    {
+      "goal": "传输速率和传播速度有什么区别？",
+      "sections": [
+        "two-kinds-of-fast"
+      ],
+      "practice": "card:CS5222-N010",
+      "cards": [
+        "CS5222-N010"
+      ]
+    },
+    {
+      "goal": "用主机、接入网、路由器和服务器描述笔记本发送网页请求的路径。",
+      "sections": [
+        "follow-the-message"
+      ],
+      "practice": "card:CS5222-N012",
+      "cards": [
+        "CS5222-N012"
+      ]
+    }
+  ]
+}

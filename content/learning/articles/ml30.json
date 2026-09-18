@@ -1,0 +1,247 @@
+{
+  "lesson_id": "ml30",
+  "title": {
+    "zh": "往年综合题诊所：先查条件，再选工具",
+    "en": "A clinic for historical problems: conditions before tools"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "有两个可调整的数 u、v，误差由 $\\ell(u,v)=(ue^v-2ve^{-u})^2$ 给出。从 (1,1) 出发，以学习率 0.1 同时更新两个数，怎样找出误差首次小于 $10^{-14}$ 的一步？先把两个偏导算对，再守住更新与停止的顺序。这是往年 Assignment 2 的原任务；其他概率、代数和信号题随后按专题展开。",
+    "en": "Two adjustable values u and v determine the error $\\ell(u,v)=(ue^v-2ve^{-u})^2$. Starting at (1,1), use simultaneous gradient descent with learning rate 0.1 to find the first update with error below $10^{-14}$. Derive both partial derivatives before implementing the update and stopping rule. This is the historical Assignment 2 task; other probability, algebra and signal problems follow as optional topic groups."
+  },
+  "sections": [
+    {
+      "id": "choose-the-task",
+      "title": {
+        "zh": "拿到题，先写清到底要交付什么",
+        "en": "Identify the required result before choosing a formula"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "证明题要给论证，计算题要给中间量与数值，程序题要给更新规则和停止条件，辨错题可以给满足全部条件的反例。它们不能都用“记得答案大概长这样”完成。先把已知变量、单位、维度、成立假设和目标圈出来，再决定回概率、最小二乘、KKT、PCA 还是卷积。\n\n同一个符号在不同题里可能有不同含义；历史材料的页码、原题编号和条件比“我印象里是上次那道”更可靠。我们先处理一条具体公式，其余题型随后按需展开，不让七个主题同时抢你的工作记忆。"
+        }
+      ]
+    },
+    {
+      "id": "differentiate-in-layers",
+      "title": {
+        "zh": "Assignment 2：先给内层起一个名字",
+        "en": "Assignment 2: name the inner expression first"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Home_Assignments_2 第 1–2 页的 Exercise 2 给出 $\\ell(u,v)=(ue^v-2ve^{-u})^2$，原任务包括求导、从 (1,1) 开始迭代，以及判断首次到达误差阈值。先别急着写更新程序：导数一旦漏一个符号，程序只是更快地算错。\n\n令 q 为平方括号里的整体，外层就是 $\\ell=q^2$。先独立求 q 对 u、v 的偏导，再乘外层导数 2q。每次求一个偏导时，另一个变量视作常数；尤其 $e^{-u}$ 还包含负号的链式法则。下面保留已有分步示范，读完后应能合上答案自己重走一次。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "special-values",
+      "title": {
+        "zh": "先用容易检查的点，抓住符号错误",
+        "en": "Use simple points to catch sign and chain-rule errors"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "在 (0,0) 处，指数都等于一，最适合检查内层与外层有没有混淆。内部导数不为零，并不意味着最终损失梯度也不为零；外层可能把它乘成零。先做带提示的一步，再把坐标换到 (1,0) 独立计算。\n\n手算精确形式和小数近似各有作用：精确式帮助看清结构，近似值帮助发现数量级与符号问题。这里两道简化练习检验求导能力，并没有替代原题要求的完整迭代。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "run-the-original-update",
+      "title": {
+        "zh": "回到原题：两个坐标必须使用同一套旧值",
+        "en": "Return to the simultaneous update in the original task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "原题设学习率 0.1、起点 (1,1)，要求双精度计算，并找损失首次小于 $10^{-14}$ 的更新。每轮先保存旧 u、v；在旧点算 q 和两个偏导，形成新的两个坐标；二者一起替换后，计数加一，再计算新损失是否达标。中间不能四舍五入，最终展示参数时才按题意保留位数。\n\n先更新 u、再用新 u 算 v 的导数，已经不是这道题的同时梯度下降。停止检查在更新前还是更新后，也会影响你报告的计数含义。原解答 Home_Assignments_Solutions_2 第 3–4 页可以核对实现顺序；本项目也独立复算过首次达标计数。卡片 M312 保存核对结果，学习时先运行自己的计算，不要把背住一个迭代次数当作会实现。"
+        }
+      ]
+    },
+    {
+      "id": "probability-desk",
+      "title": {
+        "zh": "概率题：先分清你究竟观察到了什么",
+        "en": "Probability desk: identify what was actually observed"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Assignment 1 第 1–4 页从事件概率、指示函数期望走到熵、Laplace MLE 与条件高斯。指示函数只在指定事件发生时为一，所以它的期望就是该事件概率；熵题则要说明对数底与零概率项。下面专题逐项补齐这些基础，不要求先背整页定义再猜用途。\n\nLaplace 的位置估计用中位数，尺度是平均绝对偏差，不能套高斯均值/标准差的答案。联合高斯题要先标出已观察块与待预测块；共享协方差 LDA 则利用对数类分数相减后二次项抵消，得到线性对数几率，再转成 sigmoid。不同问题共享符号，不等于共享全部假设。\n\nAssignment 2 第 1 页最后一栏写的是“4 and over”。其旧解答第 2 页明确额外假设这些观测都为 4，才给出相应经验均值。分组尾部不能偷偷改成精确值；保留“4+”的信息时，数据处理和似然问题都需要重新说明。"
+        },
+        {
+          "type": "unit",
+          "ref": "entropy-and-information",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "unit",
+          "ref": "laplace-mle-from-deviations",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "unit",
+          "ref": "conditional-gaussian-update",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "algebra-desk",
+      "title": {
+        "zh": "代数与约束题：先查存在，再查唯一",
+        "en": "Algebra and constraints: existence before uniqueness"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Assignment 3 第 1 页的一串判断题，专门检验“方程数够不够”是否能替代秩条件。$Ax=y$ 先问 y 是否在列空间，再问零空间是否包含非零方向；方阵也可能奇异，未知数多也不保证任意右端可解。下面秩专题用小矩阵把每个判断落地。\n\n矩阵求逆恒等式要确认涉及的逆都存在，不能因为 P、R 可逆就跳过其他矩阵的条件。坐标下降更新残差时，也要坚持本题残差方向：历史原题用真实减预测，现有卡 M319 用预测减真实，公式符号随约定一致改变，而不是一边混用一边猜正负。\n\nAssignment 2 的相切圆盘约束、硬间隔SVM，与 Assignment 3 的平方松弛SVM检验不同的约束结构；不能看到SVM就抄同一对偶盒约束。KKT是否适用、最优乘子是否达到，都需条件。Assignment 4 的实对称矩阵/PCA则回到共轭内积、正交特征基与重值情形，下面专题保留完整练习。"
+        },
+        {
+          "type": "unit",
+          "ref": "rank-nullspace-and-solutions",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "unit",
+          "ref": "adjoint-gram-and-pca",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "signal-desk",
+      "title": {
+        "zh": "信号图题：下标也是题目数据",
+        "en": "Signal desk: indices are part of the data"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Assignment 4 第 3–4 页给输入输出图和卷积图。先打开 M324/M325 正面的原图，逐个读出非零位置及其下标；只抄一串数而丢掉起点，得到的可能是平移后的另一个答案。系统线性只允许叠加已知输入输出，不能自动允许把冲激响应平移。还要证明时不变，才能使用LTI卷积表示。\n\n卷积手算明确核翻转、边界与输出下标；DTFT证明则从双重求和开始，用新变量把指数分成两项，再说明何时可交换求和。有限支撑或绝对可和条件提供了可用的保证。下面两个专题分别检查线性/时不变的区别，以及完整卷积与频域乘积，不把循环卷积或有限长DFT悄悄混进来。"
+        },
+        {
+          "type": "unit",
+          "ref": "linear-systems-impulses-convolution",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "unit",
+          "ref": "dtft-convolution-product",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "leave-with-a-method",
+      "title": {
+        "zh": "离开诊所时，带走一种检查方法",
+        "en": "Leave with a method for checking your own work"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "第一遍先完成梯度的示范、特殊点与变式，再按原设置做一次同时更新程序。之后每次选择一组相关旧题：说明用了哪个条件、写出关键中间式、用边界或独立计算检查答案，然后到原卡主动回忆。读完一页不等于24张原题都已会做。\n\n这些材料来自历史公开课程。保留它们是为了预习与训练论证，不是在宣布本学期或 QE 的确定考纲。遇到旧答案的额外假设或简写，写清限定再使用；专业性常常体现在你知道结论什么时候不能用。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "对复合损失正确应用链式法则并计算改变输入后的梯度",
+      "sections": [
+        "differentiate-in-layers",
+        "special-values"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M311"
+      ]
+    },
+    {
+      "goal": "说明原梯度下降任务的同时更新、精度和停止计数约定；实际程序仍需自行运行",
+      "sections": [
+        "run-the-original-update"
+      ],
+      "practice": "card:CS5489-M312",
+      "cards": [
+        "CS5489-M312"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Home_Assignments_1.pdf",
+      "locator": "PDF pp. 1–4; Exercises 1–4",
+      "kind": "historical",
+      "note": "历史概率、熵、Laplace、LDA与条件高斯题。本文按题型安排补课，不把四题改写成一个故事。"
+    },
+    {
+      "name": "Home_Assignments_2.pdf",
+      "locator": "PDF pp. 1–3; Exercises 1–5",
+      "kind": "historical",
+      "note": "历史分组Poisson计数、梯度下降、约束、投影与SVM原题；保留4+、双精度、首次达标等条件。"
+    },
+    {
+      "name": "Home_Assignments_Solutions_2.pdf",
+      "locator": "PDF pp. 2–4",
+      "kind": "historical",
+      "note": "历史提供解答；第2页明说把4+当4的额外假设，第3–4页为同时梯度下降参考顺序，计数已另行复算。"
+    },
+    {
+      "name": "Home_Assignments_3.pdf",
+      "locator": "PDF pp. 1–3; Exercises 1–4",
+      "kind": "historical",
+      "note": "历史矩阵恒等式、秩/可解性、坐标下降与平方松弛SVM；不把所有逆矩阵存在当作默认。"
+    },
+    {
+      "name": "Home_Assignments_4.pdf",
+      "locator": "PDF pp. 1–4; Exercises 1–4",
+      "kind": "historical",
+      "note": "历史对称矩阵、PCA、系统图题、卷积与DTFT；原图继续从M324/M325访问。"
+    },
+    {
+      "name": "原创分步练习与解题诊断 / Authored practice and problem-solving guidance",
+      "locator": "ML30 worked / practice / transfer; existing focused units",
+      "kind": "derived",
+      "note": "简化坐标与补课例子用于建立原题方法；没有声称用户已独立完成全部作业。"
+    }
+  ]
+}

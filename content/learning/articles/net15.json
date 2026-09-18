@@ -1,0 +1,176 @@
+{
+  "lesson_id": "net15",
+  "title": {
+    "zh": "没人告诉发送者带宽多少，它怎样边发边试？",
+    "en": "Congestion windows and feedback"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "接收者有空位，不代表路上的路由器也不忙。发送者看不到整条路径的实时容量，只能从确认、丢失等反馈调整在途数据。本节读懂往年课件的经典TCP窗口轨迹。",
+    "en": "Receiver space does not reveal the path’s available capacity. Use the historical TCP feedback model to follow how a sender probes capacity and reacts to congestion."
+  },
+  "sections": [
+    {
+      "id": "a-budget-for-the-path",
+      "title": {
+        "zh": "先区分接收者限制与路径限制",
+        "en": "Separate receiver limits from path limits"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "上一节rwnd回答接收端还能放多少字节，cwnd则是发送者根据网络反馈调整的预算。增加cwnd允许更多数据未确认时仍在途；不是直接旋转一个叫“网速”的旋钮。实际发送还受接收窗口、应用数据与其他机制限制。\n\n往年Chapter 3第105–112张讨论Tahoe与Reno这类经典算法。本页采用明确的按轮教学规则，展示它们在特定事件下的想法；不是宣称所有现代TCP默认用Reno，也不是一条实测连接的截图。"
+        }
+      ]
+    },
+    {
+      "id": "slow-start-grows-fast",
+      "title": {
+        "zh": "慢启动为何看起来反而长得快？",
+        "en": "Slow start can grow exponentially"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "起初窗口小，确认逐渐证明有数据通过。若每个满段产生一个ACK、没有丢包及其他限制，慢启动一轮RTT后可近似翻倍。“慢”是相对一开始猛发大窗口，不表示线性慢慢加。MSS是最大段载荷量，题中用它作窗口单位。\n\n到阈值ssthresh后转入拥塞避免，经典近似每RTT增加一个MSS。若用字节量写每ACK增加约MSS²/cwnd，一轮约cwnd/MSS个ACK，合起来才是一个MSS。延迟ACK、应用受限或另一种算法会改变这套计数。先把简化条件写在曲线旁。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "loss-events-are-not-identical",
+      "title": {
+        "zh": "重复确认与超时，是不同反馈",
+        "en": "Distinguish duplicate ACKs from timeout"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "三次重复ACK可能说明后续段仍在通过，但前面有缺口；超时则更久没得到足够进展。经典Tahoe在丢失后回到慢启动，Reno可在三次重复ACK后进入快速重传与快速恢复；超时反应更强。不能只看“丢包”二字就画同样的下降。\n\n完整Reno的快速恢复会暂时用ssthresh加三个MSS膨胀窗口，反映可能已经离开网络的后续段；新ACK与进一步重复ACK还会触发状态变化。本页下面的独立题明确省略这段细节，直接指定事件后起点，所以其数字不能冒充完整Reno事件表。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/window-growth.svg"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "from-window-to-rate",
+      "title": {
+        "zh": "窗口除以时间，才变成速率",
+        "en": "Convert a byte window into a rate"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "当发送主要受窗口限制，窗口字节数除以RTT可估计速率。在理想稳定锯齿中，窗口由 $W/2$ 线性涨到W，平均为 $3W/4$；还假设RTT固定、数据持续可用，忽略慢启动与超时阶段。"
+        },
+        {
+          "type": "prose",
+          "text": "例如W=64 kB、RTT=0.1 s，平均48 kB，得到480 kB/s，即十进制3.84 Mbit/s。这个估计的重点不是背四分之三，而是知道哪些区间被平均、哪些成本被省略。若RTT随排队改变，拿一个固定值继续除就可能误导。"
+        }
+      ]
+    },
+    {
+      "id": "fairness-and-signals",
+      "title": {
+        "zh": "反馈不只丢包，公平也要说明对象",
+        "en": "State the signal and the fairness unit"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "经典ECN协商后可由路由器用CE标记表达拥塞，接收者回显ECE，发送者收缩窗口并用CWR表明响应；它传递的是拥塞信息，不创造容量，也不保证永不丢包。具体机制按相应规范与端点支持条件解释。\n\n“每条连接公平”也不自动等于“每个人公平”：一个应用可能开许多连接，RTT和算法还可能不同。教材相似流的均分图是理想比较，不是服务承诺。\n\n回原课窗口图先标协议版本、事件、阈值和观察时刻，再算下一步。首轮记慢启动、加性增长、两类丢失反应及理想平均速率；不能拿一条熟悉曲线替换题目给出的规则。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha3_2025_student.pptx",
+      "locator": "slides 102–117",
+      "kind": "historical",
+      "note": "原PPTX的Tahoe/Reno、拥塞避免与3W/4吞吐量理想化。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net15 worked/practice/transfer",
+      "kind": "derived",
+      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+    },
+    {
+      "name": "RFC 3168",
+      "locator": "section 6.1",
+      "kind": "reference",
+      "note": "经典TCP ECN说明；沿用已核对原卡N184的规范依据，不指称所有新机制。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能在明确的理想 TCP 教学模型中追踪慢启动、加性增长与丢包后的窗口变化。",
+      "sections": [
+        "a-budget-for-the-path",
+        "slow-start-grows-fast",
+        "loss-events-are-not-identical",
+        "from-window-to-rate",
+        "fairness-and-signals"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N180"
+      ]
+    },
+    {
+      "goal": "在课件的经典 TCP 模型中，窗口指数增长，为什么还称为慢启动？",
+      "sections": [
+        "slow-start-grows-fast"
+      ],
+      "practice": "card:CS5222-N178",
+      "cards": [
+        "CS5222-N178"
+      ]
+    },
+    {
+      "goal": "加性增长与慢启动增长有何不同？",
+      "sections": [
+        "slow-start-grows-fast"
+      ],
+      "practice": "card:CS5222-N179",
+      "cards": [
+        "CS5222-N179"
+      ]
+    },
+    {
+      "goal": "理想 AIMD 模型中，拥塞窗口从 W/2 线性增加到最大 W，RTT 固定且忽略超时阶段。若 W=64 kB、RTT=0.1 s，按十进制单位估计平均吞吐量。",
+      "sections": [
+        "from-window-to-rate"
+      ],
+      "practice": "card:CS5222-N182",
+      "cards": [
+        "CS5222-N182"
+      ]
+    }
+  ]
+}

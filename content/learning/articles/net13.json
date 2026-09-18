@@ -1,0 +1,171 @@
+{
+  "lesson_id": "net13",
+  "title": {
+    "zh": "数据发出去了，对方没回话：到底该不该重发？",
+    "en": "Reliability and sliding windows"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "发送者交出一份数据后没有等到确认。可能数据没到，也可能数据到了但确认丢了；盲目重发会不会让接收者处理两遍？先为每种故障补一种机制。",
+    "en": "After data is sent, no acknowledgment arrives. Data or feedback may have been lost. Build the mechanisms needed to retry without delivering duplicates, following the historical transport material."
+  },
+  "sections": [
+    {
+      "id": "two-directions-can-fail",
+      "title": {
+        "zh": "正向数据与反向确认都会出问题",
+        "en": "Both data and feedback can fail"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "往年Chapter 3第22张从不可靠信道引入可靠传输。最朴素的办法是发完就认为成功，但位可能翻转、数据可能丢失。检错码先帮助判断内容是否损坏；它不是保证发现所有错误的魔法，也不会自己触发一套重传流程。\n\n于是接收者需要反馈，正确收到时可发ACK。可ACK本身也会损坏或丢失，发送者的“没听见”不能区分哪一条路失败。重传有用，却可能把已经交付过的数据再送一次；可靠协议还得记住消息身份和当前状态。"
+        }
+      ]
+    },
+    {
+      "id": "number-and-time",
+      "title": {
+        "zh": "序号管重复，定时器管等不到",
+        "en": "Sequence numbers and timers solve different problems"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "停等交替位协议让每次新分组的序号在0和1之间交替。接收者知道目前等哪一个；收到旧分组的重传可以再次确认，但不重复向上交付。这只在协议对旧副本寿命等假设下成立，不能用一位数字区分无限久以前、反复回绕后的所有包。\n\n如果数据或ACK完全消失，没有新消息再触发动作，发送者可能永远等下去。rdt3.0加定时器：超时就重试。超时说明等待太久，不证明一定丢了；慢包也会触发多余重传，所以序号去重仍必须保留。每种机制对应一种困难，而不是越多按钮越可靠。"
+        }
+      ]
+    },
+    {
+      "id": "fill-the-idle-time",
+      "title": {
+        "zh": "长链路上，停等把时间花在哪？",
+        "en": "Stop-and-wait can leave a fast link idle"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "停等每次只允许一包未确认。令包长L比特、速率R比特/秒，数据发送需L/R。若RTT特指往返传播时间，忽略ACK发送、处理与排队，一个周期是 $L/R+RTT$，发送利用率为 $(L/R)/(L/R+RTT)$。若题目给的已是完整发送到确认周期，就不能再加L/R。"
+        },
+        {
+          "type": "prose",
+          "text": "原课第45–47张给1 Gbps、8000比特、单向15毫秒：实际发包只用8微秒，随后大部分时间在等。窗口让多个包在反馈回来前先进入路径，用更多在途数据填空档；它不缩短信号传播距离。停等利用率专题与书本图保留完整计算。"
+        }
+      ]
+    },
+    {
+      "id": "a-hole-in-the-middle",
+      "title": {
+        "zh": "中间丢一包，后面到的怎么办？",
+        "en": "Handle packets beyond a missing one"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "窗口把新的问题带来：包1没到，2和3先到，是丢掉等重传，还是保留？基础Go-Back-N（GBN）只接受连续顺序，失序包丢弃并重复累计确认；Selective Repeat（SR）可缓存窗口内正确失序包，逐个确认。两者若提供有序交付，都不能把缺口后面的数据直接提前交给应用。\n\n下面明确规定GBN的ACK k表示截至k都连续收到；它和下一节TCP“下一期待字节”的编号含义不同。先逐次记录到达、交付/缓存、发出的ACK，别混用两个约定。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "change-the-missing-packet",
+      "title": {
+        "zh": "换一个缺口，重新写未确认集合",
+        "en": "Change the gap and recompute the retransmissions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "超时时，GBN重发最早未确认包起已发但未确认的包，不包含窗口里根本没发的位置；SR只重发对应未确认包。下面改变丢失位置，先更新连续前缀，再列重传集合。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "SR减少重复发送，但要付接收缓存、单独确认和序号管理成本。常见等长窗口模型要求序号空间至少是窗口的两倍，并仍依赖旧包寿命假设。回原课的事件图逐行解释，比背“GBN多发、SR少发”更能应付改变ACK到达顺序的题；真实TCP也不能直接等同基础GBN。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha3_2025_student.pptx",
+      "locator": "slides 22–59",
+      "kind": "historical",
+      "note": "原PPTX不可靠信道、ACK/序号/定时器、1Gbps停等例与GBN/SR窗口。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net13 worked/practice/transfer",
+      "kind": "derived",
+      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能用丢包事件逐步追踪基础 GBN 与 SR 的接收、确认与重传差别。",
+      "sections": [
+        "two-directions-can-fail",
+        "number-and-time",
+        "fill-the-idle-time",
+        "a-hole-in-the-middle",
+        "change-the-missing-packet"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N164",
+        "CS5222-N166"
+      ]
+    },
+    {
+      "goal": "信道可能损坏数据或确认消息时，需要增加哪些机制？",
+      "sections": [
+        "two-directions-can-fail"
+      ],
+      "practice": "card:CS5222-N156",
+      "cards": [
+        "CS5222-N156"
+      ]
+    },
+    {
+      "goal": "停等式交替位协议为什么使用 0 和 1 两个序号？",
+      "sections": [
+        "number-and-time"
+      ],
+      "practice": "card:CS5222-N157",
+      "cards": [
+        "CS5222-N157"
+      ]
+    },
+    {
+      "goal": "rdt3.0 为什么需要增加定时器？",
+      "sections": [
+        "number-and-time"
+      ],
+      "practice": "card:CS5222-N158",
+      "cards": [
+        "CS5222-N158"
+      ]
+    }
+  ]
+}

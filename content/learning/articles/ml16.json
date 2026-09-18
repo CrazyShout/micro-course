@@ -1,0 +1,202 @@
+{
+  "lesson_id": "ml16",
+  "title": {
+    "zh": "短信实验跑完了，怎样知道漏掉了谁？",
+    "en": "Who is the SMS classifier still missing?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Assignment 1 要把短信分成 normal、spam、smishing 三类。你已经能训练一个分类器，但“总准确率不错”可能只是它擅长认最常见的正常短信；怎样建立可信基线，并找出真正需要改进的错误？",
+    "en": "Assignment 1 asks for normal, spam and smishing predictions. A classifier may achieve high overall accuracy by recognizing the dominant normal class. How can you establish a credible baseline and identify the errors worth improving?"
+  },
+  "sections": [
+    {
+      "id": "make-one-complete-baseline",
+      "title": {
+        "zh": "先跑通一条能解释的完整流程",
+        "en": "Build a complete interpretable baseline"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先固定题目给定的训练、验证与测试用途，再只用训练文本拟合词表/IDF，训练标签拟合模型；其他部分应用同一转换。可以先跑多数类预测和词袋+平滑 NB，得到一个可比较的起点，而不是一开始把所有流行模型都排上菜单。\n\n原作业允许自主选择特征与算法，NB 只是建议基线。每次记录数据划分、标签映射、表示、超参数、随机种子和评价函数；两次成绩若来自不同划分，就不能直接归因于新特征。先让全过程可以从干净环境重跑，后面的比较才有可信对象。"
+        },
+        {
+          "type": "unit",
+          "ref": "baseline-pipeline",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "read-the-confusion",
+      "title": {
+        "zh": "把“错了”分成具体的去向",
+        "en": "Read errors by their true and predicted classes"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "混淆矩阵先约定行是真实类、列是预测类，对角线表示正确识别。在类别 c 的行里，对角格是 $TP_c$，其他格合计是 $FN_c$；在 c 的列里，其余格合计是 $FP_c$。recall=$TP/(TP+FN)$ 问真正属于这一类的找回多少；precision=$TP/(TP+FP)$ 问报成这一类的有多少是真的。\n\n两个分母对应两群不同对象，不能靠中文里“准确”两个字猜公式。若分母为零，数学上未定义，报告必须说明程序的处理约定。下面暂时把正常/垃圾缩成二分类，以便先把四种计数看清；这不会把真实作业的三类改成两类。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "give-each-class-a-voice",
+      "title": {
+        "zh": "让少数类也能影响最终分数",
+        "en": "Give each class a voice in the metric"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "作业使用 balanced accuracy：对评估中出现的 C 个类别，把各类 recall 算术平均，$BA=C^{-1}\\sum_c recall_c$。它让每类贡献相同，而总体 accuracy 按样本数量加权。真实三类召回若为 0.95、0.60、0.40，BA=0.65；这组数只是教学例，不是已经跑出的成绩。\n\n下面换一组二分类计数，你会看到 precision 和 recall 可以改变，但 BA 未必改变。计算后解释究竟是哪一类更好、哪一类更差，单一汇总分数可能把这种交换藏起来。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "a-lazy-but-high-score",
+      "title": {
+        "zh": "永远猜最多的类别，会得到什么？",
+        "en": "Inspect an always-majority predictor"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果正常短信特别多，什么也没学、永远回答“正常”也可能取得漂亮的总体准确率。这不是一个偷偷作弊的实现，而是值得明确列出的基线：它显示评价是否真的关心其他类别。先把四种计数填齐，再算两个指标。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "turn-errors-into-hypotheses",
+      "title": {
+        "zh": "错分短信不是装饰截图，要能支持下一步",
+        "en": "Use actual errors to motivate a testable change"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "有用的错误分析分三步：指出混淆模式与真实验证文本；把文本联系到表示/模型假设；提出能检验的改动。例如 `not free` 与 `free` 若被同一词向量表示，换更强分类器也看不到被删掉的差别。保留否定词或加入词组可以成为候选实验，但未经验证不能称为有效提升。\n\n一次只改一个主要因素，保持划分和预算一致，再看同一验证集的预测、各类召回与实际例子。若最后分析测试错误，也要在模型选择完成后进行，不能一边看测试错题一边反复调参，再把结果称为未见表现。"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    },
+    {
+      "id": "return-to-the-assignment",
+      "title": {
+        "zh": "把判断变成自己的实验记录",
+        "en": "Return to the actual assignment workflow"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Assignment1-Doc 单元 3 要求解释预处理、方法、超参数选择和错误行为；Final Notebook 则要求最终预测可复现。课堂方法、手算指标和真实运行各做一部分，任何一部分都不能冒充另一部分。提交手续与日期去课程信息栏查看，本页聚焦怎样做出可信实验。\n\n下面的实践入口指导从数据到预测的技术检查，成绩应由你实际执行获得。首轮卡帮助检索流程、指标和错因框架；能背混淆矩阵定义，还需要能在自己预测里定位一次真实错误。"
+        },
+        {
+          "type": "task",
+          "ref": "sms-reproducible-baseline"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Assignment1-Doc.ipynb",
+      "locator": "cell 3; cells 8–14",
+      "kind": "course",
+      "note": "原任务、指标、实验说明和数据接口。 / Task, metric, experiment requirements and data interface."
+    },
+    {
+      "name": "Assignment1-Final.ipynb",
+      "locator": "cell 3",
+      "kind": "course",
+      "note": "最终预测可复现要求。 / Reproducibility requirement."
+    },
+    {
+      "name": "串讲与教学演练 / Teaching synthesis",
+      "locator": "ml16",
+      "kind": "derived",
+      "note": "按所列课堂或任务资料组织；简化算例与口述框架是学习辅助，不是实测成绩或已确认 QE 题型。 / Teaching examples and oral prompts, not measured performance or a confirmed QE format."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "如何阅读混淆矩阵？精确率与召回率怎样区分？",
+      "sections": [
+        "read-the-confusion"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M093"
+      ]
+    },
+    {
+      "goal": "短信分为正常、垃圾、钓鱼三类，正常短信远多于另外两类。什么是平衡准确率？为什么它可能比普通准确率更有参考价值？",
+      "sections": [
+        "give-each-class-a-voice",
+        "a-lazy-but-high-score"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M091"
+      ]
+    },
+    {
+      "goal": "三类召回率分别为 0.95、0.60、0.40，平衡准确率是多少？",
+      "sections": [
+        "give-each-class-a-voice"
+      ],
+      "practice": "card:CS5489-M092",
+      "cards": [
+        "CS5489-M092"
+      ]
+    },
+    {
+      "goal": "已有正常、垃圾、钓鱼短信的带标签数据，并固定了训练/验证划分。尝试复杂特征前，怎样建立一个简单的文本分类基线？",
+      "sections": [
+        "make-one-complete-baseline"
+      ],
+      "practice": "card:CS5489-M094",
+      "cards": [
+        "CS5489-M094"
+      ]
+    },
+    {
+      "goal": "有价值的分类错误分析应包含什么？",
+      "sections": [
+        "turn-errors-into-hypotheses"
+      ],
+      "practice": "card:CS5489-M099",
+      "cards": [
+        "CS5489-M099"
+      ]
+    }
+  ]
+}

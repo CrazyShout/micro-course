@@ -1,0 +1,191 @@
+{
+  "lesson_id": "ml04",
+  "title": {
+    "zh": "三个向量，有多少方向是真的新信息？",
+    "en": "Which parts of a vector add a new direction?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Tutorial 1 要你写 myGS：输入几列向量，输出一组互相垂直、长度为 1 的列，而且还能表示原来的空间。只把每列除以长度够不够？先试着从一个向量里减掉“已有方向的部分”。",
+    "en": "Tutorial 1 asks you to write myGS: transform input columns into orthonormal columns spanning the same space. Is normalizing each column enough? Start by removing the part along an existing direction."
+  },
+  "sections": [
+    {
+      "id": "length-is-not-direction",
+      "title": {
+        "zh": "两根箭头都长 1，仍可能指向一起",
+        "en": "Unit length does not imply perpendicular directions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一组向量正交，指不同列内积为 0；归一，指每列长度为 1。两件事合起来才是 orthonormal。把 (1,0) 与 (1,1) 各自缩成单位长度，不会改变夹角，所以仅除以长度无法解决“方向重叠”。\n\n想象先保留一条方向 u，再处理另一条 v。我们要找 v 在 u 方向上已经包含多少，减掉这部分，剩下的才是新方向。图中的影子帮助看这种分解；它是向量几何，不代表实际光线投射。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/projection-shadow.svg"
+        },
+        {
+          "type": "foundation",
+          "ref": "vectors-matrices"
+        }
+      ]
+    },
+    {
+      "id": "derive-the-shadow",
+      "title": {
+        "zh": "让减完的余量真的垂直",
+        "en": "Choose the projection so the residual is perpendicular"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "投影沿 u，所以写成 $au$；a 是待求的一个数，u 必须非零。余量 $r=v-au$ 应与 u 垂直，即 $u^Tr=0$。代入得到 $u^Tv-a(u^Tu)=0$，因此 $a=(u^Tv)/(u^Tu)$，投影为 $P_u(v)=au$。\n\n分母不是装饰：它校正 u 本身的长度。只有 u 已经是单位向量、$u^Tu=1$ 时，才可直接用 $(u^Tv)u$。若 u=(2,0)，忘分母就像借了一把刻度加倍的尺子还照原数读；箭头方向没错，影子长度却会错。"
+        }
+      ]
+    },
+    {
+      "id": "build-the-basis",
+      "title": {
+        "zh": "一列一列地建立新的坐标方向",
+        "en": "Build the basis column by column"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Gram–Schmidt 先令 $e_1=v_1/\\|v_1\\|$。处理第 k 列时，从它减去沿此前所有单位正交列的部分：$r_k=v_k-\\sum_{j<k}(e_j^Tv_k)e_j$；若 $r_k\\ne0$，再令 $e_k=r_k/\\|r_k\\|$。求和符号表示每个已建立方向都要去掉，不能只减前一列。\n\n减投影让余量垂直，除长度让它变成单位向量；次序各有任务。先跟着两个二维向量做一次，检查投影、余量和长度，而不只抄最后两根箭头。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "from-paper-to-mygs",
+      "title": {
+        "zh": "换一组数字，再接到原函数接口",
+        "en": "Change the numbers, then return to myGS"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面的输入方向更容易看。算完后要能解释：第二个向量原来有沿第一方向的成分，为什么最后第二个方向只剩竖直部分。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "回到 Tutorial 1 单元 37–45，原矩阵 V 有 4 行、3 列，即四维空间里的三个列向量。函数返回 E 也应为 (4,3)，不能把行当作输入向量。检查 `E.T @ E`：对角线是每列长度平方，非对角线是列间内积，因此应近似 3×3 单位矩阵。浮点运算用容差比较。"
+        }
+      ]
+    },
+    {
+      "id": "no-new-direction",
+      "title": {
+        "zh": "第二个向量只是第一个的两倍呢？",
+        "en": "What if a column contributes nothing new?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果余量为零，新列已经能由已有列表示，没有新的独立方向。此时不是“长度很小，硬除一下就好”，而是不能再产生一根合法的单位新方向。若任务要求输入列线性无关，程序应清楚报告失败；若任务是提取任意输入的基，可另设计跳过相关列的策略，别默默混用接口。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "仅 `E.T@E≈I` 仍不够：随便找三根别的单位正交向量也可能通过。还应检查 `E@(E.T@V)≈V`，确认原列可由输出空间重建；这是原正交检查之上的教学补充。回忆时抓住“减已有部分、归一新部分、检查原空间”，实际实现仍需自己运行原测试矩阵。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Tutorial1.ipynb",
+      "locator": "cells 35–45",
+      "kind": "course",
+      "note": "投影、Gram–Schmidt、原矩阵与正交检查。 / Projection, algorithm, original matrix and orthogonality check."
+    },
+    {
+      "name": "Lecture1b.ipynb",
+      "locator": "cells 84–108",
+      "kind": "course",
+      "note": "内积、长度与矩阵乘法基础。 / Dot products, lengths and multiplication."
+    },
+    {
+      "name": "串讲与配套教学例 / Teaching synthesis",
+      "locator": "ml04",
+      "kind": "derived",
+      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "向量 $v$ 在非零向量 $u$ 上的投影是什么？",
+      "sections": [
+        "derive-the-shadow"
+      ],
+      "practice": "card:CS5489-M037",
+      "cards": [
+        "CS5489-M037"
+      ]
+    },
+    {
+      "goal": "Gram–Schmidt 正交归一化的步骤是什么？",
+      "sections": [
+        "build-the-basis"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M038"
+      ]
+    },
+    {
+      "goal": "手算将 $v_1=(1,1)$、$v_2=(1,0)$ 正交归一化。",
+      "sections": [
+        "build-the-basis"
+      ],
+      "practice": "card:CS5489-M039",
+      "cards": [
+        "CS5489-M039"
+      ]
+    },
+    {
+      "goal": "给定 $V=\\begin{bmatrix}1&-1&2\\\\0&2&3\\\\-1&2&1\\\\4&-1&-3\\end{bmatrix}$。函数 myGS 对它的列向量做 Gram–Schmidt，返回 E。E 应是什么形状？怎样同时检查正交归一和保留原列空间？",
+      "sections": [
+        "from-paper-to-mygs",
+        "no-new-direction"
+      ],
+      "practice": "card:CS5489-M040",
+      "cards": [
+        "CS5489-M040"
+      ]
+    },
+    {
+      "goal": "Gram–Schmidt 的残差为零或很小时怎么办？",
+      "sections": [
+        "no-new-direction"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M041"
+      ]
+    }
+  ]
+}

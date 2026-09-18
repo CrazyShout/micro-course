@@ -1,5 +1,5 @@
 'use strict';
-// Two editorial pilots share the existing exercises, companions, and card identities.
+// Continuous lessons share the canonical exercises, companions, and card identities.
 let articleLanguage = 'zh';
 
 function articlePair(value, label='English') {
@@ -26,23 +26,59 @@ function articleFoundation(f) {
 function articleUnit(u, block) {
   if(block.part==='explain') return '<div id="unit-'+esc(u.id)+'" class="article-unit" tabindex="-1">'+articlePair(u.explain_html)+ '</div>';
   if(block.part!=='all') return articleExercise(u,block.part,'unit:'+u.id);
-  const body=articlePair(u.explain_html)+articleExercise(u,'worked','unit:'+u.id)+articleExercise(u,'practice','unit:'+u.id)+articleExercise(u,'transfer','unit:'+u.id)+companionSources(u.sources);
+  const body=articlePair(u.goal_html)+articlePair(u.explain_html)+articleExercise(u,'worked','unit:'+u.id)+articleExercise(u,'practice','unit:'+u.id)+articleExercise(u,'transfer','unit:'+u.id)+'<p class="article-caption">关联卡 / Related cards: '+u.card_ids.map(id=>'<a href="cards.html#'+esc(id)+'">'+esc(id)+'</a>').join(' · ')+'</p>'+companionSources(u.sources);
   return '<details id="unit-'+esc(u.id)+'" class="article-aside" '+(block.collapsed?'':'open')+'><summary>'+articleTitle(u.title)+'</summary>'+body+'</details>';
+}
+function articleFigure(f) {
+  return '<figure class="article-figure"><a href="'+esc(f.src)+'" target="_blank" rel="noopener"><img src="'+esc(f.src)+'" alt="'+esc(f.alt)+'" loading="lazy"></a><figcaption>'+articleTitle({zh:f.caption_zh,en:f.caption_en})+' <a href="'+esc(f.src)+'" target="_blank" rel="noopener">放大 / Enlarge</a></figcaption></figure>';
+}
+function articleReading(r) {
+  if(!r)return '';
+  const sources='<details class="companion-sources"><summary>对应书页与规范 / Reading references</summary><p>书页支持这里的机制说明；数值例子与图示为教学改编。PDF 页码从文件第一页起计数。</p><ul>'+r.sources.map(s=>'<li>'+(s.href?'<a href="'+esc(s.href)+'" target="_blank" rel="noopener">'+esc(s.name)+'</a>':esc(s.name))+' · '+esc(s.locator)+'</li>').join('')+'</ul></details>';
+  return '<details id="reading-companion" class="article-aside article-reading"><summary>'+articleTitle({zh:'教材补充：'+r.title_zh,en:'Reading: '+r.title_en})+'</summary>'+(r.optional?'<p class="small">可跳过的教材拓展，未确认为本学期考核要求。</p>':'')+articlePair(r.body_html)+(r.figure?articleFigure(r.figure):'')+'<h3>合上讲解，解释一次 / Check your understanding</h3>'+articlePair(r.check_q_html)+'<details class="article-answer"><summary>想好再核对 / Check your answer</summary>'+articlePair(r.check_a_html)+'</details>'+sources+'</details>';
+}
+function articleTask(t) {
+  return '<details id="task-'+esc(t.id)+'" class="article-aside article-task" tabindex="-1"><summary>'+articleTitle(t.title)+'</summary>'+articlePair(t.goal_html)+articlePair(t.instructions_html)+practiceAssets(t)+'<h3>怎样知道做对了 / Acceptance checks</h3>'+articlePair(t.acceptance_html)+companionSources(t.sources)+'</details>';
+}
+function articleCompanions(l) {
+  const blocks=l.article.sections.flatMap(s=>s.blocks), used=(type,ref)=>blocks.some(b=>b.type===type&&(!ref||b.ref===ref));
+  const foundations=l.foundations.filter(f=>!used('foundation',f.id)).map(articleFoundation).join('');
+  // A partially embedded unit still needs its remaining exercises and a recovery anchor.
+  const units=l.units.map(u=>{
+    const parts=new Set(blocks.filter(b=>b.type==='unit'&&b.ref===u.id).map(b=>b.part));
+    if(parts.has('all'))return '';
+    if(!parts.size)return articleUnit(u,{part:'all',collapsed:true});
+    const missing=['explain','worked','practice','transfer'].filter(p=>!parts.has(p));
+    if(!missing.length)return '';
+    const body=missing.map(p=>p==='explain'?articlePair(u.explain_html):articleExercise(u,p,'unit:'+u.id)).join('');
+    return '<details '+(!parts.has('explain')?'id="unit-'+esc(u.id)+'" ':'')+'class="article-aside"><summary>'+articleTitle(u.title)+' · 补充练习 / Further practice</summary>'+body+companionSources(u.sources)+'</details>';
+  }).join('');
+  const reading=!used('reading')?articleReading(l.reading):'';
+  const tasks=(l.practical_tasks||[]).filter(t=>!used('task',t.id)).map(articleTask).join('');
+  const figures=l.first_pass.figures.filter(f=>!used('figure',f.src)).map(articleFigure).join('');
+  const extra=foundations+units+reading+tasks+(figures?'<details class="article-aside"><summary>再沿图走一次 / Revisit the diagrams</summary>'+figures+'</details>':'');
+  return extra?'<section class="article-companions" id="article-companions"><h2>'+articleTitle({zh:'需要时，再往下挖一层',en:'Go one step deeper when needed'})+'</h2><p class="article-caption">以下补课和练习按需展开，不必一次全部做完。 / Open the relevant companion when needed.</p>'+extra+'</section>':'';
 }
 function articleBlock(l,b) {
   switch(b.type) {
     case 'prose': return '<div class="article-prose zh">'+b.html+'</div>';
     case 'figure': {
       const f=[...l.first_pass.figures,...(l.article.figures||[])].find(x=>x.src===b.ref);
-      return '<figure class="article-figure"><a href="'+esc(f.src)+'" target="_blank" rel="noopener"><img src="'+esc(f.src)+'" alt="'+esc(f.alt)+'" loading="lazy"></a><figcaption>'+articleTitle({zh:f.caption_zh,en:f.caption_en})+' <a href="'+esc(f.src)+'" target="_blank" rel="noopener">放大 / Enlarge</a></figcaption></figure>';
+      return articleFigure(f);
     }
     case 'foundation': return articleFoundation(l.foundations.find(f=>f.id===b.ref));
     case 'exercise': return articleExercise(l,b.part,'lesson');
     case 'unit': return articleUnit(l.units.find(u=>u.id===b.ref),b);
+    case 'reading': return articleReading(l.reading);
+    case 'task': return articleTask(l.practical_tasks.find(t=>t.id===b.ref));
     case 'demo': return '<div class="article-demo" data-article-demo="'+esc(b.ref)+'"></div>';
     case 'recap': return '<details class="article-translation article-recap"><summary>试着用英语讲清楚 / Explain it in English</summary><div lang="en">'+l.recap_en_html+'</div></details>';
     default: throw new Error('Unrecognized article block: '+b.type);
   }
+}
+function articlePrerequisites(l) {
+  if(!l.prerequisites.length&&!l.related.length)return '';
+  return '<details class="article-toc article-prerequisites"><summary>这篇接着哪里学？ / Prerequisites and connections</summary>'+(l.prerequisites.length?'<p>先前用到的知识 / Before this lesson: '+l.prerequisites.map(lessonLink).join(' · ')+'</p>':'')+(l.related.length?'<p>其他联系 / Related: '+l.related.map(lessonLink).join(' · ')+'</p>':'')+'</details>';
 }
 function articleCards(l) {
   const byId=Object.fromEntries(l.cards.map(c=>[c.id,c]));
@@ -50,7 +86,7 @@ function articleCards(l) {
   return '<section id="article-review" class="article-review" tabindex="-1"><div class="eyebrow">UNDERSTAND → RECALL</div><h2>'+articleTitle({zh:'现在，把理解变成记得住的知识',en:'Turn understanding into recall'})+'</h2><p class="zh">先用这 '+l.study_route.first_pass.length+' 张现有卡检查自己。不要逐字背本文：试着说出结论，以及为什么。</p><p class="english">Start with these '+l.study_route.first_pass.length+' existing cards. Explain the conclusion and its reason, rather than reciting this article.</p><a class="article-cta" href="'+esc(D.courses[l.course].markji_url)+'" target="_blank" rel="noopener">去 Markji 复习 / Open Markji ↗</a><p class="article-caption">打开原牌组后按下方卡号搜索；链接不会自动选卡或更改复习排程。<br>Search these IDs in the original deck; this link does not select cards or change your schedule.</p>'+list(l.study_route.first_pass)+'<details class="article-aside"><summary>后续再看其余 '+l.study_route.after_practice.length+' 张 / More cards for later</summary>'+list(l.study_route.after_practice)+'</details></section>';
 }
 function articleSources(l) {
-  const refs=l.article.sources.map(s=>'<li><strong>'+esc(s.name)+'</strong> · '+esc(s.locator)+'<p>'+esc(s.note)+'</p></li>').join('');
+  const refs=l.article.sources.map(s=>'<li><small>'+esc({course:'当前课件',historical:'往年资料',derived:'教学推导',reference:'参考资料'}[s.kind])+'</small> · <strong>'+esc(s.name)+'</strong> · '+esc(s.locator)+'<p>'+esc(s.note)+'</p></li>').join('');
   return '<details class="article-sources"><summary>课堂、Tutorial 与教学改编的出处 / Sources</summary><ul>'+refs+'</ul><p>教学例子用于解释课程知识；不代表教师原题、真实测量或完整 QE 范围。</p></details>';
 }
 function applyArticleLanguage(value) {
@@ -72,9 +108,8 @@ window.renderArticleLesson=function(l) {
     const content=s.blocks.map(b=>articleBlock(l,b)).join('');
     return s.optional?'<details id="article-'+s.id+'" class="article-section article-optional" tabindex="-1"><summary>'+articleTitle(s.title)+' <small>选读 / Optional</small></summary>'+content+'</details>':'<section id="article-'+s.id+'" class="article-section" tabindex="-1"><h2>'+articleTitle(s.title)+'</h2>'+content+'</section>';
   }).join('');
-  const referencedUnits=new Set(a.sections.flatMap(s=>s.blocks.filter(b=>b.type==='unit').map(b=>b.ref)));
-  const extraUnits=l.units.filter(u=>!referencedUnits.has(u.id)).map(u=>articleUnit(u,{part:'all',collapsed:true})).join('');
-  $('#main').innerHTML='<article class="lesson-article"><div class="article-topline"><a href="#'+l.course+'">← '+l.course+' 课程目录</a><label for="language" class="sr-only">阅读语言 / Reading language</label><select id="language" aria-label="阅读语言 / Reading language"><option value="zh">中文阅读 · 英文随手看</option><option value="both">中英题答对照</option><option value="en">英语训练</option></select></div><div class="article-head"><div class="article-kicker">'+l.course+' / '+l.id.toUpperCase()+' <span>'+labels[l.status]+'</span></div><h1>'+heading+'</h1>'+teachingContext(l.id)+'<p class="article-subtitle" lang="en">'+esc(a.title.en)+'</p><p class="article-meta">阅读约 '+esc(a.minutes)+' 分钟 · 做题、补课另计</p><div class="article-lede">'+articlePair(a.lede_html,'Read the opening in English')+'</div></div><p class="english article-language-note">English mode provides the lesson recap, worked examples and exercises. It is not a full translation of the Chinese narrative.</p><details class="article-toc"><summary>本篇路线 / On this page</summary><ol>'+a.sections.map(s=>'<li><a data-article-anchor="article-'+s.id+'" href="?lesson='+l.id+'&section='+s.id+'">'+articleTitle(s.title)+(s.optional?' <small>选读</small>':'')+'</a></li>').join('')+'<li><a data-article-anchor="article-review" href="?lesson='+l.id+'&section=review">去复习 / Review</a></li></ol></details>'+sections+extraUnits+articleCards(l)+'<div class="article-finish"><label><input id="complete" type="checkbox" '+(done[l.id]?'checked':'')+'>我已独立做过变式，并尝试英文解释 / I tried the variation and an English explanation.</label><p class="small" id="save-status">这是保存在当前浏览器的自评，不是自动判分。</p></div>'+articleSources(l)+'<nav class="article-next" aria-label="推荐学习顺序">'+(i?'<a href="#'+seq[i-1].id+'">← '+esc(seq[i-1].title_zh)+'</a>':'<a href="#'+l.course+'">课程目录</a>')+(i<seq.length-1?'<a href="#'+seq[i+1].id+'">'+esc(seq[i+1].title_zh)+' →</a>':'')+'</nav></article>';
+  const extraUnits=articleCompanions(l);
+  $('#main').innerHTML='<article class="lesson-article"><div class="article-topline"><a href="#'+l.course+'">← '+l.course+' 课程目录</a><label for="language" class="sr-only">阅读语言 / Reading language</label><select id="language" aria-label="阅读语言 / Reading language"><option value="zh">中文阅读 · 英文随手看</option><option value="both">中英题答对照</option><option value="en">英语训练</option></select></div><div class="article-head"><div class="article-kicker">'+l.course+' / '+l.id.toUpperCase()+' <span>'+labels[l.status]+'</span></div><h1>'+heading+'</h1>'+teachingContext(l.id)+'<p class="article-subtitle" lang="en">'+esc(a.title.en)+'</p><p class="article-meta">阅读约 '+esc(a.minutes)+' 分钟 · 做题、补课另计</p><div class="article-lede">'+articlePair(a.lede_html,'Read the opening in English')+'</div></div><p class="english article-language-note">English mode provides the lesson recap, worked examples and exercises. It is not a full translation of the Chinese narrative.</p><details class="article-toc"><summary>本篇路线 / On this page</summary><ol>'+a.sections.map(s=>'<li><a data-article-anchor="article-'+s.id+'" href="?lesson='+l.id+'&section='+s.id+'">'+articleTitle(s.title)+(s.optional?' <small>选读</small>':'')+'</a></li>').join('')+'<li><a data-article-anchor="article-review" href="?lesson='+l.id+'&section=review">去复习 / Review</a></li></ol></details>'+articlePrerequisites(l)+sections+extraUnits+articleCards(l)+'<div class="article-finish"><label><input id="complete" type="checkbox" '+(done[l.id]?'checked':'')+'>我已独立做过变式，并尝试英文解释 / I tried the variation and an English explanation.</label><p class="small" id="save-status">这是保存在当前浏览器的自评，不是自动判分。</p></div>'+articleSources(l)+'<nav class="article-next" aria-label="推荐学习顺序">'+(i?'<a href="#'+seq[i-1].id+'">← '+esc(seq[i-1].title_zh)+'</a>':'<a href="#'+l.course+'">课程目录</a>')+(i<seq.length-1?'<a href="#'+seq[i+1].id+'">'+esc(seq[i+1].title_zh)+' →</a>':'')+'</nav></article>';
   $('#language').value=articleLanguage;
   applyArticleLanguage(articleLanguage);
   $('#language').onchange=e=>{articleLanguage=e.target.value;applyArticleLanguage(articleLanguage);};
@@ -84,5 +119,9 @@ window.renderArticleLesson=function(l) {
   };
   document.querySelectorAll('[data-article-anchor]').forEach(link=>link.onclick=e=>{e.preventDefault();revealArticleTarget(document.getElementById(link.dataset.articleAnchor));});
   math();
-  document.querySelectorAll('[data-article-demo]').forEach(host=>window.mountArticleDemo(host,host.dataset.articleDemo));
+  document.querySelectorAll('[data-article-demo]').forEach(host=>{
+    const type=host.dataset.articleDemo;
+    if(['gaussian-score','cafe-capacity'].includes(type))window.mountArticleDemo(host,type);
+    else window.mountLearningDemo(host,type);
+  });
 };

@@ -1,0 +1,171 @@
+{
+  "lesson_id": "net09",
+  "title": {
+    "zh": "你记得网站名字，电脑怎样找到它的地址？",
+    "en": "DNS resolution and caching"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "你输入一个域名，电脑需要可用于通信的地址。它不认识全世界的网站，也不应该把每次查找都交给同一台总服务器：这次请求应该由谁接力回答？",
+    "en": "You enter a domain name, but your computer needs an address for communication. Follow the lookup without assuming one server stores every name and address."
+  },
+  "sections": [
+    {
+      "id": "names-are-not-machines",
+      "title": {
+        "zh": "先分清名字、记录与服务",
+        "en": "A name is not a unique physical machine"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "人习惯记名字，网络通信还需要地址等信息。DNS既指分布式命名数据库，也指查询它的应用层协议。老师part2第31–33张先问名字怎样对应地址，再指出一台中央服务器难以承担所有查询、更新和故障风险。\n\nDNS不只存网站IPv4地址。A与AAAA记录分别提供IPv4与IPv6地址，MX描述邮件交换服务器，CNAME提供别名关系，NS与权威服务器有关。一个名字可有多个地址，也可先经过别名；不能把域名永远等同一台固定机器。"
+        }
+      ]
+    },
+    {
+      "id": "who-asks-whom",
+      "title": {
+        "zh": "本地解析器替你完成接力",
+        "en": "The resolver follows the chain"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "主机通常先把查询交给本地递归解析器。递归的意思是“请替我完成查找并回答”；解析器需要时再按委派方向询问其他服务器。根提供顶级域方向，TLD服务器提供相应域的权威方向，权威服务器根据自己负责区域的数据回答。\n\n本地解析器是一种为客户端办事的服务角色，不是权威树最底下又多的一层。根也不是互联网所有主机地址的总通讯录。迭代交互允许服务器说“下一步问那里”，由请求方继续；课件还有另一种全递归图，不能据此断言公共根服务器通常替每个客户端完成所有步骤。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/dns-exchanges.svg"
+        }
+      ]
+    },
+    {
+      "id": "count-messages-then-time",
+      "title": {
+        "zh": "先数交互，再给往返加时间",
+        "en": "Count exchanges before timing them"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "在这幅简化图里，相关服务器地址已知，没有重试、别名链或额外查找。主机与解析器一问一答是两条消息；解析器对根、TLD、权威各一问一答，再加六条，共八条。数消息与数串行等待是有关联的两件事，不要把“八条”直接乘某个统一RTT。\n\n下面题目分别给主机与解析器往返、以及各上游往返。上游查询依次发生，包含在主机等待最终回答的过程里；主机并不是在每个层级又重新发起一次独立总查询。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "what-is-in-the-cache",
+      "title": {
+        "zh": "缓存里到底存了哪一个答案？",
+        "en": "Specify the cached record"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "缓存复用仍在允许寿命内的记录，降低时延和上游流量。TTL表示记录还能被缓存使用多久，不保证各地同一时刻更新。权威数据改了，部分有效缓存仍可能暂时保留旧值；这不是查询已经出错的充分证据。\n\n要计算一次访问，先写缓存内容：有最终A记录、有某一级服务器地址，还是只有别名？它们省掉的步骤不同。“有缓存”三个字像说“书包里有东西”，还不足以判断能不能交作业。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "trace-a-real-exchange",
+      "title": {
+        "zh": "回到课堂图，再尝试观察一次",
+        "en": "Connect the diagram to an observed exchange"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "part2第38–41张给查询与缓存路径，第42–43张介绍资源记录。学完应能指出谁替谁查询，哪一步返回方向、哪一步返回最终记录，并解释缓存改变了什么。DNS解析成功后通常仍需连接与应用通信，不代表HTML也已下载。\n\n书本补充区分DNS缓存与HTTP缓存；实践入口有人工DNS报文和字段导览，便于先认字段。人工样本不是你的真实网络测量；自己抓包后要依据查询名、类型、标识与响应关系配对，也不要只因没看到根查询就断言DNS没工作。"
+        },
+        {
+          "type": "task",
+          "ref": "dns-trace"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha2_2026_student_part2.pptx",
+      "locator": "slides 31–43",
+      "kind": "course",
+      "note": "名字服务、集中式问题、层级查询与记录；各页为part2编号。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net09 worked/practice/transfer",
+      "kind": "derived",
+      "note": "依课程机制写成的解释与数值/情境变式，不冒称真实测量或教师原题。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能区分本地解析器、根、TLD、权威服务器及递归/迭代。",
+      "sections": [
+        "names-are-not-machines",
+        "who-asks-whom",
+        "count-messages-then-time",
+        "what-is-in-the-cache",
+        "trace-a-real-exchange"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N123",
+        "CS5222-N127"
+      ]
+    },
+    {
+      "goal": "DNS 的哪两个含义需要区分？",
+      "sections": [
+        "names-are-not-machines"
+      ],
+      "practice": "card:CS5222-N121",
+      "cards": [
+        "CS5222-N121"
+      ]
+    },
+    {
+      "goal": "课堂典型模式中的递归与迭代 DNS 查询有什么区别？",
+      "sections": [
+        "who-asks-whom"
+      ],
+      "practice": "card:CS5222-N124",
+      "cards": [
+        "CS5222-N124"
+      ]
+    },
+    {
+      "goal": "主机向本地解析器查询一个未缓存名称；解析器向根、TLD、权威服务器各进行一次请求—响应。各服务器地址已知，无重试或额外查询。包括主机与解析器之间的交互，共交换几条 DNS 消息？",
+      "sections": [
+        "count-messages-then-time"
+      ],
+      "practice": "card:CS5222-N125",
+      "cards": [
+        "CS5222-N125"
+      ]
+    }
+  ]
+}

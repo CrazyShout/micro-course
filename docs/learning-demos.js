@@ -1,6 +1,6 @@
 'use strict';
 window.mountLearningDemo=function(host,type){
-  host.className='demo';const fmt=(x,n=4)=>Number(x.toFixed(n)).toString();
+  host.classList.add('demo');const fmt=(x,n=4)=>Number(x.toFixed(n)).toString();
   if(type==='bayes'){
     host.innerHTML='<h3>动手看：同一个词，换个人群会怎样？</h3><p class="small">假设 1000 条短信；垃圾中 60% 含 free，正常中 10% 含 free。只改变垃圾短信的先验比例。<br>Keep likelihoods fixed; change only the spam prior.</p><label for="bayes-prior">垃圾比例 / Spam prior: <strong id="bayes-prior-value"></strong></label><input id="bayes-prior" type="range" min="1" max="90" step="1" value="20"><div class="mix-legend"><span>■ 垃圾 / Spam</span><span>■ 正常 / Legitimate</span></div><div id="bayes-picture"></div><div class="demo-output" id="bayes-output" aria-live="polite"></div>';
     const draw=()=>{

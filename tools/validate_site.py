@@ -101,7 +101,7 @@ def main():
                 assert f['alt'] and all(f['caption_'+lang] for lang in ['zh','en'])
                 svg=(site/f['src']).read_text()
                 assert '<title ' in svg and '<desc ' in svg and '<script' not in svg
-    # Article pilots retain the existing bilingual exercises and recovery anchors.
+    # Article lessons retain the existing bilingual exercises and recovery anchors.
     article_ids=[]
     for lesson in lessons.values():
         article=lesson.get('article')
@@ -112,17 +112,19 @@ def main():
         sections=article['sections'];section_ids={s['id'] for s in sections}
         assert len(section_ids)==len(sections)
         blocks=[b for s in sections for b in s['blocks']]
-        assert sum(b['type']=='demo' for b in blocks)==1
+        assert sum(b['type']=='demo' for b in blocks)<=1
         assert sorted(b['part'] for b in blocks if b['type']=='exercise')==['practice','transfer','worked']
         unit_ids={u['id'] for u in lesson['units']};foundation_ids={f['id'] for f in lesson['foundations']}
         for block in blocks:
-            assert block['type'] in {'prose','figure','foundation','exercise','unit','demo','recap'}
+            assert block['type'] in {'prose','figure','foundation','exercise','unit','demo','recap','reading','task'}
             if block['type']=='prose':assert block['text'] and block['html']
             elif block['type']=='figure':
                 assert block['ref'] in {f['src'] for f in lesson['first_pass']['figures']+article.get('figures',[])};local_link(block['ref'])
             elif block['type']=='foundation':assert block['ref'] in foundation_ids
             elif block['type']=='unit':assert block['ref'] in unit_ids
-            elif block['type']=='demo':assert block['ref'] in {'gaussian-score','cafe-capacity'}
+            elif block['type']=='demo':assert block['ref']==({'ml07':'gaussian-score','net02':'cafe-capacity'}.get(lesson['id']) or lesson.get('demo'))
+            elif block['type']=='reading':assert lesson.get('reading')
+            elif block['type']=='task':assert block['ref'] in {t['id'] for t in lesson['practical_tasks']}
         mapped=set()
         for objective in article['objective_map']:
             assert set(objective['sections'])<=section_ids

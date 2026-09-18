@@ -1,0 +1,181 @@
+{
+  "lesson_id": "ml19",
+  "title": {
+    "zh": "从三条测量记录，算出一条最合适的直线",
+    "en": "Fit a line from three measurements"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "给你输入与测量值三对记录 (0,1)、(1,3)、(2,5)，希望以后输入一个新数时能预测输出。肉眼看得出一条直线，但一旦数据有噪声，或者输入有很多维，“画一条差不多的”就不够了。历史 Lecture5 从回归走到最小二乘，我们沿这三条小记录把公式推出来。",
+    "en": "Given the measurement pairs (0,1), (1,3), and (2,5), we want to predict the output for a new input. A line is easy to spot here, but noisy or high-dimensional data need a precise fitting rule. Following historical Lecture5, we will derive least squares from these three small records."
+  },
+  "sections": [
+    {
+      "id": "measure-error",
+      "title": {
+        "zh": "先决定，错多少算错得严重",
+        "en": "Define the cost of a prediction error"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "用 $\\hat y=b+ax$ 表示预测：b 是输入为零时的截距，a 是输入增加一单位时预测的变化。残差采用“预测减真实” $r_i=\\hat y_i-y_i$。直接相加会让正负错误互相抵消，因此普通最小二乘（OLS）最小化平方误差和。课件把残差写成相反方向也不矛盾，平方以后相同。\n\n均方误差 MSE 把平方和再除以样本数，RMSE 则再开方。例如预测 (2,4,5)、真实 (1,4,7)，残差为 (1,0,−2)，平方和 5，MSE 为 5/3，RMSE 约 1.291。若输出单位是毫米，MSE 的单位是平方毫米，RMSE 才与原测量同单位。平均损失前面的正常数不改变最优解，但会改变梯度的数值尺度。"
+        }
+      ]
+    },
+    {
+      "id": "design-matrix",
+      "title": {
+        "zh": "把重复的乘加写成一张表",
+        "en": "Organise the repeated arithmetic in a matrix"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史 Lecture5.1 第 13、18 页用一列常数 1 把截距放进参数向量。每行是一条样本，因此本例设计矩阵 X 的三行为 (1,0)、(1,1)、(1,2)，参数向量是 $w=(b,a)^T$，真实值向量是 $y=(1,3,5)^T$。矩阵乘法 $Xw$ 就同时给出三条预测。\n\n若有 n 条样本、d 个测量特征，含截距的 X 尺寸为 $n\\times(d+1)$。常数列不是额外量出来的属性，而是让每条记录都加上同一个 b 的记账方法。先核对行列含义，后面的转置才不会像凭空出现的咒语。"
+        }
+      ]
+    },
+    {
+      "id": "derive",
+      "title": {
+        "zh": "每个残差给系数一条改进意见",
+        "en": "Let each residual contribute to the derivative"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "取 $J(w)=\\tfrac12\\sum_i(X_iw-y_i)^2$。这里 $X_i$ 是第 i 行；前面的 1/2 只是抵消平方求导产生的 2。先只对某个系数 $w_k$ 求导：平方外层给残差，内层预测对 $w_k$ 的导数是 $X_{ik}$，于是 $\\partial J/\\partial w_k=\\sum_i X_{ik}(X_iw-y_i)$。\n\n把全部系数的导数排成一列，就是 $X^T(Xw-y)$。要求梯度为零，得到正规方程 $X^TXw=X^Ty$。它也有几何意思：最优残差与 X 的每个特征列正交，已经没有沿这些列微调预测、继续降低损失的一阶方向。不是所有“导数等于零”都代表最低点；这里二阶矩阵 $X^TX$ 半正定：对任意向量 v，$v^TX^TXv=\\|Xv\\|^2\\ge0$，因此这些方程的解是全局极小点。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "try-chain-rule",
+      "title": {
+        "zh": "轮到你，别漏掉里面那一层",
+        "en": "Try the chain rule yourself"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在去掉截距，只留一个系数。这样不会被矩阵记号分散注意力，可以看清第二条样本为什么给导数多乘一个 2。算出系数后，把它代回两条预测，是最便宜也最有用的自检。\n\nLecture5.1 第 19 页把这些步骤压成了矩阵求导。回看那一页时，应能把每一项重新摊开，而不是只认得最后的逆矩阵。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "uniqueness",
+      "title": {
+        "zh": "一千条记录，也可能分不清两列的功劳",
+        "en": "Many rows do not guarantee identifiable coefficients"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "写成 $w=(X^TX)^{-1}X^Ty$ 还需要 X 列满秩。若两列特征完全相同，第一列权重加一、第二列减一，预测完全不变；数据再多，也分不清这两项各应负责多少。最小二乘的最小值仍然存在，系数却可能不唯一。下面的变式检查的就是这件事。\n\nLecture5.2 第 17 页提到样本量与共线性。本篇把“样本数不少于参数数”限定为可能满秩的必要条件之一，而不是充分保证。实际计算通常解线性方程，或使用 QR/SVD；显式求逆既不是数学上总可行，也不是数值上首选。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "ridge-and-return",
+      "title": {
+        "zh": "给不稳定的方向加约束，再回原课",
+        "en": "Stabilise uncertain directions and return to the lecture"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "当许多参数组合给出相似预测，Ridge 加入 $\\tfrac\\lambda2\\|w\\|^2$，倾向使用较小的系数。若所有系数都被惩罚，梯度多出 $\\lambda w$，方程变为 $(X^TX+\\lambda I)w=X^Ty$。正的 λ 能消除那些零曲率方向，但也引入偏差；不能把“唯一”误说成“预测一定更准”。\n\n下面专题明确采用全部系数受罚的约定。如果程序不惩罚截距，需要另写惩罚矩阵；不要把 I 无条件贴上。历史 Lecture5.2 还给出 Lasso 的 L1 惩罚，即系数绝对值之和；它可能把部分系数压到零，不能与 Ridge 的平方惩罚混为一谈。稀疏解的详细求法与后续多项式回归，放在第二遍学习。先守住残差、设计矩阵、链式法则和满秩四步，首轮卡已经足够检验这些基础。"
+        },
+        {
+          "type": "unit",
+          "ref": "ridge",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释残差、误差单位与设计矩阵",
+      "sections": [
+        "measure-error",
+        "design-matrix"
+      ],
+      "practice": "card:CS5489-M188",
+      "cards": [
+        "CS5489-M187",
+        "CS5489-M188",
+        "CS5489-M189"
+      ]
+    },
+    {
+      "goal": "按坐标推回正规方程并说明极小条件",
+      "sections": [
+        "derive",
+        "try-chain-rule"
+      ],
+      "practice": "card:CS5489-M190",
+      "cards": [
+        "CS5489-M190"
+      ]
+    },
+    {
+      "goal": "用共线特征反例判断解是否唯一",
+      "sections": [
+        "uniqueness"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M191"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture5.1.pdf",
+      "locator": "PDF pp. 10, 13, 18–19",
+      "kind": "historical",
+      "note": "历史回归定义、MSE、含截距的设计矩阵和正规方程；三点算例为已有教学练习。"
+    },
+    {
+      "name": "Lecture5.2.pdf",
+      "locator": "PDF pp. 4, 7, 17",
+      "kind": "historical",
+      "note": "历史Ridge、验证选择与共线性；样本数条件在正文明确区分必要与充分。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml19 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲、说明性反例和数值练习用于理解历史材料，不冒充教师原题或用户实际实验。"
+    }
+  ]
+}

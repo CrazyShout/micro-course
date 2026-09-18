@@ -1,0 +1,168 @@
+{
+  "lesson_id": "net12",
+  "title": {
+    "zh": "同一份文件发给十个人，谁替谁省了上传？",
+    "en": "Distribution capacity and socket framing"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "服务器最初有一份文件，十个客户端都还没有。所有人都要拿到完整副本：是让服务器发十遍，还是让已经拿到部分内容的人接着帮忙？本节按往年应用层资料预习。",
+    "en": "Only one server initially holds a file; ten empty clients all need a copy. Compare server-only distribution with peer uploads using the historical application-layer model."
+  },
+  "sections": [
+    {
+      "id": "count-the-work",
+      "title": {
+        "zh": "先数必须送出的数据",
+        "en": "Count the unavoidable work"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "往年Chapter 2第72张提出文件分发任务：文件大小F比特，接收者N个，服务器和客户端各有有限上传/下载速率。先假设初始只有服务器有文件、所有客户端为空，网络内部不额外限制，忽略协议开销。这个前提决定“哪些数据至少必须走一次”。\n\n若服务器直接给每个客户端完整一份，它总共要上传NF比特；一个最慢客户端下载自己的F比特也需要时间。这是两个同时成立的约束，不是先做完服务器工作再做客户端工作，所以最后取两者中较大的时间，不相加。"
+        }
+      ]
+    },
+    {
+      "id": "write-the-bounds",
+      "title": {
+        "zh": "从三笔账写出P2P下界",
+        "en": "Build the P2P bound from three constraints"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把服务器上传速率记作 $u_s$，客户端 $i$ 的上传为 $u_i$，最慢下载为 $d_{min}$，全部用bit/s。客户端—服务器至少需 $\\max(NF/u_s,F/d_{min})$ 秒。P2P允许客户端把已收到的块上传给别人，但服务器仍至少把每一块引入系统一次，所以不能删掉 $F/u_s$。"
+        },
+        {
+          "type": "prose",
+          "text": "还要满足最慢下载 $F/d_{min}$，以及总共NF比特的交付工作受全部上传 $u_s+\\sum_i u_i$ 限制。因此P2P下界为 $\\max(F/u_s,F/d_{min},NF/(u_s+\\sum_i u_i))$。每一项先写“谁在做多少工作”，公式才不会像三个陌生分数排队。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "more-help-changes-the-bottleneck",
+      "title": {
+        "zh": "帮手更多，瓶颈会换位置",
+        "en": "Extra upload can expose another bottleneck"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "这里的秒数是理想下界，不承诺真实系统恰好达到。节点离线、块稀缺、请求调度、重复上传和协议开销都可能让实际更慢。课件用于说明扩展方式，不是所有现实P2P都胜过所有客户端—服务器实现的定理。\n\n先提高每个客户端的上传能力，观察总上传那一项怎样变；随后再次提高，检查最大值是否已经换成最慢下载。瓶颈不听“我都升级三倍了”的抱怨，它只按剩下的最紧约束办事。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "pieces-and-playing",
+      "title": {
+        "zh": "实际分发还要知道先给谁、先拿哪块",
+        "en": "Scheduling pieces and consuming video"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "往年第76–80张的BitTorrent把文件切块。请求哪个缺块和向哪个伙伴上传是两个决策：rarest-first优先稀缺块；choke/unchoke控制本节点的上传许可，乐观解锁给其他伙伴探索机会。具体名额和周期是课件模型，不能说成所有实现的统一常数。\n\n视频则边下载边播放。DASH选择下一段的编码版本，CDN改变内容从哪里取得；一个管版本，一个管位置。吞吐量、片段大小、缓存与起始播放缓冲一起决定会不会卡顿。相应完整练习放补充，先不要把“服务器更近”当作永不卡顿保证。"
+        }
+      ]
+    },
+    {
+      "id": "bytes-need-boundaries",
+      "title": {
+        "zh": "分发算完，程序仍要认清一条消息",
+        "en": "An application must still frame messages"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史socket例子让客户端发一行文字，服务器转成大写再回传。实现时TCP给有序字节流，一次send不保证对应一次recv；一次接收可能半条、几条，或几条加半条。应用要约定编码、长度前缀或分隔符、最大长度，并保存未完成尾部。UDP保留数据报边界，但丢失等行为仍需处理。\n\n因此分发下界和可运行消息协议是两项能力：会算理想秒数不等于实现已验证。补充保留消息定界、DNS区段、视频和BitTorrent细节；当前页仍属历史预习，2024编程任务也不冒充本学期要求。首轮先巩固三项容量约束，再按专题推进。"
+        },
+        {
+          "type": "unit",
+          "ref": "tcp-framing",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha2_2025_student.pptx",
+      "locator": "slides 71–80, 82–105",
+      "kind": "historical",
+      "note": "原PPTX任务：单源文件分发、BitTorrent、视频/CDN与大小写socket程序。"
+    },
+    {
+      "name": "2024_cs5222_programming_assignment.pdf",
+      "locator": "pages 1–2, 5–6",
+      "kind": "historical",
+      "note": "留言板客户端及消息结束条件，属于历史实践资料。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net12 worked/practice/transfer",
+      "kind": "derived",
+      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能分开计算服务器注入、最慢下载与总上传下界；TCP 应用定界见补充单元。",
+      "sections": [
+        "count-the-work",
+        "write-the-bounds",
+        "more-help-changes-the-bottleneck",
+        "pieces-and-playing",
+        "bytes-need-boundaries"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N138"
+      ]
+    },
+    {
+      "goal": "为什么 P2P 文件分发的扩展方式不同于客户端—服务器模式？",
+      "sections": [
+        "count-the-work"
+      ],
+      "practice": "card:CS5222-N137",
+      "cards": [
+        "CS5222-N137"
+      ]
+    },
+    {
+      "goal": "把 F=1 Gbit 文件分发给 N=10 个客户端。服务器上传 us=100 Mbps，各客户端上传 10 Mbps，最慢客户端下载 dmin=50 Mbps。求客户端—服务器与 P2P 的理想分发时间下界。",
+      "sections": [
+        "write-the-bounds"
+      ],
+      "practice": "card:CS5222-N139",
+      "cards": [
+        "CS5222-N139"
+      ]
+    }
+  ]
+}

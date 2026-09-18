@@ -1,0 +1,206 @@
+{
+  "lesson_id": "ml06",
+  "title": {
+    "zh": "有了花朵记录，概率该由谁来定？",
+    "en": "How do labeled flower records determine probabilities?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "老师给出了已知花种和测量数据，我们知道可以用“这一类多常见、这一类常见什么测量”判断新花。但这些概率与均值并没有写在花瓣上：该怎样从已有记录估出来？",
+    "en": "The lecture provides flower labels and measurements. Class frequency and typical measurements can help classify a new flower, but the needed probabilities and means are not printed on its petals. How should the records determine them?"
+  },
+  "sections": [
+    {
+      "id": "learn-the-numbers",
+      "title": {
+        "zh": "先把需要学习的数找出来",
+        "en": "Identify which quantities must be estimated"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "生成式分类器要学习两类信息：类别先验 $P(c)$，以及该类产生观察的分布 $p(x\\mid c)$。如果花瓣长度按一维高斯描述，每类需要均值与方差；如果只看标签是不是某类，需要一个出现比例。分布形式是建模选择，参数是从数据里估的数。\n\n最直观的比例是“这类样本数除以总样本数”。最大似然估计 MLE 为这种计数提供统一理由：把已经看到的数据固定，比较不同参数，选让这批数据在所设模型下最可能的参数。它是数据关于参数的函数，不是给参数直接赋概率；要讨论参数本身的不确定性，还需要另一层模型。"
+        }
+      ]
+    },
+    {
+      "id": "one-binary-model",
+      "title": {
+        "zh": "先用只有两种结果的情况看清原则",
+        "en": "Start with a binary outcome"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "设 n 次观察相互独立、服从同一 Bernoulli 分布，成功概率为 p，观察到 k 次成功。成功各贡献 p，失败各贡献 1−p，所以这串具体结果的似然是 $L(p)=p^k(1-p)^{n-k}$。独立让我们能相乘，同分布让各次用同一个 p；这不是所有真实数据都自动满足的条件。\n\n例如课堂按“是不是某花种”计标签，和下面硬币的正反面在数学上都是两种结果。硬币只是让参数估计暂时摆脱花朵测量的复杂度。若只记录成功总数，会多一个组合系数，但它与 p 无关，不改变最佳 p。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/coin-likelihood.svg"
+        }
+      ]
+    },
+    {
+      "id": "logs-and-a-slope",
+      "title": {
+        "zh": "为什么先取对数，再找斜率为零？",
+        "en": "Why use a log and a zero derivative?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "很多小数相乘难处理，取自然对数得到 $\\ell(p)=k\\log p+(n-k)\\log(1-p)$。log 严格递增，因此最大值位置不变；它把乘积变成和，求导更方便。导数描述局部增加 p 时目标如何改变，内部最大点可能在斜率为零处。\n\n在 $0<p<1$ 中，$\\ell'(p)=k/p-(n-k)/(1-p)$。令其为零，乘去正分母得 $k(1-p)=(n-k)p$，所以 $\\hat p=k/n$。还要检查它真是最大值及边界；不能把“令导数为零”当成所有题的自动通关口令。下面完整算一组观察。"
+        },
+        {
+          "type": "foundation",
+          "ref": "powers-logs"
+        },
+        {
+          "type": "foundation",
+          "ref": "derivatives"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "a-different-sample",
+      "title": {
+        "zh": "次数换了，估计规则怎样跟着变？",
+        "en": "Change the observed counts"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "只要模型和独立同分布假设保持，换数据时改变的是成功/失败次数。下面先写对数似然的两个系数，再做求导，别跳到记忆中的答案。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "回到类别比例：N 条训练记录中有 N_c 条属于 c，先验估计是 N_c/N；多类先验相加为 1。对每类的连续观测，高斯均值 MLE 是平均数，方差 MLE 是平方偏差平均，分母为 N_c。使用 N_c−1 的无偏方差是在解决另一个估计问题。具体手算可在下面补课里核对。"
+        },
+        {
+          "type": "unit",
+          "ref": "gaussian-mle",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "the-boundary",
+      "title": {
+        "zh": "全是同一种结果时，答案可能在边界",
+        "en": "An optimum need not be an interior stationary point"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "如果一次失败都没看到，似然可能一路随 p 增大，最好值在 p=1。此时内部导数根本不为零，不能据此说没有解。另一方面，有限数据得到 p=1 不等于未来永远不会失败；这是拟合结果与现实保证的区别。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "fit-then-classify",
+      "title": {
+        "zh": "估完参数，才轮到判断新样本",
+        "en": "Use the estimates for the original classification task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture2a 单元 48 将两阶段写得很清楚：训练时估先验和每类分布；预测时把新测量代进去，比较 $p(x\\mid c)P(c)$。比如教学值 A 的似然 0.4、先验 0.2，B 的似然 0.2、先验 0.8，得到 0.08 与 0.16，不能只看较大的似然便选 A。\n\n分母 $p(x)$ 对这一次观察的所有候选类别相同，所以选最大类时可省；要输出完整后验概率，仍需归一化。用 log prior + log likelihood 比较可避免小数连乘下溢。接下来 ML07 回到老师两项花朵测量，问怎样估计和利用它们共同变化。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture2a.ipynb",
+      "locator": "cells 2, 9–18, 23–32, 41–48",
+      "kind": "course",
+      "note": "生成式模型、先验/高斯估计和两阶段总结。 / Generative modeling, parameter estimation and the two-stage workflow."
+    },
+    {
+      "name": "串讲与教学小例 / Teaching synthesis",
+      "locator": "ml06",
+      "kind": "derived",
+      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "什么是最大似然估计（MLE）？",
+      "sections": [
+        "learn-the-numbers"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M051"
+      ]
+    },
+    {
+      "goal": "对 N>0 个独立同分布的伯努利观测，推导共同成功概率 p∈[0,1] 的最大似然估计。",
+      "sections": [
+        "one-binary-model",
+        "logs-and-a-slope",
+        "the-boundary"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M052"
+      ]
+    },
+    {
+      "goal": "怎样根据训练标签估计类别先验？",
+      "sections": [
+        "a-different-sample"
+      ],
+      "practice": "card:CS5489-M053",
+      "cards": [
+        "CS5489-M053"
+      ]
+    },
+    {
+      "goal": "最大后验类别预测如何进行？为什么可以忽略证据项？",
+      "sections": [
+        "fit-then-classify"
+      ],
+      "practice": "card:CS5489-M058",
+      "cards": [
+        "CS5489-M058"
+      ]
+    },
+    {
+      "goal": "两类模型中，A 类似然 0.4、先验 0.2，B 类似然 0.2、先验 0.8。最大后验类别预测应选哪类？",
+      "sections": [
+        "fit-then-classify"
+      ],
+      "practice": "card:CS5489-M059",
+      "cards": [
+        "CS5489-M059"
+      ]
+    }
+  ]
+}

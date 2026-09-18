@@ -1,0 +1,192 @@
+{
+  "lesson_id": "ml17",
+  "title": {
+    "zh": "会背 NB，还能接住“为什么要拦”这个追问吗？",
+    "en": "Can you explain the decision behind a text classifier?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "一次练习讨论中，同学让你介绍短信过滤器：它看到了什么、凭什么判断、什么时候会出错。你刚说“垃圾概率很高”，对方就追问：如果错拦正常短信特别贵，真的应该拦吗？这节练习把表示、概率与行动分开讲清。",
+    "en": "In a practice discussion, a colleague asks what an SMS filter observes, how it decides and when it fails. You say the spam probability is high, and they ask whether blocking is still sensible when false alarms are costly. Separate representation, probability and action."
+  },
+  "sections": [
+    {
+      "id": "start-with-the-input",
+      "title": {
+        "zh": "先说程序真正看到了什么",
+        "en": "Begin with the actual representation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "“我用朴素贝叶斯”还不是完整解释。先说输入是一组词的出现标记，还是词元次数；输出是类别还是后验概率；训练数据带哪些标签。表示决定模型能区分什么：只保留 free 是否出现时，一次和三次都对应 1，后续算法无法把丢掉的重复次数凭空找回来。\n\n可以按任务、表示与假设、训练/预测、局限组织四句话。它是一种自拟表达练习，不是已确认的学校 QE 模板。下面示范针对 Multinomial 的计数表示，不能只替换模型名字就拿去解释 Bernoulli。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "change-the-model-not-just-the-name",
+      "title": {
+        "zh": "换了表示，假设与评分也要一起换",
+        "en": "Change the explanation with the model"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Bernoulli 模型给每个词一个有/无变量，给定类别后将这些变量视作独立；评分包括出现与未出现的概率。Multinomial 则在给定文档总词数后，把词元视作从本类词表分布抽取，分数按各词出现次数累加。给定总数的词计数之间并非彼此独立，不要把“独立”当成随处贴的标签。\n\n英文答案不要求逐字复述。只要对象、条件与结论一致，用自己的词讲清楚更能暴露哪里真正理解。试着把下面四句补完，再核对每句承担了什么。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "confidence-needs-checking",
+      "title": {
+        "zh": "0.99 是一次输出，校准是许多次检验",
+        "en": "A high probability does not establish calibration"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "NB 输出 0.99，只说明在其表示与假设下计算出很高的后验，并不保证现实中这类预测有 99% 正确。校准问的是：在代表目标环境的验证数据上，那些预测约为 0.99 的案例，真实正类比例是否也接近 0.99。需要足够案例与适当分组/指标，不能用单条结果证明。\n\n重复相关词可能被简化模型多次累计，分布变化也会使旧概率失真。此时“模型很自信”和“可信”是两件事。相应卡片要求的是这个边界，不是让你背一个高分当作实验结论。\n\n同样的边界意识也适用于 ML07：零协方差一般不推出独立，联合高斯等附加条件才使相应结论成立。被追问时补出条件，比用“通常就是这样”顶过去更可靠。"
+        }
+      ]
+    },
+    {
+      "id": "probability-versus-action",
+      "title": {
+        "zh": "漏掉垃圾和错拦正常，代价不一样怎么办？",
+        "en": "Choose the action by its expected cost"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "设 p 是可用于当前决策的垃圾后验；误拦正常短信损失 $C_{FP}$，放过垃圾损失 $C_{FN}$，两者非负且和为正，判断正确损失为 0。选择“拦截”，只有它其实正常时付代价，所以风险为 $C_{FP}(1-p)$；选择“放行”的风险为 $C_{FN}p$。\n\n比较两者，拦截更便宜当 $p>C_{FP}/(C_{FP}+C_{FN})$；等号处两个动作一样，可先约定放行。误拦越来越贵，阈值会上升，但在数据和模型固定时，后验本身不必改变。代价改变行动，不是重新证明概率已经校准。"
+        },
+        {
+          "type": "unit",
+          "ref": "cost-threshold",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "answer-without-the-script",
+      "title": {
+        "zh": "换个条件，自己接住两次追问",
+        "en": "Respond to a changed scenario without a script"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面把表示、Bayes 计算和不对称代价放在一起。先写明你选的模型看得见什么，再算概率，最后比较动作风险。英文追问仍围绕同一案例，不是额外背诵题；若答案出现“后验变了”，要指出到底是数据、模型还是代价变了。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "prove-an-improvement",
+      "title": {
+        "zh": "声称改好了，还需要怎样的比较？",
+        "en": "Support an improvement claim with a controlled comparison"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "最后把解释接回实验。如果想知道提升来自词表示还是分类器，先固定划分、评价与预算，只换表示比较；再固定表示比较分类器。需要时安排两种表示×两种模型的组合，检查是否有相互作用。每个可学习预处理仍只在相应训练数据中拟合，不能为了“公平”让所有方案提前看测试集。\n\nLecture2b 的模型总结与 Lecture3c 的错误代价讨论提供了这节练习的知识；口述情境是我们的教学组合。会说清模型为何快、假设何时可能失效、什么证据支持改进，比一口气报出很多算法名更有用。下一次复习按现有卡说明这些要点，长推导和代码则回到对应微课与实践。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture2b.ipynb",
+      "locator": "cells 72–98",
+      "kind": "course",
+      "note": "文本模型、平滑和生成式分类局限。 / Text models and generative-model limitations."
+    },
+    {
+      "name": "Lecture3c.ipynb",
+      "locator": "cells 35–43, 47–53",
+      "kind": "course",
+      "note": "错误代价、模型对照与比较边界。 / Error costs and model comparison."
+    },
+    {
+      "name": "Assignment1-Doc.ipynb",
+      "locator": "cell 3",
+      "kind": "course",
+      "note": "可检验的比较与错误分析。 / Verifiable comparison and error analysis."
+    },
+    {
+      "name": "串讲与教学演练 / Teaching synthesis",
+      "locator": "ml17",
+      "kind": "derived",
+      "note": "按所列课堂或任务资料组织；简化算例与口述框架是学习辅助，不是实测成绩或已确认 QE 题型。 / Teaching examples and oral prompts, not measured performance or a confirmed QE format."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "用一分钟英语解释朴素贝叶斯，并说明一项局限。",
+      "sections": [
+        "start-with-the-input",
+        "change-the-model-not-just-the-name"
+      ],
+      "practice": "card:CS5489-M105",
+      "cards": [
+        "CS5489-M105"
+      ]
+    },
+    {
+      "goal": "NB 输出后验 0.99，是否保证这类预测约有 99% 正确？",
+      "sections": [
+        "confidence-needs-checking"
+      ],
+      "practice": "card:CS5489-M103",
+      "cards": [
+        "CS5489-M103"
+      ]
+    },
+    {
+      "goal": "假阳性与假阴性的代价不相等时，决策如何变化？",
+      "sections": [
+        "probability-versus-action",
+        "answer-without-the-script"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M102"
+      ]
+    },
+    {
+      "goal": "怎样设计小实验，区分特征表示和分类器各自的影响？",
+      "sections": [
+        "prove-an-improvement"
+      ],
+      "practice": "card:CS5489-M106",
+      "cards": [
+        "CS5489-M106"
+      ]
+    }
+  ]
+}

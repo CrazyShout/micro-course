@@ -1,0 +1,197 @@
+{
+  "lesson_id": "net03",
+  "title": {
+    "zh": "包已经出发了，为什么还没到齐？",
+    "en": "Serialization, propagation, and pipelines"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "把一张 1500 字节的图片数据块送到远端：第一比特先出发，后面的比特还要排着发。我们要算清“开始看见数据”和“整包收齐”为什么是两个时刻。",
+    "en": "Serialization, propagation, and pipelines. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+  },
+  "sections": [
+    {
+      "id": "which-finish",
+      "title": {
+        "zh": "先约定你在等什么",
+        "en": "Define the event you are timing"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "从开始发送计时，接收端看到第一比特就算完成，还是要等整包到齐？如果不先回答，同一张网络图可以算出几个都“看着像对”的数字。这里先看一条链路、一个分组，忽略处理与排队，接收端等最后一比特到达。\n\n分组是连续要发送的一串比特。链路每秒只能接纳有限比特，所以前面已经在路上时，后面还可能留在发送端。这和数据“瞬间整体搬过去”的想象不同，是区分两种时延的起点。"
+        }
+      ]
+    },
+    {
+      "id": "put-on-and-travel",
+      "title": {
+        "zh": "发上链路，与沿链路传播",
+        "en": "Putting bits on the link and moving them along it"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "设包长为 $L$ 比特，发送速率为 $R$ 比特/秒。发完全部比特需 $L/R$ 秒，叫传输或串行化时延。设链路长度 $d$ 米、信号传播速度 $s$ 米/秒，一个已发出的比特走完全程需 $d/s$ 秒，叫传播时延。"
+        },
+        {
+          "type": "prose",
+          "text": "老师第47–48张用收费站与车队解释：通过收费站相当于逐个发出，公路行驶相当于传播。后车还没过站时，前车已经上路，两种过程可以重叠。类比只解释时间，不意味着比特是真车或真实网络有这座收费站。\n\n因此首比特大约在传播时延后到达；末比特先等发送端把整包发完，再走相同距离。字节先乘8变比特，千米先变米；Mbps按每秒一百万比特。本例不额外计算单个比特的有限宽度。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "demo",
+          "ref": "delay"
+        }
+      ]
+    },
+    {
+      "id": "a-router-in-the-middle",
+      "title": {
+        "zh": "中间加设备，先收齐再接力",
+        "en": "Store-and-forward adds another complete transmission"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "存储转发设备先收齐一个包，再发上下一条链路。因此单个包经过多条链路时，每段的完整发送时间都要算；传播项也沿路径累加。若每个中间路由器有处理时间，按路由器数加，不把链路数错当设备数。\n\n四项节点时延分别回答：检查首部等处理要多久、等输出口空闲要多久、整包送上链路要多久、信号走到邻居要多久。处理与排队不是同一个动作。当前 Tutorial 2 Q2 明确三条链路、两个路由器，就是检查这本分项账。"
+        }
+      ]
+    },
+    {
+      "id": "several-packets",
+      "title": {
+        "zh": "第二个包不用等第一个抵达终点",
+        "en": "Different packets can overlap"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "当第一包在链路2发送，链路1可以发送第二包。设 $H$ 条链路同速、$P$ 个包等长且连续发送；忽略传播、处理、排队与交叉流量。第一包需 $H$ 个发送时段，之后每包再隔一个时段到达，总计 $(H+P-1)L/R$。这是从时间轴数出来的，不是“任何路径都能套”的口令。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "prose",
+          "text": "书本补充把这些时段画开；若某一跳变慢，先算本包何时到齐、该链路何时空闲，取较晚者才可开始。慢链路可能让后面的包等待，旧等速公式就失效。"
+        }
+      ]
+    },
+    {
+      "id": "halve-the-data",
+      "title": {
+        "zh": "只减包长，哪一段时间会变？",
+        "en": "Change packet length without changing distance"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面只减小包长，路径和介质不动。先分别预测发送和传播会不会变，再计算首位与末位；若两项都被你减半，说明把数据量与行程混在了一起。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "这对应 Chapter 1 第25–26、44–48张的关键区别，也为 Tutorial 1 Q1、Tutorial 2 Q1–3提供方法。先会说完成事件，再回忆公式。更复杂的题和编程时间轴检查留在原题活动与实践补充，阅读一遍不等于完成实做。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 25–26, 44–48",
+      "kind": "course",
+      "note": "发送/传播、存储转发、四项时延及车队类比。"
+    },
+    {
+      "name": "tutorial-1_semA2026.pdf; tutorial-2_semA2026.pdf",
+      "locator": "Tutorial 1 page 1 Q1; Tutorial 2 pages 1–2 Q1–3",
+      "kind": "course",
+      "note": "按当前原题的完成事件与忽略项对应，不用教学变式代替原题。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net03 worked/practice/transfer",
+      "kind": "derived",
+      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能用时间轴推出单包与多包到达时间，避免死套公式。",
+      "sections": [
+        "which-finish",
+        "put-on-and-travel",
+        "a-router-in-the-middle",
+        "several-packets",
+        "halve-the-data"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N028"
+      ]
+    },
+    {
+      "goal": "节点时延的四个组成部分是什么？",
+      "sections": [
+        "a-router-in-the-middle"
+      ],
+      "practice": "card:CS5222-N025",
+      "cards": [
+        "CS5222-N025"
+      ]
+    },
+    {
+      "goal": "怎样计算传输时延？",
+      "sections": [
+        "put-on-and-travel"
+      ],
+      "practice": "card:CS5222-N026",
+      "cards": [
+        "CS5222-N026"
+      ]
+    },
+    {
+      "goal": "怎样计算传播时延？",
+      "sections": [
+        "put-on-and-travel"
+      ],
+      "practice": "card:CS5222-N027",
+      "cards": [
+        "CS5222-N027"
+      ]
+    },
+    {
+      "goal": "为什么流水线比逐个分组完全走到终点后再发下一个更快？",
+      "sections": [
+        "several-packets"
+      ],
+      "practice": "card:CS5222-N030",
+      "cards": [
+        "CS5222-N030"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "lesson_id": "ml01",
+  "title": {
+    "zh": "短信过滤器会不会只是在背答案？",
+    "en": "Is the message filter learning or memorizing?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "你有一批已被标成正常或垃圾的短信，想让电脑帮你判断下一条。直接把旧短信和答案存起来当然容易，但下一条可能从没出现过：怎样知道电脑学到了可用的规律？",
+    "en": "You have messages labeled legitimate or spam and want a computer to classify the next one. Storing old answers is easy; how can you tell whether it learned something useful for unseen messages?"
+  },
+  "sections": [
+    {
+      "id": "a-task-with-an-answer",
+      "title": {
+        "zh": "先写清它要回答什么",
+        "en": "State the question before choosing a method"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一条短信是观察对象，正常/垃圾是希望预测的答案。为了让程序处理，可以先记录短信长度、free 出现次数等数字，组成特征 x；人工标注的类别记作 y。训练时能看到 x 和 y，新短信到来时只给 x，让程序给出预测。特征不等于标签，不能把“人工判断是垃圾”偷偷混进输入。\n\n从成对的输入与答案学习，叫监督学习。模型 f 是从输入到预测的规则，写成 ŷ=f(x)。帽子表示这是预测，不是真实标签。最简单的规则可能是“free 出现多就偏向垃圾”，但同学发来 free pizza 也有这个词：规则需要由数据检验，不能由关键词的气势决定。"
+        }
+      ]
+    },
+    {
+      "id": "what-counts-as-learning",
+      "title": {
+        "zh": "错一题，才知道“学会”是什么意思",
+        "en": "Define success on the actual task"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture 1 Intro 第 13–14 页把学习联系到任务 T、经验 E、表现 P：这里任务是短信分类，经验是带标签记录，表现可以是未见短信上的错误率。分数只对这个任务和评价条件有意义；训练记录背得再熟，也不等于能处理新短信。\n\n第 17 页用手写数字识别与连续数值预测区分分类和回归。分类的输出来自离散类别，例如 normal/spam；回归预测连续量，例如送达时间。两者都可用监督学习，但“预测 0.8”本身还不能判断是哪一种：它可能是概率，也可能是 0.8 秒，必须说清输出含义。\n\n训练时的损失是指导参数调整的目标，评价指标是检查效果的读数；两者可以相关，却未必是同一公式。后续分类器会给出具体损失，这里先保证任务、学习数据和评价对象说的是同一件事。"
+        }
+      ]
+    },
+    {
+      "id": "rules-and-settings",
+      "title": {
+        "zh": "哪些数从数据学，哪些选择由我们比较？",
+        "en": "Separate learned parameters from settings"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设用分数 wx 表示垃圾倾向，x 是 free 次数，w 是训练会调整的权重。w 属于参数：换一批训练数据，学到的值可能不同。选择简单规则还是复杂规则、给平滑多大强度，则属于超参数：它规定怎样学习或使用多复杂的模型。\n\n先固定候选设置，让各候选在训练集学习自己的参数；验证集负责比较候选；最后的测试集评价已经选定的流程。可以把训练看成练习、验证看成选战术、测试看成一次保留检验；如果每看一次测试成绩就改战术，这场“保留检验”已经泄题了。下面的小例子只练分工，不会真的训练一个过滤器。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "split-before-fitting",
+      "title": {
+        "zh": "换一批短信，分工仍要保持",
+        "en": "Keep the roles when the numbers change"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "不要只背 80/10/10 的比例。比例可以变，三种用途不能混。训练越多不自动越好：还得留足能代表未来任务的验证与测试资料。对相关或重复样本，还要避免同一条短信的微小变体横跨集合，让检验变成认熟人。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "the-hidden-peek",
+      "title": {
+        "zh": "没看标签，也可能提前偷看了考卷",
+        "en": "Preprocessing can also leak information"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "有些准备步骤也会从数据学东西。词表会决定程序认识哪些词，标准化会记下均值和标准差；它们同样属于需要拟合的流程。若先看全部文本再建词表，留出文本的分布已经影响了训练，即便没有读标签。\n\n因此普通归纳评估先划分，再只在训练部分拟合所有可学习步骤；验证、测试仅应用同一套已固定转换。固定的转小写规则与从全体数据学习词表不是一回事。带着这个区别独立检查下面流程。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "return-to-the-course",
+      "title": {
+        "zh": "把课堂的三件事写回自己的任务",
+        "en": "Return to task, experience and performance"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到课程定义，你应能分别指认任务、经验和评价，并解释参数与超参数怎样进入训练—验证—测试流程。后续 Python、概率和分类器都是为这条链服务。没有标签时可能是在做聚类等无监督任务；有动作与延迟回报时可能进入强化学习，它们不是本例换个模型名字而已。\n\n这里使用二分类短信做入门例；Assignment 1 实际还包含 smishing 第三类。别把教学例的类别数抄成作业要求。想把这套检查用于自己的研究数据，可展开参考书的研究场景补充。"
+        },
+        {
+          "type": "recap"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture1 Intro.pdf",
+      "locator": "PDF pp.13–20",
+      "kind": "course",
+      "note": "学习定义、监督/无监督/强化学习与泛化。 / Learning definition, task types and generalization."
+    },
+    {
+      "name": "Assignment1-Doc.ipynb",
+      "locator": "cell 3",
+      "kind": "course",
+      "note": "本学期短信任务与验证边界。 / Current SMS task and evaluation requirements."
+    },
+    {
+      "name": "串讲与配套教学例 / Teaching synthesis",
+      "locator": "ml01",
+      "kind": "derived",
+      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "什么是监督学习？特征、标签和模型分别是什么？",
+      "sections": [
+        "a-task-with-an-answer"
+      ],
+      "practice": "card:CS5489-M001",
+      "cards": [
+        "CS5489-M001"
+      ]
+    },
+    {
+      "goal": "分类和回归有什么区别？",
+      "sections": [
+        "what-counts-as-learning"
+      ],
+      "practice": "card:CS5489-M002",
+      "cards": [
+        "CS5489-M002"
+      ]
+    },
+    {
+      "goal": "参数和超参数有什么区别？",
+      "sections": [
+        "rules-and-settings"
+      ],
+      "practice": "card:CS5489-M004",
+      "cards": [
+        "CS5489-M004"
+      ]
+    },
+    {
+      "goal": "训练—验证—测试的基本流程是什么？",
+      "sections": [
+        "rules-and-settings",
+        "the-hidden-peek"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M003"
+      ]
+    }
+  ]
+}

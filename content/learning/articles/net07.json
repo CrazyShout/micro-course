@@ -1,0 +1,189 @@
+{
+  "lesson_id": "net07",
+  "title": {
+    "zh": "一个网页有三份文件，为什么不能只数三次下载？",
+    "en": "HTTP timing, persistence, and caching"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "浏览器要取一份基础HTML，里面又引用两幅小图。浏览器什么时候知道图片地址，什么时候能发下一次请求？先把这些依赖画出来，再计算网页何时到齐。",
+    "en": "A browser fetches base HTML referencing two images. When can it discover and request those images? Establish the dependencies before calculating completion time."
+  },
+  "sections": [
+    {
+      "id": "html-first",
+      "title": {
+        "zh": "先有页面目录，才知道还有哪些对象",
+        "en": "Discover the objects from the base page"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "老师 Chapter 2 part1第19张先解释网页由基础HTML和若干对象组成。对象可以是图片、脚本或其他资源；本节把它们简化为三份很小的内容。浏览器请求资源，服务器响应状态信息及可能的正文，叫HTTP请求—响应。\n\n关键困难是：基础页面没拿到并解释之前，浏览器在本题还不知道引用对象的地址。因此三个请求不是从零时刻就都能出发。画时间轴时，先画基础页完成这道门槛，再决定后两份能否并行。实际浏览器可能边接收边解析，本题按给定的简化依赖计算。"
+        }
+      ]
+    },
+    {
+      "id": "one-object-bill",
+      "title": {
+        "zh": "一个新连接，先付哪两次往返？",
+        "en": "Account for one new connection"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "本节采用课堂传统HTTP-over-TCP模型。RTT是一小段消息去到服务器再回来的往返时间；对象长度 $L$ 用比特，传输速率 $R$ 用比特/秒。新TCP连接先用约一个RTT建立，再用一个RTT发请求并等响应开始，之后计正文发送时间 $L/R$，合成 $2RTT+L/R$。"
+        },
+        {
+          "type": "prose",
+          "text": "这笔账假设DNS已完成，并忽略TLS、请求大小、服务端处理、丢失与TCP启动过程。RTT里已有往返传播，不要又把同一路程加一遍。这些假设不是脚注装饰：题目加上任一成本，就要相应补账。\n\n例如后续卡中的十进制100 kB要先乘8；对象不够小时，发送时间不能因为大家都在数RTT就被藏起来。"
+        }
+      ]
+    },
+    {
+      "id": "reuse-or-parallel",
+      "title": {
+        "zh": "复用连接与并行，是两种不同节省",
+        "en": "Reuse and parallelism save different costs"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "非持久连接对每个对象重新建立TCP连接；持久连接可沿用已经建立的连接。若不使用流水线，每个请求仍要等前一响应完成后再继续；省掉反复建连并不等于全部对象同时下载。\n\n并行新连接则让不同连接的一批工作重叠。老师part2第1–7张正是在改变这些条件。解题时把“是否已有连接”“是否允许并行”“是否允许流水线”写成独立条件，不能只看到持久二字就套最快的时间。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "cached-is-not-always-free",
+      "title": {
+        "zh": "缓存省正文，有时仍要问一句",
+        "en": "A cached copy may still need validation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "缓存保存可复用的响应。可直接复用的命中可能由本地或附近缓存返回；未命中时需要向源服务器取回。缓存面对浏览器时是服务端，面对源站时又是客户端。存有副本不代表它永远新鲜或总能直接使用。\n\n条件验证是在问“我已有的版本还能用吗？”服务器返回304时，未修改的正文可以不再发送，但验证请求和响应仍走了一趟。Cookie解决的是另一个问题：请求携带状态标记，让应用关联会话；HTTP无状态不禁止服务端维护会话信息。"
+        },
+        {
+          "type": "reading"
+        }
+      ]
+    },
+    {
+      "id": "change-the-cache-state",
+      "title": {
+        "zh": "保留连接，改变缓存状态",
+        "en": "Change cache state while retaining the connection"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面连接已经存在，DNS也已完成，所以不要再替题目建立一次连接。检查省掉的是正文、建连还是全部通信，然后再写时间。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "回到原课，沿请求与依赖解释非持久、持久、并行与缓存，才是真正会数RTT。当前模型用于理解经典时序，不能直接充当所有现代HTTP版本的性能预测。首轮卡复述角色与时间项；测真实网站还需额外记录协议、缓存与服务器条件。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha2_2026_student_part1.pptx",
+      "locator": "slides 19–22",
+      "kind": "course",
+      "note": "网页对象、HTTP请求响应与无状态入门。"
+    },
+    {
+      "name": "cs5222_cha2_2026_student_part2.pptx",
+      "locator": "slides 1–15",
+      "kind": "course",
+      "note": "本文件重新编号：连接时序、并行、cookie和缓存。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net07 worked/practice/transfer",
+      "kind": "derived",
+      "note": "依课程机制写成的解释与数值/情境变式，不冒称真实测量或教师原题。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能画出 TCP 建连、基础页面、附属对象与缓存命中的依赖。",
+      "sections": [
+        "html-first",
+        "one-object-bill",
+        "reuse-or-parallel",
+        "cached-is-not-always-free",
+        "change-the-cache-state"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N109"
+      ]
+    },
+    {
+      "goal": "入门 HTTP 请求—响应交换如何工作？",
+      "sections": [
+        "html-first"
+      ],
+      "practice": "card:CS5222-N068",
+      "cards": [
+        "CS5222-N068"
+      ]
+    },
+    {
+      "goal": "课堂模型中，非持久和持久 HTTP 连接有什么区别？",
+      "sections": [
+        "reuse-or-parallel"
+      ],
+      "practice": "card:CS5222-N100",
+      "cards": [
+        "CS5222-N100"
+      ]
+    },
+    {
+      "goal": "经典 HTTP-over-TCP 模型中新建连接获取一个对象，为何约需 $2RTT+L/R$？RTT 为往返时延，L 是对象比特数，R 是传输速率（比特/秒）。",
+      "sections": [
+        "one-object-bill"
+      ],
+      "practice": "card:CS5222-N101",
+      "cards": [
+        "CS5222-N101"
+      ]
+    },
+    {
+      "goal": "采用理想 HTTP/TCP 时序模型，忽略 DNS、TLS、处理与 TCP 启动效应。RTT=40 毫秒，对象为十进制 100 kB，数据速率=10 Mbps。求新建连接的首次获取，以及同一持久连接上之后顺序获取一个同样对象的时间。",
+      "sections": [
+        "one-object-bill"
+      ],
+      "practice": "card:CS5222-N102",
+      "cards": [
+        "CS5222-N102"
+      ]
+    }
+  ]
+}

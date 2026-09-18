@@ -1,0 +1,211 @@
+{
+  "lesson_id": "ml10",
+  "title": {
+    "zh": "辨花时，能不能直接学会怎样划分？",
+    "en": "Can we learn the flower boundary directly?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "已有许多花的测量与种类，目标仍是辨认下一朵。上一讲先拟合每类怎样分布，再作判断；现在尝试直接给测量打分，用已知标签调整这套打分规则，看看能否把两类分开。",
+    "en": "We still have labeled flower measurements and want to identify the next flower. Instead of modeling each class distribution first, try scoring the measurements directly and adjust the scoring rule from known labels."
+  },
+  "sections": [
+    {
+      "id": "a-score-is-not-a-probability",
+      "title": {
+        "zh": "先有一条分界，再问它能否表达不确定",
+        "en": "A score locates the boundary but is not a probability"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把各项特征乘权重后相加，再加偏置，得到 $z=w^Tx+b$。x 是 d 维测量，w 是 d 个权重，b 是一个数。$z=0$ 定义分界；非零 w 指向分数增长的法向方向，b 调整边界位置。点在边界哪一侧能帮助分类，但 z 可以是 3 或 −20，显然不能直接当概率。\n\nLecture3a 单元 4 先回顾生成式模型，再在 24–32 转向线性判别与 logistic regression。虽然名字里有 regression，这里的任务是分类；“线性”说的是分数相对于输入的形式，不是输出概率也沿直线变化。"
+        }
+      ]
+    },
+    {
+      "id": "bend-the-score",
+      "title": {
+        "zh": "把任意分数转换成零到一之间的数",
+        "en": "Map the score into a probability model"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "sigmoid 函数定义 $p=\\sigma(z)=1/(1+e^{-z})$，作为正类的预测概率。z=0 时 p=0.5；z 越大，p 越靠近 1；负类概率是 1−p。反过来，$\\log[p/(1-p)]=z$，所以分数也叫 logit。优势比 p/(1−p) 不是概率本身。\n\n这里用标签 t∈{0,1}；课堂也用 y∈{−1,+1}，二者可用 t=(y+1)/2 对应。比较不同公式时先查编码，别把同一个正类换了记号后算成另一个问题。下面图示连接分数、sigmoid 与类别概率；概率模型的输出不自动保证现实校准完美。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/score-to-probability.svg"
+        }
+      ]
+    },
+    {
+      "id": "make-wrong-confidence-expensive",
+      "title": {
+        "zh": "应该怎样惩罚一个很自信的错答？",
+        "en": "Penalize assigning little probability to the true label"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "一条真实标签为 t 的样本，模型给它的概率可合写为 $p^t(1-p)^{1-t}$：t=1 留下 p，t=0 留下 1−p。取负对数得到二元交叉熵 $\\ell=-t\\log p-(1-t)\\log(1-p)$。真实类概率小，损失大；它在要求模型对真实标签给更多概率。\n\n要调整 w，需要知道损失怎样随它变化。链式法则沿 $w\\to z\\to p\\to\\ell$ 把局部变化率相乘。先对 p 求导得 $-t/p+(1-t)/(1-p)$，乘 sigmoid 导数 p(1−p)，化简为 p−t。再乘 z 对 w 的导数 x，得到 $\\nabla_w\\ell=(p-t)x$；对 b 的导数则是 p−t。每一步都围绕同一条样本，梯度不是另一个凭空背下的规则。"
+        },
+        {
+          "type": "foundation",
+          "ref": "powers-logs"
+        },
+        {
+          "type": "foundation",
+          "ref": "derivatives"
+        }
+      ]
+    },
+    {
+      "id": "move-the-weight",
+      "title": {
+        "zh": "算清旧概率，再迈一步",
+        "en": "Calculate at the old parameters before updating"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "梯度指向局部损失增加最快的方向，所以更新为 $w_{new}=w-\\eta\\nabla_w\\ell$，学习率 $\\eta>0$ 控制步幅。先用一维教学样本并固定 b=0，把前面的链完整走一遍；这不是原 iris 的拟合参数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "prose",
+          "text": "现在只把真实标签反过来。直觉上，应该降低正类概率；算出的梯度符号能否做到这一点？"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "try-the-update",
+      "title": {
+        "zh": "一次更新和反复训练，分别证明什么？",
+        "en": "Observe an update without overstating its meaning"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "演示固定 x=2、b=0、无正则、学习率 0.1，切换标签会重置参数。先猜方向，再点击一步；控件不会改变下面题干。它只展示一条样本，不代表整套训练/测试表现。"
+        },
+        {
+          "type": "demo",
+          "ref": "gradient"
+        },
+        {
+          "type": "prose",
+          "text": "独立题允许偏置也训练。两个梯度必须由同一组旧参数算出，再一起更新；不能先改 w 后拿新概率算 b。多样本目标用和还是均值会改变梯度系数，正则项还会添加额外梯度。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "return-to-logistic-training",
+      "title": {
+        "zh": "回到课堂：目标、优化和选择是三件事",
+        "en": "Return to the lecture training procedure"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3a 单元 38–49 从条件概率的最大似然走到正则化；53 之后把模型用于 iris，65–72 再选择 C。学习率控制每步怎么走，正则强度改变要优化的目标，训练时长决定走多少步，三者不能互相当替身。\n\nL2 惩罚偏好较小权重；系数怎样写、是否惩罚 b 以具体目标为准。无正则的完全可分数据可能让权重越走越大而没有有限最优值，概率越来越极端不等于学习完美。参考书用最大化 log likelihood 的上升方向，与这里最小化其负值的下降方向可以一致，展开补充可看符号和过大步长的例子。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3a.ipynb",
+      "locator": "cells 4, 24–49, 52–72",
+      "kind": "course",
+      "note": "判别式分数、sigmoid、似然与正则/选择。 / Scores, sigmoid, likelihood, regularization and selection."
+    },
+    {
+      "name": "推理桥接与手算 / Teaching derivation and hand calculation",
+      "locator": "ml10",
+      "kind": "derived",
+      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "在线性分类器 $f(x)=w^Tx+b$ 中，$w$ 和 $b$ 分别控制什么？",
+      "sections": [
+        "a-score-is-not-a-probability"
+      ],
+      "practice": "card:CS5489-M121",
+      "cards": [
+        "CS5489-M121"
+      ]
+    },
+    {
+      "goal": "逻辑回归怎样把线性分数变成类别概率？",
+      "sections": [
+        "bend-the-score"
+      ],
+      "practice": "card:CS5489-M123",
+      "cards": [
+        "CS5489-M123"
+      ]
+    },
+    {
+      "goal": "改用 0/1 标签时，二元交叉熵是什么？",
+      "sections": [
+        "make-wrong-confidence-expensive"
+      ],
+      "practice": "card:CS5489-M127",
+      "cards": [
+        "CS5489-M127"
+      ]
+    },
+    {
+      "goal": "一个采用二元交叉熵训练的二分类逻辑回归样本，对权重和偏置分别贡献什么梯度？",
+      "sections": [
+        "make-wrong-confidence-expensive",
+        "try-the-update"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M128"
+      ]
+    },
+    {
+      "goal": "二分类逻辑模型为 p=sigmoid(wx+b)，目标标签为 t，采用二元交叉熵。给定 x=2、t=1、w=0，固定 b=0，学习率 0.1、无正则，对 w 做一次梯度下降。",
+      "sections": [
+        "move-the-weight",
+        "try-the-update"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M129"
+      ]
+    }
+  ]
+}

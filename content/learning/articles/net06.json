@@ -1,0 +1,158 @@
+{
+  "lesson_id": "net06",
+  "title": {
+    "zh": "同一台电脑里，网络怎样找到正确的程序？",
+    "en": "Applications and transport services"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "你一边下载文件，一边和同学语音通话。两种数据都到了电脑，应该交给哪个程序？它们对“少一点”“慢一点”的容忍相同吗？",
+    "en": "A computer downloads a file while carrying a voice call. Which process receives each message, and do those applications tolerate the same kinds of loss or delay?"
+  },
+  "sections": [
+    {
+      "id": "processes-not-boxes",
+      "title": {
+        "zh": "先找通信的程序，再看机器",
+        "en": "Start with communicating processes"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "网络应用不是一台孤立机器。浏览器和网页服务分别是运行在主机上的进程；进程可以理解为正在执行的程序实例。Chapter 2先从人们使用的应用出发，再问程序怎样跨主机交换消息，而不是先背一张端口表。\n\n客户端—服务器架构让持续提供服务的一方等请求；P2P让节点既能请求，也能提供资源。这是在安排角色，不是选择TCP还是UDP。同一个服务器角色可以同时面对许多客户端，一个网络应用也可以包含不止两个进程。"
+        }
+      ]
+    },
+    {
+      "id": "door-and-address",
+      "title": {
+        "zh": "socket是接口，端口不是网线插口",
+        "en": "The socket is an interface, not a physical plug"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "程序不能直接伸手操作沿途每台路由器。它通过socket（套接字）这个软件接口，把要发送的数据交给传输服务，并读取收到的数据。老师第9–10张将它比作程序与网络服务之间的门：应用决定门里要说什么，操作系统负责很多门外细节。\n\n只有IP还不够。一台主机上有多个网络进程，需要端口帮助定位目标应用端点；还应说明传输协议，同一个数字在TCP与UDP中是不同端点。端口不是操作系统的进程ID，也不是机箱上的物理插孔。\n\n地址解决“交给谁”，不自动解决“这串字节是什么意思”。即使socket接到了数据，应用双方仍要约定消息格式、顺序和动作。监听入口与已建立连接的区别，以及多客户端的四元组，在书本补充继续看。"
+        }
+      ]
+    },
+    {
+      "id": "ask-the-application",
+      "title": {
+        "zh": "先问应用怕什么",
+        "en": "Identify the application’s actual requirements"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "从实际损失出发更容易选服务。文件少一个字节可能不再完整，适当等待重传通常有价值；一段实时声音晚几秒才到，内容虽正确却可能已经过时。这不是宣称语音丢多少都没关系，而是两种错误代价不同。\n\n老师第13–16张列四类需求：可靠性/数据完整性、吞吐量、时间性、安全性。速率表示送得多快，时限表示必须何时到，安全还要分保密、认证等目标。只说“这个协议快”没有把要求说完整。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "what-transport-offers",
+      "title": {
+        "zh": "TCP和UDP各自给了什么",
+        "en": "Compare the provided transport services"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "TCP提供面向连接的可靠有序字节流，并有流量控制与拥塞控制。字节流意味着应用仍需判断一条完整消息在哪里结束；可靠交付也不代表底层IP永不丢包，而是会通过确认与重传等机制处理问题。连接可能失败，TCP并不保证最低吞吐量、最大时延或应用操作恰好执行一次。\n\nUDP提供无连接数据报，保留数据报边界，但自身不提供TCP那套可靠有序交付、流量与拥塞控制。应用可另加编号、重试与其他机制，因此“用UDP”不能推成“应用没有任何可靠性”。更少内建机制也不是低时延保证：排队不会因为协议名字短就消失。\n\nTCP本身也不自带加密。课件提到安全传输是另一层需要；不能把可靠、及时、保密三个性质当同义词。"
+        }
+      ]
+    },
+    {
+      "id": "a-command-with-a-deadline",
+      "title": {
+        "zh": "换成控制命令，重新列需求",
+        "en": "Reconsider a command with a deadline"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面的任务既有限时要求，也要求不能重复执行。不要立即勾选一个协议；先写丢失、重试和重复执行分别怎样处理，确认题目要的是网络送达，还是应用已完成动作。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "你现在应能把老师的四类服务需求用于具体应用，指出socket的边界，并解释单独一个TCP/UDP名字为什么不能包办全部需求。首轮卡按这些判断回忆；真正编程仍需测试消息边界、超时和失败，而不是只跑一次成功收发。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha2_2026_student_part1.pptx",
+      "locator": "slides 4–17",
+      "kind": "course",
+      "note": "应用角色、进程/socket、寻址、服务需求及TCP/UDP入门。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net06 worked/practice/transfer",
+      "kind": "derived",
+      "note": "依课程机制写成的解释与数值/情境变式，不冒称真实测量或教师原题。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能根据应用需求讨论可靠性、速率与时延，而不机械选 TCP/UDP。",
+      "sections": [
+        "processes-not-boxes",
+        "door-and-address",
+        "ask-the-application",
+        "what-transport-offers",
+        "a-command-with-a-deadline"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N060",
+        "CS5222-N061",
+        "CS5222-N063"
+      ]
+    },
+    {
+      "goal": "什么是套接字 socket？",
+      "sections": [
+        "door-and-address"
+      ],
+      "practice": "card:CS5222-N057",
+      "cards": [
+        "CS5222-N057"
+      ]
+    },
+    {
+      "goal": "为什么只有 IP 地址不足以识别应用进程？",
+      "sections": [
+        "door-and-address"
+      ],
+      "practice": "card:CS5222-N058",
+      "cards": [
+        "CS5222-N058"
+      ]
+    }
+  ]
+}

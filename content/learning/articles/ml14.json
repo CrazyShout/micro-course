@@ -1,0 +1,178 @@
+{
+  "lesson_id": "ml14",
+  "title": {
+    "zh": "一条直线分不开，换一种表示会怎样？",
+    "en": "What if the classes cannot be separated in the original coordinates?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "你有一维观测：左边和右边的点属于同类，中间的点属于另一类。单个阈值只能切一刀，很难同时把两头放在一起。课堂接下来问：能否先改变特征表示，再用线性分类器？",
+    "en": "You have one-dimensional observations with one class at both extremes and another in the middle. A single threshold cannot isolate both ends. The lecture next asks whether a transformed representation can make a linear classifier useful."
+  },
+  "sections": [
+    {
+      "id": "change-the-coordinate",
+      "title": {
+        "zh": "把“离中心多远”变成一个新特征",
+        "en": "Represent the pattern with a new feature"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "用一个教学小例看：坐标 −2 和 2 属 A，0 属 B。原坐标中单个线性阈值无法把两边 A 同时和中间 B 分开；若把坐标改为 $z=x^2$，两类分别落在 4 与 0，就能用 z 的阈值区分。这不是神奇地改变标签，而是换了一种记录关系的方式。\n\n一般写成 $\\phi(x)$：先把输入映射到新特征，再做 $w^T\\phi(x)+b$ 的线性判别。它在新空间线性，在原空间却可能是弯曲边界。Lecture3b 单元 83–86 正是从线性不可分引入这个想法；更高维并不保证任何数据都可分，例如相同输入带相反标签的冲突不会凭空消失。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/squared-feature.svg"
+        }
+      ]
+    },
+    {
+      "id": "only-need-comparisons",
+      "title": {
+        "zh": "算法只问内积，未必需要存整条新向量",
+        "en": "Compute the needed inner product directly"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "上一节 SVM 对偶目标只通过 $x_i^Tx_j$ 使用样本。换成新特征后，它需要的是 $\\phi(x_i)^T\\phi(x_j)$。若一个函数 $k(x,z)$ 能直接给出这个值，就可以不显式生成大向量；这叫 kernel trick，核技巧。\n\n注意“相似度”在这里有精确定义：它必须对应某个特征空间的内积，不能只因为一个打分看着顺眼就叫标准核。省掉显式特征也不代表没有计算成本，N 条样本的两两核矩阵可能占 N×N 个数，大数据仍会吃内存。"
+        }
+      ]
+    },
+    {
+      "id": "expand-the-polynomial",
+      "title": {
+        "zh": "把平方展开，看看 √2 从哪里来",
+        "en": "Expand the square to identify the feature map"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对二维齐次二次核，$k(x,z)=(x^Tz)^2=(x_1z_1+x_2z_2)^2$。展开是 $x_1^2z_1^2+2x_1x_2z_1z_2+x_2^2z_2^2$，因此可取 $\\phi(x)=(x_1^2,\\sqrt2x_1x_2,x_2^2)$。\n\n中间坐标各带一份 √2，两向量相乘才产生系数 2。它不是为了好看加的常数，而是保证“直接核值”和“映射后内积”真相同。下面沿两条路径算同一对点，数字小到能直接互查。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "same-rule-new-points",
+      "title": {
+        "zh": "换两个点，再从两条路径核对",
+        "en": "Verify both calculations on a new pair"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "这里比较的不是“某个核值像不像”，而是两种表示是否逐项相等。保留坐标顺序，先算原内积后平方，再用三维映射求内积。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "独立题故意去掉 √2。只要找一对输入使两种计算不相同，就足以否定这个错误映射，无需把所有数据都试完。这也是小反例的用处。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "other-kernels",
+      "title": {
+        "zh": "RBF 的范围，与 C 的惩罚不是同一旋钮",
+        "en": "Distinguish kernel shape from the SVM penalty"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "课堂随后使用 RBF 核 $k(x,z)=\\exp(-\\gamma\\|x-z\\|^2)$，γ>0 控制随距离衰减的快慢；大 γ 让影响更局部。C 则出现在 SVM 违约惩罚，不直接改变这条核公式。特征尺度变了，距离也变，所以不能只换单位就期待原 γ 仍表示同一范围。\n\n对实值标准核，还要求对称，而且任意有限输入形成的 Gram 矩阵 K 都应对任意实系数向量 a 满足 $a^TKa\\ge0$，即半正定；a 的长度等于这批样本数。只在一批数据上验证特征值非负，不等于证明任意输入都合法；下面专题只练已知 RBF 的尺度与参数区别。"
+        },
+        {
+          "type": "unit",
+          "ref": "rbf-scale",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "back-to-kernel-svm",
+      "title": {
+        "zh": "回到老师的核 SVM，而不是停在一条漂亮公式",
+        "en": "Return to the full kernel classifier"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture3b 单元 89–95 把内积换成核并用于 SVM，101–118 比较 RBF 与参数选择。你现在应能解释为什么预测可以写成若干训练点核值的加权和，以及为什么只有合法核才能保留所用的标准理论。\n\n具体哪种核适合数据，要用固定验证协议选择 C 和核参数，再检验留出表现。手算映射证明的是这个小核的代数关系，不是证明它在 iris 或短信上一定更好。接下来回到特征预处理，看看输入表示本身还会怎样影响这套比较。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture3b.ipynb",
+      "locator": "cells 83–95, 101–118",
+      "kind": "course",
+      "note": "特征映射、核技巧、RBF 和核条件。 / Feature maps, kernel trick, RBF and kernel conditions."
+    },
+    {
+      "name": "串讲与教学演练 / Teaching synthesis",
+      "locator": "ml14",
+      "kind": "derived",
+      "note": "按所列课堂或任务资料组织；简化算例与口述框架是学习辅助，不是实测成绩或已确认 QE 题型。 / Teaching examples and oral prompts, not measured performance or a confirmed QE format."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "变换空间中的线性分类器，怎样产生原空间中的非线性边界？",
+      "sections": [
+        "change-the-coordinate"
+      ],
+      "practice": "card:CS5489-M165",
+      "cards": [
+        "CS5489-M165"
+      ]
+    },
+    {
+      "goal": "什么是核技巧？",
+      "sections": [
+        "only-need-comparisons",
+        "back-to-kernel-svm"
+      ],
+      "practice": "card:CS5489-M166",
+      "cards": [
+        "CS5489-M166"
+      ]
+    },
+    {
+      "goal": "对二维二次核 $k(x,z)=(x^Tz)^2$，给出显式特征映射。",
+      "sections": [
+        "expand-the-polynomial",
+        "same-rule-new-points"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M167"
+      ]
+    }
+  ]
+}

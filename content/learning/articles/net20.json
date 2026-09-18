@@ -1,0 +1,174 @@
+{
+  "lesson_id": "net20",
+  "title": {
+    "zh": "一台刚开机的电脑，怎样第一次拿到网页？",
+    "en": "From empty caches to a fetched page"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "电脑插入以太网，尚无地址配置，也没有缓存，要访问远端网页。它连自己的地址都不知道，怎么先查网站？我们按一个明确的IPv4课堂场景逐步补齐缺少的信息。",
+    "en": "An Ethernet host starts without configuration or caches and wants a remote page. Trace how it obtains the information needed for each next step in a stated IPv4 teaching scenario."
+  },
+  "sections": [
+    {
+      "id": "list-what-is-missing",
+      "title": {
+        "zh": "别先背协议顺序，先列缺什么",
+        "en": "List missing information before memorizing a sequence"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "这里沿历史综合题搭一个教学场景：IPv4以太网、DHCP获取配置、DNS与网页服务器都在远端、经默认网关、没有NAT，访问明文HTTP-over-TCP。换成静态配置、同网段服务器或其他协议版本，步骤可能改变。\n\n开始缺四类状态：主机的IP/掩码/网关/DNS配置；本地下一跳的MAC；网站名字对应的IP；已建立的传输连接。把它们写成四张不同纸条，比把DHCP、ARP、DNS、TCP一起叫“找地址”容易理解。"
+        }
+      ]
+    },
+    {
+      "id": "configuration-before-lookup",
+      "title": {
+        "zh": "先知道自己和出口，再找到下一跳",
+        "en": "Get configuration, then resolve the local next hop"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "DHCP在这个场景提供地址、掩码、默认网关IP和DNS服务器信息。网关IP来自配置，不是ARP替你选择出来的。主机先按路由/子网判断目标在本地还是远端，再决定该查询谁的MAC。\n\nARP用已知本地下一跳IPv4地址查链路地址。若DNS服务器在远端，发DNS查询前也必须知道网关的本地MAC；不能一边说缓存全空，一边让DNS包跳过第一帧怎么发送的问题。若DNS就在同一链路，才查DNS主机本身的MAC。"
+        }
+      ]
+    },
+    {
+      "id": "name-then-connection",
+      "title": {
+        "zh": "网站地址到手，应用还没开始拿正文",
+        "en": "A resolved name is not yet a fetched resource"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "DNS得到网站IP后，主机向远端网站建立TCP，再发HTTP请求并收响应。若网关MAC此前已缓存，就不必为了网站再查一遍同一个有效映射。首跳帧的目的MAC是网关接口，里面IP包的目的仍是远端网站；“最终找谁”和“这一段交给谁”是两层问题。\n\n每过路由器，上一链路封装被处理，再为下一段重组帧。无NAT等改写时，最终目的IP角色保持；MAC不是跨整个互联网不变的收件标签。下面先按全部空的场景走一次，再只改变已知状态。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "same-subnet",
+      "title": {
+        "zh": "对方就在本地，还要交给网关吗？",
+        "en": "A local destination changes the next hop"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "同子网通信时，主机可直接解析目的主机MAC，不需要先让网关兜圈。ARP请求通常在本LAN广播，普通路由器不把这份以太网广播转到其他子网；目标可从请求中的发送方信息得到回复所需地址，再单播响应。\n\n交换机会从收到的请求学习源方向，因此回复不一定继续泛洪到所有分支。历史Assignment 3的具体E/F、E/B及A/B图题，应在原卡图上逐段核对；这里不把某个拓扑的“S1没收到回复”说成所有网络都必然如此。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "read-the-trace",
+      "title": {
+        "zh": "抓包时，四张纸条对应哪些证据？",
+        "en": "Find evidence for each state in a trace"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史Wireshark任务要观察HTTP、DNS及传输字段。先分清帧、IP数据报、TCP载荷与应用消息，再按地址、端口、序号和请求内容配对。一个HTTP请求到响应的间隔还可能包含服务器处理；一个TCP确认时间也可能含延迟确认或重传配对歧义，不要直接当纯传播RTT。\n\n本文没有运行你的浏览器或抓取真实数据。DNS实践附件是人工样本，可用来学字段，但不能当提交所需的实测；真正操作时应记录条件、缓存、协议版本和观察到的交换。HTTPS会增加安全协商，其他传输映射还会改步骤，旧SSL/TLS字段也须按版本解释。"
+        },
+        {
+          "type": "task",
+          "ref": "dns-trace"
+        }
+      ]
+    },
+    {
+      "id": "one-chain-many-skills",
+      "title": {
+        "zh": "回到最初的网页，按缺失信息解释下一步",
+        "en": "Explain the chain by the information each step supplies"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在可以把NET01的角色图填成机制链：应用在端点、路由器逐跳转发，每一协议只补特定信息或服务。缓存有效时省掉对应工作，不代表其他层状态也自动具备；网关MAC已知不是网站IP已知，更不是TCP已经连上。\n\n本页属于历史综合预习，也关联旧作业与实践，不等于本学期已经发布了同样任务。首轮卡让你在给定图中区分IP和MAC，再从空状态串一次；不会的步骤回对应概念课。能复述链条后仍要亲手观察与实现，阅读顺序不能代替运行证据。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "CS5222 Assignment 3.pdf",
+      "locator": "pages 1–2, same-subnet / remote addressing and ARP",
+      "kind": "historical",
+      "note": "历史网络图与IP/MAC问题，具体拓扑用原卡图。"
+    },
+    {
+      "name": "CS5222 Wireshark Assignment 2025.pdf",
+      "locator": "pages 3–9",
+      "kind": "historical",
+      "note": "历史HTTP/DNS/TCP观察任务；不是本学期已下载作业。"
+    },
+    {
+      "name": "2024_cs5222_programming_assignment.pdf",
+      "locator": "pages 1–2, 5–6",
+      "kind": "historical",
+      "note": "历史消息客户端实践，不能把复述流程当实际实现。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net20 worked/practice/transfer",
+      "kind": "derived",
+      "note": "本文小例是原理练习，历史原题另循原卡/图；不补造缺失题目或实测结果。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能在明确IPv4场景中串起地址配置、下一跳解析、DNS、TCP和HTTP，并说明缓存改变哪些步骤。",
+      "sections": [
+        "list-what-is-missing",
+        "configuration-before-lookup",
+        "name-then-connection",
+        "same-subnet",
+        "read-the-trace",
+        "one-chain-many-skills"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N270",
+        "CS5222-N273"
+      ]
+    },
+    {
+      "goal": "按图将左路由器替换为交换机 S1，右路由器命名为 R1。A 广播 ARP 请求寻找 B。为什么 R1 能收到却不转发到子网 3？B 为什么无需另查 A 就能回复？S1 会收到 B 的回复吗？",
+      "sections": [
+        "same-subnet"
+      ],
+      "practice": "card:CS5222-N271",
+      "cards": [
+        "CS5222-N271"
+      ]
+    }
+  ]
+}

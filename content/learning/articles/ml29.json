@@ -1,0 +1,182 @@
+{
+  "lesson_id": "ml29",
+  "title": {
+    "zh": "把图像切成小块，它们怎样互相取信息？",
+    "en": "How do image patches exchange information?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "历史 Lecture12.2 的 ViT 把图像切成小块，再让这些块交换信息。假设输入是 224×224 的 RGB 图，切成不重叠的 16×16 小块：我们先得数清有多少块、每块包含什么，才讨论其中一块怎样从其他位置取回有用内容。",
+    "en": "Historical Lecture12.2 introduces ViT by splitting an image into patches that exchange information. For a 224-by-224 RGB image split into non-overlapping 16-by-16 patches, first count the tokens and the values in each patch. Then ask how one location retrieves information from others."
+  },
+  "sections": [
+    {
+      "id": "patches-and-positions",
+      "title": {
+        "zh": "先分清块的数量，与每块向量的长度",
+        "en": "Count tokens separately from feature width"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "每个方向 224/16=14 块，总共 196 个 patch token。一个小块有 16×16×3=768 个原始数值，展平后再投影到选定的嵌入宽度 D；D 不必等于 768。若加入一个类别 token，序列长度变为 197。多了一个位置，并不等于每个向量也多一维。\n\n只看内容的注意力不知道块来自左上角还是右下角。位置嵌入或其他位置机制补充空间信息；若没有它们打破对称，重新排列 token 会相应重新排列输出。Lecture12.2 第 8、10–11 页把 patch、类别 token 和位置编码接在一起，先把这三种角色分开。"
+        }
+      ]
+    },
+    {
+      "id": "query-key-value",
+      "title": {
+        "zh": "先决定向谁取，再决定取回什么",
+        "en": "Separate matching weights from retrieved content"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "可以把 query 暂时看成查询条件，key 是用于比较的索引，value 是被取回的内容。这个类比只说明分工；实际三者都是学习得到的向量，并不是人工填进数据库的文字标签。一个 query 与各 key 算匹配分数，分数经过 softmax 后成为权重，再对对应 value 加权相加。\n\n下图与例题把 value 缩成标量，方便专心区分“比例”和“内容”。即使权重和为一，输出也可以是 4、6 或一个包含负数的向量；它通常是新特征，不是类别概率。不要把注意力权重当作不用验证的语义解释。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/attention-values.svg"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "shapes-and-scaling",
+      "title": {
+        "zh": "用矩阵尺寸，把角色固定下来",
+        "en": "Use dimensions to disambiguate the formula"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "将 n 个 token 放在 X 的行里，X 为 n×D。令 $Q=XW_Q$、$K=XW_K$、$V=XW_V$，其中 $W_Q,W_K$ 为 D×d_k，$W_V$ 为 D×d_v。于是 $QK^T$ 为 n×n，每一行对应一个 query 面对全部 key；按行做 softmax 后乘 V，得到 n×d_v 的输出。\n\n完整写法是 $\\operatorname{softmax}(QK^T/\\sqrt{d_k})V$。在 query/key 各分量独立、零均值、单位方差的直观模型下，内积方差随 d_k 增长；除以平方根可抑制分数过大导致权重过尖。它不是对任意网络永远不会梯度消失的保证。原历史第 13 页的投影矩阵尺寸有问题，这里按原始论文的特征维投影写法纠正。"
+        },
+        {
+          "type": "unit",
+          "ref": "attention-shapes",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "equal-and-swapped",
+      "title": {
+        "zh": "先把分数拉平，再只交换内容",
+        "en": "Compare equal scores with swapped values"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "两项分数完全一样时，softmax 应给相同权重；这时输出是 value 的普通平均。下面先用这种容易心算的情况做一次检查。随后独立变式交换偏好的位置，再只交换 value，观察哪一步改变了比例、哪一步改变了内容。\n\n计算 softmax 时要先对每个分数取指数，再除以本行的指数和。例题特意使用 ln 3，让指数变回 3，避免把计算器操作误当概念难度；若分数很大，实际实现通常减去行最大值来保持数值稳定。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "many-heads",
+      "title": {
+        "zh": "多头带来多种比较，不会免除两两交互",
+        "en": "Multiple heads do not remove pairwise cost"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "不同注意力头使用不同投影，可以从不同特征子空间组合关系；各头输出拼接后再投影。前馈块则在每个 token 上处理特征，两者职责不同。自回归生成还需因果遮罩，阻止当前位置读取未来答案；它与补充位置的编码也不是同一个机制。\n\n稠密注意力有 n×n 对交互，固定特征宽度时，token 数翻倍会让这部分比较数变为四倍。朴素实现会保存整张分数表，但融合实现可改变峰值内存，因此不能把理论表大小直接说成任何程序必须占用的内存，也不能推出整座网络耗时恰好四倍。"
+        }
+      ]
+    },
+    {
+      "id": "robustness-and-return",
+      "title": {
+        "zh": "预测稳定不稳定，是另一道需要条件的问题",
+        "en": "Robustness asks a different, conditional question"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史 Lecture12.2 后半转向对抗样本：随机噪声与为了诱发错误而优化的扰动不同。讨论鲁棒性要说明谁能改哪些输入、允许多大扰动、目标是什么；没有这些威胁模型条件，“抗干扰”并不是可核对的结论。FGSM、PGD 等具体攻击步骤属于后续历史内容，不是注意力公式本身的附带保证。\n\n回到原课的 ViT 图，把 patch 数、嵌入宽度、投影、权重、value 输出与位置机制分别指出来。首轮卡依次检查这些对象和成本；先能说明一个 query 怎样取信息，再学习完整编码器或鲁棒性实验，避免把结构图上的每个框都变成一个孤立名词。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "计算patch数量并解释位置机制",
+      "sections": [
+        "patches-and-positions"
+      ],
+      "practice": "card:CS5489-M295",
+      "cards": [
+        "CS5489-M295",
+        "CS5489-M296"
+      ]
+    },
+    {
+      "goal": "核对注意力形状及token数变化的成本",
+      "sections": [
+        "shapes-and-scaling",
+        "many-heads"
+      ],
+      "practice": "unit:attention-shapes:transfer",
+      "cards": [
+        "CS5489-M297",
+        "CS5489-M299"
+      ]
+    },
+    {
+      "goal": "独立计算softmax权重与不同value组合",
+      "sections": [
+        "query-key-value",
+        "equal-and-swapped"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M298"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture12.2.pdf",
+      "locator": "PDF pp. 5, 8, 10–11, 13–14, 17, 21, 29, 32",
+      "kind": "historical",
+      "note": "历史ViT结构与对抗样本；第13页投影尺寸按特征维纠正，鲁棒性结论必须注明威胁模型。"
+    },
+    {
+      "name": "Vaswani et al., Attention Is All You Need",
+      "locator": "https://arxiv.org/pdf/1706.03762 · Sections 3.2.1–3.3",
+      "kind": "reference",
+      "note": "原始论文用于核对缩放点积、投影维度、多头及因果遮罩；不把后续架构的具体实现都等同于原论文。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml29 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+    }
+  ]
+}

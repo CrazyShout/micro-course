@@ -1,0 +1,205 @@
+{
+  "lesson_id": "ml08",
+  "title": {
+    "zh": "一封邮件进来，电脑到底应该数什么？",
+    "en": "What should the computer count in an email?"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "课堂展示了一封宣传在家赚钱机会的邮件，任务是判断 spam 还是正常邮件。人会读语气，程序先看到一串字符；在选择分类器前，要先决定把这封邮件记录成“哪些词出现过”，还是“每个词出现了几次”。",
+    "en": "The lecture shows an email advertising a home-business opportunity and asks whether it is spam. A person can read its tone; the program first sees characters. Before choosing a classifier, decide whether to record word presence or occurrence counts."
+  },
+  "sections": [
+    {
+      "id": "a-fixed-word-list",
+      "title": {
+        "zh": "先给每个词固定一个位置",
+        "en": "Give each vocabulary word a fixed coordinate"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "固定词表顺序为 free、meeting、win，那么教学短信 `free free win` 的计数向量是 (2,0,1)，出现标记是 (1,0,1)。词袋 bag-of-words 把文本变成这张按词计数的表，词序被忽略；它不会自动理解“not free”中的否定。\n\n每一列始终对应同一个词，训练和新邮件必须用相同顺序。词表只从训练文本拟合，留出文本只 transform；否则提前知道哪些词会在考题里出现，也是一种信息泄漏。很多文档只包含词表的一小部分，用稀疏矩阵存非零项能节省空间。"
+        }
+      ]
+    },
+    {
+      "id": "presence-or-counts",
+      "title": {
+        "zh": "两张记录表，回答两种统计问题",
+        "en": "Presence and counts describe different observations"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Bernoulli NB 为每个词的有/无标记建模。设 $\\theta_{cj}$ 是 c 类中出现词 j 的概率，一条文档在该特征上的因子是 $\\theta_{cj}^{x_j}(1-\\theta_{cj})^{1-x_j}$，其中 $x_j$ 只能为 0 或 1。没出现也有 $(1-\\theta)$ 这份证据；一句话把 free 写三遍，标记仍是 1。\n\nMultinomial NB 则在给定文档总词元数时，把这些词元按本类词概率分配；词 j 出现 $x_j$ 次，就贡献 $\\theta_{cj}^{x_j}$。对数分数是 log 先验加上计数乘 log 词概率的和。零计数贡献的是幂零次方 1，不能把 Bernoulli 的缺词项混进来。给定总次数后，各词计数受总和限制，并不是彼此独立的自由计数。"
+        }
+      ]
+    },
+    {
+      "id": "unseen-is-not-impossible",
+      "title": {
+        "zh": "训练里没见过，不代表以后绝不出现",
+        "en": "Reserve room for unseen events"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设某类训练邮件里从没出现 win，直接估为 0 会让新邮件一见这个词就把该类整个乘积压成 0。平滑给未见事件留少量概率。对 Bernoulli，N 篇同类文档中 k 篇出现这个词，对出现/不出现各加 $\\alpha>0$，得 $(k+\\alpha)/(N+2\\alpha)$；一篇出现五次仍只记一篇。\n\n对 Multinomial，令 $T_{cj}$ 是该类词 j 的总词元数，V 是词表大小，则 $\\theta_{cj}=(T_{cj}+\\alpha)/(\\sum_jT_{cj}+\\alpha V)$。每个词都加了一份，分母就必须总共加 V 份。两种平滑的分母不同，是因为数的对象不同。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "practice-the-denominator",
+      "title": {
+        "zh": "先确定在数什么，再写分母",
+        "en": "Choose the denominator from the observation model"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面仍是词元计数，不是含该词的文档数。先加总真实词元，再加全词表的伪计数；求完检查各词概率之和。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "若想专门检验“一个词出现五次，但只在一篇文档里”怎样影响 Bernoulli，可展开这个短专题。保持数据表示、估计方式与预测公式一致，比背两个分母更可靠。"
+        },
+        {
+          "type": "unit",
+          "ref": "bernoulli-presence",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "score-a-new-message",
+      "title": {
+        "zh": "新邮件来了，用同一模型从头算",
+        "en": "Score a new message without mixing models"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "独立题把词表缩到两个词，让你从平滑概率走到一条新文档的似然。条件已经给齐，不需要找原邮件。做完以后说出为什么一个模型要计算缺词、另一个模型用零次数项；这才说明你知道公式在记录什么。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "return-to-text-classification",
+      "title": {
+        "zh": "回到老师的邮件，再去做新闻实验",
+        "en": "Return to the lecture email and tutorial news"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture2b 单元 55–58 先把邮件变成词袋，72–87 讲 Bernoulli、平滑和重要词，再在 89–93 讨论计数/TF-IDF 与 Multinomial。TF-IDF 用非负实数权重调整常见词影响，是实用的特征加权/表示，不是严格的整数多项式计数；它的 IDF 同样只能从训练资料拟合。\n\nTutorial 2 要你在同一 AGNews 划分比较模型、查看高概率词和实际错分。某词在一类概率高，不代表它能区别其他类，仍要跨类比较。手算只是读懂这套程序的起点；下面的两特征小实现用于检查自己的代码，完整新闻任务回到 Tutorial 活动入口。"
+        },
+        {
+          "type": "task",
+          "ref": "implement-bernoulli-nb"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture2b.ipynb",
+      "locator": "cells 55–58, 72–98",
+      "kind": "course",
+      "note": "课堂文本表示、两种 NB 与平滑。 / Text representations, NB models and smoothing."
+    },
+    {
+      "name": "Tutorial2v2.ipynb",
+      "locator": "cells 10–28",
+      "kind": "course",
+      "note": "新闻管线、重要词、错分与参数实验。 / News pipelines, words, errors and parameter experiments."
+    },
+    {
+      "name": "串讲与教学小例 / Teaching synthesis",
+      "locator": "ml08",
+      "kind": "derived",
+      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "词袋模型如何把文本变成向量？",
+      "sections": [
+        "a-fixed-word-list"
+      ],
+      "practice": "card:CS5489-M075",
+      "cards": [
+        "CS5489-M075"
+      ]
+    },
+    {
+      "goal": "伯努利朴素贝叶斯对每个词建模的是什么？",
+      "sections": [
+        "presence-or-counts"
+      ],
+      "practice": "card:CS5489-M079",
+      "cards": [
+        "CS5489-M079"
+      ]
+    },
+    {
+      "goal": "为什么要对伯努利词概率做平滑？公式是什么？",
+      "sections": [
+        "unseen-is-not-impossible",
+        "practice-the-denominator"
+      ],
+      "practice": "card:CS5489-M081",
+      "cards": [
+        "CS5489-M081"
+      ]
+    },
+    {
+      "goal": "多项式朴素贝叶斯建模什么？怎样估计词概率？",
+      "sections": [
+        "presence-or-counts",
+        "unseen-is-not-impossible"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M086"
+      ]
+    },
+    {
+      "goal": "某类在三词词表中的词元计数为 $(3,1,0)$，$\\alpha=1$ 时平滑概率是多少？",
+      "sections": [
+        "unseen-is-not-impossible",
+        "score-a-new-message"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M088"
+      ]
+    }
+  ]
+}

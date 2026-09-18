@@ -1,0 +1,176 @@
+{
+  "lesson_id": "ml24",
+  "title": {
+    "zh": "预测错了，怎样知道该改哪一个数？",
+    "en": "Trace a prediction error back to the parameters"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "给定输入 x=2，希望程序输出 3。先用最小的模型 q=wx；当 w=1 时它只输出 2。我们要知道把 w 往哪边改、改多少有帮助。若计算经过很多层，靠一个参数一个参数试太慢，反向传播便用每一步的局部导数，把最终误差有次序地传回来。",
+    "en": "For input x=2, a program should output 3. Start with q=wx: at w=1 it predicts only 2. Which way should w move? When a calculation contains many layers, testing every parameter separately becomes expensive. Backpropagation applies local derivatives in a systematic reverse order."
+  },
+  "sections": [
+    {
+      "id": "need-nonlinearity",
+      "title": {
+        "zh": "先弄清层数增加了什么",
+        "en": "What does another layer actually add?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "神经网络的一层通常先加权求和，再经过激活函数。含偏置的“线性层”严格说是仿射变换。若两层之间没有非线性，$W_2(W_1x+b_1)+b_2=(W_2W_1)x+W_2b_1+b_2$，仍能合并成一层；只是多开了工位，并没有增加新的函数形状。\n\n例如 ReLU 把负数截成零、正数保留，即 $\\max(0,z)$，这才改变可表达的关系。历史 Lecture9.1 第 23、26、28 页依次谈隐藏层和激活函数。激活、输出与损失要服务任务：分类常用交叉熵，连续量预测可用平方误差。不要把所有网络的末尾都机械塞进同一个概率函数。"
+        }
+      ]
+    },
+    {
+      "id": "local-responsibility",
+      "title": {
+        "zh": "沿着计算图，一站一站回传",
+        "en": "Apply the chain rule one operation at a time"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把复杂公式拆成加法、乘法等节点。前向传播先计算并保存中间值；反向时，若已知损失对节点输出 u 的导数，再乘局部导数 $du/dv$，得到沿该条路径对输入 v 的贡献。所谓“反向”，指走过计算关系的顺序，不是把加法变减法。\n\n下图与例题先不涉及模型训练，只处理一个可以手算的函数。加法节点给每个输入乘以 1；乘法节点对一个输入求导时，要乘另一个输入的前向值。Lecture9.2 的计算图把这些局部规则画出来；从这里学会一条规则，再用于整个网络。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/backprop-graph.svg"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "shared-paths",
+      "title": {
+        "zh": "同一个变量走了两条路，账要合并",
+        "en": "Add contributions from every path"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "若 x 同时出现在两个分支里，它的变化会通过两条路径影响结果，导数要相加。下一题把 x 放在乘法节点的两个输入位置；只计算其中一条路，就像两张账单只报销了一张。\n\n历史 Lecture9.2 第 15 页把复制节点的反向规则叫梯度相加。同样的原则会出现在卷积共享滤波器：同一权重在许多位置被使用，各位置给它的梯度贡献也要合起来。共享参数节省的是参数份数，不是让大部分使用位置失去发言权。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "finish-one-update",
+      "title": {
+        "zh": "把前向、反向与更新连成一次训练",
+        "en": "Complete one forward-backward-update cycle"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到开头 q=wx 的预测任务。用损失 $L=\\tfrac12(q-y)^2$ 衡量误差：先算预测 q、残差与 L；然后算 $dL/dq$，乘上 $dq/dw=x$；最后优化器才按给定学习率更新 w。所有梯度都来自同一套旧参数，不能边求导边把参数改掉。\n\n下面变式让你完成这三个动作。更新后重新前向计算，可以检查这次小步是否降低了该样本损失；这不证明任何学习率都稳，也不证明未见数据上更好。反向传播提供导数，梯度下降只是使用导数的一种方法。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "matrix-batch",
+      "title": {
+        "zh": "一批样本一起算，形状就是路标",
+        "en": "Use matrix shapes to keep a batch calculation consistent"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把样本放在 X 的行里，层输出为 $Y=XW+b$。设回传梯度 $G=\\partial L/\\partial Y$，则 $dW=X^TG$、$dX=GW^T$，偏置梯度按样本行相加。若 X 为 n×d、W 为 d×h，Y 与 G 都是 n×h，dW 应回到 d×h；形状检查能抓住不少转置错误。\n\n损失是对样本求和还是取均值，会改变梯度尺度，G 应已经包含该系数。这里解释批量层的记账，不要求第一遍记住所有框架接口；能从标量链式法则解释矩阵结果，比照抄一个恰好不报错的张量运算更可靠。"
+        }
+      ]
+    },
+    {
+      "id": "debug-and-return",
+      "title": {
+        "zh": "先让它学会几条干净记录，再谈泛化",
+        "en": "Debug a tiny subset before claiming generalisation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "若模型有足够容量、正则化较弱，却连很小的干净训练子集也拟合不了，先查标签、形状、损失和梯度，而不是急着换更深网络。拟合小样本成功只证明基础流程有机会正常工作；恢复正式划分后，仍要看验证表现，训练误差降低不等于泛化提高。\n\nLecture9.1 第 38 页谈过拟合，第 40 页还提醒表达能力不等于参数一定学得出来。第 28 页关于 ReLU 梯度的简写也需限定：它的正区间导数为一，但负区间可能不传梯度，深网络整体仍可能出现梯度问题。首轮卡分开检查激活的必要性、三个训练动作、路径乘法与累加，以及小数据调试的边界。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释非线性激活的必要性",
+      "sections": [
+        "need-nonlinearity"
+      ],
+      "practice": "card:CS5489-M243",
+      "cards": [
+        "CS5489-M243"
+      ]
+    },
+    {
+      "goal": "沿计算图求导并完成独立参数更新",
+      "sections": [
+        "local-responsibility",
+        "shared-paths",
+        "finish-one-update"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M248",
+        "CS5489-M249",
+        "CS5489-M250"
+      ]
+    },
+    {
+      "goal": "说明小子集拟合的调试作用与局限",
+      "sections": [
+        "debug-and-return"
+      ],
+      "practice": "card:CS5489-M254",
+      "cards": [
+        "CS5489-M254"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture9.1.pdf",
+      "locator": "PDF pp. 12, 23, 26, 28, 33, 38, 40",
+      "kind": "historical",
+      "note": "历史神经元、隐藏层、激活、训练与泛化；正文限定ReLU梯度与表达能力的宽泛说法。"
+    },
+    {
+      "name": "Lecture9.2.pdf",
+      "locator": "PDF pp. 3, 15",
+      "kind": "historical",
+      "note": "历史链式法则与计算图梯度规则；第15页已按图核对复制节点的梯度累加。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing exercises",
+      "locator": "ml24 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+    }
+  ]
+}

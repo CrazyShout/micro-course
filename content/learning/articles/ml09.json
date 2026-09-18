@@ -1,0 +1,202 @@
+{
+  "lesson_id": "ml09",
+  "title": {
+    "zh": "给新闻里的词计数，怎样接上 Poisson NB？",
+    "en": "Build Poisson NB from word counts"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "Tutorial 2 已让你试过两种新闻分类方法，现在留下一个 PoissonNB 类的空骨架。输入仍是一篇新闻里各词出现的次数，输出仍是四类新闻之一；要改变的是“每类怎样产生这些计数”，而不是把整个分类流程重新发明一遍。",
+    "en": "Tutorial 2 leaves a PoissonNB skeleton after two text-classification experiments. Inputs remain word counts and outputs remain news categories. Change how each class generates counts, while retaining the classifier workflow."
+  },
+  "sections": [
+    {
+      "id": "what-is-being-counted",
+      "title": {
+        "zh": "先明确每次观察的窗口",
+        "en": "Specify what one observation counts"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "把一篇文档视作一次观察，$x_j$ 是词 j 出现的非负整数次数。Poisson 分布用 $P(X=x)=e^{-\\lambda}\\lambda^x/x!$ 描述这类计数，$x!=1\\times2\\times\\cdots\\times x$，约定 $0!=1$；$\\lambda$ 是一次观察的平均次数，方差也等于它。这里先设 $\\lambda>0$，零率需要单独处理。\n\nTutorial 用 $\\mu$ 表示这个平均计数，本文用 $\\lambda$，指同一个参数。它不是 Multinomial 的“所有词概率之和为 1”：某类文档平均一个词出现 2 次、另一个词 3 次，两个均值可以合计 5。以文档为同一观察单位，是一个建模假设；文档长短变化很大时要格外留意。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/poisson-counts.svg"
+        }
+      ]
+    },
+    {
+      "id": "learn-each-class",
+      "title": {
+        "zh": "每类、每个词，各学一个平均数",
+        "en": "Estimate one mean for each class and word"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对类别 c，把它的 $N_c>0$ 篇训练文档取出来。词 j 的均值估计为 $\\hat\\lambda_{cj}=N_c^{-1}\\sum_{n:y_n=c}x_{nj}$；同时估类别先验 $\\pi_c=N_c/N$。例如某词在四篇同类文档中的次数为 (0,1,3,0)，平均为 1。零也要算一篇观察，不能把没出现的文档从分母里删掉。\n\n给定类别后，Poisson NB 假设各词计数独立，文档的类条件概率是逐词 Poisson 的乘积。这个独立性是方便建模的选择，不是“新闻里的词真的各写各的”。长文档会倾向带来更多计数，模型也隐含了文档长度的行为。"
+        }
+      ]
+    },
+    {
+      "id": "turn-products-into-scores",
+      "title": {
+        "zh": "取对数以后，有一项特别容易被漏掉",
+        "en": "Keep the negative-rate term in the score"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对单个词取 log 得 $x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)$；逐词相加，再加入 $\\log\\pi_c$。于是 $s_c=\\log\\pi_c+\\sum_j[x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)]$。\n\n同一篇待分类文档的阶乘项在各类完全一样，比较类别时可以省掉；$-\\lambda_{cj}$ 却依赖类别，不能顺手也扔掉。它让“预期本应频繁出现，却一次没有”的词仍影响判断。下面教学例只用两类、两个词练分数，不是 AGNews 的真实实验结果。"
+        },
+        {
+          "type": "foundation",
+          "ref": "powers-logs"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "reverse-the-evidence",
+      "title": {
+        "zh": "把次数换到另一个词上",
+        "en": "Move the evidence to the other word"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "示范中两类总平均计数恰好一样，所以负率项抵消；这是那组数字的巧合，不是一般规则。下面把观测次数互换，保持模型不变，看看预测如何跟随证据。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "再做一个更尖锐的检查：某类预计这个词出现很多次，结果文档里一次也没有。此时 x log λ 是零，但“没有出现”并非没有信息。只剩一个特征的小题可以立刻检查你有没有误删负率项。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "back-to-the-template",
+      "title": {
+        "zh": "回到原类骨架，只改真正变化的部分",
+        "en": "Return to the tutorial interface"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Tutorial2v2 单元 31 要求参考课堂 GaussianBayes：fit 改为估计逐类词均值，compute_logccd 改为 Poisson 对数概率和；先验、joint score、后验归一化与预测接口继续沿用。先在小数据上比对逐项和向量化计算，再检查后验每行和为 1、标签与输出列对应，最后才跑新闻数据。\n\n若某个估计均值为 0，新文档该词出现正次数时概率为 0；数值程序还可能踩到 0×log0。可以定义正平滑率，或显式处理边界，但原模板没规定 alpha 唯一怎样使用，不能把某种补充平滑说成老师指定答案。TF-IDF 的小数权重也不该冒充这里的整数计数。"
+        }
+      ]
+    },
+    {
+      "id": "what-could-go-wrong",
+      "title": {
+        "zh": "解释模型可能失灵，比预言谁赢更重要",
+        "en": "Explain limitations before claiming a winner"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "真实新闻里有词语搭配、重复突发与文档长度差异，可能违反独立性和“均值等于方差”的简单假设。但指出假设不完美，不足以证明 Poisson 一定输给另外两种 NB。原单元 35 要的是比较结果与理由：同一协议下的实测分数、真实错分文章、哪些假设可能解释现象。\n\n首轮回忆抓住均值如何估、分数哪些项能省、零次数为何有信息。Gamma–Poisson 先验只是后续可选扩展，不是完成原模板的必经步骤；没有自己的运行记录，就不填写想象中的准确率。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Tutorial2v2.ipynb",
+      "locator": "cells 29–35",
+      "kind": "course",
+      "note": "Poisson 定义、分类器骨架和比较要求。 / Poisson definition, classifier skeleton and comparison."
+    },
+    {
+      "name": "Lecture2b.ipynb",
+      "locator": "cell 44",
+      "kind": "course",
+      "note": "复用的 GaussianBayes 接口。 / GaussianBayes interface reused by the tutorial."
+    },
+    {
+      "name": "串讲与教学小例 / Teaching synthesis",
+      "locator": "ml09",
+      "kind": "derived",
+      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "什么是泊松分布？如何根据计数估计其参数？",
+      "sections": [
+        "what-is-being-counted",
+        "learn-each-class"
+      ],
+      "practice": "card:CS5489-M111",
+      "cards": [
+        "CS5489-M111"
+      ]
+    },
+    {
+      "goal": "Poisson Naive Bayes 分类器需要学习哪些参数？",
+      "sections": [
+        "learn-each-class"
+      ],
+      "practice": "card:CS5489-M112",
+      "cards": [
+        "CS5489-M112"
+      ]
+    },
+    {
+      "goal": "如何推导数值稳定的 Poisson NB 类别分数？",
+      "sections": [
+        "turn-products-into-scores",
+        "reverse-the-evidence"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M113"
+      ]
+    },
+    {
+      "goal": "两类先验相等，泊松均值分别为 $(2,1)$、$(1,2)$，文档 $x=(2,0)$ 更支持哪类？",
+      "sections": [
+        "turn-products-into-scores"
+      ],
+      "practice": "card:CS5489-M114",
+      "cards": [
+        "CS5489-M114"
+      ]
+    },
+    {
+      "goal": "为什么 Poisson NB 对某些文档集合可能不合适？",
+      "sections": [
+        "what-could-go-wrong"
+      ],
+      "practice": "card:CS5489-M116",
+      "cards": [
+        "CS5489-M116"
+      ]
+    }
+  ]
+}

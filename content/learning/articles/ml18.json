@@ -1,0 +1,168 @@
+{
+  "lesson_id": "ml18",
+  "title": {
+    "zh": "来了一个新样本，问问它的邻居",
+    "en": "Ask the neighbours about a new sample"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "现在有一批已经标好类别的样本，例如记录了花的几项尺寸和品种。又来一朵没有标签的花：能不能先找长得最像的几朵，借它们的标签判断？历史 Lecture1.2 就从这种直接办法介绍 k 近邻。本篇先把“找谁”和“怎样投票”讲清，再检查距离有没有被单位悄悄改掉。",
+    "en": "We have labelled samples, such as flower measurements with known species, and a new unlabelled flower. Could the most similar recorded flowers help classify it? Historical Lecture1.2 introduces k-nearest neighbours this way. We will separate neighbour selection from voting, then check whether changing measurement units silently changes the decision."
+  },
+  "sections": [
+    {
+      "id": "ask-neighbours",
+      "title": {
+        "zh": "先找参照物，再给类别起名字",
+        "en": "Find comparable examples before assigning a label"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "设训练记录是一对对 $(x_i,y_i)$：$x_i$ 是第 i 条样本的特征向量，$y_i$ 是它的已知类别。新样本只有特征 $x$，目标是预测标签。k 近邻（k-nearest neighbours，k-NN）保存这些记录；预测时计算距离，找出最近的 k 条，再投票。它没有先拟合一条直线，但选特征、定尺度、选 k 仍然是学习流程的一部分。\n\n历史 Lecture1.2 第 8、14 页描述的就是“保存训练集→计算距离→取近邻→投票”。这里的近邻是特征空间里的近，不是采集时间最近，也不是文件夹里排在旁边。朴素办法能成立，依赖附近样本的标签有参考价值；若把无关特征放大，机器就会非常认真地问错人。"
+        }
+      ]
+    },
+    {
+      "id": "votes",
+      "title": {
+        "zh": "三位邻居，两套投票规矩",
+        "en": "Three neighbours, two voting rules"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "先把距离计算与投票分开。给定最近三条的标签 A、B、B，普通多数票当然偏向 B；但若 A 离查询点特别近，是否应该更有发言权？一种另行定义的规则令权重为 $1/d$，d 是距离。它改变了决策规则，不是对多数投票的一次“纠错”。两种规则都合理与否，需要训练集内部验证，不能看测试答案后临时改选。\n\n下面例题的距离已经给好，先分别列出每类的票数和权重总和。题目若没说加权，就不要自作主张加戏。距离恰好为零时 $1/d$ 不能直接算，实际实现需要规定由零距离样本决定，或使用明示的稳定化规则；平票也必须有一致处理。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "distance-scale",
+      "title": {
+        "zh": "把厘米换成毫米，类别竟然变了？",
+        "en": "When changing units changes the neighbour"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对两个 d 维向量，欧氏距离满足 $\\|x-z\\|^2=\\sum_{j=1}^{d}(x_j-z_j)^2$。一维差值扩大十倍，它在平方距离里的贡献就扩大一百倍。所以“每一列都放进公式”并不意味着每一列同样重要：单位和尺度已经在暗中投票。\n\n下面只改第一坐标的计量单位，所有点一起改，点之间的实际关系没有凭空产生新信息；算法却可能换掉最近邻。先算平方距离即可，不必开方。标准化能使尺度更可控，但尺度参数只能从训练数据拟合，再用于验证和测试；把全部数据一起标准化，会让本应未知的数据参与建模。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "choose-k",
+      "title": {
+        "zh": "扩大朋友圈，不一定更聪明",
+        "en": "A larger neighbourhood is not always better"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "k=1 对局部差异很敏感，也容易被一条噪声标签带走。增大 k 会平滑决策：一个孤立的异常点不再一票定输赢；代价是某个少数类别的小区域，可能被周围多数类淹没。应把 k、距离与缩放看成一套方案，通过验证选择，而不是把“大 k 比较稳”背成定律。\n\n历史第 17 页还提醒存储与搜索代价。蛮力预测要将查询与全部训练样本比较；数据维度增大时，哪些点真正相近也可能越来越难区分。这里不是说高维距离算不出来，而是距离对任务的区分能力、样本密度和计算成本都值得重新检查。"
+        }
+      ]
+    },
+    {
+      "id": "more-data",
+      "title": {
+        "zh": "无限增加数据，也救不了每条规则",
+        "en": "More data cannot rescue every fixed rule"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "历史第 17 页关于数据增多后收敛的概括需要条件，不能解读成固定 1-NN 必然达到贝叶斯最优。考虑特征完全不含类别信息，标签独立地以 0.7 概率为 A、0.3 为 B。最佳决策总选 A，错误率是 0.3；1-NN 却相当于借来另一个独立标签。它出错的两种情况是“A 遇到 B”和“B 遇到 A”，总概率 $0.7\\times0.3+0.3\\times0.7=0.42$。\n\n这是我们加入的限定反例，不是课堂原题。它说明邻居更多、数据更多、规则更好是三件不同的事。卡片 M186 要求你讲明这个反例；它不是要求背诵一个未经说明条件的渐近定理。"
+        }
+      ]
+    },
+    {
+      "id": "return-and-review",
+      "title": {
+        "zh": "回到历史课件：把规则说完整",
+        "en": "Return to the historical rule"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "重读 Lecture1.2 时，可以用一句完整的话核对自己：我用什么特征和尺度、什么距离、多少邻居、怎样投票、怎样处理平票。第 10 页的 arg max 返回获胜类别，而 max 返回最大得票数；知道“最多得了两票”还没有说出预测标签。\n\n下面书本补充用另一组坐标说明缩放，属于选读的复核例子。首轮先复习已有四张卡：算法、投票、尺度与 k、固定 1-NN 的限制。能用自己的话说清这些，再增加其他历史主题；本篇不把旧 Lecture 编号当作本学期已授进度。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "说明近邻查询与两种投票规则",
+      "sections": [
+        "ask-neighbours",
+        "votes"
+      ],
+      "practice": "card:CS5489-M184",
+      "cards": [
+        "CS5489-M183",
+        "CS5489-M184"
+      ]
+    },
+    {
+      "goal": "独立比较换单位前后的距离与预测",
+      "sections": [
+        "distance-scale",
+        "choose-k"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M185"
+      ]
+    },
+    {
+      "goal": "用无信息特征反例限定固定1-NN的渐近表现",
+      "sections": [
+        "more-data"
+      ],
+      "practice": "card:CS5489-M186",
+      "cards": [
+        "CS5489-M186"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture1.2.pdf",
+      "locator": "PDF pp. 8, 10, 12, 14, 17",
+      "kind": "historical",
+      "note": "历史 2024 课件：近邻分类、max/arg max、距离、蛮力搜索与取舍；第17页收敛概括在正文用反例限定。"
+    },
+    {
+      "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
+      "locator": "ml18 · worked / practice / transfer",
+      "kind": "derived",
+      "note": "串讲、说明性反例和数值练习用于理解历史材料，不冒充教师原题或用户实际实验。"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "lesson_id": "net16",
+  "title": {
+    "zh": "一个IP地址，怎样告诉路由器该往哪走？",
+    "en": "Addressing, forwarding, and fragmentation"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "网络管理员给接口一个地址192.0.2.130/26。这个斜杠不是装饰：它决定哪些地址在同一范围。先把地址拆成固定部分与可变部分，再看路由器如何选出口和处理过大的包。",
+    "en": "An interface receives 192.0.2.130/26. Understand its fixed and variable bits before choosing a forwarding entry or handling a datagram that exceeds a link’s size limit. This is historical preparation."
+  },
+  "sections": [
+    {
+      "id": "address-and-interface",
+      "title": {
+        "zh": "地址先定位接口，不等于给人发身份证",
+        "en": "An address belongs to an interface or endpoint"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "往年Chapter 4先分转发与路由：转发处理当前分组应走哪个输出接口，路由负责形成这些路径信息。IP地址关联接口或逻辑端点；一台路由器可在多个接口有地址，一个人也不是永久对应唯一IP。\n\nIPv4写成四个十进制数，本质上是32位，每个数代表8位。CIDR前缀/p表示前p位固定，其余32−p位可变。先从位理解范围，再用十进制块边界做快捷计算；不要继续把旧A/B/C类边界当作所有现代前缀的默认规则。"
+        }
+      ]
+    },
+    {
+      "id": "aligned-blocks",
+      "title": {
+        "zh": "/26为什么是64个地址，还得从边界起算？",
+        "en": "Count addresses and respect alignment"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "/26留下6个主机位，共 $2^6=64$ 个地址。前三个字节全固定，最后字节的块起点是0、64、128、192；130只能在128–191这个块，不可随意从130开始数64个。掩码前26位是1，按位AND保留前缀、清零主机位。"
+        },
+        {
+          "type": "prose",
+          "text": "在本题普通子网约定中，全零主机位是网络地址，全一是广播，剩余用于主机。/31点对点或/32主机路由有不同解释，所以先算整个块，再按用途判断可用量；不要把减2当对一切前缀成立的定律。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "most-specific-match",
+      "title": {
+        "zh": "多个条目都匹配，选描述最具体的",
+        "en": "Choose the longest matching prefix"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "10.1.2.99可以同时落在10.0.0.0/8、10.1.0.0/16和10.1.2.0/24。最长前缀匹配选/24，因为它约束的位最多；不是选文件里最上面一行，也不是看小数点后数字最大。没有更具体匹配时，/0可作默认。\n\n相邻前缀可以在对齐条件下聚合，减少表项；仅仅两个数字看着近不够。最长匹配与聚合服务于可扩展转发。路由器内部还可能遇到输入队列的队头阻塞：首包等忙输出，让后包也出不去，这与外部链路容量是不同位置的限制。"
+        },
+        {
+          "type": "unit",
+          "ref": "longest-prefix",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "size-and-fragments",
+      "title": {
+        "zh": "找到了出口，包也可能装不下",
+        "en": "A selected link may have a smaller MTU"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "IPv4总长度包含IP首部，IHL以32位字计首部长度；IHL=5即20字节，后面还可能有传输首部，不能全部叫应用数据。链路MTU约束所承载IP包大小，不包含所有外层链路封装。\n\n允许IPv4分片且无选项时，每片重新带20字节IP首部。非末片载荷取不超过MTU减首部的最大8倍数，因为offset按原载荷里的8字节块定位；MF表示后面还有没有片，最终目的端重组。用片总长度除8会把重复首部也错算进原载荷位置。"
+        },
+        {
+          "type": "unit",
+          "ref": "ipv4-fragmentation",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "getting-and-translating-addresses",
+      "title": {
+        "zh": "配置、转换与新版本，各解决什么问题？",
+        "en": "Configuration, translation and version changes"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "DHCP可提供接口地址、掩码、网关与DNS配置。常见地址端口转换网关维护内部与外部映射，改写分组并把回复送回对应端点；端口数量不是无条件可服务连接数，超时、复用与设备资源都参与限制。\n\nIPv6使用更大地址空间与40字节基本首部，后面还可有扩展首部；转发中的路由器不按IPv4方式分片，源端需要处理包长限制。隧道把IPv6包放入IPv4载荷，会增加开销并影响有效MTU，内外层地址不能混看。\n\n这些按往年Chapter 4预习，范围不自动变成本学期要求。先会对齐地址块、选最长匹配，再回原卡和补充逐片填写长度、偏移；每种计算都有自己的单位与规则。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha4_2025_student.pptx",
+      "locator": "slides 5–8, 13–26, 28–63",
+      "kind": "historical",
+      "note": "原PPTX数据平面、最长匹配、IPv4地址/分片、DHCP/NAT、IPv6与隧道。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net16 worked/practice/transfer",
+      "kind": "derived",
+      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+    },
+    {
+      "name": "RFC 8200",
+      "locator": "sections 3–5",
+      "kind": "reference",
+      "note": "IPv6基本首部与分片限制；沿用已核对N201等原卡的规范依据。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能由二进制前缀计算普通 IPv4 子网范围和可用主机数；转发与分片分别练习。",
+      "sections": [
+        "address-and-interface",
+        "aligned-blocks",
+        "most-specific-match",
+        "size-and-fragments",
+        "getting-and-translating-addresses"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N194",
+        "CS5222-N195",
+        "CS5222-N196"
+      ]
+    },
+    {
+      "goal": "IP 地址在所有情况下都标识整个物理设备吗？",
+      "sections": [
+        "address-and-interface"
+      ],
+      "practice": "card:CS5222-N193",
+      "cards": [
+        "CS5222-N193"
+      ]
+    },
+    {
+      "goal": "路由为 10.0.0.0/8→A、10.1.0.0/16→B、10.1.2.0/24→C，10.1.2.99 应走哪一条？",
+      "sections": [
+        "most-specific-match"
+      ],
+      "practice": "card:CS5222-N187",
+      "cards": [
+        "CS5222-N187"
+      ]
+    }
+  ]
+}

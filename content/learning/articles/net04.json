@@ -1,0 +1,170 @@
+{
+  "lesson_id": "net04",
+  "title": {
+    "zh": "带宽明明够，包为什么还在排队？",
+    "en": "Capacity, throughput, and queueing"
+  },
+  "minutes": "12–18",
+  "lede": {
+    "zh": "一条链路每毫秒能发完一个包。一种流量慢慢来，另一种突然一口气来四个包；两者长期发送量相同，用户等待也会一样吗？先把到达时刻写出来。",
+    "en": "Capacity, throughput, and queueing. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+  },
+  "sections": [
+    {
+      "id": "arrivals-matter",
+      "title": {
+        "zh": "先看包什么时候来到出口",
+        "en": "Look at arrivals at the output link"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "想象路由器的输出链路是正在处理任务的服务台：一个包正在发送时，新到的包通常要等。这里借用服务台只为解释“先后”，网络里的数据仍由比特和缓冲区组成。若包间隔足够长，队列可能每次都来得及清空；若一起到达，就有包等在别人后面。\n\n我们关心的是开始发送前等了多久，不包括这个包自身的发送时间。FIFO表示先到先服务。其他优先级规则会改变顺序，因此没有交代服务规则的题，不应凭一个平均速率就猜出所有等待。"
+        }
+      ]
+    },
+    {
+      "id": "capacity-and-throughput",
+      "title": {
+        "zh": "上限、实绩与等待，用三个名字",
+        "en": "Capacity, delivered rate and waiting"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "容量是链路能提供的传输上限；吞吐量是某段时间实际交付了多少数据除以时间；时延是一个指定事件等多久。大文件持续传得很多，不代表一条短请求不用久等。\n\n老师 Chapter 1 第53–55张串联快慢链路：理想单流不受其他限制时，持续吞吐量受最小链路速率约束。两段分别10和2 Mbps，并不会合成12 Mbps。若第二段已经是瓶颈，给第一段升级就像给等餐的人换更快的鞋——厨房出餐速度没有变。这个比喻只说明非瓶颈升级的限制。\n\n共享时还要问哪些流共用哪段容量。协议首部、重传和窗口也可降低应用有效吞吐量。具体分流计算保留在“共享瓶颈”补充单元，不把所有链路一律除以总用户数。"
+        }
+      ]
+    },
+    {
+      "id": "load-is-a-ratio",
+      "title": {
+        "zh": "平均负载只是一笔工作量账",
+        "en": "Average load is a workload ratio"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "令平均包长为 $L$ 比特、平均到达率为 $a$ 包/秒、服务速率为 $R$ 比特/秒。平均输入工作量是 $La$ 比特/秒；除以容量得到 $\\rho=La/R$。单位约掉后是一个比例，不是秒数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "负载接近1表示突发余量很少。在常见随机到达、无限缓冲的模型里，接近饱和时平均等待可能急剧增加；持续过载不能维持有限稳定积压。真实缓冲有限，装满后会丢包。加大缓冲能容纳更多等待，但不能把链路本身变快。"
+        }
+      ]
+    },
+    {
+      "id": "same-average-different-wait",
+      "title": {
+        "zh": "同样的平均值，画出不同的等待",
+        "en": "Equal averages can hide different queues"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "用开始为空的队列做一次可手算的反例。下面两种模式每8毫秒重复四个包，每包服务1毫秒。逐包记录“到达—开始—结束”，开始时间不能早于到达，也不能早于前包结束；等待就是开始减到达。不要先套随机队列公式，因为这里已经给出确定到达表。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "prose",
+          "text": "你应能从自己的四行时间表说明：平均负载相同并不决定平均等待。书本图是另一种看法，不是新做的一次真实网络实验。"
+        }
+      ]
+    },
+    {
+      "id": "measure-carefully",
+      "title": {
+        "zh": "测到一个慢，不等于定位了原因",
+        "en": "Measurements need an interpretation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Chapter 1第50–52张接着看traceroute与丢包。它显示各次探测往返观测，不是同一包经过每跳时累计盖章。设备回复调度、排队和返回路径都可能不同；后面一跳RTT小于前一跳，并不等于某段链路出现负时间。\n\n回到本节任务：先区分容量、吞吐量、时延；再写输入工作量；最后查看实际到达与服务事件。首轮卡检查这三层意思，Tutorial 2 Q4用具体FIFO等待继续练，Q5让你用真实输出检验观测边界。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 49–55",
+      "kind": "course",
+      "note": "流量强度、真实时延、有限缓冲与瓶颈吞吐量。"
+    },
+    {
+      "name": "tutorial-2_semA2026.pdf",
+      "locator": "pages 2–3 Q4–5",
+      "kind": "course",
+      "note": "FIFO等待与traceroute原题。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net04 worked/practice/transfer",
+      "kind": "derived",
+      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能计算输入负载并由到达事件解释排队；瓶颈与共享吞吐量见补充单元。",
+      "sections": [
+        "arrivals-matter",
+        "capacity-and-throughput",
+        "load-is-a-ratio",
+        "same-average-different-wait",
+        "measure-carefully"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N033",
+        "CS5222-N035"
+      ]
+    },
+    {
+      "goal": "平均分组 1,000 字节、每秒到达 100 个、链路 1 Mbps，流量强度是多少？",
+      "sections": [
+        "load-is-a-ratio"
+      ],
+      "practice": "card:CS5222-N034",
+      "cards": [
+        "CS5222-N034"
+      ]
+    },
+    {
+      "goal": "什么是吞吐量？瓶颈怎样限制它？",
+      "sections": [
+        "capacity-and-throughput"
+      ],
+      "practice": "card:CS5222-N037",
+      "cards": [
+        "CS5222-N037"
+      ]
+    }
+  ]
+}

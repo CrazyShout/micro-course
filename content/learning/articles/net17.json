@@ -1,0 +1,163 @@
+{
+  "lesson_id": "net17",
+  "title": {
+    "zh": "知道邻居在哪，还要怎样找到整条最短路？",
+    "en": "Shortest paths and routing policy"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "路由器A知道和谁直接相连，也知道各链路的代价，目标是把数据送到D。选第一段最便宜的路就够了吗？我们先用四个节点算完整路径，再区分前驱与下一跳。",
+    "en": "Router A knows a weighted topology and needs to reach D. Compute a complete path, then distinguish the predecessor used to reconstruct it from the next hop used to forward a packet."
+  },
+  "sections": [
+    {
+      "id": "a-map-with-costs",
+      "title": {
+        "zh": "把网络画成点和边，先说明代价是什么",
+        "en": "Define nodes, edges and costs"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "往年Chapter 5第9张用图抽象网络：点是路由器，边是链路，边上的数是代价。它可以是配置指标，不一定等于米数、毫秒或带宽。计算最短路之前，要统一什么叫“短”；非负边权是本节Dijkstra方法的重要条件。\n\n链路状态方法先传播链路信息，让路由器形成拓扑视图，再各自计算到目的地的路径。距离向量则主要与邻居交换当前距离估计。两种方法交换的知识不同，不是一个通信、另一个靠猜。"
+        }
+      ]
+    },
+    {
+      "id": "fix-then-relax",
+      "title": {
+        "zh": "暂定距离为什么可以逐个确定？",
+        "en": "Fix a minimum, then improve its neighbors"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "从A开始，A的距离定为0，直接邻居先用直连代价，未知处记无穷。每次选择尚未确定节点中暂定距离最小者，把它确定下来；再尝试用“到它的距离＋它到邻居的边”改善邻居，这叫松弛。\n\n为什么敢确定？所有边非负，绕到还更远的未确定位置再回来，不可能把当前最小值变小。这是不变量背后的理由；如果允许负边，不能继续照用这个论证。相同暂定值可以有不同合法选点顺序，但最终最短距离应一致。\n\n下面四节点边表是为手算整理的教学例，不冒充原PPTX六节点图。画出无向边，再每轮写已确定集合与剩余暂定值；缺的边不是代价0。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "predecessor-is-not-next-hop",
+      "title": {
+        "zh": "答案是一条路，执行只需要第一步",
+        "en": "Reconstruct the path before choosing the next hop"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "保存前驱是为了从终点倒着追溯路径。在A–B–C–D里，D前驱是C，但A实际应该把包交给B。把最后一段的来源直接填进A的转发表，会跳过自己并不相邻的节点。\n\n原课第13–17张与独立Dijkstra演示都强调迭代距离表。计算结束还要做两项核验：沿恢复路径把边代价相加，检查是否等于目标距离；再从源端读第一跳，核对转发表动作。书本补充把同一小图画开，帮助区分这两个方向。"
+        },
+        {
+          "type": "reading"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "listen-to-neighbors",
+      "title": {
+        "zh": "不知道全图时，先去哪个邻居？",
+        "en": "Compose a neighbor’s estimate with the first-hop cost"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "距离向量把到y的候选写成 $D_x(y)=\\min_v[c(x,v)+D_v(y)]$：v遍历x的邻居，本地边代价 $c(x,v)$ 加邻居通告的剩余距离。第一跳便宜不代表总路便宜，例如2+6比5+1更贵。"
+        },
+        {
+          "type": "prose",
+          "text": "通告可能过期。故障后，两个邻居若互相以为对方还有路，会循环依赖并逐渐增加距离，称计数到无穷。Poisoned reverse可抑制特定两节点循环，不保证消灭所有更长环路。补充练习会改变邻居通告，检验你是否真的重算而非沿用旧答案。"
+        },
+        {
+          "type": "unit",
+          "ref": "distance-vector",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "policy-is-another-objective",
+      "title": {
+        "zh": "全互联网并非共用一个“最短”标准",
+        "en": "Administrative policy changes what best means"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "互联网分自治系统AS，内部路由和跨管理方路由有不同职责。OSPF是域内链路状态协议；BGP通告带属性的前缀可达性，并受策略影响，不是把整个互联网交给一个Dijkstra。AS-PATH记录自治系统路径，可据自身AS号检测AS级环路，却不是每台物理路由器或时延的清单。\n\neBGP在AS之间，iBGP在同一AS内传播BGP信息；实际到下一跳仍依赖域内可达性。热土豆选较近的本地出口，只优化本方内部成本，不能直接当全球最短承诺。ICMP还可传回网络控制/错误信息，课堂UDP traceroute借TTL逐跳观察，但回复不保证到达。\n\n回到本节，先能算非负图、还原下一跳，再看异步通告与政策为何改变问题。首轮卡巩固算法不变量和前驱区别；历史例图的结论仍取决于具体边权，边一改就要重算。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha5_2025_student.pptx",
+      "locator": "slides 9–53",
+      "kind": "historical",
+      "note": "原拓扑图、Dijkstra/DV、AS/OSPF/BGP与ICMP。"
+    },
+    {
+      "name": "dijkstraalgo_2025_student.pptx",
+      "locator": "slides 1–7",
+      "kind": "historical",
+      "note": "历史逐步最短路演示；本文四节点数字为另行教学变式。"
+    },
+    {
+      "name": "Teaching synthesis / 教学串讲与变式",
+      "locator": "net17 worked/practice/transfer",
+      "kind": "derived",
+      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "能逐步执行非负边权Dijkstra并在边代价变化后更新路径；距离向量见补充单元。",
+      "sections": [
+        "a-map-with-costs",
+        "fix-then-relax",
+        "predecessor-is-not-next-hop",
+        "listen-to-neighbors",
+        "policy-is-another-objective"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N204",
+        "CS5222-N205",
+        "CS5222-N206"
+      ]
+    },
+    {
+      "goal": "链路状态与距离向量路由，交换的信息有什么区别？",
+      "sections": [
+        "a-map-with-costs"
+      ],
+      "practice": "card:CS5222-N203",
+      "cards": [
+        "CS5222-N203"
+      ]
+    }
+  ]
+}

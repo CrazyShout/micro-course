@@ -8,9 +8,9 @@
 
 ## 使用
 
-首页为连续微课；`cards.html` 为卡片阅读器；[课程信息与学习指南](https://crazyshout.github.io/micro-course/notices.html) 集中考核、提交、资料与运行提醒。13 张非知识卡迁出，旧网页链接跳转到对应条目。提示和答案可逐层展开，微课与卡片双向关联。支持英语口述训练、待复习标记及含图片 APKG 下载。
+首页为连续微课；`cards.html` 为卡片阅读器；[课程信息与学习指南](https://crazyshout.github.io/micro-course/notices.html) 集中考核、提交、资料与运行提醒。13 张非知识卡迁出，旧网页链接跳转到对应条目。提示和答案可逐层展开，微课与卡片双向关联。支持英语口述训练、待复习标记。
 
-每张 Markji/APKG 卡的答案末尾提供对应微课链接，采用 `?lesson=ml10` 等直达地址。`guide.html?course=CS5489` 与 `guide.html?course=CS5222` 提供两门课各自的完整双语牌组介绍；Markji 简介栏保留短说明和介绍入口。
+每张 Markji 卡的答案末尾提供对应微课链接，采用 `?lesson=ml10` 等直达地址。`guide.html?course=CS5489` 与 `guide.html?course=CS5222` 提供两门课各自的完整双语牌组介绍；Markji 简介栏保留短说明和介绍入口。
 
 学习记录保存在当前浏览器，支持导出；没有跨设备或 Markji 自动同步。原课件的文件名与页码保留在出处说明中，Canvas 及历史仓库的完整原材料继续保存在本地 Course 资料库。
 

@@ -119,6 +119,9 @@ def main():
         for ref in card['sources']:assert 'path' not in ref and (ref['href'] is None or ref['href'].startswith('https://'))
         for image in card['media']:
             rel=card['course']+'/media/'+image;local_link(rel);images.add(rel)
+    assert not list(site.rglob('*.apkg')), 'Retired package files must not be published'
+    for page in site.glob('*.html'):
+        assert '.apkg' not in page.read_text().lower(), 'Retired package download link'
     assert len(images)==manifest['images']
     assert reading_count==manifest['reading_supplements']
     assert len(reading_figures)==manifest['reading_figures']
@@ -133,7 +136,6 @@ def main():
     for course,counts in manifest['courses'].items():
         assert sum(c['course']==course for c in cards.values())==counts['cards']
         assert sum(l['course']==course for l in lessons.values())==counts['lessons']
-        local_link(course+'/exports/'+course+'-bilingual.apkg')
     forbidden=re.compile(r'/Users/|/private/tmp/|(?:https?://)?(?:localhost|127\.0\.0\.1)(?=[:/])|(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{25,})')
     for file in site.rglob('*'):
         if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md']:

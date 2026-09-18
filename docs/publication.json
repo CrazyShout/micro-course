@@ -6,7 +6,7 @@
   "beginner_figures": 22,
   "self_study_revision": "2026-09-18",
   "optional_foundations": 9,
-  "focused_units": 27,
+  "focused_units": 41,
   "practical_tasks": 5,
   "reading_revision": "2026-09-17",
   "reading_supplements": 26,
@@ -48,8 +48,8 @@
     },
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
-      "bytes": 7257215,
-      "sha256": "23d9fb7a681045e15947dda5713fdcd649463645c735f7fa28b53bca08ad6602"
+      "bytes": 7269503,
+      "sha256": "b419cdaad8aaa34e2ff9a6a589315099a5f0eb8e649ac1bca2e2819cc7c91012"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -258,8 +258,8 @@
     },
     {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
-      "bytes": 3371641,
-      "sha256": "20a54ced5b4113d40cc19c6640ed9dea67259b353d617df06fe042da69eb1696"
+      "bytes": 3375737,
+      "sha256": "648880e7f55603c1858e27ccfba3e65fe1539410b6b8e12af31d782c88a0c6f5"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -388,8 +388,8 @@
     },
     {
       "path": "cards.html",
-      "bytes": 18802,
-      "sha256": "4f1b3ae269d3f7d214865b193779055b6bf8dbc33bc901a0dd42b6df481fff76"
+      "bytes": 19005,
+      "sha256": "340951ebfc143a91e25e60a99d42cb0ba97d8a19b2ca4e4f1f5bde4700cd7ee5"
     },
     {
       "path": "deck-introductions.json",
@@ -404,7 +404,7 @@
     {
       "path": "index.html",
       "bytes": 2280,
-      "sha256": "5774bf8fef6e48dc120e22c9d284ac089189905aecee88102fbdca82de174038"
+      "sha256": "b8ab09336887bb7ab4e677915e2c1da4fb3a941435f35b9a4800632b3cec9a20"
     },
     {
       "path": "learning/figures/attention-values.svg",
@@ -518,8 +518,8 @@
     },
     {
       "path": "learning-data.js",
-      "bytes": 1958808,
-      "sha256": "b0c02e4c27a89d001b034e18de44c6e41c862e7548af4ed90cbce7dfda4abe4b"
+      "bytes": 2133488,
+      "sha256": "641c0c64402a0954147591eebd31e7ce2c8d4e97346698d31cb2d84781effd27"
     },
     {
       "path": "learning-demos.js",
@@ -538,8 +538,8 @@
     },
     {
       "path": "learning.js",
-      "bytes": 19276,
-      "sha256": "218ca02b16544a3d5dd0f0d6a50eb383aee00928513f65a813f12cc3f10bcc82"
+      "bytes": 19457,
+      "sha256": "bb742be5c2a2edc945bdb508d9a414481636a4e4971dcf8b6cd7d1de7e79959f"
     },
     {
       "path": "notices-data.js",
@@ -558,8 +558,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1760666,
-      "sha256": "1c7ffbeeffb22c4f393e4a28674e8954056bdf64e705bdf333be8ec7a2e2e756"
+      "bytes": 1793920,
+      "sha256": "f4c5e9d924614cc2aa775963e8bbee18bf7f6f0c507c5c7fadb65864ac920b42"
     },
     {
       "path": "reading/figures/ml-margin.svg",

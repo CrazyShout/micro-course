@@ -190,7 +190,23 @@
         "CS5489-M336",
         "CS5489-M337"
       ],
-      "units": [],
+      "units": [
+        {
+          "id": "objects-and-inheritance",
+          "goal": {
+            "zh": "能跟踪实例属性和方法调用，并区分复用父类与重写方法。",
+            "en": "Trace instance attributes and method calls, distinguishing inherited behavior from an override."
+          },
+          "independent": {
+            "zh": "仍用相同定义，创建 `u = DoubleCounter(5)`、`v = Counter(5)`，依次调用 `u.add(1)`、`v.add(1)`、`u.add(-2)`。独立追踪最后的两份 value，并说明为什么第二次调用不会改变 u。",
+            "en": "Using the same definitions, create `u = DoubleCounter(5)` and `v = Counter(5)`. Call `u.add(1)`, `v.add(1)`, and `u.add(-2)` in that order. Trace both final values and explain why the second call does not change u."
+          },
+          "card_ids": [
+            "CS5489-M015",
+            "CS5489-M016"
+          ]
+        }
+      ],
       "practical_tasks": [
         "python-factor-program"
       ]
@@ -375,7 +391,23 @@
         "CS5489-M073",
         "CS5489-M074"
       ],
-      "units": [],
+      "units": [
+        {
+          "id": "determinant-and-gaussian-volume",
+          "goal": {
+            "zh": "能计算二维行列式，并说明高斯密度为何使用其平方根。",
+            "en": "Compute a two-dimensional determinant and explain why Gaussian density uses its square root."
+          },
+          "independent": {
+            "zh": "独立处理 $\\Sigma=\\begin{bmatrix}1&0.6\\\\0.6&1\\end{bmatrix}$：行列式、面积倍数与相对峰值是多少？若把两个 0.6 都改成 1，为什么原密度公式不能继续套？",
+            "en": "Independently handle $\\Sigma=\\begin{bmatrix}1&0.6\\\\0.6&1\\end{bmatrix}$: find determinant, area multiplier, and relative peak. If both 0.6 entries become 1, why can the same density formula no longer be applied?"
+          },
+          "card_ids": [
+            "CS5489-M067",
+            "CS5489-M068"
+          ]
+        }
+      ],
       "practical_tasks": []
     },
     {
@@ -460,7 +492,24 @@
         "CS5489-M117",
         "CS5489-M118"
       ],
-      "units": [],
+      "units": [
+        {
+          "id": "gamma-poisson-mean",
+          "goal": {
+            "zh": "能从先验乘似然得到Gamma–Poisson更新，并区分后验均值与MAP。",
+            "en": "Obtain a Gamma–Poisson update by multiplying prior and likelihood, and distinguish posterior mean from MAP."
+          },
+          "independent": {
+            "zh": "当前后验为Gamma(6,4)。再进行一次独立单位观察，得到计数0，把旧后验作为新先验。新后验、均值和MAP分别是什么？为什么观察到零也提供信息？",
+            "en": "Your current posterior is Gamma(6,4). Observe one more independent unit exposure with count zero, using the old posterior as the new prior. Find the new posterior, mean, and MAP. Why does observing zero still provide information?"
+          },
+          "card_ids": [
+            "CS5489-M111",
+            "CS5489-M112",
+            "CS5489-M115"
+          ]
+        }
+      ],
       "practical_tasks": []
     },
     {
@@ -984,6 +1033,22 @@
             "CS5489-M233",
             "CS5489-M237"
           ]
+        },
+        {
+          "id": "kernel-pca-center-and-scale",
+          "goal": {
+            "zh": "能从两点例子算中心化核矩阵、归一化系数和一个新点的得分。",
+            "en": "Compute a centered two-point kernel, normalized coefficients and a query score."
+          },
+          "independent": {
+            "zh": "回到训练x=(0,2)、phi=x²、训练特征均值2，查询x=1。求居中特征、与训练点的居中核向量及得分。为什么不能先把原x减1再平方代替？",
+            "en": "Return to training x=(0,2), phi=x² and feature mean2. For query x=1, compute centered feature, centered kernel vector and score. Why is squaring after subtracting raw mean1 different?"
+          },
+          "card_ids": [
+            "CS5489-M238",
+            "CS5489-M239",
+            "CS5489-M240"
+          ]
         }
       ],
       "practical_tasks": []
@@ -1282,7 +1347,109 @@
         "CS5489-M325",
         "CS5489-M326"
       ],
-      "units": [],
+      "units": [
+        {
+          "id": "entropy-and-information",
+          "goal": {
+            "zh": "能用两枚硬币的表格解释熵、条件熵、链式法则与互信息。",
+            "en": "Use coin tables to explain entropy, conditional entropy, the chain rule and mutual information."
+          },
+          "independent": {
+            "zh": "X取1的概率1/4、取0的概率3/4，Y恒等于0。已知log₂(1/4)=−2、log₂(3/4)≈−0.415037，求H(X)、H(Y)、H(X|Y)与I；Y能否帮助预测？",
+            "en": "X is1 with probability1/4 and0 with3/4; Y is always0. Using the supplied logarithms−2 and−0.415037, compute H(X), H(Y), H(X|Y), I and whether Y helps."
+          },
+          "card_ids": [
+            "CS5489-M305",
+            "CS5489-M306"
+          ]
+        },
+        {
+          "id": "laplace-mle-from-deviations",
+          "goal": {
+            "zh": "能从绝对偏差推位置中位数与尺度MLE，并识别零尺度退化。",
+            "en": "Derive median location and mean-absolute-deviation scale and identify degeneracy."
+          },
+          "independent": {
+            "zh": "两观测为2、4。为什么mu=2、3、4都可最优？尺度分别多少？若两观测都改为4又发生什么？",
+            "en": "For observations2,4, why can mu=2,3,4 all be optimal, and what scale results? What changes if both observations equal4?"
+          },
+          "card_ids": [
+            "CS5489-M307"
+          ]
+        },
+        {
+          "id": "conditional-gaussian-update",
+          "goal": {
+            "zh": "能通过配方解释条件高斯，并计算观测引起的均值与方差变化。",
+            "en": "Explain Gaussian conditioning by completing a square and compute its mean and variance."
+          },
+          "independent": {
+            "zh": "一般二元高斯均值(10,20)，方差分别4、9，交叉协方差3。观察A=12，独立算B的条件均值和方差；若交叉协方差改为0呢？",
+            "en": "A general Gaussian pair has means(10,20), variances4 and9, and cross-covariance3. Observe A=12. Compute B’s conditional parameters, then repeat with zero cross-covariance."
+          },
+          "card_ids": [
+            "CS5489-M309"
+          ]
+        },
+        {
+          "id": "rank-nullspace-and-solutions",
+          "goal": {
+            "zh": "能用列空间、秩和零空间判定小线性方程组的解。",
+            "en": "Use column space, rank and nullspace to analyze a small linear system."
+          },
+          "independent": {
+            "zh": "A=[[1,0,0],[0,0,0]]是2×3宽矩阵。独立求rank/nullity；分别判断y=(1,1)和(1,0)，写出有解时的全部解。",
+            "en": "For wide A=[[1,0,0],[0,0,0]], find rank/nullity and analyze y=(1,1) and(1,0), giving all solutions when consistent."
+          },
+          "card_ids": [
+            "CS5489-M318"
+          ]
+        },
+        {
+          "id": "adjoint-gram-and-pca",
+          "goal": {
+            "zh": "能计算共轭二次型，解释对称矩阵实特征值，并检验PCA方向与重值情况。",
+            "en": "Compute a conjugate quadratic form and connect real eigenvalues to PCA and repeated values."
+          },
+          "independent": {
+            "zh": "A=2I₂，u=(1,0)，v=(1,1)/√2。验证它们都是同一特征值的特征向量但不正交；PCA仍能选两条正交方向吗？",
+            "en": "For A=2I₂, u=(1,0), v=(1,1)/√2, verify both have the same eigenvalue yet are not orthogonal. Can PCA still select orthogonal directions?"
+          },
+          "card_ids": [
+            "CS5489-M322",
+            "CS5489-M323"
+          ]
+        },
+        {
+          "id": "linear-systems-impulses-convolution",
+          "goal": {
+            "zh": "能用冲激分解计算LTI输出，并给出线性但时变的反例。",
+            "en": "Compute an LTI response from impulses and recognize a linear time-varying system."
+          },
+          "independent": {
+            "zh": "新系统定义T{x}[n]=n x[n]。验证线性，再比较delta[n]与delta[n−1]的输出：它是否时不变，能否用对delta的响应h=0推断所有输入输出为0？",
+            "en": "A new system is T{x}[n]=n x[n]. Check linearity and compare responses to delta[n] and delta[n−1]. Is it time invariant, and can its zero impulse response imply all outputs are zero?"
+          },
+          "card_ids": [
+            "CS5489-M324",
+            "CS5489-M325"
+          ]
+        },
+        {
+          "id": "dtft-convolution-product",
+          "goal": {
+            "zh": "能解释DTFT符号、完成换元因式分解，并用有限序列核对定理。",
+            "en": "Explain DTFT notation, factor the changed sums, and verify the theorem on finite sequences."
+          },
+          "independent": {
+            "zh": "独立计算从0开始的x=(1,2)、h=(1,1)之完整卷积。再令u=e^(−j omega)，写XH多项式并在omega=pi（u=−1）核验。",
+            "en": "Independently convolve x=(1,2), h=(1,1), both starting at0. Write the XH polynomial in u=e^(−j omega), then check at omega=pi, u=−1."
+          },
+          "card_ids": [
+            "CS5489-M326"
+          ]
+        }
+      ],
       "practical_tasks": []
     },
     {
@@ -1713,6 +1880,50 @@
             "CS5222-N145",
             "CS5222-N146",
             "CS5222-N147"
+          ]
+        },
+        {
+          "id": "dns-sections-and-delegation",
+          "goal": {
+            "zh": "能读懂四个DNS区段，并区分域名委派与主机地址记录。",
+            "en": "Read the four DNS sections and distinguish domain delegation from a host address record."
+          },
+          "independent": {
+            "zh": "域名管理员把委派从ns1.example.org改为ns2.example.org，并正确配置新服务器地址。两台权威服务器都保留`www.example.org A 203.0.113.80`。网站IP是否必须改变？所有解析器是否会立即换用ns2？说明两点理由。",
+            "en": "The administrator changes delegation from ns1.example.org to ns2.example.org and correctly configures the new server address. Both authoritative servers retain `www.example.org A 203.0.113.80`. Must the website IP change? Must every resolver immediately use ns2? Explain both conclusions."
+          },
+          "card_ids": [
+            "CS5222-N135",
+            "CS5222-N136"
+          ]
+        },
+        {
+          "id": "dash-cdn-delivery",
+          "goal": {
+            "zh": "能区分DASH的版本选择与CDN的服务器选择，并用分段大小估计缓冲变化。",
+            "en": "Distinguish DASH representation selection from CDN server selection and estimate buffer change from segment size."
+          },
+          "independent": {
+            "zh": "改用另一个CDN节点后，有效速率为8 Mbps，但本次缓存未命中，下载前还需额外等待0.8秒。获取同样6 Mbps、2秒的段总共需多久？按持续播放计算的缓冲收支差是多少？仅凭这些值能断定发生卡顿吗？",
+            "en": "A different CDN node delivers at 8 Mbps, but this request misses its cache and adds 0.8 second of waiting before downloading. How long does the same 6 Mbps, 2-second segment take in total? What is the buffer balance assuming continuous playback? Do these values alone prove a playback stall?"
+          },
+          "card_ids": [
+            "CS5222-N141",
+            "CS5222-N142"
+          ]
+        },
+        {
+          "id": "bittorrent-piece-and-peer-choices",
+          "goal": {
+            "zh": "能分别按稀有程度选缺失块、按互惠规则选上传伙伴，并解释乐观解锁。",
+            "en": "Choose missing pieces by rarity, choose upload partners by reciprocation, and explain optimistic unchoking."
+          },
+          "independent": {
+            "zh": "L仍缺P/Q/R，已知副本数为4/2/1，R仅D拥有。新测得B/C/D/E向L的速率为6/4/5/8 Mbps；两个常规名额，乐观名额选C。独立给出块优先级与上传伙伴。因为L会choke D，就能断定L一定不能从D收到R吗？",
+            "en": "L still lacks P/Q/R, whose known copy counts are 4/2/1; only D has R. Newly measured upload rates to L from B/C/D/E are 6/4/5/8 Mbps. There are two regular slots, and the optimistic slot goes to C. Give the piece priority and upload partners. Does L choking D prove that L cannot receive R from D?"
+          },
+          "card_ids": [
+            "CS5222-N140"
           ]
         }
       ],

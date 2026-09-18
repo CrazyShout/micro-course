@@ -172,7 +172,7 @@ def main():
     reading_dest=ROOT/'content/reading';reading_dest.mkdir(parents=True,exist_ok=True)
     beginner_dest=ROOT/'content/learning';beginner_dest.mkdir(parents=True,exist_ok=True)
     shutil.copy2(source/'learning/first-pass.md',beginner_dest/'first-pass.md')
-    for name in ['foundations.json','lesson-units.json','practical-tasks.json','coverage-scope.json','coverage.json']:
+    for name in ['foundations.json','lesson-units.json','practical-tasks.json','coverage-scope.json','coverage.json','card-recovery.json']:
         shutil.copy2(source/'learning'/name,beginner_dest/name)
     shutil.copy2(source/'reading/authoring.md',reading_dest/'lessons.md')
     source_catalog=json.loads((source/'reading/sources.json').read_text())

@@ -1,0 +1,186 @@
+{
+  "CS5489-M015": {
+    "lesson": "ml02",
+    "unit": "objects-and-inheritance",
+    "title": {
+      "zh": "补一小步：对象保存谁的状态？",
+      "en": "A short bridge: whose state does an object store?"
+    }
+  },
+  "CS5489-M016": {
+    "lesson": "ml02",
+    "unit": "objects-and-inheritance",
+    "title": {
+      "zh": "补一小步：对象保存谁的状态？",
+      "en": "A short bridge: whose state does an object store?"
+    }
+  },
+  "CS5489-M067": {
+    "lesson": "ml07",
+    "unit": "determinant-and-gaussian-volume",
+    "title": {
+      "zh": "补一小步：|Σ| 到底是什么？",
+      "en": "A short bridge: what does |Σ| mean?"
+    }
+  },
+  "CS5489-M068": {
+    "lesson": "ml07",
+    "unit": "determinant-and-gaussian-volume",
+    "title": {
+      "zh": "补一小步：|Σ| 到底是什么？",
+      "en": "A short bridge: what does |Σ| mean?"
+    }
+  },
+  "CS5489-M115": {
+    "lesson": "ml09",
+    "unit": "gamma-poisson-mean",
+    "title": {
+      "zh": "可选扩展：伪计数与伪观察量从哪里来？",
+      "en": "Optional extension: where do pseudo-counts and exposure come from?"
+    }
+  },
+  "CS5489-M238": {
+    "lesson": "ml23",
+    "unit": "kernel-pca-center-and-scale",
+    "title": {
+      "zh": "核PCA：先在特征空间居中，再把方向缩成单位长度",
+      "en": "Kernel PCA: center features, then normalize directions"
+    }
+  },
+  "CS5489-M239": {
+    "lesson": "ml23",
+    "unit": "kernel-pca-center-and-scale",
+    "title": {
+      "zh": "核PCA：先在特征空间居中，再把方向缩成单位长度",
+      "en": "Kernel PCA: center features, then normalize directions"
+    }
+  },
+  "CS5489-M240": {
+    "lesson": "ml23",
+    "unit": "kernel-pca-center-and-scale",
+    "title": {
+      "zh": "核PCA：先在特征空间居中，再把方向缩成单位长度",
+      "en": "Kernel PCA: center features, then normalize directions"
+    }
+  },
+  "CS5489-M305": {
+    "lesson": "ml30",
+    "unit": "entropy-and-information",
+    "title": {
+      "zh": "概率之外：一句消息减少多少不确定性",
+      "en": "Entropy: how much uncertainty does a message remove?"
+    }
+  },
+  "CS5489-M306": {
+    "lesson": "ml30",
+    "unit": "entropy-and-information",
+    "title": {
+      "zh": "概率之外：一句消息减少多少不确定性",
+      "en": "Entropy: how much uncertainty does a message remove?"
+    }
+  },
+  "CS5489-M307": {
+    "lesson": "ml30",
+    "unit": "laplace-mle-from-deviations",
+    "title": {
+      "zh": "Laplace估计：为什么中心取中位数",
+      "en": "Laplace estimation: why the median is the center"
+    }
+  },
+  "CS5489-M309": {
+    "lesson": "ml30",
+    "unit": "conditional-gaussian-update",
+    "title": {
+      "zh": "看见一个坐标，怎样更新另一个",
+      "en": "Updating one Gaussian coordinate after observing another"
+    }
+  },
+  "CS5489-M318": {
+    "lesson": "ml30",
+    "unit": "rank-nullspace-and-solutions",
+    "title": {
+      "zh": "方程有解与解唯一是两件事",
+      "en": "Existence and uniqueness are different questions"
+    }
+  },
+  "CS5489-M322": {
+    "lesson": "ml30",
+    "unit": "adjoint-gram-and-pca",
+    "title": {
+      "zh": "从共轭内积到实特征值和PCA",
+      "en": "From conjugate inner products to real eigenvalues and PCA"
+    }
+  },
+  "CS5489-M323": {
+    "lesson": "ml30",
+    "unit": "adjoint-gram-and-pca",
+    "title": {
+      "zh": "从共轭内积到实特征值和PCA",
+      "en": "From conjugate inner products to real eigenvalues and PCA"
+    }
+  },
+  "CS5489-M324": {
+    "lesson": "ml30",
+    "unit": "linear-systems-impulses-convolution",
+    "title": {
+      "zh": "先分清线性和时不变，再使用冲激响应",
+      "en": "Separate linearity from time invariance before convolving"
+    }
+  },
+  "CS5489-M325": {
+    "lesson": "ml30",
+    "unit": "linear-systems-impulses-convolution",
+    "title": {
+      "zh": "先分清线性和时不变，再使用冲激响应",
+      "en": "Separate linearity from time invariance before convolving"
+    }
+  },
+  "CS5489-M326": {
+    "lesson": "ml30",
+    "unit": "dtft-convolution-product",
+    "title": {
+      "zh": "卷积为什么在频域变成乘法",
+      "en": "Why convolution becomes multiplication in frequency"
+    }
+  },
+  "CS5222-N135": {
+    "lesson": "net12",
+    "unit": "dns-sections-and-delegation",
+    "title": {
+      "zh": "DNS：下一台服务器，不等于网站地址",
+      "en": "DNS: the next server is not the website address"
+    }
+  },
+  "CS5222-N136": {
+    "lesson": "net12",
+    "unit": "dns-sections-and-delegation",
+    "title": {
+      "zh": "DNS：下一台服务器，不等于网站地址",
+      "en": "DNS: the next server is not the website address"
+    }
+  },
+  "CS5222-N141": {
+    "lesson": "net12",
+    "unit": "dash-cdn-delivery",
+    "title": {
+      "zh": "在线视频：选哪个版本，从哪里取得",
+      "en": "Video delivery: which version and which server"
+    }
+  },
+  "CS5222-N142": {
+    "lesson": "net12",
+    "unit": "dash-cdn-delivery",
+    "title": {
+      "zh": "在线视频：选哪个版本，从哪里取得",
+      "en": "Video delivery: which version and which server"
+    }
+  },
+  "CS5222-N140": {
+    "lesson": "net12",
+    "unit": "bittorrent-piece-and-peer-choices",
+    "title": {
+      "zh": "BitTorrent：选哪个块，给谁上传",
+      "en": "BitTorrent: which piece to request, whom to upload to"
+    }
+  }
+}

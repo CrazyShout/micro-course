@@ -108,8 +108,8 @@ MEDIA: chapter1-slide-28.png
 @@ N018 | 02-switching | learn | N1:29-31
 Q_EN: What is statistical multiplexing, and why can it serve more users than fixed reservation?
 Q_ZH: 什么是统计复用？为什么它可能容纳比固定预留更多的用户？
-A_EN: Statistical multiplexing shares capacity among users that happen to be active. If users are often idle and their bursts do not always coincide, many users can share a link with a low overload probability. It does not create extra physical capacity: simultaneous demand above $R$ still causes queueing or loss. Its benefit depends on traffic activity and dependence.
-A_ZH: 统计复用把容量共享给当时活跃的用户。若用户经常空闲，且突发不总是同时发生，就能让更多用户共享链路，同时保持较低过载概率。它没有创造额外物理容量：总需求超过 $R$ 时仍会排队或丢包。收益取决于活跃程度及流量间的依赖关系。
+A_EN: Statistical multiplexing shares link capacity R among users that are active at that moment. If users are often idle and their bursts do not always coincide, more users can share a link with a low overload probability. It does not create extra capacity: simultaneous demand above R still causes queueing or loss. The benefit depends on activity and dependence.
+A_ZH: 统计复用把链路容量 R 共享给当时活跃的用户。若用户经常空闲，且突发不总同时发生，就能让更多用户共享链路，同时保持较低过载概率。它没有创造额外容量：同时需求超过 R 时仍会排队或丢包。收益取决于活跃程度及用户间的依赖关系。
 
 @@ N019 | 02-switching | classroom | N1:29-30
 Q_EN: A 1 Mbps link serves users needing 100 kbps when active. How many circuit-switched users fit?
@@ -121,8 +121,8 @@ MEDIA: chapter1-slide-29.png
 @@ N020 | 02-switching | classroom | N1:29-30
 Q_EN: A 1 Mbps link serves 35 independent users, each needing 100 kbps when active and active with probability 0.1. How is the probability that demand exceeds capacity calculated?
 Q_ZH: 1 Mbps 链路服务 35 个独立用户，每人活跃时需 100 kbps、活跃概率为 0.1。需求超过容量的概率如何计算？
-A_EN: Assume independent activity, each with probability 0.1. Then $K\sim\operatorname{Binomial}(35,0.1)$ and $P(K>10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243$. The slide's “less than 0.0004” is a small numerical approximation error; the value is about 0.0424%. Independence is essential to this binomial calculation.
-A_ZH: 假设各用户独立、活跃概率均为 0.1，则 $K\sim\operatorname{Binomial}(35,0.1)$，$P(K>10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243$。幻灯片所写“小于 0.0004”有轻微数值误差，实际约为 0.0424%。二项计算依赖用户独立这个前提。
+A_EN: Capacity supports ten active users. Let K count simultaneous active users; independence gives $K\sim\operatorname{Binomial}(35,0.1)$. Hence $P(K>10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243$, or 0.0424%. The combination chooses the k active users; the powers describe that activity pattern. The slide's bound “less than 0.0004” is slightly inaccurate.
+A_ZH: 容量最多支持十人同时活跃。令 K 为同时活跃人数，独立性给出 $K\sim\operatorname{Binomial}(35,0.1)$，故 $P(K>10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243$，即 0.0424%。组合数选出活跃的 k 人，两个幂对应这一活跃模式的概率。课件“小于 0.0004”的界限略有误差。
 
 @@ N021 | 02-switching | check | N1:29-31
 Q_EN: Does low average load guarantee no queueing?
@@ -170,8 +170,8 @@ A_ZH: $d_{prop}=d/s$，距离 $d$ 用米、传播速度 $s$ 用米/秒。1,000 �
 MEDIA: chapter1-slide-46.png
 
 @@ N028 | 03-performance | worked | N1:45-46
-Q_EN: A 1,500-byte packet crosses one 2 Mbps, 1,000 km link at $2\times10^8$ m/s. When does its last bit arrive?
-Q_ZH: 1,500 字节分组经过一条 2 Mbps、1,000 千米、传播速度 $2\times10^8$ 米/秒的链路，最后一比特何时到达？
+Q_EN: A 1,500-byte packet crosses one 2 Mbps, 1,000 km link at $2\times10^8$ m/s. From the start of transmission, when does its last bit arrive? Ignore processing and queueing.
+Q_ZH: 1500 字节分组经过一条 2 Mbps、1000 千米、传播速度 $2\times10^8$ 米/秒的链路。从开始发送计时，最后一比特何时到达？忽略处理与排队。
 A_EN: Starting when transmission begins and ignoring processing/queueing, serialization is 6 ms and propagation is 5 ms. The last bit arrives after $6+5=11$ ms. The first bit arrives after about 5 ms. “First bit arrives” and “whole packet arrives” are different completion events, so state which one the question asks for.
 A_ZH: 从开始发送计时，忽略处理和排队，串行化 6 毫秒、传播 5 毫秒，所以最后一比特在 $6+5=11$ 毫秒后到达。第一比特约在 5 毫秒后到达。“第一比特到达”和“整个分组到齐”是不同完成事件，解题前须明确目标。
 
@@ -188,8 +188,8 @@ A_EN: While packet 1 uses link 2, link 1 can send packet 2. For P packets of L b
 A_ZH: 分组 1 使用链路 2 时，链路 1 可发分组 2。P 个分组每个 L 比特，经过 N 条速率均为 R 比特/秒的链路，总完成时间为 $D=(N+P-1)L/R$ 秒。首个分组需 $NL/R$，此后每个再增加 $L/R$。模型假设存储转发、连续发送，并忽略传播、处理、排队与交叉流量。
 
 @@ N031 | 03-performance | classroom | N1:47
-Q_EN: In the caravan analogy, ten cars require 12 s each at a tollbooth and travel 100 km at 100 km/h. When has the last car reached the next booth?
-Q_ZH: 车队类比中，10 辆车每辆过收费站需 12 秒，再以 100 千米/小时行驶 100 千米，最后一辆何时到下站？
+Q_EN: Ten cars are queued when the first tollbooth starts serving them at time zero. It serves one car every 12 s without gaps; each then travels 100 km at 100 km/h. When does the last car reach the next booth?
+Q_ZH: 零时刻十辆车已在首个收费站排队，收费站开始无间断地每 12 秒服务一辆；每车随后以 100 千米/小时行驶 100 千米。最后一辆何时到达下一收费站？
 A_EN: Serial service for all cars takes $10\times12=120$ s = 2 min. The last car then travels for 60 min, giving 62 min from the start of the first service. The analogy separates putting the whole packet onto the link from propagation. Earlier cars can already be traveling while later cars are still being served.
 A_ZH: 全部车辆依次接受服务需 $10\times12=120$ 秒，即 2 分钟。最后一辆再行驶 60 分钟，因此从第一辆开始服务计时，共 62 分钟。这个类比区分把整个分组送上链路和传播。后面车辆还在收费时，前面的车辆已经可以行驶。
 MEDIA: chapter1-slide-47.png
@@ -211,8 +211,8 @@ MEDIA: chapter1-slide-49.png
 @@ N034 | 03-performance | worked | N1:49
 Q_EN: Packets average 1,000 bytes, arrive at 100 packets/s, and use a 1 Mbps link. What is traffic intensity?
 Q_ZH: 平均分组 1,000 字节、每秒到达 100 个、链路 1 Mbps，流量强度是多少？
-A_EN: Convert length to 8,000 bits. Offered work is $8000\times100=800000$ bit/s, so $\rho=0.8$. The link is loaded to 80% on average. This does not mean every packet waits for exactly 20% of its transmission time; a waiting-time calculation needs additional assumptions about arrival and service variability.
-A_ZH: 长度先转成 8,000 比特，输入工作量为 $8000\times100=800000$ 比特/秒，因此 $\rho=0.8$，即平均负载 80%。这不意味着每个分组都等待其传输时间的 20%；计算等待时间还需要到达和服务波动等额外假设。
+A_EN: Convert 1,000 bytes to 8,000 bits. Mean incoming work is $8000\times100=800000$ bit/s; divide by $10^6$ bit/s to get $\rho=0.8$. The offered workload uses 80% of service capacity on average. This dimensionless load is not a delay; calculating queueing time also needs the arrival and service patterns.
+A_ZH: 把 1000 字节换成 8000 比特。平均输入工作量为 $8000\times100=800000$ 比特/秒，除以 $10^6$ 比特/秒得到 $\rho=0.8$。即平均输入工作量占服务容量的 80%。这是无量纲负载，不是时延；计算排队时间还需知道到达与服务模式。
 
 @@ N035 | 03-performance | learn | N1:49,52
 Q_EN: What happens as load approaches or exceeds capacity, and how does a finite buffer change the story?
@@ -234,16 +234,16 @@ A_ZH: 吞吐量是实际交付数据的速率，可按瞬时或某段时间测�
 MEDIA: chapter1-slide-54.png
 
 @@ N038 | 03-performance | classroom | N1:55
-Q_EN: Ten flows share a core link of rate $R$. What is each flow's ideal throughput if its server and client links have rates $R_s$ and $R_c$?
-Q_ZH: 10 条流共享速率 $R$ 的核心链路，单流服务器和客户端链路速率为 $R_s$、$R_c$，理想吞吐量是多少？
+Q_EN: Ten simultaneously active flows equally share a core link of rate R. Each flow has server/client access rates $R_s,R_c$. Assuming no other bottlenecks, what is its ideal sustained throughput?
+Q_ZH: 十条同时活跃的流均分速率为 R 的核心链路，每条流的服务器与客户端接入速率为 $R_s,R_c$。无其他瓶颈时，单流理想持续吞吐量是多少？
 A_EN: Under the slide's equal-sharing assumption, each flow is limited by $\min(R_s,R_c,R/10)$. For $R_s=20$ Mbps, $R_c=10$ Mbps and $R=50$ Mbps, the result is 5 Mbps. $R/10$ is an assumed fair share, not a universal promise: inactive flows, competing paths and allocation policies can change it.
 A_ZH: 在幻灯片的均分假设下，每条流受 $\min(R_s,R_c,R/10)$ 限制。例如 $R_s=20$ Mbps、$R_c=10$ Mbps、$R=50$ Mbps，则为 5 Mbps。$R/10$ 是假设的公平份额，不是普遍保证；流是否活跃、其他路径和分配策略都可能改变结果。
 MEDIA: chapter1-slide-55.png
 
 @@ N039 | 03-performance | check | N1:45-55
-Q_EN: Can a high-throughput path still feel slow for an interactive application?
+Q_EN: Why can a high-throughput path still feel slow for an interactive application?
 Q_ZH: 高吞吐量路径为什么仍可能让交互应用感觉很慢？
-A_EN: Yes. A path may transfer large files quickly once data are flowing but have a large propagation delay or queueing delay before responses arrive. Interactive tasks often depend on round-trip time and delay variation, while bulk transfers emphasize sustained throughput. Describe latency, throughput and loss separately when diagnosing a network problem.
+A_EN: A path may transfer large files quickly once data are flowing but have a large propagation or queueing delay before responses arrive. Interactive tasks often depend on round-trip time and delay variation, while bulk transfers emphasize sustained throughput. Describe latency, throughput and loss separately when diagnosing a network problem.
 A_ZH: 数据开始流动后，路径可能很快传完大文件，但响应到达前仍有很大的传播或排队时延。交互任务经常依赖往返时间和时延波动，批量传输更重视持续吞吐量。诊断网络问题时，应分别描述时延、吞吐量与丢包。
 
 @@ N040 | 03-performance | check | N1:25-55
@@ -261,8 +261,8 @@ A_ZH: 分层把复杂系统拆成具有明确服务和接口的模块。每层�
 @@ N042 | 04-layering | learn | N1:61
 Q_EN: Name the five Internet protocol layers from top to bottom and their main roles.
 Q_ZH: 自上而下列出互联网五层，并说明主要职责。
-A_EN: Application supports application protocols; transport provides process-to-process communication; network delivers packets across interconnected networks; link transfers frames across a local link; physical transmits signals representing bits. Remember the order: application, transport, network, link, physical. For example, HTTP, TCP, IP, Ethernet and its physical signaling fit these respective roles in one common stack.
-A_ZH: 应用层支持应用协议；传输层提供进程间通信；网络层跨互联网络传递分组；链路层在本地链路上传帧；物理层传递表示比特的信号。顺序是应用、传输、网络、链路、物理。常见协议栈中的 HTTP、TCP、IP、Ethernet 及其物理信号可对应这些职责。
+A_EN: Application defines messages and rules for network applications; transport communicates between processes; network moves packets across networks; link transfers frames between neighboring interfaces; physical carries signals representing bits. From top to bottom: application, transport, network, link, physical. In one common stack, HTTP, TCP, IP, Ethernet framing and physical signaling illustrate these roles.
+A_ZH: 应用层定义网络应用的消息与交互规则；传输层负责进程间通信；网络层跨网络传递分组；链路层在相邻接口间传帧；物理层用信号承载比特。自上而下为应用、传输、网络、链路、物理。常见协议栈可用 HTTP、TCP、IP、Ethernet 成帧及物理信号说明这些职责。
 MEDIA: chapter1-slide-61.png
 
 @@ N043 | 04-layering | learn | N1:62
@@ -281,8 +281,8 @@ MEDIA: chapter1-slide-64.png
 @@ N045 | 04-layering | learn | N1:64-65
 Q_EN: Which layers do hosts, routers and ordinary link-layer switches usually process?
 Q_ZH: 主机、路由器和普通链路层交换机通常处理哪些层？
-A_EN: Hosts implement the full stack for their applications. An ordinary router forwards using network-layer information and also processes the link/physical layers on each interface. A basic link-layer switch forwards frames using link-layer information. This is the introductory model; devices can have extra functions. Do not assume every router runs the destination's HTTP application.
-A_ZH: 主机为应用实现完整协议栈。普通路由器依据网络层信息转发，也处理各接口的链路层与物理层。基本链路层交换机依据链路层信息转发帧。这是入门模型，实际设备可有额外功能。不能假定每个路由器都运行目的端的 HTTP 应用。
+A_EN: Hosts use all five layers for their applications. An ordinary router uses network, link and physical layers: it selects an output using network-layer information and sends a new link frame on that interface. A basic link-layer switch uses link and physical layers. This describes ordinary forwarding; additional management or security functions may use higher layers.
+A_ZH: 主机为应用使用五层。普通路由器转发时处理网络、链路、物理三层：依据网络层信息选出口，再从该接口发送新的链路帧。普通链路层交换机处理链路层与物理层。这里描述常规转发，设备附加的管理或安全功能可能使用更高层。
 
 @@ N046 | 04-layering | worked | N1:63-65
 Q_EN: If an application has 1,000 bytes and three layers each add a 20-byte header, what fraction of the final size is payload?
@@ -387,8 +387,8 @@ A_ZH: TCP 提供面向连接、可靠有序的字节流服务，并有流量控�
 @@ N062 | 05-applications | learn | N2:15
 Q_EN: What is the difference between flow control and congestion control?
 Q_ZH: 流量控制与拥塞控制有什么区别？
-A_EN: Flow control protects a receiver from data arriving faster than it can handle. Congestion control protects the network from excessive offered traffic. A slow receiving application and an overloaded router are different bottlenecks. TCP has both mechanisms. The current Canvas application-layer introduction covers their service roles; Extra Resources adds the historical rwnd/cwnd and congestion-control algorithms.
-A_ZH: 流量控制防止接收方来不及处理到达的数据；拥塞控制防止网络承受过量流量。接收应用过慢与路由器过载是不同瓶颈，TCP 同时具有两类机制。当前 Canvas 应用层入门介绍其服务职责；Extra Resources 已补充往年的 rwnd/cwnd 与拥塞控制算法。
+A_EN: Flow control protects a receiver from data arriving faster than it can handle. Congestion control limits traffic to avoid overloading the network. A nearly full receiving buffer and a congested router queue are different reasons to slow a sender. TCP has both mechanisms; allowing more data at the receiver does not prove the path has more spare capacity.
+A_ZH: 流量控制防止数据到得太快、接收方处理不过来；拥塞控制限制流量，避免网络过载。接收缓存快满与路由器队列拥塞，是让发送方减速的不同原因。TCP 同时具有两类机制；接收方还能多收数据，并不证明网络路径也有更多空余容量。
 
 @@ N063 | 05-applications | learn | N2:15
 Q_EN: What does UDP provide?
@@ -402,11 +402,11 @@ Q_ZH: “实时应用”是否就等于“必须用 UDP”？
 A_EN: No. Start with requirements: delay budget, loss tolerance, message ordering, deployment support and whether the application adds recovery. UDP avoids some TCP mechanisms but also leaves more responsibility to the application. Some real-time services use transports built above UDP; others can use TCP in suitable conditions. The lecture table is a set of examples, not an absolute design law.
 A_ZH: 不等于。应先看时延预算、丢失容忍、消息顺序、部署支持，以及应用是否自己恢复丢失。UDP 少了一些 TCP 机制，同时也把更多责任留给应用。有的实时服务使用 UDP 上构建的传输，有的在合适条件下使用 TCP。课堂表格是示例，不是绝对设计定律。
 
-@@ N065 | 05-applications | learn | N2:15-17
+@@ N065 | 05-applications | learn | N2:15-17;TLS:1
 Q_EN: Does using TCP make application data confidential?
 Q_ZH: 使用 TCP 是否就能保证应用数据保密？
-A_EN: No. TCP reliability and ordering do not encrypt application bytes. A secure application commonly adds a cryptographic protocol such as TLS, which can provide confidentiality, integrity and peer authentication under its security assumptions. The lecture uses the historical term SSL; current designs should be understood in terms of TLS. The detailed TLS version distinction is covered in the extension cards.
-A_ZH: 不能。TCP 的可靠与有序不等于对应用字节加密。安全应用通常再使用 TLS 等密码协议，在相应安全假设下提供机密性、完整性与对端认证。课件使用了历史名称 SSL；理解现代设计时应对应到 TLS。版本区别见扩展卡。
+A_EN: No. TCP reliability and ordering do not encrypt application bytes. TLS can add confidentiality, integrity and peer authentication under its configuration and security assumptions. These are different services: retransmitting a lost segment repairs delivery, while encrypting content protects it from readable disclosure. The lecture uses the historical name SSL; current protocol terminology is TLS.
+A_ZH: 不能。TCP 的可靠与有序不会加密应用字节。TLS 可在相应配置与安全假设下增加机密性、完整性和对端认证。两者提供不同服务：重传丢失报文段修复交付，加密内容则防止信息以可读形式暴露。课件使用历史名称 SSL，现行协议术语应区分为 TLS。
 
 @@ N066 | 06-http | learn | N2:19
 Q_EN: What is a web page made of in the lecture's HTTP model?
@@ -439,13 +439,11 @@ Q_ZH: 本学期 Tutorial 1 Q1a：L 比特分组经过两条存储转发链路，
 A_EN: The switch first receives all $L$ bits in $L/R_1$, then sends them in $L/R_2$. Total time is $D=L/R_1+L/R_2$. Do not replace this by $L/\min(R_1,R_2)$: the bottleneck rate describes sustained throughput, while this question asks for the first complete packet's latency.
 A_ZH: 交换设备先用 $L/R_1$ 收齐，再用 $L/R_2$ 发完，总时间为 $D=L/R_1+L/R_2$。不能替换为 $L/\min(R_1,R_2)$：瓶颈速率描述持续吞吐量，这里问的是首个完整分组的时延。
 
-
 @@ N072 | 07-exercises | classroom | NT1:1;NT1S:4;NQA:3;HT1:1b
 Q_EN: Tutorial 1 (2026A) Q1b: three packets, each L bits, are sent back-to-back across two store-and-forward links, each of rate R bit/s. Ignore all other delays. From the start of transmission, how long until all three arrive completely?
 Q_ZH: 本学期 Tutorial 1 Q1b：三个分组各 L 比特，连续发送，经过两条速率均为 R 比特/秒的存储转发链路。忽略其他时延，从开始发送到三个分组全部到齐需多久？
 A_EN: Let $t=L/R$. During successive intervals, link 1 sends packets 1, 2 and 3; link 2 sends them one interval later. Arrival times are $2t,3t,4t$, so completion is $4L/R$. Summing $2L/R$ separately for all three gives $6L/R$ and incorrectly forbids pipelining.
 A_ZH: 令 $t=L/R$。链路 1 依次发送分组 1、2、3；链路 2 比它晚一个时间段依次发送。到达时刻为 $2t,3t,4t$，所以完成需 $4L/R$。把三次 $2L/R$ 相加得到 $6L/R$，错误地禁止了流水线重叠。
-
 
 @@ N073 | 07-exercises | classroom | NT1:2;NT1S:6;HT1:2a
 Q_EN: Tutorial 1 (2026A) Q2a: a square A–B–C–D–A has four circuits on each edge. What is the maximum number of simultaneous connections if endpoints are unrestricted?
@@ -469,18 +467,16 @@ A_ZH: 可以。A–C 中 2 个经 B、2 个经 D；B–D 中 2 个经 A、2 个�
 MEDIA_FRONT: square-circuits-teaching.png
 
 @@ N076 | 07-exercises | classroom | NT1:2-3;NT1S:9;HT1:3
-Q_EN: Tutorial 1 (2026A) Q3: send 160,000 bits on a 1.536 Mbps link divided into 12 equal FDM circuits; setup takes 600 ms. Find total time.
-Q_ZH: 本学期 Tutorial 1 Q3：1.536 Mbps 链路均分为 12 条 FDM 电路，发送 160,000 比特，建立连接需 600 毫秒，总时间是多少？
+Q_EN: Tutorial 1 Q3: use one of twelve equal FDM circuits on a 1.536 Mbps link to send 160,000 bits. Connection setup takes 600 ms; ignore propagation and other delays. Find total time from the start of setup.
+Q_ZH: Tutorial 1 Q3：在 1.536 Mbps 链路均分的十二条 FDM 电路中使用一条，发送 160000 比特。连接建立需 600 毫秒，忽略传播等其他时延。从开始建连计时，总共需多久？
 A_EN: Each circuit gets $1.536\times10^6/12=128000$ bit/s. Data transmission takes $160000/128000=1.25$ s. Add setup: $D=0.6+1.25=1.85$ s, under the question's ignored propagation and other delays. Using the full 1.536 Mbps for one reserved circuit would overestimate its available rate.
 A_ZH: 每条电路速率为 $1.536\times10^6/12=128000$ 比特/秒，数据发送需 $160000/128000=1.25$ 秒。加建立时间，总共 $D=0.6+1.25=1.85$ 秒，这里按题意忽略传播等时延。若对单条电路使用全链路 1.536 Mbps，就高估了可用速率。
 
-
 @@ N077 | 07-exercises | classroom | NT1:3;NT1S:10;HT1:4a-4b
-Q_EN: Tutorial 1 (2026A) Q4: a 3 Mbps link serves users needing 150 kbps while active, with activity probability 0.1. How many circuits fit, and what is one user's activity probability?
-Q_ZH: 本学期 Tutorial 1 Q4：3 Mbps 链路、每人活跃时需 150 kbps、活跃概率 0.1，最多多少条电路？单人活跃概率是多少？
-A_EN: Fixed circuits fit $3000/150=20$ users. A given user's activity probability is the stated 0.1. These answer different questions: the first is a resource-reservation bound, the second a traffic-model parameter. Multiplying 20 by 10 does not establish a guaranteed 200-user capacity under packet switching.
-A_ZH: 固定电路可容纳 $3000/150=20$ 人。某个用户的活跃概率就是给定的 0.1。两者回答不同问题：前者是资源预留上界，后者是流量模型参数。把 20 乘 10 并不能证明分组交换保证支持 200 人。
-
+Q_EN: Under Tutorial 1 Q4’s model, a 3 Mbps link serves users needing 150 kbps when active, with activity probability 0.1. How many fixed circuits fit? Explain why using average demand 15 kbps per user would give the wrong circuit-reservation limit.
+Q_ZH: 按 Tutorial 1 Q4 的模型，3 Mbps 链路服务活跃时需 150 kbps、活跃概率 0.1 的用户。最多可预留多少条固定电路？为什么不能按每人平均 15 kbps 来计算这个预留上限？
+A_EN: At most $3000/150=20$ circuits. Each reserves 150 kbps even while its user is idle. The average-demand calculation $3000/15=200$ describes neither 200 reserved circuits nor a no-overload guarantee. Activity probability matters for a packet-sharing demand model, not for reducing each circuit’s fixed reservation.
+A_ZH: 最多 $3000/150=20$ 条电路，每条在用户空闲时仍预留 150 kbps。按平均需求算出的 $3000/15=200$ 既不是可预留电路数，也不是无过载保证。活跃概率用于分组共享的需求模型，不能减少每条电路的固定预留。
 
 @@ N078 | 07-exercises | classroom | NT1:3;NT1S:10;HT1:4c
 Q_EN: With 120 independent users each active with probability 0.1, what is the probability exactly $n$ are active?
@@ -488,13 +484,11 @@ Q_ZH: 120 个独立用户每人以 0.1 概率活跃，恰有 $n$ 人活跃的概
 A_EN: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$ for $n=0,\ldots,120$. The combination counts which users are active; the other terms give the probability of one such pattern. Expected active users are $E[K]=120\times0.1=12$. An overload probability requires summing the tail above capacity, not substituting the mean.
 A_ZH: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$，其中 $n=0,\ldots,120$。组合数统计哪些用户活跃，其余项表示一种具体组合的概率。期望活跃人数为 $E[K]=120\times0.1=12$。过载概率要对超过容量的尾部求和，不能用均值直接代替。
 
-
 @@ N079 | 07-exercises | classroom | NT2:1;HT2:1
 Q_EN: Tutorial 2 (2026A) Q1: voice is encoded at 128 kbps into 64-byte packets, sent at 4 Mbps with 8 ms propagation. Measured from the start of packetization, when can playback of the first encoded bit start if the receiver waits for the complete packet?
 Q_ZH: 本学期 Tutorial 2 Q1：语音以 128 kbps 编码，组成 64 字节分组，以 4 Mbps 发送，传播 8 毫秒。若接收端等完整分组到齐后播放，最早编码的比特从开始组包到可播放需多久？
-A_EN: Packetization needs $512/128000=4$ ms; transmission needs $512/(4\times10^6)=0.128$ ms; propagation is 8 ms. Total is 12.128 ms under the whole-packet playback model. The phrase “a bit” is ambiguous: the earliest encoded bit waits about the full packetization interval, while a typical bit's average assembly wait is about half, 2 ms.
-A_ZH: 组包需 $512/128000=4$ 毫秒，发送需 $512/(4\times10^6)=0.128$ 毫秒，传播为 8 毫秒。按完整分组到达后播放的模型，总共 12.128 毫秒。原题“某个比特”略有歧义：最早编码的比特约等待完整组包时间，而任意典型比特的平均组包等待约为一半，即 2 毫秒。
-
+A_EN: Collecting 64 bytes requires $512/128000=4$ ms. Only then is the whole packet sent, taking $512/(4\times10^6)=0.128$ ms, followed by 8 ms propagation for its last bit. Total: 12.128 ms. The earliest bit waits for the other bits to be collected; receiver playback waits for the entire packet. This question measures from the start of assembly.
+A_ZH: 收集 64 字节需 $512/128000=4$ 毫秒，随后整包发送需 $512/(4\times10^6)=0.128$ 毫秒，末位传播再需 8 毫秒，总计 12.128 毫秒。最早的比特先等待其余比特组包，接收端再等整包到齐才播放。本题计时起点明确为开始组包。
 
 @@ N080 | 07-exercises | classroom | NT2:1;HT2:2a
 Q_EN: Tutorial 2 (2026A) Q2a: an L-bit packet crosses three links and two store-and-forward routers. Link i has rate R_i bit/s, length d_i m and propagation speed s_i m/s. Each router adds d_proc seconds; queueing and endpoint processing are zero. Find complete-packet delay.
@@ -502,13 +496,11 @@ Q_ZH: 本学期 Tutorial 2 Q2a：L 比特分组经过三条链路和两个存储
 A_EN: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$. There are three serialization terms because each link transmits the whole packet, three propagation terms, and two router-processing terms. If the problem adds source or destination processing, include those separately; do not infer them when the stated model excludes them.
 A_ZH: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$。三条链路各发完整分组，因此有三个串行化项、三个传播项，以及两个路由处理项。若题目另加源端或目的端处理，应单独计入；模型未要求时不要自行添加。
 
-
 @@ N081 | 07-exercises | classroom | NT2:1;HT2:2b
 Q_EN: One packet crosses three store-and-forward links and two routers, with no queueing or endpoint processing. Use $L=1500$ bytes, each $R=2$ Mbps, $s=2.5\times10^8$ m/s, distances 5,000/4,000/1,000 km, and 3 ms processing per router. Find complete-packet delay.
 Q_ZH: 一个分组经过三条存储转发链路和两个路由器，无排队与端点处理。分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒。求整个分组到齐的时延。
 A_EN: Each serialization takes 6 ms, so three give 18 ms. Total distance is $10^7$ m, giving 40 ms propagation. Two routers add 6 ms. Total: $18+40+6=64$ ms. Keep all three components visible; the result is easy to miscalculate if kilometers, bytes and milliseconds are mixed without conversion.
 A_ZH: 每条链路串行化 6 毫秒，三条共 18 毫秒。总距离 $10^7$ 米，传播共 40 毫秒；两个路由器再加 6 毫秒。总计 $18+40+6=64$ 毫秒。应保留分项，避免把千米、字节和毫秒不经换算直接混用。
-
 
 @@ N082 | 07-exercises | classroom | NT2:2;HT2:3
 Q_EN: A 1,500-byte packet crosses three 2 Mbps links with total propagation 40 ms. If routers forward each bit immediately with zero processing, what is the ideal delay?
@@ -516,26 +508,23 @@ Q_ZH: 1500 字节分组经过三条 2 Mbps 链路，总传播为 40 毫秒，路
 A_EN: With all links at the same rate, serialization overlaps across links: count one $L/R=6$ ms plus total propagation of 40 ms. The result is 46 ms. This is the question's ideal cut-through model; actual forwarding may need enough header bits to choose an output, so do not apply the ideal formula to every real device without checking assumptions.
 A_ZH: 各链路同速时，串行化在各链路间重叠，只计一次 $L/R=6$ 毫秒，再加总传播 40 毫秒，得 46 毫秒。这是题目的理想直通模型；真实转发可能先需要足够的首部比特来决定出口，不能无条件套用到所有设备。
 
-
 @@ N083 | 07-exercises | classroom | NT2:2;HT2:4
-Q_EN: A 2 Mbps output link is halfway through a 1,500-byte packet and has four more equal packets waiting. What is a newly arriving packet's queueing delay?
-Q_ZH: 2 Mbps 输出链路已发送完一个 1500 字节分组的一半，队列中另有四个等长分组等待。新到分组需排队多久？
+Q_EN: A FIFO 2 Mbps output link has sent half of a 1,500-byte packet; four more 1,500-byte packets are already waiting ahead of a new arrival. With no priority changes, how long until the new packet starts transmission?
+Q_ZH: FIFO（先到先服务）的 2 Mbps 输出链路已发完一个 1500 字节分组的一半，另有四个 1500 字节分组排在新到分组之前。无优先级变化时，新分组还要多久才能开始发送？
 A_EN: One full serialization takes 6 ms. The new packet waits for half the current packet plus four queued packets: $(0.5+4)\times6=27$ ms, assuming FIFO and no priority changes. This is waiting until its own transmission starts; add another 6 ms if asked when its own serialization finishes.
 A_ZH: 一个完整分组发送需 6 毫秒。新分组要等当前剩余半个与已排队的四个，所以 $(0.5+4)\times6=27$ 毫秒，假设先到先服务且无优先级变化。这里算到自身开始发送；若问自身发完，还要再加 6 毫秒。
 
 @@ N084 | 07-exercises | classroom | NT2:2;HT2:4
-Q_EN: Generalize queueing delay when $x$ bits of the current $L$-bit packet have already been sent and $n$ full packets are waiting.
-Q_ZH: 当前 $L$ 比特分组已有 $x$ 比特发出，另有 $n$ 个完整分组等待，如何写新到分组的排队时延？
+Q_EN: On a FIFO output link of rate R bit/s, x of the current packet’s L bits have already been sent (0≤x≤L), and n more L-bit packets wait ahead of a new arrival. With constant rate and no priority changes, give its waiting time until transmission starts.
+Q_ZH: FIFO 输出链路速率为 R 比特/秒，当前 L 比特分组已有 x 比特发出（0≤x≤L），新到分组之前另有 n 个 L 比特分组等待。速率不变且无优先级变化，求新分组到开始发送前的等待时间。
 A_EN: Remaining work ahead is $(L-x)+nL$ bits, so $d_{queue}=((L-x)+nL)/R$ under FIFO. Do not include the arriving packet's own $L$ bits in queueing delay. If there is no packet in service, the residual term is zero; if packet lengths differ, sum the actual queued lengths rather than using $nL$.
 A_ZH: 前面剩余工作量为 $(L-x)+nL$ 比特，因此 FIFO 下 $d_{queue}=((L-x)+nL)/R$。排队时延不包含新到分组自身的 $L$ 比特。若没有分组正在发送，残余项为零；若各分组长度不同，应累加实际长度，而不是用 $nL$。
-
 
 @@ N085 | 07-exercises | classroom | NT2:3;HT2:5;N1:50-51
 Q_EN: Why can a later traceroute hop show a smaller RTT than an earlier hop?
 Q_ZH: 为什么 traceroute 中后面一跳的 RTT 可能比前面一跳更小？
 A_EN: The probes are separate measurements, not one packet being timed cumulatively at every hop. Router reply scheduling, queueing, probe timing and return paths can differ. Therefore subtracting adjacent RTTs is not a reliable direct estimate of one link's propagation delay. Examine repeated measurements and the measurement mechanism before drawing a network-performance conclusion.
 A_ZH: 各跳探测是不同测量，不是同一个分组沿途累积计时。路由器回复调度、排队、探测时刻与返回路径可能不同。因此相邻 RTT 相减不能可靠地直接估计某条链路传播时延。下结论前应看重复测量及其测量机制。
-
 
 @@ N086 | 08-extension | extension | N1:46,53-55
 Q_EN: What is the bandwidth–delay product, and why is its delay definition important?
@@ -594,8 +583,8 @@ A_ZH: 按自下而上的编号，只有 B“第 4 层”正确。UDP 表明传�
 @@ N099 | 07-exercises | classroom | NT2:3
 Q_EN: Consider this illustrative traceroute row: `4  203.0.113.1  10.2 ms  *  11.0 ms`. It uses hop number, responding IP, then three probe results. What do the fields and the asterisk mean? Can you conclude ordinary forwarded packets are being lost?
 Q_ZH: 观察这条教学用 traceroute 行：`4  203.0.113.1  10.2 ms  *  11.0 ms`。格式为跳号、回复 IP、三次探测结果。各字段和星号表示什么？能据此断定普通转发分组丢失吗？
-A_EN: A typical row contains hop number, round-trip times for several probes (often three), and the responding router's name or IP address; exact display order varies by system. An asterisk means no reply arrived before that probe's timeout. It can reflect filtering or reply rate-limiting, so it is not by itself proof that the router drops ordinary forwarded traffic. RTTs include a return trip.
-A_ZH: 典型一行包括跳号、数次探测的往返时间（常见三次），以及回复路由器的名称或 IP；不同系统的列顺序可能不同。星号表示该次探测超时未收到回复，可能来自过滤或回复限速，不能单独证明路由器丢弃普通转发流量。RTT 包含返回路程。
+A_EN: 4 is the probed hop number; 203.0.113.1 is the responding address. The first probe took 10.2 ms round trip, the second received no reply before timeout (*), and the third took 11.0 ms round trip. These are source-to-hop-and-back times, not single-link delays. Filtering or reply rate-limiting can cause the timeout; it alone does not prove ordinary forwarded packets were lost.
+A_ZH: 4 是被探测的跳号，203.0.113.1 是回复地址。第一探测往返 10.2 毫秒，第二探测超时未收到回复（*），第三探测往返 11.0 毫秒。这些是源端到该跳再返回的时间，不是单条链路时延。过滤或回复限速也可能造成超时，不能单凭星号断定普通转发分组丢失。
 
 @@ N100 | 10-http2 | learn | N2B:1-3,6
 Q_EN: How do non-persistent and persistent HTTP connections differ in the lecture model?
@@ -604,21 +593,21 @@ A_EN: Non-persistent HTTP uses a separate TCP connection for each object. Persis
 A_ZH: 非持久 HTTP 为每个对象单独建立 TCP 连接；持久 HTTP 在相同端点间复用一个 TCP 连接来完成多个请求—响应。复用可节省重复建立连接的时延和系统工作。本章分析传统 HTTP-over-TCP 模型，持久连接与同时开启多个并行连接是不同概念。
 
 @@ N101 | 10-http2 | learn | N2B:4
-Q_EN: Why does fetching one object with non-persistent HTTP take approximately $2RTT+L/R$?
-Q_ZH: 为什么非持久 HTTP 获取一个对象约需 $2RTT+L/R$？
+Q_EN: In the classic HTTP-over-TCP model with a new connection, why is one object fetch approximately $2RTT+L/R$? RTT is round-trip time, L is object length in bits, and R is its transmission rate in bit/s.
+Q_ZH: 经典 HTTP-over-TCP 模型中新建连接获取一个对象，为何约需 $2RTT+L/R$？RTT 为往返时延，L 是对象比特数，R 是传输速率（比特/秒）。
 A_EN: One RTT establishes the TCP connection. A second RTT covers sending the request and receiving the start of the response. Then $L/R$ accounts for serializing the object. The model neglects DNS, request size, server processing, loss and TCP startup effects. RTT already includes round-trip propagation, so do not add the same propagation twice.
 A_ZH: 第一个 RTT 用于建立 TCP 连接，第二个 RTT 用于发出请求并收到响应开头，再用 $L/R$ 计算对象串行化。模型忽略 DNS、请求大小、服务器处理、丢包与 TCP 启动效应。RTT 已包含往返传播，不能重复加同一传播时间。
 MEDIA: chapter2-part2-slide-4.png
 
 @@ N102 | 10-http2 | worked | N2B:4-5
-Q_EN: RTT is 40 ms, an object is 100 kB, and throughput is 10 Mbps. Estimate the first fetch and a later sequential fetch on the same persistent connection.
-Q_ZH: RTT 为 40 毫秒，对象为 100 kB、吞吐量为 10 Mbps，估算首次获取和同一持久连接上后续顺序获取的时间。
+Q_EN: Use the ideal HTTP/TCP timing model, ignoring DNS, TLS, processing and TCP startup effects. RTT=40 ms, object size=100 decimal kB, data rate=10 Mbps. Find the first fetch on a new connection and a later sequential fetch on that same persistent connection.
+Q_ZH: 采用理想 HTTP/TCP 时序模型，忽略 DNS、TLS、处理与 TCP 启动效应。RTT=40 毫秒，对象为十进制 100 kB，数据速率=10 Mbps。求新建连接的首次获取，以及同一持久连接上之后顺序获取一个同样对象的时间。
 A_EN: Using decimal kB, transmission takes $100000\times8/10^7=80$ ms. A first fetch requiring setup takes $2(40)+80=160$ ms. A later request after the previous response completes takes $40+80=120$ ms. These ideal estimates omit DNS, TLS, processing and TCP dynamics, as in the lecture's timing model.
 A_ZH: 按十进制 kB，传输需 $100000\times8/10^7=80$ 毫秒。需要建连的首次获取为 $2(40)+80=160$ 毫秒；前一响应完成后，再顺序发送的后续请求为 $40+80=120$ 毫秒。按课堂时序模型，这里忽略 DNS、TLS、处理和 TCP 动态过程。
 
 @@ N103 | 10-http2 | worked | N2B:2-6
-Q_EN: A base HTML page references ten images from one server. Ignoring object transmission, compare serial non-persistent HTTP with sequential persistent HTTP.
-Q_ZH: 一个基础 HTML 引用同一服务器的十张图片，忽略对象传输时间，比较串行非持久 HTTP 与顺序持久 HTTP。
+Q_EN: Starting with no TCP connection or cached objects, a base HTML page reveals ten image URLs on the same server. All exchanges use the same RTT; ignore transmission, DNS, TLS and processing. Compare total RTT counts for serial non-persistent versus sequential persistent HTTP without pipelining.
+Q_ZH: 开始时无 TCP 连接和缓存对象，基础 HTML 到达后才知道同一服务器上的十张图片 URL。各交互 RTT 相同，忽略传输、DNS、TLS 与处理。比较串行非持久 HTTP 和不使用流水线的顺序持久 HTTP 所需总 RTT 数。
 A_EN: There are eleven objects. Serial non-persistent access needs $11\times2RTT=22RTT$. Sequential persistent access needs one setup RTT plus one request–response RTT per object, giving $12RTT$. The image URLs become known after the base HTML arrives. The persistent calculation here does not assume pipelining or HTTP/2 multiplexing.
 A_ZH: 共十一个对象。串行非持久方式需 $11\times2RTT=22RTT$；顺序持久方式需一次建连 RTT，加每个对象一次请求—响应 RTT，共 $12RTT$。图片 URL 在基础 HTML 到达后才知道。此处持久连接计算没有假设流水线或 HTTP/2 多路复用。
 
@@ -630,23 +619,23 @@ A_ZH: 复用是保留一个连接供后续请求使用；并发连接是同时�
 MEDIA: chapter2-part2-slide-5.png
 
 @@ N105 | 10-http2 | worked | N2B:2-7
-Q_EN: In an ideal non-persistent model with five parallel connections and ten tiny images, how many RTTs are needed including the base HTML?
-Q_ZH: 理想非持久模型中，用五条并行连接获取十张很小的图片，连同基础 HTML 一共需要多少 RTT？
+Q_EN: In ideal non-persistent HTTP, fetch a base HTML and then its ten tiny images from one server. All connections start fresh, share the same RTT, and at most five run concurrently. Ignore transmission, DNS, TLS and processing. How many RTTs are needed?
+Q_ZH: 理想非持久 HTTP 中，先取基础 HTML，再取其指向的同一服务器上的十张微小图片。每次使用新连接，各连接 RTT 相同，最多五条同时运行；忽略传输、DNS、TLS 与处理。共需多少 RTT？
 A_EN: Fetch the HTML first in $2RTT$. The ten images form two groups of five, with each parallel group taking $2RTT$. Total is $2+2\times2=6RTT$. Assume negligible transmission, no DNS/TLS/processing delays, and independent connections that can start together. With substantial object sizes and a shared bottleneck, parallel transfers compete for the same capacity.
 A_ZH: 先用 $2RTT$ 获取 HTML。十张图分两组、每组五张并行，每组需 $2RTT$，合计 $2+2\times2=6RTT$。假设传输可忽略、无 DNS/TLS/处理时延，且连接可同时开始。对象较大且共享瓶颈时，并行传输仍会竞争相同容量。
 
 @@ N106 | 10-http2 | learn | N2B:8-9
 Q_EN: What information is in an HTTP/1.1 request line and its headers?
 Q_ZH: HTTP/1.1 请求行与首部包含哪些信息？
-A_EN: A request line such as `GET /index.html HTTP/1.1` gives method, request target and HTTP version. Header fields follow, such as `Host`, and an empty line ends the header section; a message body may follow when applicable. The lecture's readable text format is HTTP/1.x syntax. Do not assume HTTP/2 or HTTP/3 encodes every message as this same plain-text layout.
-A_ZH: 例如 `GET /index.html HTTP/1.1` 给出方法、请求目标和 HTTP 版本，后面是 `Host` 等首部字段。空行结束首部区，适用时再跟消息体。课堂的可读文本格式是 HTTP/1.x 语法，不能假定 HTTP/2、HTTP/3 都按同样纯文本布局编码消息。
+A_EN: In `GET /index.html HTTP/1.1`, GET is the method, /index.html the request target, and HTTP/1.1 the version. Following header fields supply metadata; `Host: example.org` identifies the target host. An empty line ends the headers, after which a body may follow. This readable line-based format describes HTTP/1.x, not the binary framing of HTTP/2 or HTTP/3.
+A_ZH: `GET /index.html HTTP/1.1` 中，GET 是方法，/index.html 是请求目标，HTTP/1.1 是版本。后续首部携带元信息，例如 `Host: example.org` 指明目标主机。空行结束首部，之后在适用时接消息体。这种可读的按行格式属于 HTTP/1.x，不是 HTTP/2、HTTP/3 的二进制成帧格式。
 MEDIA: chapter2-part2-slide-9.png
 
-@@ N107 | 10-http2 | learn | N2B:8-9
+@@ N107 | 10-http2 | learn | N2B:8-9;HTTPSEM:9.3.1-9.3.3
 Q_EN: What is the basic distinction among GET, HEAD and POST?
 Q_ZH: GET、HEAD 和 POST 的基本区别是什么？
-A_EN: GET requests a resource representation. HEAD requests the corresponding response metadata without the representation body. POST asks the target resource to process supplied content according to that resource's semantics. The method is part of the request line; headers and body are separate components. Real behavior must follow the protocol and application definition rather than a vague “all requests download files” model.
-A_ZH: GET 请求资源表示，HEAD 请求相应响应元数据但不返回表示主体，POST 请求目标资源按其语义处理提交内容。方法位于请求行，首部和消息体是独立组成部分。实际行为须按协议和应用定义理解，不能笼统认为所有请求都是下载文件。
+A_EN: GET requests a resource representation, such as an image. HEAD requests the corresponding response headers without that representation body, useful for inspecting metadata. POST asks the target to process supplied content according to its semantics, such as handling a submitted form. POST is not simply another name for downloading, and HEAD does not return the image bytes.
+A_ZH: GET 请求资源表示，例如一张图片；HEAD 请求对应的响应首部但不返回该表示主体，可用于检查元信息；POST 请求目标按其语义处理提交内容，例如处理表单。POST 不只是下载的另一种叫法，HEAD 也不会返回图片字节。
 
 @@ N108 | 10-http2 | learn | N2B:10-13
 Q_EN: What four components implement the lecture's cookie-based state example?
@@ -663,8 +652,8 @@ A_ZH: 命中可用缓存时，缓存直接把已存对象返回客户端；未�
 MEDIA: chapter2-part2-slide-14.png
 
 @@ N110 | 10-http2 | worked | N2B:14-15
-Q_EN: In a simplified model, cache-hit delay is 10 ms, miss delay is 110 ms and hit probability is 0.4. What is mean response time?
-Q_ZH: 简化模型中，缓存命中时延 10 毫秒、未命中 110 毫秒、命中概率 0.4，平均响应时间是多少？
+Q_EN: In a simplified cache model, the entire response delay is 10 ms on a hit and 110 ms on a miss, both already including cache lookup. Hit probability is 0.4. What is mean response time?
+Q_ZH: 简化缓存模型中，命中时完整响应时延为 10 毫秒，未命中时为 110 毫秒，两者均已包括缓存查找。命中概率为 0.4，平均响应时间是多少？
 A_EN: $E[T]=0.4(10)+0.6(110)=70$ ms. Define the miss delay as the entire miss path, including lookup, so that you do not count lookup twice. Caching can also reduce access-link traffic and queueing, but that additional network effect is not captured by fixed 10/110 ms delays. This is an added worked example applying the slide's cache mechanism.
 A_ZH: $E[T]=0.4(10)+0.6(110)=70$ 毫秒。这里将未命中时延定义为包含查找在内的完整路径，避免重复计算查找。缓存还能减少接入链路流量与排队，但固定的 10/110 毫秒模型没有描述这种额外网络效应。本题是根据课件缓存机制补充的例题。
 
@@ -700,11 +689,11 @@ Q_ZH: 为什么 SMTP 被称为 push，而基础 HTTP 获取被称为 pull？
 A_EN: A sending mail server initiates delivery to a receiving mail server, pushing an available message. In the basic web example, a client requests a resource, pulling it from the server. These describe the application exchanges shown, not every possible use of HTTP. SMTP's delivery to the recipient's server is still separate from the recipient reading the message.
 A_ZH: 发件服务器主动向收件服务器投递已有消息，因此称推送；基础 Web 示例由客户端请求资源，从服务器拉取。这描述的是所示应用交互，而非 HTTP 的所有可能用途。SMTP 把邮件送到收件服务器，仍不同于收件人实际阅读邮件。
 
-@@ N116 | 11-email | learn | N2B:24-27
+@@ N116 | 11-email | learn | N2B:24-27;POPRFC:3-6
 Q_EN: What are POP3's three phases and typical commands?
 Q_ZH: POP3 有哪三个阶段？典型命令是什么？
-A_EN: The basic example opens TCP port 110, then performs authorization, transaction and update. Authorization identifies the user; transaction commands include LIST to list messages, RETR to retrieve one and DELE to mark one for deletion. A normal QUIT transitions to update, where pending deletions are processed. Do not interpret downloading alone as an unavoidable server-side deletion.
-A_ZH: 基础示例连接 TCP 110 端口，依次进入认证、事务和更新阶段。认证用于识别用户；事务命令中，LIST 列出邮件，RETR 取邮件，DELE 标记删除。正常 QUIT 进入更新阶段处理待删除项。不能把下载本身理解成一定会删除服务器邮件。
+A_EN: Authorization authenticates the user, for example with USER and PASS. Transaction permits LIST (list messages), RETR (retrieve) and DELE (mark for deletion). QUIT from the transaction state enters update, where marked deletions are processed. QUIT during authorization just ends the session. Reading a message alone does not mark it for deletion.
+A_ZH: 认证阶段验证用户，例如使用 USER 和 PASS。事务阶段可执行 LIST 列出邮件、RETR 取邮件、DELE 标记删除。从事务阶段发出 QUIT 才进入更新阶段，处理已标记的删除；认证阶段的 QUIT 只是结束会话。仅取回邮件本身不会将其标记删除。
 
 @@ N117 | 11-email | learn | N2B:27-28
 Q_EN: How do POP3's download modes differ from IMAP's server-side organization?
@@ -721,10 +710,10 @@ A_ZH: 浏览器通过 HTTP 与 Web 邮箱服务通信，通常以 HTTPS 保护�
 MEDIA: chapter2-part2-slide-24.png
 
 @@ N119 | 11-email | check | N2B:19-23;SMTPRFC:4.1.1.4
-Q_EN: Does an SMTP success reply prove that the recipient has read the message?
-Q_ZH: SMTP 返回成功，是否证明收件人已经读信？
-A_EN: No. A successful acceptance reply concerns the receiving system's handling responsibility at that stage, not a human reading event. Messages can still pass through queues, later delivery steps and mailbox handling. Keep protocol acceptance, final mailbox delivery and user reading distinct. This is an extension of the lecture's command–response example.
-A_ZH: 不能。成功接受回复描述该阶段接收系统的处理责任，并不是人类阅读事件。邮件还可能经过队列、后续投递和邮箱处理。协议接受、最终入箱与用户阅读应分开理解。本卡扩展了课堂命令—回复示例。
+Q_EN: After the complete SMTP DATA block, the receiving server returns a 250 success reply. Does this prove the human recipient has read the message?
+Q_ZH: 完整 SMTP DATA 数据块结束后，接收服务器返回 250 成功回复。这是否证明人类收件人已经读信？
+A_EN: No. This reply means the receiving SMTP server accepted responsibility for that message, not that a person read it. Further relay, queues and mailbox delivery may still be involved. Distinguish acceptance of the whole message from the earlier successful greeting or recipient commands, and distinguish acceptance, final delivery and human reading.
+A_ZH: 不能。这个回复表示接收 SMTP 服务器接受了该邮件的处理责任，不表示人已经读信。后面仍可能有转递、排队和邮箱投递。要区分整封邮件的接受与先前问候或收件人命令的成功，也要区分接受、最终投递和人类阅读。
 
 @@ N120 | 11-email | check | N2B:19,23;SMTPRFC:2.3.1
 Q_EN: How should I interpret the slides' statement that SMTP mail is 7-bit ASCII?
@@ -759,15 +748,15 @@ A_ZH: 递归请求要求被联系的解析器代表客户端完成解析；迭�
 MEDIA: chapter2-part2-slide-39.png
 
 @@ N125 | 12-dns | classroom | N2B:38-39
-Q_EN: In the illustrated cold-cache lookup with one root, one TLD and one authoritative exchange, why are there eight DNS messages?
-Q_ZH: 所示冷缓存查询经历根、TLD、权威各一次交互，为什么一共八条 DNS 消息？
+Q_EN: A host asks a local resolver for an uncached name. The resolver performs exactly one request–response exchange each with a root, TLD and authoritative server. All server addresses are known and there are no retries or extra lookups. How many DNS messages are exchanged, including host–resolver traffic?
+Q_ZH: 主机向本地解析器查询一个未缓存名称；解析器向根、TLD、权威服务器各进行一次请求—响应。各服务器地址已知，无重试或额外查询。包括主机与解析器之间的交互，共交换几条 DNS 消息？
 A_EN: The host sends one request to its local resolver and receives one response. The resolver makes three upstream request–response exchanges, adding six messages. Total: $2+3\times2=8$. Assume server addresses are already available and no retries, extra delegations or other lookups are needed. Cache hits can skip some or all upstream exchanges.
 A_ZH: 主机向本地解析器发一次请求并收一次响应，共两条；解析器再进行三组上游请求—响应，增加六条，总共 $2+3\times2=8$。假设服务器地址已知，且无需重试、额外委派或其他查询。缓存命中可跳过部分或全部上游交互。
 MEDIA_FRONT: chapter2-part2-slide-38.png
 
 @@ N126 | 12-dns | worked | N2B:38-41
-Q_EN: Host–resolver RTT is 2 ms; sequential resolver exchanges with root, TLD and authority take 20, 30 and 10 ms. What is the lookup delay?
-Q_ZH: 主机—解析器 RTT 为 2 毫秒，解析器顺序访问根、TLD、权威的 RTT 为 20、30、10 毫秒，解析时延是多少？
+Q_EN: For an uncached DNS name, host–resolver RTT is 2 ms. The resolver performs three sequential request–response exchanges with root, TLD and authority, with RTTs 20, 30 and 10 ms. Ignore additional overhead and extra queries. What is total lookup delay?
+Q_ZH: 查询一个未缓存 DNS 名称：主机—解析器 RTT 为 2 毫秒；解析器顺序向根、TLD、权威进行三次请求—响应，RTT 分别为 20、30、10 毫秒。忽略额外开销和查询，总解析时延是多少？
 A_EN: Neglecting processing and message transmission, total delay is $2+20+30+10=62$ ms. Count each complete request–response exchange once. If the resolver already has a usable final answer cached, the model reduces to the 2 ms host–resolver round trip. A different delegation chain or parallel work would require a different timing model.
 A_ZH: 忽略处理和消息传输后，总时延为 $2+20+30+10=62$ 毫秒，每个完整请求—响应只计一次。若解析器已缓存可用最终答案，模型就只剩主机—解析器的 2 毫秒往返。委派链不同或存在并行工作时，需要调整时序模型。
 
@@ -784,18 +773,18 @@ A_EN: An A record associates a name with an IPv4 address. An NS record identifie
 A_ZH: A 记录把名称关联到 IPv4 地址；NS 记录用名字服务器的主机名作为值，标识域或区域的权威服务器。因此 NS 的值并不就是用户所求的 Web 服务器地址。委派解析时，还可能需要名字服务器主机名对应的地址信息。
 MEDIA: chapter2-part2-slide-42.png
 
-@@ N129 | 12-dns | learn | N2B:43
+@@ N129 | 12-dns | learn | N2B:43;DNSRR:3.3.9
 Q_EN: How do CNAME and MX records differ?
 Q_ZH: CNAME 与 MX 记录有什么区别？
-A_EN: CNAME maps an alias name to a canonical name. MX identifies a mail exchanger for a domain; its value names a mail server rather than directly storing that server's IP address. Address resolution of the named target is a further step. The same organization's web service and mail service can use different targets even when users recognize the same domain name.
-A_ZH: CNAME 将别名映射到规范名称；MX 为域指定邮件交换服务器，其值是邮件服务器名称，而不是直接存该服务器 IP。还需要进一步解析目标名称的地址。同一组织的 Web 和邮件服务可以使用不同目标，即使用者看到的是相同域名。
+A_EN: CNAME maps an alias to a canonical name. MX specifies a mail exchanger by its host name and a preference number; lower numbers are preferred. For example, `10 mail.example.org` names a mail server, not an IP address. Resolving that host name to an address is a separate step. CNAME supplies an alias relationship; MX supplies mail-routing information.
+A_ZH: CNAME 将别名映射到规范名称。MX 用邮件交换服务器的主机名和优先数指定投递目标，数值较小者优先。例如 `10 mail.example.org` 给的是邮件服务器名，不是 IP 地址，还需另做地址解析。CNAME 表达别名关系，MX 提供邮件路由信息。
 MEDIA: chapter2-part2-slide-43.png
 
 @@ N130 | 12-dns | worked | N2B:42-43
 Q_EN: If `www.example.org` is a CNAME for `edge.example.net`, and that target has an A record, which record gives the final IPv4 address?
 Q_ZH: 若 `www.example.org` 的 CNAME 指向 `edge.example.net`，后者有 A 记录，哪条记录提供最终 IPv4 地址？
-A_EN: The target's A record supplies the IPv4 address. The CNAME supplies a name-to-name step, so treating the alias target string itself as an IP address is wrong. For mail to an example.org address, an MX lookup serves a different purpose: identifying the receiving mail exchanger. Record type determines how to interpret the value.
-A_ZH: 目标的 A 记录提供 IPv4 地址；CNAME 只是名称到名称的一步，不能把别名目标字符串本身当 IP。发送到 example.org 的邮件时，MX 查询承担另一任务，即确定收件邮件交换服务器。记录类型决定如何解释记录值。
+A_EN: The A record for `edge.example.net` gives the IPv4 address. First follow the CNAME from `www.example.org` to the target name; then interpret the target A record as an address. The CNAME target is still a name, not an IP. The two steps can be included in one DNS response, but they remain different record types.
+A_ZH: `edge.example.net` 的 A 记录给出 IPv4 地址。先沿 `www.example.org` 的 CNAME 找到目标名称，再从目标的 A 记录读取地址。CNAME 目标仍是名称，不是 IP。两步所需记录可以同在一个 DNS 响应中返回，但仍属于不同记录类型。
 
 @@ N131 | 12-dns | worked | N2B:41
 Q_EN: A DNS record was cached with TTL 300 s, 60 s ago. What lifetime remains in the basic countdown model?
@@ -806,8 +795,8 @@ A_ZH: 剩余 $300-60=240$ 秒。过期后，通常需更新信息才能继续复
 @@ N132 | 12-dns | check | N2B:35,38-40;DNSRFC:4.3.1-4.3.2
 Q_EN: Does a root DNS server normally resolve every queried host all the way to its final address?
 Q_ZH: 根 DNS 服务器通常会亲自把每个主机名一直解析到最终地址吗？
-A_EN: No. In the usual iterative hierarchy, it supplies a referral toward the relevant TLD. The recursive resolver continues the lookup. The slide's short prose on roots should be read alongside the later iterative-query diagram. Distinguish the resolver's job from an authoritative root server's job, and treat the slide's old server-instance count as historical rather than current.
-A_ZH: 通常不会。典型迭代层次中，根服务器返回通往相应 TLD 的转介，由递归解析器继续查询。根服务器那页的简写应与后面的迭代图一起理解。要区分递归解析器和根权威服务器的职责，旧的服务器实例数量也应视作历史数据。
+A_EN: Usually no. A root server gives the recursive resolver a referral toward the relevant top-level domain. For a typical www.example.com lookup, it can point toward .com name servers; the recursive resolver continues toward an authoritative answer. The root has authority over the root zone, while the recursive resolver performs the client’s multi-step lookup.
+A_ZH: 通常不会。根服务器向递归解析器提供通往相应顶级域的转介。例如查询 www.example.com 时，可指向 .com 名字服务器；随后由递归解析器继续寻找权威答案。根服务器对根区域有权威，而递归解析器代表客户端完成多步查询。
 
 @@ N133 | 12-dns | check | N2B:41;N1:50-51
 Q_EN: Is DNS TTL the same thing as the IP TTL used by traceroute?

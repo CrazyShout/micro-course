@@ -81,8 +81,8 @@ A_ZH: 类定义对象的结构与行为，实例是依据类创建的具体对�
 @@ M016 | 02-python | learn | P1:146-154
 Q_EN: What does inheritance add to a Python class?
 Q_ZH: Python 类的继承有什么作用？
-A_EN: A child class can reuse behavior from a parent and override selected methods. For example, a base classifier can define an interface while a Gaussian classifier implements its own probability calculation. An instance method operates on one object's state; a class method receives the class through `cls`. Inheritance is an organization tool, not an improvement in statistical accuracy.
-A_ZH: 子类可以复用父类行为，并重写某些方法。例如基类定义分类器接口，高斯分类器实现自己的概率计算。实例方法操作某个对象的状态，类方法通过 `cls` 接收类本身。继承是组织程序的方法，不会自动提升统计预测精度。
+A_EN: A child class can reuse methods from a parent and override selected methods with its own implementation. For example, a base classifier may provide a common prediction workflow while a Gaussian subclass supplies the probability calculation. Reuse avoids repeating shared code; overriding changes the selected behavior. Inheritance organizes software but does not by itself improve statistical accuracy.
+A_ZH: 子类可以复用父类的方法，并用自己的实现重写部分同名方法。例如，分类器基类提供共同的预测流程，高斯子类提供具体的概率计算。复用减少重复代码，重写改变相应行为。继承组织的是软件结构，本身不会提高统计预测准确率。
 
 @@ M017 | 02-python | learn | P1:155-168
 Q_EN: How do text files, CSV and pickle differ?
@@ -117,8 +117,8 @@ A_ZH: 数组保存规则排列、具有共同数据类型的数值。`shape` 给
 @@ M022 | 03-numpy | learn | P2:10-33
 Q_EN: How do arange, linspace, zeros and ones differ?
 Q_ZH: arange、linspace、zeros 和 ones 有什么区别？
-A_EN: `np.arange(start, stop, step)` specifies a step and normally excludes `stop`. `np.linspace(start, stop, num)` specifies a number of evenly spaced samples and includes the endpoint by default. `np.zeros((2,3))` and `np.ones((2,3))` create arrays with two rows and three columns. Prefer an explicit shape and dtype when allocating numerical work arrays.
-A_ZH: `np.arange(start, stop, step)` 指定步长，通常不包含 `stop`；`np.linspace(start, stop, num)` 指定等间隔采样的个数，默认包含终点。`np.zeros((2,3))` 和 `np.ones((2,3))` 创建两行三列的数组。分配数值计算数组时，最好明确形状和数据类型。
+A_EN: `np.arange(start, stop, step)` specifies a step and normally excludes `stop`; `np.linspace(start, stop, num)` specifies the number of evenly spaced samples and includes both endpoints by default. `np.zeros((2,3))` fills a two-row, three-column array with 0; `np.ones((2,3))` fills the same shape with 1. These last two allocate constant arrays rather than a sequence of different values.
+A_ZH: `np.arange(start, stop, step)` 指定步长，通常不含 `stop`；`np.linspace(start, stop, num)` 指定等间隔样本个数，默认包含两端。`np.zeros((2,3))` 创建两行三列、全部为 0 的数组；`np.ones((2,3))` 创建同形状、全部为 1 的数组。后两者创建常量数组，而非数值逐步变化的序列。
 
 @@ M023 | 03-numpy | worked | P2:20-49
 Q_EN: For a data matrix $X$ of shape $(100,4)$, what do `X[:,1]` and `X[:,1:2]` return?
@@ -129,8 +129,8 @@ A_ZH: 两者都取所有样本的第二个特征。`X[:,1]` 形状是 `(100,)`�
 @@ M024 | 03-numpy | learn | P2:20-43
 Q_EN: How does Boolean indexing select a class from a dataset?
 Q_ZH: 如何用布尔索引选出某一类别的数据？
-A_EN: If `y` contains one label per row of `X`, then `mask = (y == c)` marks samples of class $c$, and `X[mask]` selects those rows. To count them, use `mask.sum()`. Parenthesize elementwise conditions, for example `(y == 0) | (y == 1)`. Python's scalar `and/or` do not replace NumPy's elementwise `&/|` operations.
-A_ZH: 若 `y` 的每个标签对应 `X` 的一行，`mask = (y == c)` 标记类别 $c$ 的样本，`X[mask]` 取出这些行。`mask.sum()` 可统计数量。逐元素条件应加括号，例如 `(y == 0) | (y == 1)`。Python 标量逻辑 `and/or` 不能代替 NumPy 逐元素的 `&/|`。
+A_EN: For NumPy arrays, let y contain one label per row of X. Then `mask = (y == c)` marks class-c rows with True, and `X[mask]` selects them. `mask.sum()` counts them because True counts as 1. Parenthesize elementwise conditions, such as `(y == 0) | (y == 1)`; scalar `and/or` do not replace NumPy's elementwise `&/|`.
+A_ZH: 对 NumPy 数组，设 y 的每个标签对应 X 的一行。`mask = (y == c)` 把 c 类对应位置标为 True，`X[mask]` 选出这些行。True 按 1 计，所以 `mask.sum()` 得到数量。逐元素条件应加括号，例如 `(y == 0) | (y == 1)`；标量 `and/or` 不能代替 NumPy 逐元素的 `&/|`。
 
 @@ M025 | 03-numpy | learn | P2:44-56
 Q_EN: What do reshape, transpose, concatenate and stack do?
@@ -147,8 +147,8 @@ A_ZH: 指定的轴是运算要压缩掉的方向。对形状为 $(N,d)$ 的 $X$�
 @@ M027 | 03-numpy | learn | P2:72-83
 Q_EN: What is the NumPy broadcasting rule?
 Q_ZH: NumPy 广播的规则是什么？
-A_EN: Compare shapes from the trailing axes. Each pair must be equal, or one length must be 1; missing leading axes act as length 1. Thus $(N,d)-(d,)$ centers each feature, and $(N,1)+(1,d)$ produces $(N,d)$. Broadcasting conceptually repeats values without requiring an explicitly tiled copy. Check the resulting shape before trusting the arithmetic.
-A_ZH: 从最后一个轴开始比较形状，每对长度必须相等，或其中一个是 1；缺失的前导轴视为长度 1。因此 $(N,d)-(d,)$ 可逐特征中心化，$(N,1)+(1,d)$ 得到 $(N,d)$。广播在概念上重复数值，不必先手动复制数组。计算后要检查结果形状。
+A_EN: Compare shapes from the trailing axes. Each pair must be equal or contain a length 1; missing leading axes act as length 1. Subtracting a feature-mean vector of shape $(d,)$ from data of shape $(N,d)$ centers each feature. An arbitrary $(d,)$ vector merely shifts columns. Also, $(N,1)+(1,d)$ produces $(N,d)$. Broadcasting need not create an explicitly tiled copy.
+A_ZH: 从最后一个轴开始比较形状，每对长度必须相等或有一个为 1；缺失的前导轴视为 1。用形状 $(N,d)$ 的数据减去形状 $(d,)$ 的列均值向量，才是逐特征中心化；减任意 $(d,)$ 向量只会平移各列。另外，$(N,1)+(1,d)$ 得到 $(N,d)$。广播不要求先显式复制出完整平铺数组。
 
 @@ M028 | 03-numpy | check | P2:72-83
 Q_EN: Why can subtracting arrays of shapes $(N,1)$ and $(N,)$ silently give the wrong result?
@@ -195,15 +195,15 @@ A_ZH: 在相同算法和环境下，种子使伪随机序列可重复，便于�
 @@ M035 | 04-tutorial | classroom | T1:14-24
 Q_EN: For every integer n=2,...,100, count its positive divisors excluding 1 and n. The plots below show these 99 counts. What does a point in A represent, what does a bar in B represent, and why must B’s frequencies total 99?
 Q_ZH: 对整数 n=2,…,100，统计除 1 和 n 自身外的正因数个数。下图展示这 99 个计数。A 图的一个点、B 图的一根柱各表示什么？为什么 B 的频数总和必须是 99？
-A_EN: For each integer n from 2 through 100, count divisors excluding 1 and n. The first plot uses n on the x-axis and this nontrivial-divisor count on the y-axis. The histogram instead groups those counts: its x-axis is a count bin and its y-axis is how many integers fall there. Check 2→0, 4→1, 12→4; all histogram frequencies together must account for 99 integers.
-A_ZH: 对 2 到 100 的每个整数 n，统计除 1 和 n 外的非平凡因数个数。第一张图横轴是 n，纵轴是它的因数个数；直方图则把这些计数分箱，横轴是因数个数区间，纵轴是落入该区间的整数数量。先检查 2→0、4→1、12→4；直方图各箱频数合计应覆盖 99 个整数。
+A_EN: In A, a point pairs integer n with its count of positive divisors excluding 1 and n. In B, a bar counts how many integers have divisor counts in that bin. Each of the 99 integers contributes exactly one count to exactly one histogram bin, so frequencies sum to 99. Check 2→0, 4→1 and 12→4; a divisor count is different from the frequency of that count.
+A_ZH: A 的一个点把整数 n 与它的非平凡正因数个数配对；B 的一根柱统计因数个数落入该箱的整数有多少。99 个整数各产生一个计数，各归入且仅归入一个箱，所以频数合计为 99。可检查 2→0、4→1、12→4；“因数个数”和“这种个数出现的频数”不是同一量。
 MEDIA_FRONT: tutorial1-factor-counts-teaching.png
 
 @@ M036 | 04-tutorial | classroom | T1:26-33
 Q_EN: A trusted file has been loaded into NumPy array mydata of shape (120,2): one sample per row, x in column 0 and y in column 1. How do you plot all 120 points? The figure shows how three illustrative rows become points; they are not extra class labels.
 Q_ZH: 已把可信文件读入 NumPy 数组 mydata，形状为 (120,2)：每行一个样本，第 0 列是 x、第 1 列是 y。怎样画出全部 120 个点？图中仅用三行示例说明“行→点”的关系，不是额外的类别标签。
-A_EN: Load the trusted tutorial file and verify that mydata has shape (120,2): each row is one sample and each column one coordinate. Use `plt.scatter(mydata[:,0], mydata[:,1])` and label the coordinate axes. The supplied exercise has no class-label column or grouping requirement. Swapping rows and columns changes which objects are treated as samples.
-A_ZH: 读取可信的教程文件，确认 mydata 形状为 (120,2)：每行一个样本，每列一个坐标。用 `plt.scatter(mydata[:,0], mydata[:,1])` 绘图并标注坐标轴。原题没有类别标签列，也没有按类别分组要求。把行列颠倒，会改变哪些对象被当作样本。
+A_EN: After `import matplotlib.pyplot as plt`, use `plt.scatter(mydata[:,0], mydata[:,1])`. Column 0 supplies all x coordinates, column 1 all y coordinates, and matching row indices form the 120 points. Label the axes with `plt.xlabel("x")` and `plt.ylabel("y")`; call `plt.show()` in a script. There is no class-label column or grouping requirement.
+A_ZH: 先用 `import matplotlib.pyplot as plt` 导入，再执行 `plt.scatter(mydata[:,0], mydata[:,1])`。第 0 列提供全部 x，第 1 列提供全部 y，同一行配成一个点，共 120 个。用 `plt.xlabel("x")`、`plt.ylabel("y")` 标轴；脚本中再调用 `plt.show()`。这里没有类别标签列，也无分组要求。
 MEDIA_FRONT: rows-to-points-teaching.png
 
 @@ M037 | 04-tutorial | learn | T1:35-36
@@ -227,8 +227,8 @@ A_ZH: 先得 $e_1=(1,1)/\sqrt2$。因为 $e_1^Tv_2=1/\sqrt2$，所以 $r_2=(1,0)
 @@ M040 | 04-tutorial | classroom | T1:37-45
 Q_EN: Let $V=\begin{bmatrix}1&-1&2\\0&2&3\\-1&2&1\\4&-1&-3\end{bmatrix}$. A function myGS applies Gram–Schmidt to its columns and returns E. What shape should E have, and how do you check both orthonormality and preservation of V’s column span?
 Q_ZH: 给定 $V=\begin{bmatrix}1&-1&2\\0&2&3\\-1&2&1\\4&-1&-3\end{bmatrix}$。函数 myGS 对它的列向量做 Gram–Schmidt，返回 E。E 应是什么形状？怎样同时检查正交归一和保留原列空间？
-A_EN: The notebook transposes a $3\times4$ literal, giving $V$ shape $(4,3)$: three vectors in four-dimensional space. Return $E$ with shape $(4,3)$. Check `np.allclose(E.T @ E, np.eye(3))`, and check that projecting $V$ onto the output span reconstructs it: `E @ (E.T @ V)` should match $V$. Orthonormality alone does not prove preservation of the intended span.
-A_ZH: Notebook 将一个 $3\times4$ 字面矩阵转置，得到形状 $(4,3)$ 的 $V$，即四维空间中的三个向量。返回的 $E$ 应为 $(4,3)$。用 `np.allclose(E.T @ E, np.eye(3))` 检查正交归一，还应验证 `E @ (E.T @ V)` 能重构 $V$。仅有正交归一不能证明保留了原来的子空间。
+A_EN: V has four rows and three columns: three vectors in four-dimensional space. Return E with shape (4,3). Check `np.allclose(E.T @ E, np.eye(3))` for orthonormal columns, then `np.allclose(E @ (E.T @ V), V)` for preservation of the input span. Here `np` is NumPy and `allclose` allows floating-point tolerance. Orthonormality alone does not identify the intended span.
+A_ZH: V 有四行三列，即四维空间中的三个向量，E 应为 (4,3)。用 `np.allclose(E.T @ E, np.eye(3))` 检查列正交归一，再用 `np.allclose(E @ (E.T @ V), V)` 检查保留输入列空间。这里 `np` 指 NumPy，`allclose` 允许浮点容差。仅有正交归一不能确定就是题目要求的子空间。
 
 @@ M041 | 04-tutorial | check | T1:35-45
 Q_EN: What if a Gram–Schmidt residual is zero or very small?
@@ -257,12 +257,12 @@ A_ZH: 分母只包括 20 条垃圾短信，因此条件概率为 $10/20=0.5$。�
 @@ M045 | 05-probability | learn | P2:137-140;B1:34-41
 Q_EN: State Bayes' rule and explain prior, likelihood, evidence and posterior.
 Q_ZH: 写出贝叶斯公式，并解释先验、似然、证据与后验。
-A_EN: $P(y=c\mid x)=\frac{p(x\mid y=c)P(y=c)}{p(x)}$. The prior $P(y=c)$ is the class probability before observing $x$. The likelihood $p(x\mid y=c)$ describes how compatible $x$ is with that class. The evidence $p(x)$ normalizes across classes. The posterior combines prior knowledge and the observed features into a class probability.
-A_ZH: $P(y=c\mid x)=\frac{p(x\mid y=c)P(y=c)}{p(x)}$。先验 $P(y=c)$ 是看到 $x$ 前的类别概率；似然 $p(x\mid y=c)$ 描述该类别对 $x$ 的解释程度；证据 $p(x)$ 负责跨类别归一化；后验综合先验与观测特征，给出新的类别概率。
+A_EN: For $p(x)>0$, $P(y=c\mid x)=p(x\mid y=c)P(y=c)/p(x)$. The prior $P(y=c)$ is the class probability before seeing x. The likelihood $p(x\mid y=c)$ measures compatibility of x with that class. Evidence $p(x)=\sum_c p(x\mid y=c)P(y=c)$ normalizes the scores. The posterior is the resulting class probability after incorporating x.
+A_ZH: 当 $p(x)>0$ 时，$P(y=c\mid x)=p(x\mid y=c)P(y=c)/p(x)$。先验 $P(y=c)$ 是看到 x 前的类别概率；似然 $p(x\mid y=c)$ 描述 x 与该类的相容程度；证据 $p(x)=\sum_c p(x\mid y=c)P(y=c)$ 把分数归一化。后验是纳入 x 后得到的类别概率。
 
 @@ M046 | 05-probability | worked | P2:137-140;B1:34-41
-Q_EN: Spam has prior 0.2; “free” appears in 0.6 of spam and 0.1 of normal messages. What is the spam posterior after seeing “free”?
-Q_ZH: 垃圾短信先验为 0.2，free 在垃圾短信和正常短信中出现的概率分别为 0.6、0.1。看到 free 后垃圾短信的后验是多少？
+Q_EN: In a two-class spam/normal model, spam has prior 0.2; “free” appears in 0.6 of spam and 0.1 of normal messages. What is the spam posterior after seeing “free”?
+Q_ZH: 在只有垃圾/正常两类的模型中，垃圾短信先验为 0.2，free 在两类中的出现概率分别为 0.6、0.1。看到 free 后垃圾短信的后验是多少？
 A_EN: The spam joint score is $0.6\times0.2=0.12$; the normal score is $0.1\times0.8=0.08$. Evidence is $0.12+0.08=0.20$, so the posterior is $0.12/0.20=0.60$. The word increases the spam probability from 20% to 60%, but it does not make spam certain. The posterior still reflects the base rate.
 A_ZH: 垃圾短信联合分数为 $0.6\times0.2=0.12$，正常短信分数为 $0.1\times0.8=0.08$。证据为 $0.12+0.08=0.20$，故后验为 $0.12/0.20=0.60$。这个词使垃圾短信概率从 20% 升到 60%，但并不代表一定是垃圾短信；后验仍受基础发生率影响。
 
@@ -275,14 +275,14 @@ A_ZH: 独立意味着 $p(x_1,x_2)=p(x_1)p(x_2)$；给定 $y$ 的条件独立意�
 @@ M048 | 05-probability | learn | P2:129-133;B1:13,23-26
 Q_EN: What do expectation, variance and standard deviation measure?
 Q_ZH: 期望、方差与标准差分别衡量什么？
-A_EN: Expectation is a probability-weighted mean. Variance is the expected squared deviation, $\operatorname{Var}(X)=E[(X-\mu)^2]$. Standard deviation is its square root. If a feature is measured in centimeters, its mean and standard deviation use centimeters, while variance uses square centimeters. Large variance means greater spread, not necessarily a different mean.
-A_ZH: 期望是按概率加权的平均值；方差是平方偏差的期望，$\operatorname{Var}(X)=E[(X-\mu)^2]$；标准差是方差的平方根。若特征单位为厘米，均值与标准差仍以厘米计，方差则是平方厘米。方差大表示更分散，不代表均值一定不同。
+A_EN: Expectation $\mu=E[X]$ is a probability-weighted mean. Variance is the expected squared deviation, $\operatorname{Var}(X)=E[(X-\mu)^2]$; standard deviation is its square root. If X is measured in centimeters, its mean and standard deviation use centimeters, but variance uses square centimeters. Greater variance means greater spread around the mean, not necessarily a different mean.
+A_ZH: 期望 $\mu=E[X]$ 是按概率加权的平均值。方差为平方偏差的期望 $\operatorname{Var}(X)=E[(X-\mu)^2]$，标准差是其平方根。若 X 以厘米计，均值和标准差也以厘米计，方差则以平方厘米计。方差大表示围绕均值更分散，不代表均值一定不同。
 
 @@ M049 | 05-probability | learn | P2:129-133;B1:13,23
 Q_EN: What are Bernoulli, Poisson and Gaussian distributions used to represent?
 Q_ZH: 伯努利、泊松和高斯分布分别表示什么？
-A_EN: Bernoulli models one binary outcome, such as whether a word appears, with success probability $p$. Poisson models a nonnegative event count in a fixed interval, with rate parameter $\lambda$. Gaussian models a continuous quantity around a mean $\mu$ with variance $\sigma^2$. Choose a distribution to match the observation type and assumptions, not simply because its formula is familiar.
-A_ZH: 伯努利分布描述单次二元结果，例如一个词是否出现，参数是成功概率 $p$；泊松分布描述固定区间内的非负事件次数，参数为 $\lambda$；高斯分布描述围绕均值 $\mu$ 波动的连续量，方差为 $\sigma^2$。选择分布应匹配观测类型与假设，而不是只选熟悉的公式。
+A_EN: Bernoulli models one binary outcome, such as whether a word appears, with success probability p. Poisson models a nonnegative event count over a specified exposure, with $\lambda$ the expected count for that exposure. Gaussian models a continuous quantity with mean $\mu$ and variance $\sigma^2$. Match both observation type and assumptions; a Poisson mean count is not a per-second rate unless the exposure is one second.
+A_ZH: 伯努利分布描述单次二元结果，例如词是否出现，p 是成功概率。泊松分布描述指定观察量内的非负事件次数，$\lambda$ 是该观察量下的期望次数。高斯分布描述均值为 $\mu$、方差为 $\sigma^2$ 的连续量。须匹配数据类型和假设；泊松均值只有在观察一秒时才可直接看作每秒速率。
 
 @@ M050 | 06-bayes | learn | B1:8-11
 Q_EN: What does a generative classifier learn?
@@ -297,10 +297,10 @@ A_EN: Choose parameters $\theta$ that make the observed training data most likel
 A_ZH: 选择使已观测训练数据最可能出现的参数：独立样本下，$\hat\theta=\arg\max_\theta\prod_{i=1}^N p(x_i\mid\theta)$，等价于最大化 $\sum_i\log p(x_i\mid\theta)$。这里数据固定、参数变化。似然是关于参数的函数，并不自动成为参数上的归一化概率分布。
 
 @@ M052 | 06-bayes | learn | B1:11-16
-Q_EN: Derive the MLE of a Bernoulli probability.
-Q_ZH: 如何推导伯努利概率的最大似然估计？
-A_EN: Let $s$ of $N$ observations equal 1. The log likelihood is $\ell(p)=s\log p+(N-s)\log(1-p)$. For an interior optimum, $\ell'(p)=s/p-(N-s)/(1-p)=0$, giving $\hat p=s/N$. If $s=0$ or $s=N$, the maximum is at a boundary, 0 or 1. The estimate is the observed success fraction.
-A_ZH: 设 $N$ 次观测中有 $s$ 次为 1，对数似然为 $\ell(p)=s\log p+(N-s)\log(1-p)$。内部最优点满足 $\ell'(p)=s/p-(N-s)/(1-p)=0$，得到 $\hat p=s/N$。若 $s=0$ 或 $s=N$，最大值在边界 0 或 1。估计结果就是观测到的成功比例。
+Q_EN: For N>0 independent identically distributed Bernoulli observations, derive the MLE of their common success probability p in [0,1].
+Q_ZH: 对 N>0 个独立同分布的伯努利观测，推导共同成功概率 p∈[0,1] 的最大似然估计。
+A_EN: Let s observations equal 1. The log likelihood is $\ell(p)=s\log p+(N-s)\log(1-p)$. For 0<s<N, setting $\ell^{\prime}(p)=s/p-(N-s)/(1-p)=0$ gives $\hat p=s/N$. The log likelihood is strictly concave inside (0,1), so this is the maximum. If s=0 or s=N, the maximum instead occurs at boundary 0 or 1.
+A_ZH: 设其中 s 次为 1，则 $\ell(p)=s\log p+(N-s)\log(1-p)$。当 0<s<N 时，令 $\ell^{\prime}(p)=s/p-(N-s)/(1-p)=0$，得 $\hat p=s/N$。内部对数似然严格凹，所以该驻点是最大值。若 s=0 或 s=N，最大值分别在边界 0 或 1。
 
 @@ M053 | 06-bayes | worked | B1:11-13
 Q_EN: How do I estimate class priors from training labels?
@@ -316,16 +316,16 @@ A_ZH: $p(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp[-\frac{(x-\mu)^2}{2\sigma^2}]$，�
 MEDIA: Lecture2a-cell-25.png
 
 @@ M055 | 06-bayes | learn | B1:23-26
-Q_EN: Derive the Gaussian MLE for the mean.
-Q_ZH: 如何推导高斯均值的最大似然估计？
+Q_EN: For N>0 IID observations from $N(\mu,\sigma^2)$, hold $\sigma^2>0$ fixed while optimizing the mean. Derive the maximizing $\mu$.
+Q_ZH: 设 N>0 个观测独立同分布于 $N(\mu,\sigma^2)$。优化均值时先固定 $\sigma^2>0$，推导使似然最大的 $\mu$。
 A_EN: The log likelihood contains $-\frac{1}{2\sigma^2}\sum_i(x_i-\mu)^2$. Differentiating with respect to $\mu$ gives $\frac{1}{\sigma^2}\sum_i(x_i-\mu)=0$. Hence $\hat\mu=\frac1N\sum_i x_i$. The best center under the squared-deviation Gaussian model is the sample mean. For a class-conditional model, use only samples in that class.
 A_ZH: 对数似然含有 $-\frac{1}{2\sigma^2}\sum_i(x_i-\mu)^2$。对 $\mu$ 求导并令其为 0，得 $\frac{1}{\sigma^2}\sum_i(x_i-\mu)=0$，所以 $\hat\mu=\frac1N\sum_i x_i$。平方偏差形式的高斯模型中，最佳中心就是样本均值。类条件模型须只使用该类样本。
 
 @@ M056 | 06-bayes | learn | B1:18-26; B2:44
 Q_EN: What is the Gaussian variance MLE, and why do I sometimes see $N-1$ instead?
 Q_ZH: 高斯方差的 MLE 是什么？为什么有时分母是 $N-1$？
-A_EN: For N independent Gaussian observations with unknown mean, nonzero sample spread gives $\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$. The unbiased variance estimator instead divides by N−1 and needs N>1. NumPy var defaults to N; the lecture np.cov call uses N−1. If all observations coincide, the formula gives zero, but for a Gaussian model requiring positive variance the likelihood grows without bound as variance tends to zero: no positive-variance MLE exists.
-A_ZH: 对均值未知的 N 个独立高斯观测，样本有非零离散程度时，$\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$。无偏方差估计改除以 N−1，且要求 N>1。NumPy var 默认除以 N，课上的 np.cov 默认除以 N−1。若观测全部相同，公式得到零；但在方差必须为正的高斯模型中，方差趋零时似然无界增大，并不存在正方差的 MLE。
+A_EN: For IID Gaussian observations with unknown mean and nonzero sample spread, $\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$. The unbiased estimator divides by N−1 and requires N>1. NumPy var defaults to N; the lecture np.cov uses N−1. If all observations coincide, zero is the limiting estimate, but the positive-variance Gaussian likelihood is unbounded as variance tends to zero: no positive-variance MLE exists.
+A_ZH: 对均值未知、样本有非零离散程度的独立同分布高斯观测，$\hat\sigma^2_{ML}=N^{-1}\sum_i(x_i-\bar x)^2$。无偏估计除以 N−1，要求 N>1。NumPy var 默认除以 N，课上 np.cov 除以 N−1。观测全相同时，零是极限估计；但正方差高斯的似然在方差趋零时无界增大，并无正方差的 MLE。
 
 @@ M057 | 06-bayes | worked | B1:26
 Q_EN: Find the Gaussian mean and variance MLEs for $x=(1,2,3)$.
@@ -340,8 +340,8 @@ A_EN: Under equal misclassification costs, predict $\hat y=\arg\max_c P(y=c\mid 
 A_ZH: 错分代价相同时，预测 $\hat y=\arg\max_c P(y=c\mid x)=\arg\max_c p(x\mid y=c)\pi_c$。固定 $x$ 后，各候选类别的正分母 $p(x)$ 相同，不影响最大者。如果需要归一化概率，就必须保留分母。忽略证据不等于可以忽略不相等的先验。
 
 @@ M059 | 06-bayes | worked | B1:34-48
-Q_EN: Class A has likelihood 0.4 and prior 0.2; B has likelihood 0.2 and prior 0.8. Which class wins?
-Q_ZH: A 类似然 0.4、先验 0.2；B 类似然 0.2、先验 0.8。应该选择哪类？
+Q_EN: In a two-class model, A has likelihood 0.4 and prior 0.2; B has likelihood 0.2 and prior 0.8. Which class does maximum-posterior prediction select?
+Q_ZH: 两类模型中，A 类似然 0.4、先验 0.2，B 类似然 0.2、先验 0.8。最大后验类别预测应选哪类？
 A_EN: Joint scores are $0.4\times0.2=0.08$ and $0.2\times0.8=0.16$. Predict B, despite its smaller likelihood. Normalized posteriors are $1/3$ and $2/3$. Equal priors guarantee the same ranking by likelihood and posterior; unequal priors can change the ranking, as here, though the winning class may sometimes still coincide.
 A_ZH: 联合分数分别为 $0.4\times0.2=0.08$ 和 $0.2\times0.8=0.16$，因此选择 B，虽然其似然更小。归一化后验为 $1/3$ 和 $2/3$。先验相等保证似然与后验排序相同；先验不等时可能像本例这样改变排序，但在某些样本上获胜类别仍可碰巧相同。
 
@@ -365,10 +365,10 @@ A_EN: A row $x=(x_1,x_2)$ labeled $c$ contributes $x_1$ to class $c$'s first-fea
 A_ZH: 标签为 $c$ 的一行 $x=(x_1,x_2)$，将 $x_1$ 用于该类第一个特征的均值与方差估计，将 $x_2$ 用于第二个特征。模型不拟合类内交叉协方差项。例如该类样本为 $(1,2)$、$(3,4)$，则均值为 $(2,3)$，MLE 方差为 $(1,1)$，这里尚未加入数值平滑。
 
 @@ M063 | 07-gaussian | learn | B2:14-27
-Q_EN: Write the Gaussian NB log decision score.
-Q_ZH: 写出 Gaussian NB 的对数决策分数。
-A_EN: $s_c(x)=\log\pi_c-\frac12\sum_j\left[\log(2\pi\sigma^2_{cj})+\frac{(x_j-\mu_{cj})^2}{\sigma^2_{cj}}\right]$. Predict the class with largest score. The squared-distance term penalizes being far from a class mean relative to its spread; the log-variance term accounts for density normalization. Unequal feature variances can produce curved decision boundaries.
-A_ZH: $s_c(x)=\log\pi_c-\frac12\sum_j\left[\log(2\pi\sigma^2_{cj})+\frac{(x_j-\mu_{cj})^2}{\sigma^2_{cj}}\right]$，选择分数最大的类别。平方距离项惩罚相对于该类离散程度而言偏离均值的情况；对数方差项对应密度归一化。特征方差不同时，决策边界可能弯曲。
+Q_EN: With positive class priors and positive feature variances, write the Gaussian NB log decision score and explain its distance and variance terms.
+Q_ZH: 类别先验和各特征方差均为正时，写出 Gaussian NB 对数决策分数，并解释其中的距离项与方差项。
+A_EN: $s_c(x)=\log\pi_c-\frac12\sum_j\left[\log(2\pi\sigma^2_{cj})+\frac{(x_j-\mu_{cj})^2}{\sigma^2_{cj}}\right]$. Predict the class with largest score. The squared-distance term penalizes being far from a class mean relative to its spread; the log-variance term accounts for density normalization. Variances that differ across classes can produce curved boundaries; merely differing across feature dimensions is not sufficient.
+A_ZH: $s_c(x)=\log\pi_c-\frac12\sum_j\left[\log(2\pi\sigma^2_{cj})+\frac{(x_j-\mu_{cj})^2}{\sigma^2_{cj}}\right]$，选择分数最大的类别。平方距离项惩罚相对于该类离散程度而言偏离均值的情况；对数方差项对应密度归一化。不同类别的方差不同时，边界可能弯曲；仅不同特征维度的方差不同，还不足以得出这一结论。
 
 @@ M064 | 07-gaussian | learn | B2:19-32
 Q_EN: How do I read a class-density plot and a posterior decision-region plot?
@@ -393,12 +393,12 @@ MEDIA: Lecture2b-cell-38.png
 @@ M067 | 07-gaussian | learn | B2:34-38
 Q_EN: State the multivariate Gaussian density and explain its two main matrix terms.
 Q_ZH: 写出多元高斯密度，并解释两个主要矩阵项。
-A_EN: $p(x)=\frac{\exp[-\frac12(x-\mu)^T\Sigma^{-1}(x-\mu)]}{(2\pi)^{d/2}|\Sigma|^{1/2}}$ for positive-definite $\Sigma$. The quadratic form measures squared distance adjusted for spread and correlation. The determinant term normalizes for the distribution's volume. With diagonal covariance, this density factors into independent univariate Gaussian densities.
-A_ZH: 正定 $\Sigma$ 下，$p(x)=\frac{\exp[-\frac12(x-\mu)^T\Sigma^{-1}(x-\mu)]}{(2\pi)^{d/2}|\Sigma|^{1/2}}$。二次型衡量考虑离散程度与相关性后的平方距离，行列式项按分布体积进行归一化。协方差为对角矩阵时，密度可分解成独立的一维高斯密度乘积。
+A_EN: For dimension d and positive-definite covariance $\Sigma$, $p(x)=\exp[-(x-\mu)^T\Sigma^{-1}(x-\mu)/2]/[(2\pi)^{d/2}|\Sigma|^{1/2}]$. Here $|\Sigma|$ denotes the determinant. The quadratic form is squared distance adjusted for spread and correlation; the determinant factor normalizes the occupied volume. A diagonal covariance makes this Gaussian density a product of independent univariate Gaussian densities.
+A_ZH: 维度为 d、协方差 $\Sigma$ 正定时，$p(x)=\exp[-(x-\mu)^T\Sigma^{-1}(x-\mu)/2]/[(2\pi)^{d/2}|\Sigma|^{1/2}]$，其中 $|\Sigma|$ 是行列式。二次型是考虑离散程度与相关性后的平方距离；行列式因子校正所占体积，使密度归一化。对角协方差会使此高斯密度分解为独立的一维高斯密度之积。
 
 @@ M068 | 07-gaussian | worked | B2:36-38
-Q_EN: Interpret $\Sigma=\begin{bmatrix}1&0.9\\0.9&1\end{bmatrix}$ and compare it with $I$.
-Q_ZH: 如何理解 $\Sigma=\begin{bmatrix}1&0.9\\0.9&1\end{bmatrix}$？它与 $I$ 有何不同？
+Q_EN: For a zero-mean two-dimensional Gaussian, interpret $\Sigma=\begin{bmatrix}1&0.9\\0.9&1\end{bmatrix}$ and compare its contours with covariance I.
+Q_ZH: 对零均值二维高斯，解释 $\Sigma=\begin{bmatrix}1&0.9\\0.9&1\end{bmatrix}$，并与协方差为 I 时的等密度线比较。
 A_EN: Both features have variance 1, but the positive off-diagonal entries create strong positive correlation. In two dimensions the density contours are elongated along approximately $x_1=x_2$. Identity covariance gives circular contours with no preferred direction. A diagonal naive Bayes model cannot represent this tilted class-conditional shape.
 A_ZH: 两个特征的方差都是 1，但正的非对角项表示较强正相关。二维密度等高线大致沿 $x_1=x_2$ 方向拉长；单位协方差对应无偏好方向的圆形等高线。对角协方差的朴素贝叶斯不能表达这种倾斜的类条件形状。
 
@@ -425,14 +425,14 @@ MEDIA: Lecture2b-cell-52.png
 @@ M072 | 07-gaussian | learn | B2:44
 Q_EN: How does log-sum-exp normalize class log scores stably?
 Q_ZH: log-sum-exp 如何稳定地归一化类别对数分数？
-A_EN: Given log joint scores $s_c$, compute $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$, where $\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$ and $m=\max_c s_c$. Subtracting $m$ prevents large exponentials. For scores $(-1000,-1001)$, the posterior is approximately $(0.7311,0.2689)$ even though directly exponentiating both raw scores may underflow.
-A_ZH: 已有对数联合分数 $s_c$ 时，计算 $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$，其中 $\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$、$m=\max_c s_c$。先减最大值可避免指数过大。分数为 $(-1000,-1001)$ 时，后验约为 $(0.7311,0.2689)$，直接对原分数取指数却可能下溢。
+A_EN: Given finite log joint scores $s_c$, compute $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$ with $\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$ and $m=\max_c s_c$. Exponentiate these normalized log probabilities to obtain posteriors. Subtracting m makes every exponent nonpositive. Scores (−1000,−1001) give posteriors approximately (0.7311,0.2689), while exponentiating the original scores may underflow.
+A_ZH: 给定有限的对数联合分数 $s_c$，令 $m=\max_c s_c$、$\operatorname{LSE}(s)=m+\log\sum_c e^{s_c-m}$，再算 $\log p(c\mid x)=s_c-\operatorname{LSE}(s)$。对这些归一化后的对数概率取指数才得到后验。先减 m 使指数不大于零。分数 (−1000,−1001) 得后验约 (0.7311,0.2689)，直接对原分数取指数却可能下溢。
 
 @@ M073 | 07-gaussian | check | B2:44
 Q_EN: A custom Gaussian classifier uses training-label array y, sets `K=max(y)+1`, and fits a mean/covariance for each label in `range(K)` (0 through K−1). Before reusing it on new data, what label and covariance assumptions should you check?
 Q_ZH: 某自定义高斯分类器用训练标签数组 y，令 `K=max(y)+1`，再为 `range(K)`（0 至 K−1）中每个标签拟合均值和协方差。用于新数据前，应检查哪些标签与协方差假设？
-A_EN: It sets `K = max(y)+1` and loops through `range(K)`, assuming consecutive integer labels starting at zero. Each class must contain enough observations for covariance estimation, and covariance must be numerically usable. The assignment labels 0, 1, 2 fit the label convention; arbitrary strings or labels 1, 3 do not. Map labels explicitly when generalizing the code.
-A_ZH: 它用 `K = max(y)+1` 并遍历 `range(K)`，假设标签为从 0 开始的连续整数。每类还须有足够观测估计协方差，协方差必须数值可用。作业标签 0、1、2 满足约定，任意字符串或 1、3 这样的标签则不满足。推广代码时应显式映射标签。
+A_EN: Labels must be consecutive integers starting at zero, with every looped class present; remap strings or labels such as 1 and 3. Each class needs finite feature values and at least two observations for the intended unbiased sample covariance. Check that the resulting covariance is positive definite, using suitable regularization if needed: sample count alone does not guarantee invertibility.
+A_ZH: 标签须为从 0 开始的连续整数，循环访问的每类都要有样本；字符串或 1、3 这样的标签应先映射。每类特征须有限，且至少两个观测才能按预期估计无偏样本协方差。还要检查结果是否正定，必要时适当正则化：单靠样本数不能保证可逆。
 
 @@ M074 | 07-gaussian | check | B2:3,33-52
 Q_EN: When might Gaussian NB outperform a full-covariance Gaussian classifier?
@@ -497,8 +497,8 @@ A_ZH: 有区分力的词在不同类别中的概率差异大，而不只是总�
 @@ M084 | 08-text | learn | B2:89-92
 Q_EN: What are term frequency and inverse document frequency?
 Q_ZH: 词频 TF 和逆文档频率 IDF 分别是什么？
-A_EN: In the lecture's simplified definition, $TF_j=w_j/|D|$, where $w_j$ is a word count and $|D|$ is document length. $IDF_j=\log(N/df_j)$ measures rarity across $N$ documents, with $df_j$ counting documents containing the word. TF-IDF multiplies the two. Libraries may add smoothing constants and apply an additional vector normalization.
-A_ZH: 课件的简化定义中，$TF_j=w_j/|D|$，$w_j$ 为词频计数，$|D|$ 为文档长度。$IDF_j=\log(N/df_j)$ 衡量在 $N$ 篇文档中的稀有程度，$df_j$ 是含该词的文档数。TF-IDF 将二者相乘。实际库可能加入平滑常数，并进一步归一化向量。
+A_EN: For a nonempty document, the lecture uses $TF_j=w_j/|D|$, with word count $w_j$ and total token count $|D|$. For a word observed in the training corpus, $IDF_j=\log(N/df_j)$, where N is the number of training documents and df_j counts those containing the word. TF-IDF multiplies them. Libraries may smooth IDF and normalize the resulting vector; an empty document needs separate handling.
+A_ZH: 对非空文档，课件使用 $TF_j=w_j/|D|$，其中 $w_j$ 为词计数，$|D|$ 为文档总词元数。对训练语料中出现过的词，$IDF_j=\log(N/df_j)$，N 为训练文档数，df_j 为含该词的文档数。TF-IDF 是二者乘积。库可能平滑 IDF 并归一化结果；空文档须另行处理。
 
 @@ M085 | 08-text | worked | B2:90-91
 Q_EN: Must every TF-IDF vector sum to 1?
@@ -509,8 +509,8 @@ A_ZH: 不是。课堂代码显式设置 `TfidfTransformer(norm='l1')`，所以�
 @@ M086 | 08-text | learn | B2:93-99
 Q_EN: What does multinomial naive Bayes model, and how are word probabilities estimated?
 Q_ZH: 多项式朴素贝叶斯建模什么？怎样估计词概率？
-A_EN: In the count model, $x_j$ is the number of occurrences of word $j$. Let $T_{cj}$ be its total count in class $c$ and $V$ the vocabulary size. Additive smoothing gives $\hat\theta_{cj}=(T_{cj}+\alpha)/(\sum_k T_{ck}+\alpha V)$. These word probabilities sum to 1 within each class. The denominator counts tokens, unlike Bernoulli's document-count denominator.
-A_ZH: 在计数模型中，$x_j$ 是第 $j$ 个词出现的次数。设 $T_{cj}$ 是该词在类别 $c$ 中的总次数，词表大小为 $V$，则加性平滑为 $\hat\theta_{cj}=(T_{cj}+\alpha)/(\sum_k T_{ck}+\alpha V)$。每类词概率之和为 1。分母统计词元总数，而伯努利模型的分母统计文档数。
+A_EN: Given a document length, multinomial NB models how its tokens are allocated among vocabulary words. With class-c total word counts $T_{cj}$ and vocabulary size V, additive smoothing gives $\hat\theta_{cj}=(T_{cj}+\alpha)/(\sum_k T_{ck}+\alpha V)$ for $\alpha>0$. These word probabilities sum to one per class. The denominator counts tokens, unlike Bernoulli NB, which counts documents.
+A_ZH: 给定文档长度后，多项式 NB 建模词元如何分配到词表中的各词。设类别 c 的词总计数为 $T_{cj}$、词表大小 V，$\alpha>0$ 时平滑概率为 $\hat\theta_{cj}=(T_{cj}+\alpha)/(\sum_k T_{ck}+\alpha V)$。每类词概率和为 1。分母统计词元数，而伯努利 NB 统计文档数。
 
 @@ M087 | 08-text | learn | B2:93-99
 Q_EN: What is the multinomial NB decision score, and why can a combinatorial term be omitted?
@@ -533,8 +533,8 @@ A_ZH: Gaussian NB 适合可用类条件高斯描述的连续特征；Bernoulli N
 @@ M091 | 09-assignment | learn | A1:3; METRIC:Classification metrics
 Q_EN: In a three-class SMS task (normal, spam, smishing), normal messages are much more common. What is balanced accuracy, and why can it be more informative than ordinary accuracy?
 Q_ZH: 短信分为正常、垃圾、钓鱼三类，正常短信远多于另外两类。什么是平衡准确率？为什么它可能比普通准确率更有参考价值？
-A_EN: For $C$ classes, balanced accuracy is mean class recall: $BA=\frac1C\sum_c TP_c/(TP_c+FN_c)$. Each class contributes equally, even when sample counts differ. Ordinary accuracy weights frequent classes more heavily through their sample counts. Here the normal class is much more common, so balanced accuracy helps expose failure on spam or smishing.
-A_ZH: 对 $C$ 个类别，平衡准确率是各类召回率的平均：$BA=\frac1C\sum_c TP_c/(TP_c+FN_c)$。即使各类样本数不同，每类也有相同权重。普通准确率因样本数量而更偏向常见类。这里正常短信占多数，平衡准确率能更好地暴露模型对垃圾或钓鱼短信的失效。
+A_EN: For C classes present in evaluation data, balanced accuracy averages class recall: $BA=C^{-1}\sum_c TP_c/(TP_c+FN_c)$. Here TP_c counts correctly recognized class-c examples, and FN_c counts actual class-c examples missed. Each class contributes equally. Ordinary accuracy gives more weight to frequent classes, so high normal-message accuracy can hide poor spam or smishing recall.
+A_ZH: 对评估数据中出现的 C 个类别，平衡准确率取各类召回率的平均：$BA=C^{-1}\sum_c TP_c/(TP_c+FN_c)$。TP_c 是正确识别的 c 类样本数，FN_c 是实际为 c 类却漏掉的数量。各类贡献相同；普通准确率更偏重高频类别，正常短信判得好可能掩盖垃圾或钓鱼短信召回差。
 
 @@ M092 | 09-assignment | worked | A1:3
 Q_EN: A three-class classifier has recalls 0.95, 0.60 and 0.40. What is balanced accuracy?
@@ -545,14 +545,14 @@ A_ZH: $BA=(0.95+0.60+0.40)/3=0.65$，即 65%。若三类均存在，永远预测
 @@ M093 | 09-assignment | learn | A1:3; METRIC:Classification metrics
 Q_EN: How do I read a confusion matrix and distinguish precision from recall?
 Q_ZH: 如何阅读混淆矩阵？精确率与召回率怎样区分？
-A_EN: First state the axes; a common convention uses true classes as rows and predicted classes as columns. For class $c$, recall is $TP_c/(TP_c+FN_c)$: how much of the true class was found? Precision is $TP_c/(TP_c+FP_c)$: how much of what was predicted as that class is correct? Balanced accuracy averages recall, not precision.
-A_ZH: 先说明坐标约定，常见方式是行表示真实类，列表示预测类。对类别 $c$，召回率 $TP_c/(TP_c+FN_c)$ 回答“真实该类找回多少”；精确率 $TP_c/(TP_c+FP_c)$ 回答“预测为该类的有多少正确”。平衡准确率平均的是召回率，不是精确率。
+A_EN: Under the convention “true rows, predicted columns,” TP_c is diagonal cell (c,c); FN_c is the rest of row c, and FP_c is the rest of column c. Recall $TP_c/(TP_c+FN_c)$ asks how many actual class-c examples were found. Precision $TP_c/(TP_c+FP_c)$ asks how many predicted class-c examples were correct. A zero denominator is undefined mathematically; report the implementation’s chosen convention.
+A_ZH: 按“真实类为行、预测类为列”，TP_c 是对角格 (c,c)，FN_c 是该行其余格之和，FP_c 是该列其余格之和。召回率 $TP_c/(TP_c+FN_c)$ 问实际 c 类找回多少；精确率 $TP_c/(TP_c+FP_c)$ 问预测为 c 类的有多少正确。分母为零时数学上未定义，报告结果时须说明实现采用的约定。
 
 @@ M094 | 09-assignment | learn | A1:3;B2:61-71
 Q_EN: You have labeled normal/spam/smishing SMS and a fixed training/validation split. How would you build a simple text-classification baseline before trying more complex features?
 Q_ZH: 已有正常、垃圾、钓鱼短信的带标签数据，并固定了训练/验证划分。尝试复杂特征前，怎样建立一个简单的文本分类基线？
-A_EN: Start with a majority-class baseline to reveal the effect of imbalance, then a training-only word vectorizer plus a smoothed NB classifier. Compare count/Bernoulli and count or TF-IDF/multinomial variants on the same validation split. Record feature settings, smoothing, class recalls and balanced accuracy. This is an experiment plan; actual performance must come from your runs.
-A_ZH: 先用多数类基线观察类别不平衡的影响，再用仅在训练集拟合的词向量器配合平滑 NB。使用同一验证划分，比较计数/伯努利，以及计数或 TF-IDF/多项式方案。记录特征设置、平滑参数、各类召回率和平衡准确率。这是实验方案，实际效果须来自你的运行结果。
+A_EN: Start with a majority-class predictor, then fit a word vectorizer and smoothed NB only on training data. For Bernoulli NB, explicitly convert word counts to 0/1 presence indicators. For multinomial NB, try nonnegative counts or TF-IDF. Compare on the same validation split and record feature settings, smoothing, class recalls and balanced accuracy. Actual performance must come from your runs.
+A_ZH: 先运行多数类预测基线，再仅用训练数据拟合词向量器与平滑 NB。Bernoulli NB 须明确把词计数转为 0/1 出现标记；Multinomial NB 可比较非负计数或 TF-IDF。使用同一验证划分，记录特征设置、平滑参数、各类召回率和平衡准确率。实际效果必须来自你的运行。
 
 @@ M095 | 09-assignment | learn | A1:3; LEAK:Data leakage
 Q_EN: Where can data leakage occur even if I never train the classifier on test labels?
@@ -569,8 +569,8 @@ A_ZH: 候选扩展包括字符 n-gram、URL 指示、数字比例和短信长度
 @@ M099 | 09-assignment | learn | A1:3
 Q_EN: What should an informative classification error analysis contain?
 Q_ZH: 有价值的分类错误分析应包含什么？
-A_EN: Show confusion patterns and a few authorized evaluation examples, then propose reasons tied to features or assumptions: unseen vocabulary, ambiguous language, or overlapping spam/smishing signals. Distinguish an observation from a causal explanation. Use validation errors for model development; do not repeatedly tune on held-out test mistakes. A good report explains both improvements and unresolved failures.
-A_ZH: 展示混淆模式和少量符合评估流程的例子，再提出与特征或假设相关的可能原因，例如未见词、语义歧义、垃圾与钓鱼信号重叠。应区分观察事实与因果解释。模型开发使用验证错误，不应反复根据留出测试错误调参。好的报告同时解释改进与仍未解决的问题。
+A_EN: Show confusion patterns and a few actual validation examples, then propose reasons tied to features or assumptions: unseen vocabulary, ambiguous language, or overlapping spam/smishing signals. Distinguish an observed error from a causal explanation. Use validation errors for development; do not repeatedly tune on held-out test mistakes. Explain both improvements and unresolved failures.
+A_ZH: 展示混淆模式和少量实际验证样本，再提出与特征或假设相关的可能原因，例如未见词、语义歧义、垃圾与钓鱼信号重叠。区分观察到的错误与因果解释。开发模型使用验证错误，不应反复根据留出测试错误调参；既解释改进，也说明仍未解决的问题。
 
 @@ M101 | 10-extension | extension | B2:93-99;NB:1.9.2
 Q_EN: Is a TF-IDF vector literally a multinomial count observation?
@@ -584,17 +584,17 @@ Q_ZH: 假阳性与假阴性的代价不相等时，决策如何变化？
 A_EN: Let $p=P(y=1\mid x)$, correct predictions cost zero, and $C_{FP},C_{FN}\ge0$ with positive sum. Predicting 1 has expected cost $C_{FP}(1-p)$; predicting 0 costs $C_{FN}p$. Choose 1 when $p>C_{FP}/(C_{FP}+C_{FN})$; at equality either decision has the same expected cost. Equal positive costs give threshold 0.5. This extends the lecture decision rule to unequal costs.
 A_ZH: 设 $p=P(y=1\mid x)$，正确分类代价为零，且 $C_{FP},C_{FN}\ge0$、二者之和为正。预测 1 的期望代价为 $C_{FP}(1-p)$，预测 0 为 $C_{FN}p$。当 $p>C_{FP}/(C_{FP}+C_{FN})$ 时选择 1；等号处两种选择期望代价相同。两种正代价相等时阈值才为 0.5。这是对课堂规则的不同代价扩展。
 
-@@ M103 | 10-extension | extension | B2:3,25-28;NB:1.9
+@@ M103 | 10-extension | extension | B2:3,25-28;NB:1.9;CAL:1.16
 Q_EN: Does an NB posterior of 0.99 guarantee about 99% correctness on such predictions?
 Q_ZH: NB 输出后验 0.99，是否保证这类预测约有 99% 正确？
-A_EN: No. That interpretation requires calibration on the relevant data population. Misspecified distributions or correlated features can make NB probabilities overconfident even when the winning class is useful. Check probability quality separately from classification accuracy. This extension explains why a model-generated confidence number should not be treated as an independently verified success rate.
-A_ZH: 不保证。这种解释要求概率在相关数据总体上经过校准。分布假设错误或特征相关，可能使 NB 概率过于自信，即使最大分数类别仍有预测价值。概率质量应与分类准确率分开检查。本扩展说明：模型输出的置信数字不能当作独立验证的成功率。
+A_EN: No. That frequency interpretation requires well-calibrated probabilities on the relevant population: among predictions near confidence 0.99, roughly 99% should be correct. This is a property to assess, not proof that a calibration procedure was run. NB’s misspecified distributions or correlated features can produce overconfidence. Evaluate probability quality separately from which class has the highest score.
+A_ZH: 不保证。这种频率解释要求概率在相关总体上校准良好：置信度约 0.99 的预测中，应约有 99% 正确。这是要检验的性质，并不等于必须执行过某种校准后处理。NB 的分布假设错误或特征相关可能产生过度自信；概率质量须与最大分数类别是否正确分开评价。
 
 @@ M104 | 10-extension | extension | T1:35-45;B2:34-44
 Q_EN: Does zero covariance always imply independence?
 Q_ZH: 零协方差一定意味着独立吗？
-A_EN: No. Let $X$ be uniform on $\{-1,0,1\}$ and $Y=X^2$. Symmetry gives $\operatorname{Cov}(X,Y)=0$, but $Y$ is determined by $X$, so they are dependent. For jointly Gaussian variables, zero cross-covariance does imply independence. The Gaussian qualification is essential when connecting diagonal covariance to naive Bayes.
-A_ZH: 不一定。令 $X$ 在 $\{-1,0,1\}$ 上均匀分布，$Y=X^2$。对称性使 $\operatorname{Cov}(X,Y)=0$，但 $Y$ 被 $X$ 完全确定，两者仍有统计依赖、并不独立。对联合高斯变量，零交叉协方差才意味着独立。由对角协方差联系到朴素贝叶斯时，这个高斯前提很关键。
+A_EN: No. Let X be uniform on {−1,0,1} and Y=X². Then E[X]=0 and E[XY]=E[X³]=0, hence $\operatorname{Cov}(X,Y)=E[XY]-E[X]E[Y]=0$. Yet P(Y=0|X=0)=1 differs from P(Y=0)=1/3, so they are dependent. Zero cross-covariance implies independence for jointly Gaussian variables; that Gaussian qualification is essential.
+A_ZH: 不一定。令 X 在 {−1,0,1} 上均匀分布，Y=X²。E[X]=0，E[XY]=E[X³]=0，所以 $\operatorname{Cov}(X,Y)=E[XY]-E[X]E[Y]=0$。但 P(Y=0|X=0)=1，而 P(Y=0)=1/3，因此二者依赖。对联合高斯变量，零交叉协方差才可推出独立，高斯前提不能省略。
 
 @@ M105 | 10-extension | extension | B1:8-48;B2:3-99
 Q_EN: Give a one-minute English explanation of naive Bayes, including a limitation.
@@ -605,14 +605,14 @@ A_ZH: “朴素贝叶斯是生成式分类器。它估计类别先验和类条�
 @@ M106 | 10-extension | extension | A1:3;B2:61-99
 Q_EN: Design a small experiment that separates the effect of representation from the effect of classifier.
 Q_ZH: 怎样设计小实验，区分特征表示和分类器各自的影响？
-A_EN: Fix the split and metric. First compare count versus TF-IDF features with the same multinomial NB settings; then compare compatible classifiers under a fixed representation. Tune each method fairly within training/validation and report class recalls as well as balanced accuracy. Change one factor at a time for interpretation, while acknowledging possible interactions. This is an AI-added research habit, not a confirmed QE question.
-A_ZH: 固定划分与指标。先在相同多项式 NB 设置下比较计数与 TF-IDF，再在固定表示下比较兼容的分类器。训练/验证内部公平调参，同时报告各类召回率和平衡准确率。为便于解释，每次改变一个因素，但也承认因素之间可能有交互。这是 AI 补充的研究训练，不是已确认的 QE 考题。
+A_EN: Fix the split and metric. To isolate representation, compare count versus TF-IDF with the same multinomial NB and fixed hyperparameters. To compare classifiers, fix the representation and use the same training/validation protocol. A separate comparison after tuning each pipeline measures optimized pipelines, not representation alone. Report class recalls and balanced accuracy, and acknowledge possible interactions.
+A_ZH: 固定划分和指标。隔离表示影响时，在同一 Multinomial NB、固定超参数下比较计数与 TF-IDF；比较分类器时固定表示，使用相同训练/验证流程。若另行对各流程分别调参，比较的是优化后的完整流程，不能再把差异全部归于表示。报告各类召回率和平衡准确率，并承认可能有交互。
 
 @@ M108 | 11-tutorial2 | classroom | T2:10-18
-Q_EN: How should the Bernoulli and multinomial text-classification pipelines differ?
-Q_ZH: 伯努利与多项式文本分类流程应怎样区分？
-A_EN: Learn one vocabulary from training documents. Bernoulli NB uses whether each vocabulary word occurs, so counts must be binarized. The requested multinomial experiment uses nonnegative TF-IDF weights instead. Fit vocabulary and IDF on training data, and only transform held-out documents. Compare both pipelines under the same evaluation split and record `max_features` and smoothing.
-A_ZH: 从训练文档学习词表。Bernoulli NB 使用各词是否出现，因此计数要二值化；题目要求的多项式实验则使用非负 TF-IDF 权重。词表和 IDF 都只在训练数据拟合，留出文档仅做转换。应使用同一评估划分比较两条流程，并记录词表上限与平滑参数。
+Q_EN: For training and held-out news documents, how do you build Bernoulli NB and the tutorial’s TF-IDF-plus-multinomial-NB pipeline without leaking held-out information?
+Q_ZH: 对训练和留出新闻文档，怎样构建 Bernoulli NB 以及教程指定的 TF-IDF＋Multinomial NB 流程，并避免留出信息泄漏？
+A_EN: Fit the vocabulary on training text. Convert counts to 0/1 presence indicators for Bernoulli NB. For the tutorial’s multinomial experiment, fit TF-IDF on training counts and apply that fitted transformation to held-out counts. Fit both classifiers on training data only. Keep the evaluation split fixed. TF-IDF is a requested practical weighting choice, not literal integer multinomial counts.
+A_ZH: 词表只在训练文本上拟合。Bernoulli NB 将计数转为 0/1 出现标记；教程的多项式实验则在训练计数上拟合 TF-IDF，再用同一变换处理留出计数。两个分类器都只在训练数据上拟合，评估划分保持一致。TF-IDF 是题设的实用权重选择，并非严格的整数多项式计数。
 
 @@ M109 | 11-tutorial2 | classroom | T2:15-20
 Q_EN: Do the ten words with the largest `feature_log_prob_` values necessarily best distinguish one news class?
@@ -653,8 +653,8 @@ A_ZH: 两类参数和都是 3。省略共同先验和阶乘项后，分数为 $2
 @@ M115 | 11-tutorial2 | extension | T2:31-32; GP:4.2,2.1
 Q_EN: Why smooth Poisson count rates, and how do pseudo-counts differ from pseudo-exposure?
 Q_ZH: 为什么要平滑泊松计数率？伪计数与额外暴露量有什么区别？
-A_EN: A zero fitted rate makes every positive count impossible. Let T be total count in N>0 equal-exposure documents. With a Gamma(a,b) prior using shape a>0 and rate b>0, the posterior is Gamma(a+T,b+N), so its mean is $(T+a)/(N+b)$. The numerator adds pseudo-events, the denominator adds pseudo-exposure. T=0,N=4,a=b=1 gives 0.2. This is a Bayesian extension and a posterior mean, not a MAP formula or the tutorial template’s unspecified alpha convention.
-A_ZH: 拟合率为零会让所有正计数变得“不可能”。设 N>0 篇等暴露量文档的总计数为 T。采用形状 a>0、率 b>0 的 Gamma(a,b) 先验，后验为 Gamma(a+T,b+N)，故后验均值为 $(T+a)/(N+b)$。分子加伪事件，分母加伪暴露量。例如 T=0、N=4、a=b=1 时得 0.2。这是贝叶斯扩展及后验均值，不是 MAP 公式，也不能当作教程模板未定义的 alpha 约定。
+A_EN: A zero fitted rate makes every positive count impossible. Let T be total count in N>0 independent, equal-exposure Poisson observations. With a Gamma(a,b) prior on their mean count using shape a>0 and rate b>0, the posterior is Gamma(a+T,b+N), so its mean is $(T+a)/(N+b)$. The numerator adds pseudo-events, the denominator adds pseudo-exposure. T=0,N=4,a=b=1 gives 0.2. This is a Bayesian extension and a posterior mean, not a MAP formula or the tutorial template’s unspecified alpha convention.
+A_ZH: 拟合率为零会让所有正计数变得“不可能”。设 N>0 个独立、等暴露量泊松观测的总计数为 T，对其平均计数采用形状 a>0、率 b>0 的 Gamma(a,b) 先验，后验为 Gamma(a+T,b+N)，故后验均值为 $(T+a)/(N+b)$。分子加伪事件，分母加伪暴露量。例如 T=0、N=4、a=b=1 时得 0.2。这是贝叶斯扩展及后验均值，不是 MAP 公式，也不能当作教程模板未定义的 alpha 约定。
 
 @@ M116 | 11-tutorial2 | check | T2:31-35
 Q_EN: Why might Poisson NB be a poor model for some document collections?
@@ -665,8 +665,8 @@ A_ZH: 它假设类内计数独立，且各计数的均值等于方差。真实�
 @@ M117 | 11-tutorial2 | classroom | T2:31-34
 Q_EN: What checks make a custom PoissonNB implementation credible?
 Q_ZH: 哪些检查能验证自定义 PoissonNB 实现？
-A_EN: Confirm nonnegative integer inputs, one rate per class/feature, and normalized priors. Compare matrix scores with a direct sum of Poisson log probabilities on a tiny dataset. Check that posterior rows sum to 1 and that predicted labels follow their largest entries. Map arbitrary class labels explicitly. If using sparse word counts, compute $X\log\mu_c$ without expanding a large document matrix to dense form.
-A_ZH: 检查输入是非负整数、每类每特征有一个参数、先验已归一化。用小数据对比矩阵分数与逐项泊松对数概率之和。验证后验每行和为 1，预测标签对应最大后验，并显式映射任意类别标签。使用稀疏词频时，应直接计算 $X\log\mu_c$，避免把大文档矩阵全变成稠密数组。
+A_EN: Check nonnegative integer inputs, one rate per class/feature, normalized priors and explicit label mapping. Compare vectorized and direct Poisson log scores with the SAME prior and factorial constants, or compare their normalized posteriors. Omitting a class-independent factorial term shifts scores but should not change posteriors or labels. Check posterior rows sum to one; keep large word-count matrices sparse.
+A_ZH: 检查非负整数输入、每类每特征一个率参数、归一化先验及显式标签映射。对比向量化与逐项泊松对数分数时，两边须保留相同的先验和阶乘常数，或直接比较归一化后验。省略与类别无关的阶乘项会平移分数，却不应改变后验和标签。后验每行和应为 1，大词频矩阵保持稀疏。
 
 @@ M118 | 11-tutorial2 | check | T2:21-28,35
 Q_EN: You compared Bernoulli, Multinomial and Poisson NB on the same labeled news dataset and saved predictions. What should you record, and how should actual misclassified articles support your explanation?
@@ -683,8 +683,8 @@ A_ZH: 生成式分类器先建模 $p(x\mid y)$ 和类别先验，再通过贝叶
 @@ M120 | 12-logistic | learn | L3A:8-22
 Q_EN: Why can a Gaussian generative classifier have a linear decision boundary?
 Q_ZH: 为什么高斯生成式分类器也可能具有线性决策边界？
-A_EN: In the lecture's binary example, all features and both classes share variance $\sigma^2$. Subtracting Gaussian log densities cancels the $x_j^2$ terms. With class means $\mu,\nu$, the log posterior ratio is $w^Tx+b$, where $w=(\mu-\nu)/\sigma^2$ and $b=(\|\nu\|^2-\|\mu\|^2)/(2\sigma^2)+\log(\pi_1/\pi_2)$. A linear boundary therefore does not identify the training method as discriminative.
-A_ZH: 课堂二分类例子假设两个类别、所有特征共用方差 $\sigma^2$，相减高斯对数密度时，$x_j^2$ 项抵消。设两类均值为 $\mu,\nu$，对数后验比为 $w^Tx+b$，其中 $w=(\mu-\nu)/\sigma^2$，$b=(\|\nu\|^2-\|\mu\|^2)/(2\sigma^2)+\log(\pi_1/\pi_2)$。所以边界线性，不能证明训练方法一定是判别式。
+A_EN: In the lecture example, both Gaussian classes share spherical covariance $\sigma^2 I$ with $\sigma^2>0$; this includes conditional independence, not just equal marginal variances. Quadratic x terms cancel in the log ratio. For class-1/2 means $\mu,\nu$ and positive class priors $\pi_1,\pi_2$, $w=(\mu-\nu)/\sigma^2$ and $b=(\|\nu\|^2-\|\mu\|^2)/(2\sigma^2)+\log(\pi_1/\pi_2)$ give log posterior ratio $w^Tx+b$. A linear boundary therefore need not come from discriminative training.
+A_ZH: 课堂例中，两类高斯共享球形协方差 $\sigma^2 I$，$\sigma^2>0$；这包含类内条件独立，不只是各维方差相同。对数比的 x 二次项抵消。类别 1、2 的均值为 $\mu,\nu$、先验 $\pi_1,\pi_2>0$ 时，$w=(\mu-\nu)/\sigma^2$，$b=(\|\nu\|^2-\|\mu\|^2)/(2\sigma^2)+\log(\pi_1/\pi_2)$，后验对数比为 $w^Tx+b$。因此线性边界并不表示一定用了判别式训练。
 
 @@ M121 | 12-logistic | learn | L3A:24-30
 Q_EN: What do $w$ and $b$ control in the linear classifier $f(x)=w^Tx+b$?
@@ -713,16 +713,16 @@ A_EN: If $p=\sigma(w^Tx+b)$, then $\log[p/(1-p)]=w^Tx+b$. Holding other features
 A_ZH: 若 $p=\sigma(w^Tx+b)$，则 $\log[p/(1-p)]=w^Tx+b$。其他特征固定时，第 $j$ 个特征增加一个单位，会使对数几率增加 $w_j$、几率乘 $e^{w_j}$。这不等于概率直接加 $w_j$，学到的关联也不能自动解释为因果效应。
 
 @@ M125 | 12-logistic | learn | L3A:39-46
-Q_EN: Why can the true-class probability be written as $\sigma(yf(x))$ when $y\in\{-1,+1\}$?
-Q_ZH: 标签为 $y\in\{-1,+1\}$ 时，为什么真实类别概率可写成 $\sigma(yf(x))$？
+Q_EN: In binary logistic regression with $P(y=+1\mid x)=\sigma(f(x))$ and labels $y\in\{-1,+1\}$, why is the true-class probability $\sigma(yf(x))$?
+Q_ZH: 二分类逻辑回归满足 $P(y=+1\mid x)=\sigma(f(x))$，标签为 $y\in\{-1,+1\}$。为什么真实类别概率是 $\sigma(yf(x))$？
 A_EN: For $y=+1$, it is $\sigma(f(x))$. For $y=-1$, use $1-\sigma(f(x))=\sigma(-f(x))$. Combining both gives $\sigma(yf(x))$. The signed score $z=yf(x)$ is positive for a correct classification and negative for an error. This formula assumes the ±1 label convention; do not substitute 0/1 labels unchanged.
 A_ZH: $y=+1$ 时概率为 $\sigma(f(x))$；$y=-1$ 时利用 $1-\sigma(f(x))=\sigma(-f(x))$。合并得到 $\sigma(yf(x))$。带标签的分数 $z=yf(x)$ 正值表示分类正确，负值表示错误。本式采用 ±1 标签，不能不改公式就代入 0/1 标签。
 
 @@ M126 | 12-logistic | learn | L3A:44-48
 Q_EN: How does maximum likelihood produce the logistic loss?
 Q_ZH: 最大似然怎样导出逻辑损失？
-A_EN: The negative log probability of the true label is $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$, with $z=yf(x)$. Minimize the sum of this loss over training examples. At $z=0$, the loss is $\log2\approx0.6931$; at $z=2$, it is about 0.1269; at $z=-2$, about 2.1269. Confident errors receive much larger penalties than confident correct predictions.
-A_ZH: 真实标签概率的负对数为 $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$，其中 $z=yf(x)$，训练时最小化各样本损失之和。$z=0$ 时为 $\log2\approx0.6931$，$z=2$ 时约为 0.1269，$z=-2$ 时约为 2.1269。自信但错误的预测会受到更大惩罚。
+A_EN: For labels $y\in\{-1,+1\}$, the true-label probability is $\sigma(z)$ with $z=yf(x)$. Its negative log is $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$. For independent training observations, maximizing their product likelihood is equivalent to minimizing the sum of these losses. At z=0,2,−2 the losses are approximately 0.6931,0.1269,2.1269: confident errors receive larger penalties.
+A_ZH: 标签为 $y\in\{-1,+1\}$ 时，令 $z=yf(x)$，真实标签概率为 $\sigma(z)$，负对数为 $\ell(z)=-\log\sigma(z)=\log(1+e^{-z})$。独立训练观测的联合似然是各概率之积，最大化它等价于最小化这些损失之和。z 为 0、2、−2 时损失约为 0.6931、0.1269、2.1269，自信的错误受到更大惩罚。
 MEDIA: Lecture3a-cell-48.png
 
 @@ M127 | 12-logistic | learn | L3A:38-45
@@ -732,8 +732,8 @@ A_EN: For target $t\in\{0,1\}$ and predicted positive probability $p$, use $\ell
 A_ZH: 对目标 $t\in\{0,1\}$ 和正类概率 $p$，损失为 $\ell=-t\log p-(1-t)\log(1-p)$。$t=1$ 时只剩 $-\log p$，$t=0$ 时只剩 $-\log(1-p)$。通过 $y=2t-1$ 转换后，它与 ±1 写法的逻辑损失一致。把公式写成代码时必须明确标签编码。
 
 @@ M128 | 12-logistic | learn | L3A:45,52
-Q_EN: What gradient does one logistic-regression example contribute?
-Q_ZH: 一个逻辑回归样本对梯度贡献什么？
+Q_EN: For one binary logistic-regression example trained with binary cross-entropy, what gradients do its weights and bias receive?
+Q_ZH: 一个采用二元交叉熵训练的二分类逻辑回归样本，对权重和偏置分别贡献什么梯度？
 A_EN: With a 0/1 target $t$, score $z=w^Tx+b$ and $p=\sigma(z)$, the chain rule gives $\partial\ell/\partial z=p-t$. Therefore $\nabla_w\ell=(p-t)x$ and $\partial\ell/\partial b=p-t$. The feature vector directs the update, while prediction error determines its sign and size. Sum or average consistently across samples, then add any regularizer's gradient.
 A_ZH: 对 0/1 标签 $t$、分数 $z=w^Tx+b$ 与 $p=\sigma(z)$，链式法则给出 $\partial\ell/\partial z=p-t$，所以 $\nabla_w\ell=(p-t)x$、$\partial\ell/\partial b=p-t$。特征向量决定更新方向，预测误差决定符号和大小。跨样本求和或平均时须保持一致，再加入正则项梯度。
 
@@ -764,13 +764,13 @@ A_ZH: 若某分隔方向让所有 $y_if(x_i)>0$，不断放大权重和偏置，
 @@ M133 | 12-logistic | classroom | L3A:68-73
 Q_EN: For logistic regression, C controls inverse regularization strength under the chosen implementation. Given candidate C values, training data and a held-out test set, how should cross-validation select C and produce the final fitted model?
 Q_ZH: 逻辑回归中，C 按所用实现控制正则化强度的倒数。已有候选 C、训练数据和留出测试集，应怎样通过交叉验证选择 C，再得到最终拟合模型？
-A_EN: Choose candidate values, split the training data into folds, fit each candidate using each fold's training portion, and evaluate on that fold's validation portion. Average validation scores and choose the best candidate. Refit it on the entire training set before evaluating the held-out test set. The held-out test samples are excluded from both selection and refitting.
-A_ZH: 先选候选值，将训练数据分折；每个候选都在各折训练部分拟合，在对应验证部分评估。平均验证分数后选最佳候选，再用整个训练集重训，最后评估留出测试集。测试样本既不参与选参，也不参与这里的重训。
+A_EN: Use the same training-data folds for every candidate. Within each fold, fit learned preprocessing and the classifier only on its training portion, then score its validation portion. Choose the candidate with the best mean validation score. Refit the full pipeline on all training data before evaluating the held-out test set. Test samples enter neither selection nor refitting.
+A_ZH: 各候选使用相同训练数据分折。每折只在训练部分拟合需要学习的预处理和分类器，再评分验证部分。选择平均验证分数最好的候选，用全部训练数据重新拟合完整流程，最后评估留出测试集。测试样本既不参与选参，也不参与重训。
 MEDIA: Lecture3-10_fold_cv.png
 
 @@ M134 | 12-logistic | worked | L3A:68-73
-Q_EN: $C=0.1$ scores $(0.82,0.86,0.84)$ across three folds; $C=10$ scores $(0.90,0.74,0.79)$. Which should this mean-score rule select?
-Q_ZH: 三折中 $C=0.1$ 得分 $(0.82,0.86,0.84)$，$C=10$ 得分 $(0.90,0.74,0.79)$，按平均分应选哪个？
+Q_EN: $C=0.1$ has three validation accuracies $(0.82,0.86,0.84)$; $C=10$ has $(0.90,0.74,0.79)$. The selection rule maximizes their arithmetic mean. Which C wins?
+Q_ZH: $C=0.1$ 的三折验证准确率为 $(0.82,0.86,0.84)$，$C=10$ 为 $(0.90,0.74,0.79)$。规则选择算术平均准确率更高者，应选哪个 C？
 A_EN: The means are 0.84 and 0.81, so select $C=0.1$. Choosing $C=10$ because it achieved one 0.90 score ignores its other folds. These scores are a teaching example. In real small datasets, also consider variation and use consistent splits and metrics when comparing candidates.
 A_ZH: 平均分分别为 0.84、0.81，因此选 $C=0.1$。仅因某一折达到 0.90 就选 $C=10$，忽视了其他折的表现。这是教学例子；真实小数据集还应关注波动，并在一致划分和指标下比较候选。
 
@@ -787,14 +787,14 @@ A_EN: Train $K$ binary classifiers: class $c$ versus all other classes for each 
 A_ZH: 训练 $K$ 个二分类器，每个区分类别 $c$ 与其他所有类别。预测时比较类别分数，取最大者。三类时分别训练 1 对 {2,3}、2 对 {1,3}、3 对 {1,2}。各二分类器独立输出的概率，在明确组合或归一化前不一定和为 1。
 
 @@ M137 | 12-logistic | learn | L3A:86-91
-Q_EN: How does softmax define a joint multiclass probability model?
-Q_ZH: Softmax 如何定义联合的多类别概率模型？
+Q_EN: How does multinomial logistic regression use softmax to turn class scores into one probability distribution?
+Q_ZH: 多项式逻辑回归怎样用 Softmax 将各类分数组成一个概率分布？
 A_EN: Assign each class a score $f_c(x)=w_c^Tx+b_c$ and set $p_c=e^{f_c(x)}/\sum_k e^{f_k(x)}$. All classes share one denominator, so probabilities sum to 1 and the largest score gives the largest probability. The parameters are trained jointly. A bias can be included explicitly or through a constant feature, even when a shorthand equation omits it.
 A_ZH: 给每类一个分数 $f_c(x)=w_c^Tx+b_c$，令 $p_c=e^{f_c(x)}/\sum_k e^{f_k(x)}$。各类共享分母，因此概率和为 1，最大分数对应最大概率，参数也联合训练。偏置可以显式加入，也可以用常数特征表示，不能因简写公式省略它就误以为不允许偏置。
 
 @@ M138 | 12-logistic | worked | L3A:86-89
-Q_EN: Compute softmax for scores $(\log2,0,0)$. What if all scores increase by 1,000?
-Q_ZH: 分数为 $(\log2,0,0)$ 时 Softmax 是多少？若全部增加 1,000 呢？
+Q_EN: Compute softmax for scores $(\ln 2,0,0)$, using the natural logarithm. What if all scores increase by 1,000?
+Q_ZH: 使用自然对数时，分数 $(\ln 2,0,0)$ 的 Softmax 是多少？若全部分数增加 1000 呢？
 A_EN: Exponentials are $(2,1,1)$, giving probabilities $(0.5,0.25,0.25)$. Adding the same constant to every score multiplies numerator and denominator by the same factor, leaving the probabilities unchanged. For stability, subtract the maximum score before exponentiating. This prevents avoidable overflow while preserving the prediction.
 A_ZH: 指数为 $(2,1,1)$，归一化得 $(0.5,0.25,0.25)$。所有分数加同一常数，会让分子分母乘相同因子，概率不变。数值计算时先减最大分数再取指数，可避免不必要的上溢，同时保持预测结果。
 
@@ -860,8 +860,8 @@ A_EN: Maximize $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$,
 A_ZH: 最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$，约束为 $\alpha_i\ge0$、$\sum_i\alpha_i y_i=0$。每个训练样本对应一个乘子。样本通过内积进入目标，这为核方法提供了基础。本式是硬间隔形式，软间隔对偶还要求 $\alpha_i\le C$。
 
 @@ M150 | 13-svm | learn | L3B:37-41; SVM:2-4; CVX:5.5.3
-Q_EN: What are the KKT conditions for differentiable minimization with constraints $g_i(x)\ge0$?
-Q_ZH: 对约束 $g_i(x)\ge0$ 的可微最小化问题，KKT 条件包括什么？
+Q_EN: For differentiable minimization of f(x) subject only to inequalities $g_i(x)\ge0$, what are the KKT conditions?
+Q_ZH: 对仅带不等式约束 $g_i(x)\ge0$ 的可微最小化问题 min f(x)，KKT 条件是什么？
 A_EN: The conditions are primal feasibility $g_i(x)\ge0$, dual feasibility $\lambda_i\ge0$, stationarity $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$, and complementary slackness $\lambda_i g_i(x)=0$. Under suitable constraint qualifications they are necessary at an optimum. With convex f and concave g_i, any point and multipliers satisfying them certify a global optimum. Complementary slackness does not require every constraint to be active.
 A_ZH: 条件为原始可行性 $g_i(x)\ge0$、对偶可行性 $\lambda_i\ge0$、驻点条件 $\nabla f(x)-\sum_i\lambda_i\nabla g_i(x)=0$，以及互补松弛 $\lambda_i g_i(x)=0$。适当约束资格下，它们是最优点的必要条件。若 f 凸、各 g_i 凹，满足这些条件的点及乘子就能证明该点全局最优。互补松弛不要求每个约束都取等号。
 
@@ -880,8 +880,8 @@ A_ZH: 对最小化原问题，对偶最优值提供下界：$d^*\le p^*$；强�
 @@ M153 | 13-svm | learn | L3B:41-45;SVM:3-4
 Q_EN: How do support vectors determine prediction and the bias term?
 Q_ZH: 支持向量怎样决定预测和偏置？
-A_EN: Since $w=\sum_i\alpha_i y_i x_i$, points with $\alpha_i=0$ contribute nothing to that representation. For a hard-margin support vector, $y_i(w^Tx_i+b)=1$, so $b=y_i-w^Tx_i$. For a soft-margin SVM, use a free support vector with $0<\alpha_i<C$ for that equality. Averaging consistent bias estimates can reduce numerical noise.
-A_ZH: 因为 $w=\sum_i\alpha_i y_i x_i$，$\alpha_i=0$ 的点在此表示中没有贡献。硬间隔支持向量满足 $y_i(w^Tx_i+b)=1$，故 $b=y_i-w^Tx_i$。软间隔时，应选 $0<\alpha_i<C$ 的自由支持向量使用该等式。对一致的偏置估计取平均可减少数值噪声。
+A_EN: In $w=\sum_i\alpha_i y_i x_i$, zero multipliers contribute nothing. An active hard-margin support vector satisfies $y_i(w^Tx_i+b)=1$, giving $b=y_i-w^Tx_i$. For soft margin, this equality is guaranteed for a free support vector with $0<\alpha_i<C$. Average consistent estimates when available; if there is no free support vector, use the KKT bounds for b instead of applying this equality to an arbitrary point.
+A_ZH: 在 $w=\sum_i\alpha_i y_i x_i$ 中，零乘子不作贡献。硬间隔活跃支持向量满足 $y_i(w^Tx_i+b)=1$，故 $b=y_i-w^Tx_i$。软间隔中，$0<\alpha_i<C$ 的自由支持向量保证满足此等式。有多个时可平均一致的估计；若没有自由支持向量，应由 KKT 的 b 上下界确定，不能随便选一点套此等式。
 
 @@ M154 | 13-svm | learn | L3B:49-54;SVM:3
 Q_EN: How does the soft-margin SVM handle data that cannot be perfectly separated?
@@ -897,16 +897,16 @@ A_EN: At an optimum with $C>0$, minimal slack is $\xi_i=\max(0,1-y_if(x_i))$. Ze
 A_ZH: $C>0$ 的最优解处，最小松弛量为 $\xi_i=\max(0,1-y_if(x_i))$。零表示位于正确间隔边缘或外侧；$0<\xi_i<1$ 表示在间隔内但类别仍正确；$\xi_i=1$ 表示在决策面上；$\xi_i>1$ 才表示错分。因此违反间隔不一定就是分类错误。
 
 @@ M156 | 13-svm | learn | L3B:54,58;SVM:3
-Q_EN: For soft-margin SVM, minimize $\frac12\|w\|^2+C\sum_i\xi_i$ subject to $y_if(x_i)\ge1-\xi_i$ and $\xi_i\ge0$. Eliminate the slacks, then divide by C. What hinge-loss objective results, and where is the 1/2 factor?
-Q_ZH: 软间隔 SVM 最小化 $\frac12\|w\|^2+C\sum_i\xi_i$，约束为 $y_if(x_i)\ge1-\xi_i$、$\xi_i\ge0$。消去松弛量，再整体除以 C，得到什么 hinge loss 目标？1/2 因子在哪里？
+Q_EN: For soft-margin SVM with C>0, minimize $\frac12\|w\|^2+C\sum_i\xi_i$ subject to $y_if(x_i)\ge1-\xi_i$ and $\xi_i\ge0$. Eliminate the slacks, then divide by C. What hinge-loss objective results, and where is the 1/2 factor?
+Q_ZH: 软间隔 SVM 中 C>0，最小化 $\frac12\|w\|^2+C\sum_i\xi_i$，约束为 $y_if(x_i)\ge1-\xi_i$、$\xi_i\ge0$。消去松弛量并整体除以 C 后，hinge loss 目标是什么？1/2 因子在哪里？
 A_EN: Eliminating minimal slacks gives $\frac12\|w\|^2+C\sum_i\max(0,1-y_if(x_i))$. Dividing by $C$ gives $\|w\|^2/(2C)+\sum_i\mathrm{hinge}_i$. The notebook later writes $1/C$ instead of $1/(2C)$: that can describe the same family after redefining $C$, but is not algebraically identical at the same numerical $C$. State your objective convention.
 A_ZH: 消去最小松弛量得到 $\frac12\|w\|^2+C\sum_i\max(0,1-y_if(x_i))$；除以 $C$ 后为 $\|w\|^2/(2C)+\sum_i\mathrm{hinge}_i$。Notebook 后面写成 $1/C$ 而非 $1/(2C)$，可通过重定义 $C$ 表示同一家族，但在相同数值 $C$ 下不严格等价。应说明所用目标约定。
 
 @@ M157 | 13-svm | learn | L3B:54;SVM:3
 Q_EN: Why does the soft-margin dual constrain $0\le\alpha_i\le C$?
 Q_ZH: 为什么软间隔对偶要求 $0\le\alpha_i\le C$？
-A_EN: Add a multiplier $\beta_i\ge0$ for $\xi_i\ge0$. Stationarity in $\xi_i$ gives $C-\alpha_i-\beta_i=0$. Since both multipliers are nonnegative, $\alpha_i\le C$. The dual has the same quadratic objective as hard-margin SVM, together with this box constraint and $\sum_i\alpha_i y_i=0$. Omitting the upper bound changes the soft-margin problem.
-A_ZH: 为 $\xi_i\ge0$ 加乘子 $\beta_i\ge0$。对 $\xi_i$ 的驻点条件给出 $C-\alpha_i-\beta_i=0$。两个乘子均非负，因此 $\alpha_i\le C$。对偶目标与硬间隔的二次目标相同，但多了箱约束，并仍满足 $\sum_i\alpha_i y_i=0$。漏掉上界就改变了软间隔问题。
+A_EN: The Lagrangian terms involving $\xi_i$ are $C\xi_i-\alpha_i\xi_i-\beta_i\xi_i$, where $\alpha_i,\beta_i\ge0$ enforce the margin and nonnegative-slack constraints. Stationarity gives $C-\alpha_i-\beta_i=0$, so $0\le\alpha_i\le C$. The quadratic dual objective and $\sum_i\alpha_i y_i=0$ remain. Dropping the upper bound would change the soft-margin problem.
+A_ZH: 拉格朗日函数中含 $\xi_i$ 的项为 $C\xi_i-\alpha_i\xi_i-\beta_i\xi_i$，其中 $\alpha_i,\beta_i\ge0$ 分别对应间隔约束和非负松弛约束。驻点条件给出 $C-\alpha_i-\beta_i=0$，所以 $0\le\alpha_i\le C$。二次对偶目标及 $\sum_i\alpha_i y_i=0$ 保留；删除上界会改变软间隔问题。
 
 @@ M158 | 13-svm | check | SVM:3-4;L3B:44,54
 Q_EN: What do $\alpha_i=0$, $0<\alpha_i<C$ and $\alpha_i=C$ imply at a soft-margin optimum?
@@ -950,8 +950,8 @@ MEDIA: Lecture3-nestedclassifier.png
 @@ M164 | 13-svm | check | L3B:45,124;L3C:43
 Q_EN: Is an SVM decision score of 2 a probability of class +1?
 Q_ZH: SVM 决策分数为 2，是否就是正类概率？
-A_EN: No. The decision function is used for ranking and sign-based classification and can take values outside [0,1]. In a linear model, division by $\|w\|$ converts its signed score to signed geometric distance. Probability estimates require an additional probability-modeling or calibration procedure. A wider margin does not by itself establish calibrated confidence.
-A_ZH: 不是。决策函数用于排序和按符号分类，可以超出 [0,1]。在线性模型中，分数除以 $\|w\|$ 才得到带符号的几何距离。概率估计需要额外的概率建模或校准过程，更宽间隔本身不能证明置信概率已经校准。
+A_EN: No. The decision function is used for ranking and sign-based classification and can take values outside [0,1]. In a linear model with nonzero w, division by $\|w\|$ converts its signed score to signed geometric distance. Probability estimates require an additional probability-modeling or calibration procedure. A wider margin does not by itself establish calibrated confidence.
+A_ZH: 不是。决策函数用于排序和按符号分类，可以超出 [0,1]。在线性模型且 w 非零时，分数除以 $\|w\|$ 才得到带符号的几何距离。概率估计需要额外的概率建模或校准过程，更宽间隔本身不能证明置信概率已经校准。
 
 @@ M165 | 14-kernels | learn | L3B:83-93
 Q_EN: How can a linear classifier in a transformed space produce a nonlinear boundary in the original space?
@@ -963,8 +963,8 @@ MEDIA: Lecture3b-cell-88.png
 @@ M166 | 14-kernels | learn | L3B:89-94
 Q_EN: What is the kernel trick?
 Q_ZH: 什么是核技巧？
-A_EN: A kernel computes $k(x,z)=\phi(x)^T\phi(z)$ without explicitly constructing the transformed vectors. Since the SVM dual uses inner products, replace $x_i^Tx_j$ by $k(x_i,x_j)$. Prediction becomes $\operatorname{sign}(\sum_i\alpha_i y_i k(x_i,x)+b)$. The trick changes the feature geometry while retaining the dual optimization structure and its constraints.
-A_ZH: 核函数直接计算 $k(x,z)=\phi(x)^T\phi(z)$，不必显式构造变换向量。SVM 对偶只使用内积，因此把 $x_i^Tx_j$ 替换为 $k(x_i,x_j)$。预测为 $\operatorname{sign}(\sum_i\alpha_i y_i k(x_i,x)+b)$。核技巧改变特征几何，同时保留对偶优化结构及约束。
+A_EN: A kernel computes $k(x,z)=\phi(x)^T\phi(z)$ without explicitly constructing the transformed vectors. Since the SVM dual uses inner products, replace $x_i^Tx_j$ by $k(x_i,x_j)$. Prediction becomes $\operatorname{sign}(\sum_i\alpha_i y_i k(x_i,x)+b)$. Specify a tie rule at zero. The trick changes the feature geometry while retaining the dual optimization structure and its constraints.
+A_ZH: 核函数直接计算 $k(x,z)=\phi(x)^T\phi(z)$，不必显式构造变换向量。SVM 对偶只使用内积，因此把 $x_i^Tx_j$ 替换为 $k(x_i,x_j)$。预测为 $\operatorname{sign}(\sum_i\alpha_i y_i k(x_i,x)+b)$。分数为零时须规定平局规则。核技巧改变特征几何，同时保留对偶优化结构及约束。
 
 @@ M167 | 14-kernels | worked | L3B:90-92
 Q_EN: Give an explicit feature map for the two-dimensional quadratic kernel $k(x,z)=(x^Tz)^2$.
@@ -1025,8 +1025,8 @@ A_ZH: 把猫/狗/马编码为 0/1/2，会引入未经论证的数值顺序和距
 @@ M176 | 15-features | learn | L3C:20-21
 Q_EN: What does binning a continuous feature do, and what information can it lose?
 Q_ZH: 对连续特征分箱会做什么？可能损失哪些信息？
-A_EN: Choose interval boundaries, assign each value to a bin, and optionally one-hot encode the bin index. This can represent different behavior in different ranges. It discards within-bin differences and creates abrupt boundaries: two nearby values across a boundary may get different indicators. Specify which endpoint belongs to each bin and choose boundaries without using held-out outcomes.
-A_ZH: 先定义区间边界，把值归入箱，再可对箱编号做 one-hot。这能表示不同数值区间的不同作用，但会丢失箱内差异并产生突变边界，相邻却跨界的两个值可能获得不同指示。须明确端点归属，选边界时不能利用留出目标信息。
+A_EN: Choose intervals, assign each value to a bin, and optionally one-hot encode the bin. Binning discards within-bin differences and creates abrupt boundaries: nearby values on opposite sides may get different indicators. Specify endpoint inclusion. Set boundaries independently in advance or learn them from training data only; validation/test feature values must not influence fitted quantile or other data-dependent boundaries.
+A_ZH: 定义区间，把值归入箱，再可对箱编号做 one-hot。分箱丢失箱内差异并产生突变边界：相近但跨界的值可能得到不同指示。须明确端点归属。边界可以事先独立规定，或仅从训练数据学习；验证/测试特征值也不能参与拟合分位数等数据驱动边界，不只是不能用其标签。
 
 @@ M177 | 15-features | worked | L3C:22-23
 Q_EN: What second-degree polynomial features are produced from $(x_1,x_2)=(2,3)$ when including bias and lower degrees?
@@ -1037,14 +1037,14 @@ A_ZH: 按 $(1,x_1,x_2,x_1^2,x_1x_2,x_2^2)$ 排列，得到 $(1,2,3,4,6,9)$。交
 @@ M178 | 15-features | learn | L3C:24
 Q_EN: When can a log transform help, and what domain checks are necessary?
 Q_ZH: 对数变换何时有用？需要检查什么定义域条件？
-A_EN: A log transform compresses large positive ranges and turns multiplicative ratios into additive differences. Ordinary $\log x$ requires $x>0$. A justified `log1p(x)` transform can handle nonnegative values including zero, but it defines a different mapping. Do not apply a log blindly to negative, missing or arbitrarily shifted measurements.
-A_ZH: 对数变换压缩很大的正值范围，并把乘法比例转成加法差异。普通 $\log x$ 要求 $x>0$；合理采用 `log1p(x)` 可处理包含零的非负值，但这是另一种映射。不能不检查就对负值、缺失值或随意平移的测量取对数。
+A_EN: A log transform compresses a large positive range and turns multiplicative ratios into additive differences. Ordinary $\log x$ requires x>0. `log1p(x)` computes $\log(1+x)$, whose real-valued domain is x>−1; it includes x=0 but is a different mapping. Check domain and measurement meaning before transforming, rather than shifting arbitrary data merely to make a formula run.
+A_ZH: 对数变换压缩很大的正值范围，并把乘法比例转为加法差异。普通 $\log x$ 要求 x>0；`log1p(x)` 计算 $\log(1+x)$，实数定义域为 x>−1，包含 x=0，但这是另一种映射。变换前要检查定义域与测量含义，不能为了让公式运行而随意平移数据。
 
 @@ M179 | 15-features | learn | L3C:25-34
 Q_EN: How does balanced class weighting change a classifier's training objective?
 Q_ZH: 平衡类别权重怎样改变分类器的训练目标？
-A_EN: Give class $c$ a weight inversely related to its training frequency, commonly $a_c=N/(K N_c)$. Each example's loss is multiplied by its class weight, increasing minority examples' relative contribution. This changes training incentives without duplicating every minority sample. It does not guarantee better balanced accuracy or preserve the interpretation of unweighted population probabilities.
-A_ZH: 按类别训练频率的倒数分配权重，常用 $a_c=N/(K N_c)$。每个样本损失乘所属类权重，提高少数类的相对贡献。它通过改变训练目标起作用，不必复制每个少数类样本。但不保证平衡准确率一定提高，也不自动保持未加权总体概率的解释。
+A_EN: With N training examples, K represented classes and N_c>0 examples of class c, a common balanced weight is $a_c=N/(K N_c)$. Multiply each example’s loss by its class weight; each class then has total weight N/K. This increases minority examples’ relative influence without duplicating them. It does not guarantee better balanced accuracy or probabilities calibrated for the unweighted population.
+A_ZH: 设训练样本总数为 N，实际出现的类别数为 K，c 类有 N_c>0 个样本，常见平衡权重为 $a_c=N/(K N_c)$。各样本损失乘所属类权重，使每类总权重同为 N/K；这提高少数类相对影响，无需复制样本。但它不保证平衡准确率提高，也不保证概率对原始未加权总体仍校准良好。
 MEDIA: Lecture3c-cell-34.png
 
 @@ M180 | 15-features | worked | L3C:31-34
@@ -1062,8 +1062,8 @@ A_ZH: 数量不平衡关注各类样本有多少，代价不等关注不同错�
 @@ M182 | 15-features | learn | L3C:43-53
 Q_EN: What common framework links logistic regression, SVM and regularized model selection?
 Q_ZH: 什么共同框架联系逻辑回归、SVM 和正则化模型选择？
-A_EN: Minimize a data-fit term plus a complexity penalty: $\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$. Logistic and hinge losses reward different score behavior, while $\Omega$ limits complexity within a chosen model family. Choose the family, representation and hyperparameters using relevant validation evidence. “No free lunch” does not mean all methods perform equally on your actual task or that domain knowledge is useless.
-A_ZH: 共同形式是最小化数据拟合项与复杂度惩罚：$\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$。逻辑损失和 hinge loss 对分数行为的偏好不同，$\Omega$ 则限制所选模型家族的复杂度。应根据相关验证证据选择家族、表示与超参数。“没有免费午餐”不意味着所有方法在你的实际任务上同样好，也不意味着领域知识无用。
+A_EN: Minimize data-fit loss plus a complexity penalty: $\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$, with $\lambda\ge0$. Logistic regression uses logistic loss; an SVM uses hinge loss. A possible penalty is $\Omega(f)=\|w\|^2$, and lambda controls its relative strength. Fit parameters on training data and choose the model family, representation and penalty strength using validation evidence.
+A_ZH: 共同目标是数据拟合损失加复杂度惩罚：$\sum_i L(y_i,f(x_i))+\lambda\Omega(f)$，其中 $\lambda\ge0$。逻辑回归使用逻辑损失，SVM 使用 hinge loss；惩罚可取 $\Omega(f)=\|w\|^2$，lambda 控制相对强度。训练数据用于拟合参数，验证证据用于选择模型家族、表示和惩罚强度。
 
 @@ M327 | 01-map | learn | I:13-14
 Q_EN: How do task T, experience E and performance measure P define a learning problem?

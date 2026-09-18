@@ -1,10 +1,10 @@
 # Extra Resources · historical preview
 
-@@ N135 | x01-applications | learn | XN2:66-67
+@@ N135 | x01-applications | learn | XN2:66-67; DNSNEG:2.1,3
 Q_EN: What are the question, answer, authority and additional sections in a DNS message?
 Q_ZH: DNS 消息中的 question、answer、authority 和 additional 部分分别做什么？
-A_EN: The question names the requested record. Answers provide records addressing it. Authority records identify relevant authoritative servers, while additional records can supply useful supporting data such as server addresses. The header also carries an identifier and flags. An additional record is not automatically the final answer to the original question.
-A_ZH: Question 指明查询的记录，answer 提供回答该查询的记录，authority 标识相关权威服务器，additional 可提供服务器地址等辅助信息。首部还包含标识符与标志。Additional 中的记录并不自动等于原问题的最终答案。
+A_EN: Question specifies the queried name and record type. Answer contains records answering it. Authority can give NS records for a referral or an SOA record describing the zone in a negative answer; it is not always a list of servers. Additional supplies supporting records, such as an NS server's address. The header carries the transaction ID and flags. Supporting data is not automatically the final answer.
+A_ZH: Question 给出查询名与记录类型；answer 放回答查询的记录。Authority 可在转介中给出 NS 记录，也可在否定回答中放描述该区域的 SOA 记录，并非总是服务器名单。Additional 放辅助记录，如 NS 服务器的地址；首部包含事务 ID 和标志。辅助信息不自动等于最终答案。
 
 @@ N136 | x01-applications | learn | XN2:68
 Q_EN: How does registering a domain differ from publishing a host's address record?
@@ -15,14 +15,14 @@ A_ZH: 注册与委派确定由哪些权威名称服务器负责域名，这些�
 @@ N137 | x01-applications | learn | XN2:71-74
 Q_EN: Why can peer-to-peer distribution scale differently from client-server distribution?
 Q_ZH: 为什么 P2P 文件分发的扩展方式不同于客户端—服务器模式？
-A_EN: In client-server distribution, the server uploads a complete copy to each client. In P2P, peers can upload pieces they have already received, adding aggregate upload capacity as the group grows. The server must still introduce every piece at least once, and slow peer downloads can remain bottlenecks.
-A_ZH: 客户端—服务器模式中，服务器要向每个客户端上传完整副本。P2P 中，节点可上传自己已收到的分块，节点增加时也增加了总体上传能力。但服务器仍需至少引入每一块一次，下载很慢的节点也仍可能成为瓶颈。
+A_EN: In client-server distribution, the server uploads a complete copy to each client. In P2P, peers upload pieces already received, so new peers can add upload capacity. In the stated model the server initially holds the only copy and peers start empty, so the server must introduce every piece at least once. Slow peer downloads can still be bottlenecks; extra upload capacity alone does not guarantee a faster measured transfer.
+A_ZH: 客户端—服务器模式中，服务器向每个客户端上传完整副本。P2P 节点可上传已收到的块，因此新节点也能增加上传能力。这里的模型假设初始只有服务器拥有文件、节点为空，所以服务器必须至少引入每一块一次。下载慢的节点仍可能成为瓶颈；增加上传能力不自动保证实测更快。
 
 @@ N138 | x01-applications | learn | XN2:72-74
 Q_EN: What ideal lower bounds govern distribution of an F-bit file to N peers?
 Q_ZH: 向 N 个节点分发 F bit 文件，有哪些理想时间下界？
-A_EN: Let server upload be us, peer uploads ui and minimum peer download dmin. Client-server needs at least $\max(NF/u_s,F/d_{\min})$. P2P needs at least $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$. These fluid-model bounds ignore packet overhead, piece availability and scheduling limits; a bound is not automatically an achievable measured time.
-A_ZH: 设服务器上传速率为 us、节点上传为 ui、最慢下载为 dmin。客户端—服务器模式至少需 $\max(NF/u_s,F/d_{\min})$；P2P 至少需 $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$。这些流体模型下界忽略分组开销、分块可用性和调度限制，不自动等于实际可达到的时间。
+A_EN: Let F be file bits, N the number of initially empty peers, us the only initial source's upload rate, ui peer i's upload rate, and dmin the slowest peer download rate; all rates are bit/s. Client-server requires at least $\max(NF/u_s,F/d_{\min})$: the server supplies N copies and every peer downloads one. P2P requires at least $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$: initial copy, slowest download, and total upload supply. Take the largest because all constraints must hold. These ideal lower bounds ignore overhead and scheduling limits.
+A_ZH: F 为文件比特数，N 为初始为空的节点数；us 是唯一初始源的上传速率，ui 是节点 i 上传速率，dmin 是最慢下载速率，均用 bit/s。客户端—服务器下界为 $\max(NF/u_s,F/d_{\min})$：服务器须发 N 份，每个节点须下载一份。P2P 下界为 $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$，分别限制首份注入、最慢下载和总上传供给。三个约束同时成立，所以取最大值；忽略开销及调度限制。
 
 @@ N139 | x01-applications | worked | XN2:73-75
 Q_EN: Distribute a file F=1 Gbit to N=10 clients. Server upload us=100 Mbps, each client upload is 10 Mbps, and the slowest client download dmin=50 Mbps. Find ideal client–server and P2P distribution-time lower bounds.
@@ -51,8 +51,8 @@ A_ZH: CDN 在多个位置放置或缓存内容，并把客户端引导到适当�
 @@ N143 | x01-applications | learn | XN2:94-101
 Q_EN: What is the basic UDP server/client socket workflow?
 Q_ZH: UDP 服务器与客户端的基本 socket 流程是什么？
-A_EN: A server creates a datagram socket and binds a local address/port. It receives a datagram together with the sender's address and can reply to that address. A client sends to the server's destination and receives a response. UDP has no transport handshake or accept step, and the application must handle missing or unexpected responses.
-A_ZH: 服务器创建数据报 socket，并绑定本地地址和端口；接收数据报时同时获得发送者地址，可向该地址回复。客户端向服务器目标地址发送，再接收响应。UDP 没有传输层握手或 accept 步骤，应用需自行处理丢失或非预期的回复。
+A_EN: The server creates a datagram socket, binds its local address/port, then receives a datagram and its sender address. It can send a reply to that address. The client also creates a datagram socket and sends to the server's address/port; the OS can assign a local ephemeral port automatically. It then waits for a response or timeout. UDP needs no TCP-style handshake or accept call, and the application must handle missing or unexpected responses.
+A_ZH: 服务器创建数据报 socket，绑定本地地址/端口，再接收数据报及发送者地址，并可向该地址回复。客户端也先创建数据报 socket，再向服务器地址/端口发送；操作系统可自动分配本地临时端口，然后客户端等待回复或超时。UDP 不需要 TCP 式握手或 accept，应用须处理丢失或非预期的回复。
 
 @@ N144 | x01-applications | learn | XN2:102-105
 Q_EN: Why does a TCP server have a listening socket and separate connected sockets?
@@ -111,14 +111,14 @@ A_ZH: UDP 本身不保证交付、顺序、去重、重传或拥塞控制。应�
 @@ N153 | x02-transport | learn | XN3:19-20; XUDP:Fields
 Q_EN: How is the Internet checksum formed, and what does UDP additionally cover through its pseudo-header?
 Q_ZH: 互联网校验和如何形成？UDP 伪首部额外保护什么信息？
-A_EN: Add 16-bit words with one's-complement arithmetic, wrap end-around carries, then complement the result. UDP covers its header and data plus a pseudo-header containing IP source/destination, protocol and UDP length. The pseudo-header is used in computation rather than sent as an extra UDP header. Passing this check means no detectable checksum error, not proven authenticity.
-A_ZH: 使用反码加法累加 16 bit 字，最高位进位回卷相加，最后按位取反。UDP 除首部和数据外，还覆盖含 IP 源/目的地址、协议及 UDP 长度的伪首部。伪首部参与计算，并不是额外发送的 UDP 首部。校验通过只表示未检出此类差错，不证明真实性。
+A_EN: For UDP, set the checksum field to zero for calculation. Form 16-bit words from the pseudo-header, UDP header and data; if needed, append a zero byte only for calculation. Add with end-around carry, then invert all bits. The pseudo-header covers IP source/destination, protocol and UDP length without becoming an extra transmitted UDP header. A computed zero checksum is sent as all ones; in IPv4, a transmitted zero instead means no UDP checksum. Passing a checksum does not authenticate the sender.
+A_ZH: 计算 UDP 校验和时先把校验字段置零。将伪首部、UDP 首部和数据组成 16 位字；字节数为奇数时，仅为计算补一个零字节。相加时将最高位进位回卷，最后逐位取反。伪首部覆盖 IP 源/目的地址、协议及 UDP 长度，但不额外作为 UDP 首部发送。算得零时传全一；IPv4 中传零反而表示不使用 UDP 校验和。通过校验并不认证发送者。
 
 @@ N154 | x02-transport | worked | XN3:19-20
-Q_EN: Using 16-bit one's-complement arithmetic, find the checksum of words 0xFFFF and 0x0001.
-Q_ZH: 用 16 bit 反码加法，求 0xFFFF 与 0x0001 两个字的校验和。
-A_EN: Their ordinary sum is 0x10000. Wrap the carry into the low 16 bits to obtain 0x0001, then complement to get 0xFFFE. Including this checksum in the one's-complement sum gives 0xFFFF. Ignoring the end-around carry would produce the wrong checksum.
-A_ZH: 普通相加得到 0x10000，将进位回卷到低 16 bit，得到 0x0001，再取反得到 0xFFFE。把该校验和一起反码相加会得到 0xFFFF。若忽略进位回卷，就会算错。
+Q_EN: Using 16-bit one's-complement addition, find the checksum of 0xFFFF (65535) and 0x0001 (1). The prefix 0x means hexadecimal.
+Q_ZH: 用 16 位反码加法求 0xFFFF（65535）与 0x0001（1）的校验和；0x 表示十六进制。
+A_EN: The ordinary sum is 65536=0x10000: low 16 bits are zero, with carry 1. Add that carry back to get 0x0001; invert its 16 bits to obtain 0xFFFE (65534). Adding all three words with the same carry rule gives 0xFFFF, the all-one check result. Ordinary arithmetic addition without carry wrap would give the wrong checksum.
+A_ZH: 普通和为 65536=0x10000：低 16 位为零，进位为 1。把进位加回得 0x0001，再将其 16 位逐位取反，得到 0xFFFE（65534）。用同一回卷规则把两个原字与校验和相加，结果为全一的 0xFFFF。漏掉回卷步骤会算错。
 
 @@ N155 | x02-transport | check | XN3:19-20; XN6:11-13
 Q_EN: Can a checksum detect every possible corruption?
@@ -147,8 +147,8 @@ A_ZH: 数据或确认消息丢失后，发送者可能无限等待；超时会�
 @@ N159 | x02-transport | learn | XN3:45-46
 Q_EN: What is ideal stop-and-wait sender utilization?
 Q_ZH: 理想停等协议的发送端利用率是多少？
-A_EN: With packet serialization time L/R, propagation round trip RTT, negligible ACK transmission and no errors, $U=(L/R)/(RTT+L/R)$. The sender transmits one packet and then waits for its ACK. Throughput is $L/(RTT+L/R)$ bits/s. Be explicit about whether a problem's RTT already includes serialization or processing.
-A_ZH: 设分组发送时间为 L/R、传播往返时间为 RTT，忽略 ACK 发送与差错，则 $U=(L/R)/(RTT+L/R)$。发送者发一包后等待确认，吞吐量为 $L/(RTT+L/R)$ bit/s。必须明确题目的 RTT 是否已经包含发送或处理时间。
+A_EN: Let L be packet bits, R link rate in bit/s, and RTT round-trip propagation time. Assume no loss, negligible ACK serialization/processing, and immediate ACK after a complete packet. Each cycle is data transmission L/R plus RTT. Thus $U=(L/R)/(RTT+L/R)$ and throughput is $L/(RTT+L/R)$ bit/s. U is the fraction of the cycle spent sending data. Do not add L/R again if a differently defined RTT already includes it.
+A_ZH: 令 L 为分组比特数、R 为链路 bit/s 速率、RTT 为往返传播时间。假设无丢包，ACK 发送/处理可忽略，完整收包后立即确认。每周期为数据发送 L/R 加 RTT，因此 $U=(L/R)/(RTT+L/R)$，吞吐量为 $L/(RTT+L/R)$ bit/s。U 表示周期中发数据的时间比例；若别题 RTT 已含发送时间，不能重复加 L/R。
 
 @@ N160 | x02-transport | worked | XN3:45-46
 Q_EN: In a loss-free stop-and-wait model, link rate R=1 Gbps, packet length L=8,000 bits, and round-trip propagation RTT=30 ms. Ignore ACK transmission and processing time. Find the fraction of a send–ACK cycle spent transmitting data and the resulting throughput.
@@ -159,8 +159,8 @@ A_ZH: 发送时间为 8 微秒，利用率为 $8/30008\approx0.0002666$，即 0.
 @@ N161 | x02-transport | learn | XN3:47-50
 Q_EN: How does pipelining improve utilization in the ideal reliable-transfer model?
 Q_ZH: 理想可靠传输模型中，流水线怎样提高利用率？
-A_EN: Allow several unacknowledged packets in flight. With window N, the ideal utilization is bounded by $\min(1,N(L/R)/(RTT+L/R))$. Once the path is full, enlarging the window cannot exceed link capacity. Loss, receiver limits and congestion can reduce realized performance, so this is a simplified capacity calculation.
-A_ZH: 允许多个未确认分组同时在途。窗口为 N 时，理想利用率受 $\min(1,N(L/R)/(RTT+L/R))$ 限制。路径填满后，继续扩大窗口也不能超过链路容量。丢包、接收限制与拥塞会降低实际性能，因此这是简化容量计算。
+A_EN: Let N be the packet window, L packet bits, R link rate in bit/s, and RTT round-trip propagation time. With equal packets, no errors, and negligible ACK/processing time, ideal utilization is $U=\min(1,N(L/R)/(RTT+L/R))$. The window lets N packet-transmission times fill a send-to-ACK cycle instead of just one. The cap 1 means the sender cannot exceed link capacity. Loss, receiver limits and congestion can reduce actual performance.
+A_ZH: 令 N 为以包计的窗口、L 为每包比特数、R 为 bit/s 速率、RTT 为往返传播时间。等长分组、无差错且忽略 ACK/处理耗时时，理想利用率为 $U=\min(1,N(L/R)/(RTT+L/R))$。窗口让一个发送—确认周期内可填入 N 个包的发送时间，而非只发一个。上限 1 表示不能超过链路容量；实际还受丢包、接收和拥塞限制。
 
 @@ N162 | x02-transport | learn | XN3:50-55
 Q_EN: What does Go-Back-N retransmit after a timeout?
@@ -183,8 +183,8 @@ A_ZH: SR 单独确认正确收到的分组，可缓存窗口内乱序数据，�
 @@ N165 | x02-transport | check | XN3:51-59; XNT5:2
 Q_EN: Why must sender/receiver windows be limited relative to the sequence-number space?
 Q_ZH: 为什么发送、接收窗口的大小要受序号空间限制？
-A_EN: After sequence numbers wrap, a receiver must distinguish an old duplicate from new data. In the standard models with m-bit sequence numbers, GBN allows window size at most $2^m-1$, while equal-sized SR windows require at most $2^{m-1}$. These bounds depend on the protocol and its lifetime assumptions; “more sequence numbers than packets currently buffered” is not a complete argument.
-A_ZH: 序号回绕后，接收者必须区分旧副本和新数据。在标准 m bit 序号模型中，GBN 窗口至多为 $2^m-1$，等大小的 SR 收发窗口至多为 $2^{m-1}$。这些界限依赖协议和分组寿命假设，不能只说“序号比当前缓存分组多”就算完整论证。
+A_EN: Old duplicates must not be confused with new data after sequence numbers wrap. For m-bit sequence numbers, the standard GBN sender window is at most $2^m-1$; its receiver window is one packet. Standard SR with equal sender/receiver windows requires $N\le2^{m-1}$, so old and new receiving windows cannot overlap ambiguously. For m=3 this gives GBN sender≤7 and each SR window≤4. Packet-lifetime assumptions still matter.
+A_ZH: 序号回绕后，旧副本不能被误认成新数据。m 位序号的标准 GBN 发送窗口至多 $2^m-1$，其接收窗口仅一包；等大小收发窗口的标准 SR 要求 $N\le2^{m-1}$，避免新旧接收窗口发生歧义重叠。m=3 时，GBN 发送窗口≤7，SR 每个窗口≤4。仍须满足协议的分组寿命假设。
 
 @@ N166 | x02-transport | worked | XN3:55-59
 Q_EN: Packets 0,1,2,3 are sent and packet 1 is lost. Contrast the basic GBN and SR reactions.
@@ -195,8 +195,8 @@ A_ZH: GBN 接收 0，丢弃随后乱序到达的 2、3，之后从 1 起重传�
 @@ N167 | x03-tcp | learn | XN3:61-64
 Q_EN: What do TCP sequence and acknowledgment numbers count?
 Q_ZH: TCP 的序号和确认号统计的是什么？
-A_EN: A data segment's sequence number identifies its first byte in the stream. The acknowledgment number is the next byte expected, confirming all earlier bytes cumulatively. These are byte positions, not packet counts. SYN and FIN consume sequence space, while an ACK without data does not consume a new data byte.
-A_ZH: 数据段序号标识其在字节流中的第一个字节；确认号表示下一个期望字节，对之前所有字节作累计确认。它们是字节位置，不是分组数量。SYN 和 FIN 消耗序号空间，而不带数据的 ACK 不会消耗新的数据字节。
+A_EN: A data segment's sequence number identifies its first stream byte. Its ACK number is the next byte expected in the opposite direction, cumulatively confirming earlier bytes. These count byte positions, not packets. SYN and FIN each consume one sequence number. A pure ACK with no payload, SYN or FIN consumes none. Thus acknowledging data does not itself advance the sender's own data sequence.
+A_ZH: 数据段序号标识本方向第一个字节；ACK 号是反方向下一个期望字节，累计确认此前字节。它们按字节位置计，不按包数计。SYN 与 FIN 各占一个序号；没有载荷、SYN 或 FIN 的纯 ACK 不占序号。因此确认对方数据本身，不会推进自己的数据序号。
 
 @@ N168 | x03-tcp | worked | XN3:63-67
 Q_EN: A segment starts at sequence 1,000 and carries 500 bytes. Assuming all earlier bytes arrived, what ACK follows?
@@ -241,8 +241,8 @@ A_EN: Flow control protects the receiver's capacity to buffer and consume data, 
 A_ZH: 流量控制保护接收者缓冲和消费数据的能力，使用其通告的接收窗口 rwnd。拥塞控制响应网络容量与拥塞，使用发送端的 cwnd 等状态。接收者可能很快而路径拥塞，也可能接收者很慢但路径空闲，因此不能忽略任何一个窗口。
 
 @@ N175 | x03-tcp | worked | XN3:103-104
-Q_EN: If cwnd=12 kB, rwnd=8 kB and 5 kB is unacknowledged, how much more data can the simplified window rule allow?
-Q_ZH: 若 cwnd=12 kB、rwnd=8 kB，已有 5 kB 未确认，简化窗口规则还允许发送多少？
+Q_EN: The sender's congestion window cwnd=12 kB and receiver-advertised window rwnd=8 kB. With 5 kB unacknowledged, how much additional data does the simplified window rule permit?
+Q_ZH: 发送端拥塞窗口 cwnd=12 kB，接收端通告窗口 rwnd=8 kB；已有 5 kB 未确认。简化窗口规则允许再发多少数据？
 A_EN: The in-flight bound is $\min(12,8)=8$ kB, leaving 3 kB of window space. This ignores other constraints such as application availability, segment sizing and pacing. The receive window is not added to the congestion window; the tighter limit applies.
 A_ZH: 在途上限为 $\min(12,8)=8$ kB，因此还剩 3 kB 窗口空间。这里忽略应用数据是否就绪、分段大小和发送节奏等限制。接收窗口不能与拥塞窗口相加，应采用较紧的限制。
 
@@ -267,8 +267,8 @@ A_ZH: 它从较小拥塞窗口开始，通过 ACK 探测容量。若每段得到
 @@ N179 | x03-tcp | learn | XN3:102,108-109
 Q_EN: How is additive increase different from slow-start growth?
 Q_ZH: 加性增长与慢启动增长有何不同？
-A_EN: Congestion avoidance increases cwnd by roughly one MSS per RTT, instead of roughly doubling it. If cwnd is measured in bytes, a common per-ACK increment is about $MSS^2/cwnd$. Losing track of units can turn that into the wrong formula. The classic AIMD picture also reduces the window multiplicatively after a congestion signal.
-A_ZH: 拥塞避免阶段每 RTT 大约增加一个 MSS，而不是近似翻倍。若 cwnd 用 byte 表示，常见的逐 ACK 增量约为 $MSS^2/cwnd$，忽略单位会写错公式。经典 AIMD 图景还会在收到拥塞信号后按比例减小窗口。
+A_EN: In classic congestion avoidance, cwnd grows by about one MSS (maximum segment payload) per RTT, rather than doubling as in slow start. With cwnd and MSS in bytes and one ACK per full-sized segment, adding about $MSS^2/cwnd$ per ACK gives about one MSS across cwnd/MSS ACKs. Delayed ACKs or different increase rules change that accounting. AIMD also reduces cwnd multiplicatively after congestion.
+A_ZH: 经典拥塞避免中，cwnd 每 RTT 约增加一个 MSS（最大段载荷），而非像慢启动那样翻倍。cwnd、MSS 均用字节且每个满段产生一个 ACK 时，每 ACK 增加约 $MSS^2/cwnd$，一轮约 cwnd/MSS 个 ACK 合计增加一个 MSS。延迟 ACK 或其他增长规则会改变该计算；AIMD 还在拥塞后按比例减窗。
 
 @@ N180 | x03-tcp | learn | XN3:105-112
 Q_EN: What main difference separates the lecture's TCP Tahoe and Reno loss reactions?
@@ -294,11 +294,11 @@ Q_ZH: 为什么每条 TCP 连接公平，不自动等于每个用户公平？
 A_EN: One user can open several competing connections and receive several shares. Fairness also depends on RTTs, algorithms, loss and other traffic. The equal R/K sharing picture is an idealized comparison for K similar flows, not a universal service guarantee or a rule that every application receives equal bandwidth.
 A_ZH: 一个用户可开启多条竞争连接，从而获得多个份额。公平性还受 RTT、算法、丢包及其他流量影响。R/K 平分图景是 K 条相似流的理想化比较，不是通用服务保证，也不意味着每个应用必定得到相同带宽。
 
-@@ N184 | x03-tcp | learn | XN3:90-100,113
-Q_EN: How can ECN signal congestion without requiring a packet drop?
-Q_ZH: ECN 怎样在不必丢弃分组的情况下指示拥塞？
-A_EN: A capable network device can mark congestion in an ECN-capable packet, and endpoints communicate and respond to that signal. This can avoid waiting for loss as the only indication. Congestion still costs queueing delay and capacity, and repeated unnecessary retransmissions add load rather than creating more useful throughput.
-A_ZH: 支持 ECN 的网络设备可在允许 ECN 的分组中标记拥塞，端点再传递并响应该信号，从而不必只等丢包才发现问题。拥塞仍会带来排队延迟和容量损失，反复进行不必要重传只会增加负载，不会创造更多有效吞吐量。
+@@ N184 | x03-tcp | learn | XN3:90-100,113; ECNRFC:6.1
+Q_EN: In classic ECN-capable TCP, how can congestion be signaled without dropping a packet?
+Q_ZH: 经典支持 ECN 的 TCP 如何不靠丢包传递拥塞信号？
+A_EN: After endpoints negotiate ECN, the sender marks suitable IP packets ECN-capable. A router can set CE (Congestion Experienced) instead of dropping one; the receiver echoes it using ECE in TCP ACKs. The sender reduces its congestion window and signals CWR (Congestion Window Reduced). This is the classic RFC 3168 mechanism. ECN reports congestion; it neither adds capacity nor guarantees that no packet will be dropped.
+A_ZH: 端点协商使用 ECN 后，发送端将适当的 IP 包标为支持 ECN。路由器可设置 CE（已遇到拥塞）而不丢弃该包；接收端用 TCP ACK 的 ECE 回显。发送端减小拥塞窗口，并设置 CWR（拥塞窗口已缩减）。这是 RFC3168 的经典机制；ECN 报告拥塞，不增加容量，也不保证永不丢包。
 
 @@ N185 | x04-ip | learn | XN4:5-8,13-14
 Q_EN: How do forwarding, routing, the data plane and control plane relate?
@@ -357,8 +357,8 @@ A_ZH: 更准确地说，IP 地址关联网络接口或逻辑端点。路由器�
 @@ N194 | x04-ip | learn | XN4:29-34
 Q_EN: What does an IPv4 prefix such as /26 mean?
 Q_ZH: IPv4 中的 /26 这类前缀是什么意思？
-A_EN: The first 26 bits specify the network prefix, leaving 6 host bits and $2^6=64$ addresses in the block. A matching mask has 26 leading ones. The network address is obtained by bitwise AND with the mask, not by decimal rounding. CIDR prefixes replace the fixed class A/B/C boundary assumption.
-A_ZH: 前 26 bit 是网络前缀，剩余 6 bit 为主机部分，地址块包含 $2^6=64$ 个地址，对应掩码前 26 bit 为 1。网络地址通过与掩码按位 AND 得到，不能进行十进制四舍五入。CIDR 不再假设固定 A/B/C 类边界。
+A_EN: /26 fixes the first 26 of IPv4's 32 bits, leaving six variable bits and $2^6=64$ addresses. Its mask is 255.255.255.192: 26 ones followed by six zeros. AND the address with this mask to obtain the network address; a bitwise AND outputs 1 only when both input bits are 1. This keeps prefix bits and clears host bits. CIDR uses explicit prefix lengths instead of fixed class A/B/C boundaries.
+A_ZH: /26 固定 IPv4 的前 26 位，剩六位可变，共 $2^6=64$ 个地址。掩码为 255.255.255.192，即 26 个一后跟六个零。地址与掩码按位 AND 得到网络地址：只有两输入位都为一时才输出一，因此保留前缀、清零主机位。CIDR 用明确前缀长度，不再依赖固定 A/B/C 类边界。
 
 @@ N195 | x04-ip | worked | XN4:30-34
 Q_EN: Find the network and broadcast addresses for 192.0.2.130/26 in an ordinary IPv4 subnet.
@@ -367,8 +367,8 @@ A_EN: /26 gives mask 255.255.255.192 and blocks of 64 last-octet addresses. The 
 A_ZH: /26 对应 255.255.255.192，末字节每 64 个地址形成一块。130 位于 128–191 块，因此网络地址为 192.0.2.128，广播地址为 192.0.2.191。按普通子网约定，可用主机地址为 .129 至 .190，共 62 个。
 
 @@ N196 | x04-ip | check | XN4:29-34
-Q_EN: Is $2^{32-p}-2$ a universal IPv4 host-count formula?
-Q_ZH: $2^{32-p}-2$ 是普遍适用的 IPv4 主机数公式吗？
+Q_EN: For an IPv4 /p prefix, is $2^{32-p}-2$ always the number of usable host addresses?
+Q_ZH: IPv4 的 /p 前缀中，$2^{32-p}-2$ 总是可用主机地址数吗？
 A_EN: No. It describes ordinary subnets that reserve network and broadcast addresses. Special uses such as /31 point-to-point links and /32 host routes require different interpretation. First compute block size, then apply the addressing convention requested by the problem. A prefix length by itself is not a promise of that many usable interfaces.
 A_ZH: 不是。该公式用于保留网络地址和广播地址的普通子网；/31 点对点链路、/32 主机路由等特殊用途需要不同解释。应先算地址块大小，再采用题目要求的地址约定，前缀长度本身不保证某个可用接口数量。
 
@@ -525,20 +525,20 @@ A_ZH: 将数据按行列排列，并分别加入行、列校验。单个数据�
 @@ N222 | x06-link | learn | XN6:14-16
 Q_EN: How does CRC interpret a bit string and a generator?
 Q_ZH: CRC 如何解释位串与生成多项式？
-A_EN: Treat bits as polynomial coefficients over GF(2). Addition/subtraction is XOR, with no arithmetic carry. A generator of degree r defines r check bits. The sender chooses a remainder so the transmitted polynomial is divisible by the generator. This is polynomial division, not ordinary integer division with decimal remainders.
-A_ZH: 将位串视为 GF(2) 上的多项式系数，加减法是 XOR，没有普通算术进位。r 次生成多项式对应 r 个校验位。发送者选择余数，使发送多项式可被生成多项式整除。这是多项式除法，不是带十进制余数的普通整数除法。
+A_EN: A bit string gives polynomial coefficients that are only 0 or 1 (GF(2)). For example, 1011 means $x^3+x+1$: each 1 selects its bit-position power. Adding or subtracting coefficients uses XOR: equal bits give 0, different bits give 1, with no carry. A generator of degree r (highest power r) defines r check bits. CRC chooses them so the complete transmitted polynomial is divisible by that generator.
+A_ZH: 位串给出只取0或1的多项式系数，称为GF(2)。例如1011表示 $x^3+x+1$：每个一对应其所在位置的幂。系数加减都用XOR：相同位得零，不同位得一，不进位。r次生成式（最高幂为r）对应r个校验位；CRC选择这些位，使整个发送多项式可被生成式整除。
 
 @@ N223 | x06-link | learn | XN6:14-16
 Q_EN: What are the CRC encoding and checking steps?
 Q_ZH: CRC 编码与检查的步骤是什么？
-A_EN: Append r zeros to data D, divide by generator G using XOR, and append the r-bit remainder R to the original data. The transmitted word is $D2^r\oplus R$. The receiver divides the full received word by G. A nonzero remainder detects an error; a zero remainder cannot rule out all possible corruption.
-A_ZH: 先给 D 追加 r 个零，用 XOR 对 G 做除法，再把 r bit 余数 R 接到原数据后，发送字为 $D2^r\oplus R$。接收者用 G 除完整接收字。余数非零表示检测到错误，余数为零则不能排除所有可能损坏。
+A_EN: Let data be bit string D and generator G have r+1 bits with leading 1, hence degree r. Append r zeros to D, then do XOR long division by G. Pad the remainder R to exactly r bits and append it to the ORIGINAL D, giving $D2^r\oplus R$. At each division step align G's leading 1 with the current remainder's leading 1 and XOR. The receiver divides the complete received word by G: nonzero detects an error, while zero does not rule out every possible corruption.
+A_ZH: 令数据为位串D，生成式G有r+1位且首位为一，所以次数为r。先在D后补r个零，再对G做XOR长除法。把余数R补足r位，接在原始D后，得 $D2^r\oplus R$。除法每步把G最高的一对齐当前余串最高的一，再XOR。接收端对完整接收字除以G：非零余数表示检出错误，零余数并不能排除所有损坏。
 
 @@ N224 | x06-link | worked | XN6:14-16
 Q_EN: Encode data 1101 with CRC generator 1011.
 Q_ZH: 使用 CRC 生成式 1011 对数据 1101 编码。
-A_EN: G has degree 3, so divide 1101000 by 1011 using XOR. The remainder is 001, and the transmitted word is 1101001. Dividing that complete word by 1011 yields zero remainder. Preserve leading zeros in the remainder so the check field has exactly three bits.
-A_ZH: G 的次数为 3，因此用 XOR 将 1101000 除以 1011，余数为 001，发送字为 1101001。完整发送字再除以 1011，余数为零。余数开头的零不能省略，校验字段必须恰好有三位。
+A_EN: G has degree 3. Append three zeros: 1101000. XOR aligned copies of G: 1101000 XOR 1011000=0110000; XOR 0101100=0011100; XOR 0010110=0001010; XOR 0001011=0000001. The three-bit remainder is 001, so append it to the original data and send 1101001. Dividing this whole codeword by G gives remainder zero.
+A_ZH: G的次数为3，先补三个零得1101000。依次与对齐的G异或：1101000 XOR 1011000=0110000；再XOR 0101100=0011100；再XOR 0010110=0001010；再XOR 0001011=0000001。保留三位余数001，接回原数据，发送1101001。整个码字除以G余数为零。
 
 @@ N225 | x06-link | check | XN6:11,14-16; XNA3:1
 Q_EN: Does an r-bit CRC mean “any r erroneous bits can be corrected”?
@@ -571,8 +571,8 @@ A_EN: Without slot alignment, a frame can collide with transmissions beginning w
 A_ZH: 没有时隙对齐时，一个帧可能与约两个帧时长的易冲突区间内开始的传输相撞。若尝试次数按 Poisson 模型、每帧时长负载为 G，则吞吐率 $S=Ge^{-2G}$，在 G=0.5 时达到 $1/(2e)$。对应模型下，时隙对齐将易冲突区间减半。
 
 @@ N230 | x06-link | worked | XN6:25-27
-Q_EN: Four slotted-ALOHA nodes each transmit with probability 1/4. Find success, idle and collision probabilities per slot.
-Q_ZH: 四个时隙 ALOHA 节点各以 1/4 概率发送，求每槽成功、空闲和碰撞概率。
+Q_EN: Four backlogged slotted-ALOHA nodes attempt independently with probability 1/4 at each slot start. Exactly one sender succeeds; two or more collide. Find success, idle and collision probabilities.
+Q_ZH: 四个有包待发的时隙ALOHA节点在每槽开始独立地以1/4概率发送；恰好一人发送成功，两人以上碰撞。求成功、空闲和碰撞概率。
 A_EN: Success is $4(1/4)(3/4)^3=108/256=0.421875$. Idle probability is $(3/4)^4=81/256$. The remainder, $67/256\approx0.261719$, is collision probability. These three mutually exclusive events sum to one, giving a useful check on the calculation.
 A_ZH: 成功概率为 $4(1/4)(3/4)^3=108/256=0.421875$，空闲概率为 $(3/4)^4=81/256$，其余 $67/256\approx0.261719$ 为碰撞概率。三种事件互斥且和为一，可用于检查计算。
 
@@ -589,14 +589,14 @@ A_EN: Uncached delay is RTTL + 3RTTr; cached delay is RTTL, ignoring processing 
 A_ZH: 忽略处理与传输耗时，未缓存为 RTTL + 3RTTr，已缓存为 RTTL。本题三次上游交互依次发生，因此相加。DNS 缓存省掉的是特定查询步骤，后续获取网页需要的 TCP 或 HTTP 交互仍存在。
 
 @@ N233 | x07-tutorials | historical | XNT3:3
-Q_EN: After DNS, fetch one tiny HTML page and eight tiny objects. With server RTT R, compare serial nonpersistent HTTP, nonpersistent HTTP with five parallel connections, and one nonpipelined persistent connection.
-Q_ZH: DNS 完成后获取一个很小的 HTML 页面及八个很小的对象，服务器 RTT 为 R。比较串行非持久、最多五条并行非持久，以及一条无流水线的持久连接。
-A_EN: Ignoring transmission time: serial nonpersistent needs 9×2R=18R. Five parallel connections need 2R for HTML plus two object batches of 2R, totaling 6R. Persistent without pipelining needs 2R for connection+HTML, then 8R, totaling 10R. Add DNS delay to each. HTTP pipelining or HTTP/2 multiplexing would change the assumed model.
-A_ZH: 忽略传输时间：串行非持久需要 9×2R=18R；五条并行连接先用 2R 获取 HTML，再分两批获取对象，每批 2R，共 6R；无流水线持久连接先用 2R 建连并取 HTML，再用 8R 取对象，共 10R。都需另加 DNS 耗时。若使用 HTTP 流水线或 HTTP/2 多路复用，模型会改变。
+Q_EN: After DNS, fetch one tiny HTML page, then its eight tiny objects from one server (RTT R). Start with no connections or caches; ignore transmission time, TLS, losses and processing. Compare serial nonpersistent HTTP, at most five parallel nonpersistent connections, and one nonpipelined persistent connection.
+Q_ZH: DNS完成后，从同一服务器（RTT为R）先取很小的HTML，再取其八个很小的对象。初始无连接或缓存，忽略传输、TLS、丢包及处理耗时。比较串行非持久、最多五条并行非持久，以及一条无流水线持久连接。
+A_EN: Serial nonpersistent: nine connection/request pairs cost 9×2R=18R. Five-way parallel: HTML costs 2R; eight objects need two batches of at most five, each costing 2R, so total 6R. Persistent without pipelining: setup+HTML cost 2R, then eight sequential requests cost 8R, totaling 10R. These times start after DNS; add DNS time only when measuring from before lookup. Pipelining or HTTP/2 changes the model.
+A_ZH: 串行非持久：九组建连与请求，每组2R，共18R。五路并行：HTML先耗2R，八对象分两批，每批至多五个，各耗2R，总计6R。无流水线持久：建连加HTML耗2R，再依次八次请求耗8R，共10R。这里从DNS之后计时；只有从查询之前计时才另加DNS。流水线或HTTP/2会改变模型。
 
 @@ N234 | x07-tutorials | historical | XNT4:1
-Q_EN: Why can the ideal client-server file-distribution bound max(NF/us, F/dmin) be achieved in the fluid model?
-Q_ZH: 为什么理想流体模型中，客户端—服务器分发下界 max(NF/us, F/dmin) 可以达到？
+Q_EN: An initially sole server (upload us bit/s) sends an F-bit file to N empty clients; dmin is their minimum download rate. With continuous divisible traffic, simultaneous sends and no other bottlenecks, why is max(NF/us,F/dmin) achievable?
+Q_ZH: 初始唯一服务器上传速率为us bit/s，向N个空客户端分发F bit文件，dmin为最慢下载速率。流量连续可分、可同时发送且无其他瓶颈时，为什么max(NF/us,F/dmin)可达到？
 A_EN: Give every client rate min(us/N, dmin). Total server upload then does not exceed us, and no client's download limit is exceeded because every limit is at least dmin. Every client receives F bits in F/min(us/N,dmin), equal to the bound. This assumes divisible continuous traffic, no other bottlenecks, and simultaneous transmissions; it is not a guarantee for real TCP transfers.
 A_ZH: 给每个客户端分配 min(us/N, dmin) 的速率，总上传不超过 us，而且各客户端下行上限均不小于 dmin。每个客户端接收 F 位所需时间为 F/min(us/N,dmin)，正好等于该下界。这里假设流量连续可分、无其他瓶颈且可同时发送，并非实际 TCP 传输保证。
 
@@ -631,16 +631,16 @@ A_EN: GBN: 0,1,2,3,4,5,5. Packet 7 is discarded and repeats cumulative ACK5. SR:
 A_ZH: GBN 为 0,1,2,3,4,5,5：丢弃 7 号并重复累计 ACK5。SR 为 0,1,2,3,4,5,7：缓存 7 号并单独确认。共有七个 ACK，不是八个，因为丢失的包未到接收方，不会产生 ACK。此处 ACK 表示包编号，与 TCP 的下一期待字节约定不同。
 
 @@ N240 | x07-tutorials | historical | XNT6:1; XNT6S:11-14
-Q_EN: TCP receiver B has bytes through 126. A sends seq=127 with 80 bytes, then 40 bytes, using ports 302→80. Give the second sequence number and the ACK when either segment arrives first.
-Q_ZH: TCP 接收方 B 已收到至 126 字节。A 用端口 302→80 先发 seq=127、长度 80 的段，再发 40 字节。第二段序号是多少？两段分别先到时 ACK 是多少？
+Q_EN: TCP receiver B has all bytes through 126 and buffers out-of-order data. A sends seq=127 with 80 bytes, then 40 bytes, using ports 302→80. Assume an immediate ACK after each arrival. Give the second sequence number and the ACK if either segment arrives first.
+Q_ZH: TCP接收方B已收齐至126字节，并缓存乱序数据。A用端口302→80先发seq=127、80字节，再发40字节。假设每段到达立即确认。求第二段序号，以及两段分别先到时的ACK。
 A_EN: First data covers 127–206, so the second starts at 207 and keeps ports 302→80. If the first arrives first, B sends ACK207 with ports 80→302. If the second arrives first, the gap starts at 127, so B sends ACK127. Once both are received contiguously, ACK247 acknowledges bytes through 246.
 A_ZH: 第一段覆盖 127–206，因此第二段从 207 开始，端口仍为 302→80。第一段先到时，B 从 80→302 发 ACK207。第二段先到时，缺口从 127 开始，因此发 ACK127。两段连续收齐后发 ACK247，表示已收至 246。
 
 @@ N241 | x07-tutorials | historical | XNT6:2; XNT6S:17-20; XRTO:2
-Q_EN: Start EstimatedRTT=100 ms, DevRTT=5 ms; samples are 106,120,140 ms, alpha=1/8 and beta=1/4. Update EstimatedRTT first, use its NEW value for DevRTT, then RTO=EstimatedRTT+4DevRTT, ignoring timer bounds. Find the three RTOs. Is this tutorial convention identical to RFC 6298?
-Q_ZH: 初始 EstimatedRTT=100 ms、DevRTT=5 ms，样本为 106、120、140 ms，alpha=1/8、beta=1/4。先更新 EstimatedRTT，再用其新值更新 DevRTT，取 RTO=EstimatedRTT+4DevRTT，忽略定时器上下界。求三次 RTO。这一教程约定与 RFC 6298 完全相同吗？
-A_EN: The tutorial updates EstimatedRTT first and uses that new value in DevRTT; RTO=EstimatedRTT+4DevRTT gives 121,135.1875,164.0234 ms. For example the final estimate/deviation are 107.7617/14.0654 ms. RFC 6298 updates variation using the OLD SRTT and also includes timer granularity and a recommended minimum. State the course convention when solving this exercise; do not call it the exact RFC algorithm.
-A_ZH: 例解先更新 EstimatedRTT，再用新值更新 DevRTT；按 RTO=EstimatedRTT+4DevRTT 得到 121、135.1875、164.0234 ms。最终估计值与偏差为 107.7617、14.0654 ms。RFC 6298 用旧 SRTT 更新偏差，还考虑时钟粒度和建议的最小超时值。解本题时注明课程约定，不能称其为完全相同的 RFC 算法。
+Q_EN: Initially E=100 ms, D=5 ms. For each RTT sample S=106,120,140 ms, update E'=0.875E+0.125S, then D'=0.75D+0.25|S−E'| and RTO=E'+4D'. Carry E',D' to the next sample and ignore timer bounds. Find all three RTOs. Is this the exact RFC 6298 order?
+Q_ZH: 初始E=100 ms、D=5 ms。依次对RTT样本S=106、120、140 ms计算E'=0.875E+0.125S，再算D'=0.75D+0.25|S−E'|、RTO=E'+4D'；新E、D用于下一样本，忽略定时器上下界。求三次RTO；此顺序与RFC6298完全相同吗？
+A_EN: First sample: E'=100.75 and D'=3.75+0.25×5.25=5.0625 ms, so RTO=121 ms. The second gives (E',D')=(103.15625,8.0078125), RTO=135.1875 ms. The third gives (107.76171875,14.0654296875), RTO≈164.0234 ms. This is the tutorial convention: RFC 6298 updates variation using OLD SRTT before updating SRTT, and also includes clock granularity and timer bounds.
+A_ZH: 首样本：E'=100.75，D'=3.75+0.25×5.25=5.0625 ms，所以RTO=121 ms。第二次(E',D')=(103.15625,8.0078125)，RTO=135.1875 ms；第三次为(107.76171875,14.0654296875)，RTO约164.0234 ms。这是教程约定：RFC6298先用旧SRTT更新偏差，再更新SRTT，还考虑时钟粒度及定时器界限。
 
 @@ N242 | x07-tutorials | historical | XNT7:1; XNT7S:5
 Q_EN: In the historical Reno graph, identify slow start, congestion avoidance, and the loss signals after rounds 16 and 22.
@@ -650,20 +650,20 @@ A_EN: Slow start operates over rounds 1–6 and 23–26; congestion avoidance ov
 A_ZH: 慢启动为第 1–6、23–26 轮，拥塞避免为第 6–16、17–22 轮；第 6 轮是切换点。第 16 轮后窗口约减半并加上图中的恢复增量，表示三次重复 ACK。第 22 轮后降到一段，表示该历史模型中的超时。应说明增长或下降形态，不能只背区间。
 
 @@ N243 | x07-tutorials | historical | XNT7:1-2; XNT7S:6-8
-Q_EN: In a historical Reno model, windows are in MSS. Three duplicate ACKs follow round 16 with cwnd=42; a timeout follows round 22 with cwnd=29. At round 26 cwnd=8. Give ssthresh at rounds 18/24 and the immediate response to three duplicate ACKs after round 26, with no intervening losses.
-Q_ZH: 历史 Reno 模型中窗口以 MSS 为单位：第 16 轮 cwnd=42 后出现三次重复 ACK；第 22 轮 cwnd=29 后超时；第 26 轮 cwnd=8。假设无其他丢包，求第 18/24 轮 ssthresh，以及第 26 轮后三次重复 ACK 的即时响应。
-A_EN: Round 18: ssthresh=21. Round 24: 29/2=14.5, shown as 14 under the solution's whole-segment convention. After round 26: ssthresh=4 and immediate fast-recovery cwnd=4+3=7. The extra three segments describe recovery, not a permanent new threshold. Tahoe would instead reset cwnd to one; after the round-16 loss its round-19 cwnd is four in this model.
-A_ZH: 第 18 轮 ssthresh=21；第 24 轮为 29/2=14.5，例解按整段约定写为 14。第 26 轮之后 ssthresh=4，快速恢复即时 cwnd=4+3=7。额外三段属于恢复阶段，不是永久阈值。Tahoe 则将 cwnd 置为一；在本题第 16 轮丢包后，第 19 轮 cwnd 为四。
+Q_EN: In a historical Reno model, cwnd is measured in MSS. After round 16, three duplicate ACKs arrive while cwnd=42; after round 22, a timeout occurs while cwnd=29. At round 26 cwnd=8. With no other losses, give ssthresh at rounds 18/24 and the immediate response to three duplicate ACKs after round 26. Round half-windows down to whole MSS.
+Q_ZH: 历史Reno模型中，cwnd以MSS计：第16轮cwnd=42后发生三次重复ACK，第22轮cwnd=29后超时，第26轮cwnd=8。无其他丢包，求第18/24轮ssthresh和第26轮后三次重复ACK的即时响应；半窗向下取整到完整MSS。
+A_EN: Round18 has ssthresh=42/2=21 MSS. Round24 has floor(29/2)=14 MSS under the stated rounding rule. After round 26, ssthresh=8/2=4 MSS and immediate fast-recovery cwnd=4+3=7 MSS. The extra three account for recovery and do not change ssthresh to seven. They are removed when the model's recovery ends.
+A_ZH: 第18轮ssthresh=42/2=21 MSS；第24轮按题设取整为floor(29/2)=14 MSS。第26轮后ssthresh=8/2=4 MSS，快速恢复即时cwnd=4+3=7 MSS。多出的三段用于恢复阶段，不表示ssthresh变成七；模型结束恢复时会撤去该临时增量。
 
 @@ N244 | x07-tutorials | historical | XNT7:2; XNT7S:7
-Q_EN: With windows 1,2,4,8,16,32 in the first six rounds and 33 in round seven, during which round is segment 70 first sent?
-Q_ZH: 前六轮窗口依次为 1、2、4、8、16、32，第七轮为 33。第 70 个段首次在第几轮发送？
+Q_EN: Assume each round sends a full window of NEW segments, with no retransmissions. Windows are 1,2,4,8,16,32 in rounds 1–6 and 33 in round 7. In which round is segment 70 first sent?
+Q_ZH: 假设每轮发满一窗新数据段，无重传。第1–6轮窗口为1、2、4、8、16、32，第7轮为33。第70个段首次在哪轮发送？
 A_EN: Six rounds send 1+2+4+8+16+32=63 segments. Round seven sends segments 64–96, including 70. Therefore the answer is round seven. Count cumulative transmitted segments; cwnd is the amount allowed within a round, not the cumulative segment number.
 A_ZH: 六轮共发送 1+2+4+8+16+32=63 个段。第七轮发送第 64–96 个段，包含第 70 个。因此答案是第七轮。要累计已发送段数；cwnd 是一轮内允许的数量，不是累计段号。
 
 @@ N245 | x07-tutorials | historical | XNT7:3; XNT7S:14
-Q_EN: For an ideal pipeline, R=1 Gbps, RTT=30 ms and packet length=1200 bytes. What is the smallest integer window giving sender utilization greater than 97%?
-Q_ZH: 理想流水线中 R=1 Gbps、RTT=30 ms、包长 1200 字节。使发送利用率超过 97% 的最小整数窗口是多少？
+Q_EN: An ideal loss-free pipeline has R=1 Gbps, round-trip PROPAGATION time RTT=30 ms and 1200-byte packets. ACK transmission/processing are negligible. What minimum integer packet window gives sender utilization strictly greater than 97%?
+Q_ZH: 理想无丢包流水线中，R=1 Gbps、往返传播时间RTT=30 ms、每包1200字节，忽略ACK发送与处理。使发送利用率严格超过97%的最小整数包窗口是多少？
 A_EN: Serialization takes 1200×8/10^9=9.6 microseconds. Use $U=\min(1,NL/R\,/\,(RTT+L/R))$. Thus N>0.97×(30000+9.6)/9.6=3032.22, so choose 3033 packets. Convert bytes to bits and keep the serialization term; substituting the nearby 8000-bit illustrative figure would solve a different problem.
 A_ZH: 串行化耗时 1200×8/10^9=9.6 微秒。用 $U=\min(1,NL/R\,/\,(RTT+L/R))$，得到 N>0.97×(30000+9.6)/9.6=3032.22，因此选 3033 个包。要把字节转为位并保留串行化项；若代入旁边示意图中的 8000 位，就变成另一道题了。
 
@@ -680,8 +680,8 @@ A_EN: The advertised receive window changes as data arrives and the application 
 A_ZH: 接收数据和应用读取缓冲区都会改变通告接收窗口，TCP 首部携带此信息。RTO 根据平滑估计和偏差计算，异常大的新样本不一定低于更新后的 RTO。流量控制按通告窗口限制未确认数据，并不意味着接收缓冲占用不变。
 
 @@ N248 | x07-tutorials | historical | XNT8:1
-Q_EN: Fragment an IPv4 datagram of total length 1600 bytes, ID=291, onto MTU=500, assuming a 20-byte header without options. Give each fragment's total length, offset and MF.
-Q_ZH: IPv4 数据报总长 1600 字节、ID=291，经过 MTU=500 的链路，假设首部 20 字节且无选项。给出各分片总长、偏移和 MF。
+Q_EN: Fragment a 1600-byte IPv4 datagram (including its 20-byte no-options header), ID=291, for MTU=500 bytes. Assume fragmentation is permitted. Give each fragment's total length, offset and MF.
+Q_ZH: IPv4数据报总长1600字节（含20字节无选项首部）、ID=291，需经过MTU=500字节的链路。假设允许分片，给出各片总长、偏移和MF。
 A_EN: Payload is 1580 bytes. Nonfinal payloads must be multiples of eight, so use 480,480,480,140. Total lengths are 500,500,500,160; offsets in eight-byte units are 0,60,120,180; MF values are 1,1,1,0. All retain ID291. Check that payloads, not total lengths including repeated headers, sum to 1580.
 A_ZH: 原载荷为 1580 字节。非末片载荷须为八的倍数，取 480、480、480、140。总长为 500、500、500、160；以八字节为单位的偏移为 0、60、120、180；MF 为 1、1、1、0，ID 均为 291。校验时应让各片载荷相加为 1580，而非含重复首部的总长相加。
 
@@ -721,35 +721,34 @@ A_ZH: 依次为 eBGP、iBGP、eBGP、iBGP。信息从 AS4 跨入 AS3 到达 3c�
 @@ N254 | x07-tutorials | historical | XNT11:1; XNT11S:3; XPARITY:9
 Q_EN: Place data 1110 0110 1001 1101 row by row in a 4×4 grid. Extend it to 5×5 so every row and column, including the parity row/column, has even parity. Fill the missing bits. Why does this specified format transmit nine extra bits?
 Q_ZH: 把 1110 0110 1001 1101 逐行放入 4×4 数据格，再扩成 5×5，使每行每列（包括校验行/列）都满足偶校验。补齐空位，并解释为何此指定格式发送九个额外位。
-A_EN: Row parity is 1,0,0,1 and column parity is 1,1,0,0. The full 5×5 format also transmits corner parity 0, totaling 4+4+1=9 check bits. The corner makes the parity row and column even too. Although its value is determined by other parity values, it is part of this code: omitting it changes the format and lowers minimum Hamming distance from 4 to 3. Do not replace the course's nine-bit answer with eight by calling the corner redundant.
-A_ZH: 行校验为 1,0,0,1，列校验为 1,1,0,0。完整 5×5 格式还发送角落校验 0，共 4+4+1=9 个校验位，使校验行和校验列也满足偶校验。角落位虽可由其他校验值算出，却是此编码的一部分；省略它会改变格式，使最小汉明距离从 4 降为 3。不能因它可被推算，就把课程要求的九位答案改成八位。
+A_EN: Row counts of ones are 3,2,2,3, so row-parity bits are 1,0,0,1. Column counts are 3,3,2,2, so column-parity bits are 1,1,0,0. Their parity totals are even, giving corner bit0. The completed rows are 11101 / 01100 / 10010 / 11011 / 11000. The specified 5×5 format adds four row bits, four column bits and the corner: nine transmitted check bits. A computable corner is still part of this chosen format.
+A_ZH: 四行的一的个数为3、2、2、3，故行校验为1、0、0、1；四列为3、3、2、2，故列校验为1、1、0、0。校验行/列的一均为偶数，角落位为0。完整五行为11101 / 01100 / 10010 / 11011 / 11000。题设5×5格式增加四行位、四列位和角落位，共九位；角落可推算，不意味着它可从指定格式中省略。
 MEDIA_FRONT: parity-grid-question.png
 
 @@ N255 | x07-tutorials | historical | XNT11:1; XNT11S:5
-Q_EN: Two saturated slotted-ALOHA nodes transmit independently with probabilities pA and pB. Does pA=2pB give A twice B's throughput? How should pA be chosen for that target?
-Q_ZH: 两个饱和时隙 ALOHA 节点独立地以 pA、pB 发送。令 pA=2pB 就能让 A 吞吐量为 B 两倍吗？应如何设置 pA？
-A_EN: Throughputs are $S_A=p_A(1-p_B)$ and $S_B=p_B(1-p_A)$. Doubling attempt probability also changes collision probabilities, so it does not generally double successful throughput. Solve $p_A(1-p_B)=2p_B(1-p_A)$ to obtain $p_A=2p_B/(1+p_B)$. At pB=0.2, choose pA=1/3; then SA=4/15 and SB=2/15.
-A_ZH: 吞吐量为 $S_A=p_A(1-p_B)$、$S_B=p_B(1-p_A)$。尝试发送概率加倍也会改变碰撞概率，因此通常不等于成功吞吐加倍。解 $p_A(1-p_B)=2p_B(1-p_A)$ 得 $p_A=2p_B/(1+p_B)$。当 pB=0.2 时取 pA=1/3，得到 SA=4/15、SB=2/15。
+Q_EN: Two backlogged slotted-ALOHA nodes transmit independently with probabilities pA,pB, with 0<pB<1; a sole sender succeeds. Does pA=2pB ensure twice B's successful throughput? Find pA for that target.
+Q_ZH: 两个积压的时隙ALOHA节点独立以pA、pB发送，其中0<pB<1，恰好一人发送才成功。令pA=2pB能保证A成功吞吐量为B两倍吗？求所需pA。
+A_EN: $S_A=p_A(1-p_B)$ and $S_B=p_B(1-p_A)$. Setting pA=2pB changes collisions too and is invalid if pB>1/2. Instead solve $p_A(1-p_B)=2p_B(1-p_A)$: $p_A(1+p_B)=2p_B$, hence $p_A=2p_B/(1+p_B)$. For pB=0.2, pA=1/3 gives SA=4/15 and SB=2/15. The open interval for pB avoids zero-throughput ratio endpoints.
+A_ZH: $S_A=p_A(1-p_B)$、$S_B=p_B(1-p_A)$。pA=2pB也改变碰撞概率，pB>1/2时甚至超出有效概率。应解 $p_A(1-p_B)=2p_B(1-p_A)$，移项得 $p_A(1+p_B)=2p_B$，故 $p_A=2p_B/(1+p_B)$。pB=0.2时取1/3，SA=4/15、SB=2/15。限定pB开区间可避开零吞吐的比值端点。
 
 @@ N256 | x07-tutorials | historical | XNT11:1-2; XNT11S:5
-Q_EN: In N-node slotted ALOHA, A attempts with probability 2p and every other node with p. Give the individual throughputs and the valid range of p.
-Q_ZH: N 节点时隙 ALOHA 中，A 以 2p 尝试发送，其余节点均以 p 发送。求各节点吞吐量及 p 的有效范围。
+Q_EN: In slotted ALOHA with N≥2 backlogged independent nodes, A attempts with probability 2p and every other node with p. Exactly one sender succeeds. Give individual throughputs in successful packets per slot and the valid range of p.
+Q_ZH: 时隙ALOHA中有N≥2个积压且独立发送的节点，A以2p尝试，其余均以p尝试；恰好一人发送成功。求各节点每槽成功包数的期望及p有效范围。
 A_EN: A succeeds when it transmits and all N−1 others remain silent: $S_A=2p(1-p)^{N-1}$. Another named node succeeds when it transmits, A is silent, and the remaining N−2 nodes are silent: $S_B=p(1-2p)(1-p)^{N-2}$. Valid probabilities require $0\le p\le1/2$. Count the silent competitors explicitly to avoid wrong exponents.
 A_ZH: A 成功要求它发送且其余 N−1 个节点静默：$S_A=2p(1-p)^{N-1}$。某个其他节点成功要求它发送、A 静默且余下 N−2 个节点静默：$S_B=p(1-2p)(1-p)^{N-2}$。概率有效要求 $0\le p\le1/2$。逐一数清必须静默的竞争者，就不易写错指数。
 
 @@ N257 | x07-tutorials | historical | XNT11:2; XNT11S:6-10
 Q_EN: If CSMA listens before transmitting, why can collisions still occur? What additional behavior does CSMA/CD provide?
 Q_ZH: CSMA 在发送前监听信道，为什么还会碰撞？CSMA/CD 又增加了什么行为？
-A_EN: Signals take time to propagate. B may sense idle and start before A's earlier signal reaches B, so both transmit. Collision detection lets a sender detect overlap during transmission and abort, reducing wasted time. This is the historical shared-medium Ethernet model; ordinary full-duplex switched Ethernet does not operate as a shared collision channel. These topics appear in Tutorial 11 even though the supplied Chapter 6 lecture ends at ALOHA.
-A_ZH: 信号传播需要时间；A 已发送但信号尚未到 B 时，B 仍可能认为空闲并开始发送。碰撞检测使发送者在传输期间发现冲突并中止，减少浪费。这属于历史共享介质以太网模型，普通全双工交换式以太网不是共享碰撞信道。虽然现有 Chapter 6 课件止于 ALOHA，Tutorial 11 确实包含这些内容。
+A_EN: Signals need propagation time: B can sense an idle medium before A's earlier signal reaches it, so both start transmitting. CSMA/CD additionally monitors for collisions while transmitting and aborts when one is detected, rather than wasting a full frame's transmission time. Sensing before sending cannot remove the propagation gap. This concerns historical shared half-duplex Ethernet; ordinary full-duplex switched Ethernet does not use this shared collision model.
+A_ZH: 信号传播需要时间：A已开始，但信号未到B时，B仍可能听到空闲，于是双方同时发送。CSMA/CD还会在发送中监测碰撞，检出即中止，而非继续浪费整帧的发送时间。先听后发不能消除传播空档。这针对历史共享半双工以太网，普通全双工交换以太网不使用该共享碰撞模型。
 
 @@ N258 | x07-tutorials | historical | XNT11:2; XNT11S:11
 Q_EN: In the pictured tree, S4 connects S1,S2,S3; A/B/C attach to S1, D/E/F to S2, G/H/I to S3. All switch tables start empty. A sends a frame to G. Which switches learn A, and why does S2 receive a flooded copy?
 Q_ZH: 图中 S4 连接 S1、S2、S3；A/B/C 接 S1，D/E/F 接 S2，G/H/I 接 S3。所有交换表初始为空，A 向 G 发帧。哪些交换机会学到 A？为什么 S2 也收到泛洪副本？
 MEDIA_FRONT: extra-t11-switches.png
-A_EN: Every switch learns a source-MAC→incoming-port entry. S1 learns A on its A-facing port; S4 learns A toward S1; S2 and S3 learn A toward S4. Unknown-destination flooding goes through S1→S4 and onward to both S2 and S3, excluding each incoming port. S2 floods toward D/E/F; those hosts discard the frame. The provided solution's short path summary omits this flooded branch, but its S2 table confirms A was learned.
-A_ZH: 每台交换机记录“源 MAC→入端口”。S1 学到 A 朝 A，S4 学到 A 朝 S1，S2 和 S3 学到 A 朝 S4。目的未知时，泛洪经 S1→S4 后同时进入 S2、S3，各交换机均不向入端口回发。S2 向 D/E/F 泛洪，这些主机丢弃该帧。例解的简短路径描述漏写了该分支，但其 S2 表确实记录了 A。
-
+A_EN: Learning uses the source: S1 records A→A-facing port; S4 records A→S1; S2 and S3 record A→S4. Since G is unknown, S1 floods to B,C and S4. S4 floods to S2,S3. S2 floods to D/E/F, while S3 floods to G/H/I; hosts other than G discard the frame. Each switch excludes its incoming port. Thus S2 receives a copy and learns A even though it is not on the eventual unicast path to G.
+A_ZH: 学习看源地址：S1记A朝A端口，S4记A朝S1，S2/S3记A朝S4。因G未知，S1向B、C及S4泛洪；S4向S2、S3泛洪；S2再向D/E/F，S3向G/H/I发送，除G外的主机丢弃该帧。每台交换机排除入端口。因此S2虽不在最终到G的单播路径上，也收到副本并学到A。
 @@ N259 | x07-tutorials | historical | XNT11:2; XNT11S:11
 Q_EN: S4 connects S1,S2,S3; A attaches to S1 and G to S3. Initially empty tables have just learned A from A’s flooded frame to G. Using the pictured tree, G now replies to A. Give the path and the switches that learn G; does S2 learn G from this reply?
 Q_ZH: S4 连接 S1、S2、S3，A 接 S1、G 接 S3。初始空表刚通过 A 向 G 的泛洪帧学到 A。现在 G 按图回复 A：经过哪条路径？哪些交换机会学到 G？S2 会由这次回复学到 G 吗？
@@ -758,10 +757,10 @@ A_EN: The reply follows G→S3→S4→S1→A because A's location has been learn
 A_ZH: 回复沿 G→S3→S4→S1→A，因为各沿途交换机已学到 A。S3 学到 G 朝 G，S4 学到 G 朝 S3，S1 学到 G 朝 S4。S2 不接收这次已知目的单播，因此不会由此学到 G。交换机根据自己实际接收帧的源地址学习，而不是看到全网任何目的地址就能学习。
 
 @@ N260 | x08-assignments | historical | XNA1:1; XNA1S:1
-Q_EN: Assignment 1: a link has rate R, length m and propagation speed s. At t=L/R after transmission begins, where are the first and last bits? For L=120 bits, R=56 kbps, s=2.5×10^8 m/s, find m when propagation and transmission delays are equal.
-Q_ZH: Assignment 1：链路速率 R、长度 m、传播速度 s。开始发送后 t=L/R 时，首位和末位在哪里？若 L=120 位、R=56 kbps、s=2.5×10^8 m/s，求传播与发送时延相等时的 m。
-A_EN: The last bit is just leaving the sender. If m/s>L/R, the first bit is still on the link; if m/s<L/R, it has reached the receiver. Equality requires m=sL/R=535714.3 m≈535.7 km. End-to-end delivery of the last bit takes L/R+m/s, ignoring processing/queueing. Finishing serialization does not mean the whole packet has arrived.
-A_ZH: 末位刚离开发送端。若 m/s>L/R，首位仍在链路上；若 m/s<L/R，首位已到接收端。相等条件为 m=sL/R=535714.3 米，约 535.7 千米。忽略处理和排队，末位到达总耗时 L/R+m/s。完成串行发送并不代表整个包已到达。
+Q_EN: A link has rate R bit/s, length m meters and propagation speed s m/s. Start sending an L-bit packet at t=0. At t=L/R, where are its first and last bits? For L=120 bits, R=56 kbps, s=2.5×10^8 m/s, find m when propagation and transmission delays are equal.
+Q_ZH: 链路速率R bit/s、长度m米、传播速度s m/s；t=0开始发L比特包。t=L/R时首位、末位在哪里？若L=120位、R=56 kbps、s=2.5×10^8 m/s，求传播与发送时延相等时的m。
+A_EN: The last bit is just leaving the sender. If m/s>L/R, the first bit is sL/R meters from the sender, still on the link; if m/s<L/R, it has reached the receiver; at equality it is just arriving there. Equality gives m=sL/R=535714.3 m≈535.7 km. The last bit arrives at L/R+m/s, ignoring processing and queueing. Finishing transmission does not mean the complete packet has arrived.
+A_ZH: 末位刚离开发送端。若m/s>L/R，首位距发送端sL/R米，仍在链路上；若m/s<L/R，首位已到接收端；相等时首位正好到达接收端。由m/s=L/R得m=sL/R=535714.3米，约535.7千米。忽略处理与排队，末位到达时刻为L/R+m/s；完成发送不代表完整包已到达。
 
 @@ N261 | x08-assignments | historical | XNA1:2; XNA1S:3
 Q_EN: Send 8×10^6 bits across three equal 2 Mbps store-and-forward links. Compare one whole message with 800 packets of 10000 bits each, ignoring headers, propagation and queueing.
@@ -778,8 +777,8 @@ A_ZH: 删除模式在收到相应回复后依次 DELE 1、RETR 2、DELE 2、QUIT
 @@ N263 | x08-assignments | historical | XNA1:3; XNA1S:6-8; XUDP:Format
 Q_EN: A student claims: “Video conferencing using UDP has no error detection, and media packets must be sent directly to the teacher’s computer.” What is wrong with these claims, and what deployment evidence would be needed?
 Q_ZH: 有人声称：“视频会议用 UDP，所以没有差错检测，而且媒体分组一定直接发往老师的电脑。”这两句话哪里有问题？还需要什么部署证据？
-A_EN: Protocol names, media relay versus P2P choices, and fallback behavior need dated official evidence for the client/mode studied. A cloud-relayed call need not use the lecturer's IP as the student's media destination. UDP has a checksum; it lacks built-in reliable retransmission and ordering. The old solution confuses error checking with reliable delivery. Record observations and deployment assumptions instead of treating every old vendor claim as universal.
-A_ZH: 协议名称、媒体中继或 P2P 选择、回退行为都需与所研究客户端和模式对应的有日期官方证据。云中继通话中，学生的媒体目的地址不必是教师电脑 IP。UDP 有校验和，缺少的是内建可靠重传和排序；旧例解混淆了差错检测与可靠交付。应记录观测及部署假设，不把旧产品描述当作普遍定律。
+A_EN: UDP defines a checksum, so “UDP has no error detection” is false; in IPv4 that checksum can be disabled, so also check the actual packet. Error detection is different from UDP's lack of built-in retransmission or ordering. A media relay may receive the student's packets instead of the teacher's host. To identify the deployed mode, inspect the trace's transport protocol/endpoints and dated official documentation for that client and call type. Do not infer P2P solely from a video-call label.
+A_ZH: UDP定义校验和，因此“UDP没有检错”错误；IPv4中可禁用该校验和，所以还要看实际分组。检错与UDP缺少内建重传/排序是不同问题。媒体中继可能代替教师主机接收学生的包。判断部署模式应检查抓包的传输协议和端点，并结合对应客户端/通话模式的有日期官方说明，不能仅凭“视频会议”就判为P2P。
 
 @@ N264 | x08-assignments | historical | XNA2:1; XNA2S:1
 Q_EN: Why can rdt3.0 reuse the alternating-bit receiver logic of rdt2.2 even though the sender adds a timeout?
@@ -868,10 +867,10 @@ A_EN: Identify a transmitted segment and the ACK that acknowledges its data; sub
 A_ZH: 找到某次发送及确认其数据的 ACK，在同一观察点用时间戳相减。重传会让 ACK 对应关系不明确，应选无歧义样本并说明延迟 ACK 影响。长度要写清采用的是捕获帧长度、TCP 首部还是 tcp.len 载荷。实验的具体数值必须来自指定抓包，不能从通用握手图猜测。
 
 @@ N278 | x08-assignments | historical | XPROJ:1-2; XPROJ:5
-Q_EN: A TCP message-board protocol uses POST/DELETE followed by lines ending with a line containing only #; GET/QUIT are single-line commands, and QUIT requires an OK reply before closing. What client states and receive-buffer behavior implement these rules?
-Q_ZH: 一个 TCP 留言板协议规定：POST/DELETE 后接多行，单独一行 # 结束；GET/QUIT 是单行命令，QUIT 要等 OK 回复后关闭。客户端应怎样组织状态与接收缓冲？
-A_EN: Connect, await user command, assemble/send that command, receive a complete response, then return to the command state. POST/DELETE collect lines until a line containing only #; GET/QUIT send only the command. After QUIT, wait for the specified OK reply and close. Keep a receive buffer because TCP is a byte stream. These are historical protocol requirements; future Canvas specifications decide any changed terminator or response format.
-A_ZH: 先连接，等待用户命令，组装并发送命令，接收完整回复，再回到命令状态。POST/DELETE 收集多行直至仅含 # 的行；GET/QUIT 只发命令。QUIT 后等待规定的 OK 回复再关闭。TCP 是字节流，因此需要接收缓冲。以上是历史协议要求，终止符或回复格式若有变化，以后续 Canvas 说明为准。
+Q_EN: A TCP message-board protocol sends POST/DELETE followed by lines ending with a line containing only #. GET/QUIT are single-line commands; QUIT waits for OK before closing. Describe the client's basic states. Do these rules alone specify when a complete GET response has arrived?
+Q_ZH: TCP留言板协议：POST/DELETE后接多行，以单独一行#结束；GET/QUIT为单行命令，QUIT等OK后关闭。客户端有哪些基本状态？仅凭这些规则能知道GET回复何时收全吗？
+A_EN: Connect→read command→assemble/send→collect response→read next command; after QUIT's OK, close. POST/DELETE collect input through the # line. Buffer incoming bytes because a TCP read may split or combine messages. The supplied command rules do NOT define GET-response framing: obtain an explicit response delimiter, length or equivalent completion rule from the protocol specification. Do not guess that one recv or a brief silence means the response is complete.
+A_ZH: 连接→读命令→组装发送→收集回复→读下一命令；QUIT收到OK后关闭。POST/DELETE收集输入至#行。接收必须缓冲，因为一次TCP读取可能拆开或合并消息。题干的命令规则没有规定GET回复的分帧方式；还需协议给出回复终止符、长度或其他明确完成规则，不能猜一次recv或短暂没数据就代表收全。
 
 @@ N279 | x08-assignments | historical | XPROJ:5-6
 Q_EN: What tests reveal a message-board client's protocol bugs before running it against the course server?

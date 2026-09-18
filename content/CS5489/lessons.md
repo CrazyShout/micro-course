@@ -279,7 +279,12 @@ EXPLAIN: 把硬间隔约束写成 $g_i=1-y_i(w^Tx_i+b)\le0$。最小化问题的
 对 w 求导得 $w=\sum_i\alpha_i y_i x_i$，对 b 求导得 $\sum_i\alpha_i y_i=0$。代回后，对偶目标是最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_j y_i y_j x_i^Tx_j$，同时满足这些约束。乘子像约束的“价格”；不挤压最优解的约束不必付价。互补松弛 $\alpha_i g_i=0$ 表示：g_i<0 时 alpha_i=0；反向却不一定成立。
 
 软间隔加上线性松弛惩罚后得到 0≤alpha_i≤C。0<alpha_i<C 的点落在间隔边界，可用于求 b；alpha_i=C 也可能仍正确分类。硬间隔在线性可分时可放大分离超平面，使约束严格满足；结合凸性可用强对偶说明最优值相等。这是本问题的条件，不能推广为任意优化问题都成立。
+
+边界补充（C>0）：若没有 0<αᵢ<C 的自由支持向量，不能随便选点套 b=yᵢ−wᵀxᵢ。由 KKT 求可行区间：αᵢ=0 时，正类给 b≥1−wᵀxᵢ、负类给 b≤−1−wᵀxᵢ；αᵢ=C 时方向反过来。取满足所有上下界的 b；若数值解出现冲突，应检查容差和优化结果。比如 w=0.5，(x,y)=(1,1)、(−1,−1)，两点乘子均为 C=0.25，则 −0.5≤b≤0.5，b=0 可用。
 RECAP_EN: The dual maximizes a lower bound on the primal objective. Stationarity expresses w as a weighted sample sum; complementary slackness is an implication, not a reversible test for every constraint.
+
+For C>0 with no free support vector, derive bounds from KKT instead of treating any point as a margin point. At α=0, positive labels give b≥1−wᵀx and negative labels b≤−1−wᵀx; at α=C the bounds reverse. With w=0.5, points (1,1),(−1,−1), and both multipliers C=0.25, the feasible interval is −0.5≤b≤0.5.
+
 WORKED_Q: 一维样本 (x₁,y₁)=(−1,−1)、(x₂,y₂)=(1,+1)。写 L=½w²+α₁(1−w+b)+α₂(1−w−b)。先对 w、b 求导，再由最优 w=1、b=0 求乘子。 || For (x₁,y₁)=(−1,−1),(x₂,y₂)=(1,+1), use L=½w²+α₁(1−w+b)+α₂(1−w−b). Differentiate in w,b and find multipliers at the optimum w=1,b=0.
 WORKED_A: 对 w：½w² 给 w，两个约束项分别给 −α₁、−α₂，所以 ∂L/∂w=w−α₁−α₂=0。对 b：∂L/∂b=α₁−α₂=0。故 α₁=α₂=a，1=2a，得到各 1/2。两约束均为零，互补松弛成立；原始与对偶目标都为 1/2。 || The w derivative is w−α₁−α₂=0; the b derivative is α₁−α₂=0. Thus both multipliers equal a and 1=2a, giving a=1/2. Both constraints are active, so complementary slackness holds; primal and dual objectives equal 1/2.
 PRACTICE_Q: 将样本改成 (−2,−1)、(2,+1)，其最优 w=1/2、b=0。L=½w²+α₁(1−2w+b)+α₂(1−2w−b)。补出两个驻点方程并求乘子。 || For points (−2,−1),(2,+1), the optimum is w=1/2,b=0. Using L=½w²+α₁(1−2w+b)+α₂(1−2w−b), derive both stationarity equations and multipliers.

@@ -107,7 +107,14 @@ def main():
             assert reader.get('source_labels',{}).get(ref['provenance']),('Missing bilingual provenance',ref['provenance'])
         assert card.get('microcourse_links'),card['id']
         for link in card['microcourse_links']:
-            assert link['id'] in lessons and link['url']=='https://crazyshout.github.io/micro-course/?lesson='+link['id']
+            assert link['id'] in lessons
+            expected='https://crazyshout.github.io/micro-course/?lesson='+link['id']
+            if link.get('unit'):
+                unit=next(u for u in lessons[link['id']]['units'] if u['id']==link['unit'])
+                assert card['id'] in unit['card_ids']
+                assert link['title_zh']==unit['title']['zh'] and link['title_en']==unit['title']['en']
+                expected+='&unit='+link['unit']
+            assert link['url']==expected
         for lid in card['learning_context']['lesson_ids']:assert lid in lessons
         for ref in card['sources']:assert 'path' not in ref and (ref['href'] is None or ref['href'].startswith('https://'))
         for image in card['media']:

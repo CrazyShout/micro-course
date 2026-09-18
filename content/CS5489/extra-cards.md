@@ -27,14 +27,14 @@ A_ZH: 不能。假设特征不含标签信息，各样本标签独立，以 0.7 
 @@ M187 | x02-regression | learn | XR1:10-14
 Q_EN: What does ordinary least squares optimize, and what is a residual?
 Q_ZH: 普通最小二乘优化什么？什么是残差？
-A_EN: For prediction $\hat y_i=w^Tx_i+b$, the residual is $r_i=y_i-\hat y_i$. OLS chooses parameters to minimize $\sum_i r_i^2$, or its mean. Squaring makes large errors count more and removes their sign. The model output is numerical; rounding it into a class changes the task and evaluation.
-A_ZH: 对预测 $\hat y_i=w^Tx_i+b$，残差是 $r_i=y_i-\hat y_i$。OLS 选择参数使 $\sum_i r_i^2$ 或其平均值最小。平方使大误差受到更重惩罚，也消除了正负号。模型输出是数值；把它四舍五入成类别，会改变任务与评价方式。
+A_EN: For prediction $\hat y_i=w^Tx_i+b$, this course uses residual $r_i=\hat y_i-y_i$ (prediction minus target). OLS minimizes $\sum_i r_i^2$, or its mean. The alternative residual $y_i-\hat y_i$ has the opposite sign but the same squared loss. Squaring prevents positive and negative errors from cancelling and penalizes large errors more strongly.
+A_ZH: 对预测 $\hat y_i=w^Tx_i+b$，本课程统一用残差 $r_i=\hat y_i-y_i$（预测减真实）。OLS最小化 $\sum_i r_i^2$ 或其平均值。若课件用 $y_i-\hat y_i$，只是残差符号相反，平方损失相同。平方避免正负误差抵消，并加重较大误差的惩罚。
 
 @@ M188 | x02-regression | worked | XR1:10
 Q_EN: Predictions are (2,4,5) and targets are (1,4,7). Compute MSE and RMSE.
 Q_ZH: 预测值为 (2,4,5)，真实值为 (1,4,7)，计算 MSE 和 RMSE。
-A_EN: Residuals are (-1,0,2), and squared errors sum to 5. Thus MSE is $5/3$ and RMSE is $\sqrt{5/3}\approx1.291$. MSE has squared target units; RMSE has the original target unit. These are added teaching numbers, not a reproduced experiment.
-A_ZH: 残差为 (-1,0,2)，平方误差之和为 5。因此 MSE 为 $5/3$，RMSE 为 $\sqrt{5/3}\approx1.291$。MSE 的单位是目标单位的平方，RMSE 与目标量使用相同单位。这是补充计算例子，不是复现实验成绩。
+A_EN: Using prediction minus target, residuals are (1,0,-2), so the squared-error sum is $1+0+4=5$. MSE is $5/3$ and RMSE is $\sqrt{5/3}\approx1.291$. MSE uses squared target units; RMSE uses the target unit. Reversing every residual sign would leave both measures unchanged.
+A_ZH: 按预测减真实，残差为 (1,0,-2)，平方误差和为 $1+0+4=5$。MSE为 $5/3$，RMSE为 $\sqrt{5/3}\approx1.291$。MSE用目标单位的平方，RMSE用原目标单位；全部残差反号不会改变这两个结果。
 
 @@ M189 | x02-regression | learn | XR1:13,18
 Q_EN: How does a design matrix include the intercept?
@@ -45,8 +45,8 @@ A_ZH: 每行放一个样本，并在前面加一列 1。若有 n 个样本和 d 
 @@ M190 | x02-regression | learn | XR1:18-19
 Q_EN: Derive the normal equations for linear least squares.
 Q_ZH: 怎样推导线性最小二乘的正规方程？
-A_EN: For $J(w)=\frac12\|Xw-y\|^2$, the gradient is $X^T(Xw-y)$. Setting it to zero gives $X^TXw=X^Ty$. The Hessian $X^TX$ is positive semidefinite, so any solution is a global minimizer. The inverse expression $w=(X^TX)^{-1}X^Ty$ additionally requires full column rank.
-A_ZH: 对 $J(w)=\frac12\|Xw-y\|^2$，梯度为 $X^T(Xw-y)$。令其为零，得到 $X^TXw=X^Ty$。Hessian $X^TX$ 半正定，因此方程的解是全局极小点。进一步写成逆矩阵形式 $w=(X^TX)^{-1}X^Ty$，还需要列满秩。
+A_EN: Write $J=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$. For coordinate k, the chain rule gives $\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$. Collecting these derivatives yields $X^T(Xw-y)$. Setting them to zero gives $X^TXw=X^Ty$. Its Hessian $X^TX$ is positive semidefinite, so solutions minimize J globally; an inverse formula additionally needs full column rank.
+A_ZH: 先写 $J=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$。对第k个系数用链式法则：$\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$。把各坐标导数排成向量即 $X^T(Xw-y)$，令零得 $X^TXw=X^Ty$。Hessian $X^TX$ 半正定，所以方程解为全局极小点；要写逆矩阵解还需列满秩。
 
 @@ M191 | x02-regression | check | XR1:19; XR2:17
 Q_EN: Is having at least as many samples as coefficients sufficient for a unique OLS fit?
@@ -56,7 +56,7 @@ A_ZH: 不足够，还要求 X 列满秩。即使有很多样本，重复或线�
 
 @@ M192 | x02-regression | worked | XR1:15-17
 Q_EN: Fit a line through (0,1), (1,3), (2,5). What do slope and intercept mean?
-Q_ZH: 对 (0,1)、(1,3)、(2,5) 拟合直线，斜率和截距是什么？
+Q_ZH: 对 (0,1)、(1,3)、(2,5) 拟合直线，斜率和截距各是多少、各表示什么？
 A_EN: The line $\hat y=2x+1$ fits every point, so the slope is 2, intercept is 1 and training MSE is zero. A one-unit increase in x changes this model's prediction by 2. A perfect fit to these three points does not establish accuracy outside the observed range or a causal relationship.
 A_ZH: 直线 $\hat y=2x+1$ 通过全部点，所以斜率为 2、截距为 1、训练 MSE 为零。x 增加一个单位，模型预测增加 2。对这三个点拟合完美，并不能证明范围外预测准确，也不能证明因果关系。
 
@@ -69,14 +69,14 @@ A_ZH: 假设误差独立，$\epsilon_i\sim N(0,\sigma^2)$ 且方差相同，并�
 @@ M194 | x02-regression | learn | XR2:3-6
 Q_EN: State the ridge objective and derive its solution under the stated scaling.
 Q_ZH: 写出岭回归目标，并在明确系数约定下求解。
-A_EN: Use $J=\frac12\|Xw-y\|^2+\frac{\lambda}{2}\|w\|^2$. Stationarity gives $(X^TX+\lambda I)w=X^Ty$. For $\lambda>0$, the matrix is positive definite and the solution is unique. This formula penalizes every coordinate in w. If the intercept is exempt, replace I with a diagonal penalty mask.
-A_ZH: 采用 $J=\frac12\|Xw-y\|^2+\frac{\lambda}{2}\|w\|^2$。驻点条件为 $(X^TX+\lambda I)w=X^Ty$。当 $\lambda>0$ 时，该矩阵正定，解唯一。此式惩罚 w 的全部坐标；若截距不受惩罚，应把 I 换成相应的对角惩罚矩阵。
+A_EN: For $J=\frac12\|Xw-y\|^2+\frac\lambda2\|w\|^2$, differentiate: $\nabla J=X^T(Xw-y)+\lambda w$. Setting this to zero gives $(X^TX+\lambda I)w=X^Ty$. With $\lambda>0$, all eigenvalues of this matrix are positive, so w is unique. Every coordinate is penalized here; exempting an intercept replaces I with the appropriate diagonal penalty mask.
+A_ZH: 对 $J=\frac12\|Xw-y\|^2+\frac\lambda2\|w\|^2$ 求导：$\nabla J=X^T(Xw-y)+\lambda w$。令零得到 $(X^TX+\lambda I)w=X^Ty$。当 $\lambda>0$ 时该矩阵特征值均正，解唯一。这里惩罚全部坐标；若截距豁免，应将I换成相应对角惩罚矩阵。
 
 @@ M195 | x02-regression | check | XR2:4-7,17
 Q_EN: Why can ridge help with nearly collinear features, and what does it cost?
 Q_ZH: 岭回归为何能改善近共线特征的问题？代价是什么？
-A_EN: Along an eigenvector of $X^TX$ with eigenvalue s, ridge replaces division by s with division by $s+\lambda$. Small-eigenvalue directions are therefore less amplified. This improves conditioning and reduces variance, at the cost of bias. It does not prove that the model is correctly specified or that a chosen lambda generalizes best.
-A_ZH: 沿 $X^TX$ 特征值为 s 的方向，岭回归把除以 s 改为除以 $s+\lambda$，减少了小特征值方向上的放大，从而改善条件数并降低方差，代价是引入偏差。它不能证明模型形式正确，也不能保证任意选定的 lambda 泛化最好。
+A_EN: Along an eigenvector of $X^TX$ with positive eigenvalue s, OLS divides by s, whereas ridge divides by $s+\lambda$. Small-s directions amplify noise less. This improves conditioning; in the usual fixed-design, equal-variance noise model it reduces coefficient-estimation variance while introducing bias. The selected lambda still needs validation.
+A_ZH: 沿 $X^TX$ 特征值为正数s的方向，OLS除以s，岭回归改为除以 $s+\lambda$，因此小s方向不再强烈放大噪声。这改善条件数；在常见的固定设计、同方差噪声模型中，系数估计方差降低，但引入偏差。lambda仍需通过验证选择。
 
 @@ M196 | x02-regression | learn | XR2:10-16
 Q_EN: What distinguishes lasso regularization from ridge regularization?
@@ -93,8 +93,8 @@ A_ZH: 在题设目标函数系数下，Ridge 得到 $w_{\rm OLS}/(1+\lambda)=(1.
 @@ M198 | x02-regression | learn | XR2:4
 Q_EN: How can ridge be interpreted as maximum a posteriori estimation?
 Q_ZH: 怎样把岭回归解释为最大后验估计？
-A_EN: Combine Gaussian observation noise of variance $\sigma^2$ with an independent zero-mean Gaussian prior $w_j\sim N(0,\tau^2)$. Negative log posterior, multiplied by $\sigma^2$, gives $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$. Hence $\lambda=\sigma^2/\tau^2$ under this convention. A tighter prior means stronger shrinkage.
-A_ZH: 将方差为 $\sigma^2$ 的高斯观测噪声，与独立零均值高斯先验 $w_j\sim N(0,\tau^2)$ 结合。负对数后验乘以 $\sigma^2$ 后，得到 $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$。因此在此约定下 $\lambda=\sigma^2/\tau^2$，先验越集中，收缩越强。
+A_EN: Assume independent Gaussian observation errors with known $\sigma^2>0$ and independent priors $w_j\sim N(0,\tau^2)$ with $\tau^2>0$. Multiplying the negative log posterior by $\sigma^2$ and dropping constants gives $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$. Thus $\lambda=\sigma^2/\tau^2$ in this objective convention: a tighter prior produces stronger shrinkage.
+A_ZH: 假设观测误差独立高斯，已知 $\sigma^2>0$，并取独立先验 $w_j\sim N(0,\tau^2)$、$\tau^2>0$。将负对数后验乘 $\sigma^2$、去掉无关常数，得到 $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$。因此此目标约定下 $\lambda=\sigma^2/\tau^2$；先验越集中，收缩越强。
 
 @@ M199 | x02-regression | check | XR2:7-8,17; XROB:34
 Q_EN: Why should feature scales and intercept treatment be specified before comparing regression coefficients?
@@ -135,8 +135,8 @@ A_ZH: 反复抽取小样本集，拟合候选模型，再统计残差低于阈�
 @@ M205 | x03-robust | learn | XROB:8-9
 Q_EN: How is the ideal RANSAC trial count related to inlier probability?
 Q_ZH: 理想情况下，RANSAC 迭代次数如何由内点概率决定？
-A_EN: For s>=1 independently sampled points, each an inlier with probability w, a clean sample has probability $w^s$. T independent trials succeed at least once with probability $1-(1-w^s)^T$. For $0<w<1$ and $0 < p < 1$, round $\log(1-p)/\log(1-w^s)$ upward. If w=1 one trial suffices; if w=0 no finite number succeeds. Sampling without replacement or degenerate clean samples requires a modified model.
-A_ZH: 独立抽取 s>=1 个点，每个为内点的概率为 w，则全内点样本概率为 $w^s$。T 次独立试验至少成功一次的概率为 $1-(1-w^s)^T$。当 $0<w<1$、$0 < p < 1$，将 $\log(1-p)/\log(1-w^s)$ 向上取整即可。w=1 时一次足够；w=0 时有限次都不可能成功。无放回采样或全内点仍退化的情形，需要修改模型。
+A_EN: Let p be the target success probability. Under the ideal model, s independent draws are all inliers with probability $w^s$, and a clean sample is nondegenerate. T independent trials succeed with probability $1-(1-w^s)^T$. For $0<w<1$ and $0<p<1$, use $T=\lceil\log(1-p)/\log(1-w^s)\rceil$. If w=1 one trial suffices; w=0 cannot succeed. Without-replacement sampling or degeneracy changes this model.
+A_ZH: 令p为目标成功概率。理想模型下，独立抽s个点全部为内点的概率为 $w^s$，并假设全内点样本不退化。T次独立尝试的成功率为 $1-(1-w^s)^T$。当 $0<w<1$、$0<p<1$，取 $T=\lceil\log(1-p)/\log(1-w^s)\rceil$。w=1一次足够，w=0不可能成功；无放回抽样或退化会改变模型。
 
 @@ M206 | x03-robust | worked | XROB:8-9
 Q_EN: With inlier fraction 0.5, sample size 2 and target success 0.99, how many ideal RANSAC trials are needed?
@@ -195,8 +195,8 @@ A_ZH: (0,2) 分入第一簇，(8,10) 分入第二簇，新中心分别为 1 和 
 @@ M215 | x04-clustering | check | XCL:19-23
 Q_EN: Why use multiple initializations, and why is lower training inertia insufficient for choosing k?
 Q_ZH: 为什么要使用多个初始化？为什么不能仅凭较小训练惯性选择 k？
-A_EN: Different initial centers can lead to different local optima, so use restarts. The globally minimal training inertia cannot increase when k increases: extra centers can reproduce or improve the old fit. Separate local algorithm runs need not show this monotonicity. Training inertia alone favors too many clusters; combine it with stability, an elbow, domain meaning or a justified validation criterion. None universally identifies a true k.
-A_ZH: 不同初始中心可能进入不同局部最优，因此要多次重启。k 增大时，全局最小训练惯性不会增加，因为额外中心能复现或改善原拟合；但各自独立运行的局部算法结果未必单调。只看训练惯性容易偏向过多簇，应结合稳定性、肘部、领域意义或合理验证标准，没有一种方法普遍保证找出真实 k。
+A_EN: Inertia is the sum of squared distances to assigned centers. Restarts help because different initial centers can reach different local optima. The globally smallest inertia cannot increase as k grows: extra centers can reproduce the old fit. Separate local runs need not be monotone. Thus training inertia alone favors too many clusters; consider stability, task meaning or a justified validation criterion, none of which universally recovers a true k.
+A_ZH: 惯性是样本到所属中心的平方距离之和。不同初始中心可能进入不同局部最优，因此需要重启。k增大时，全局最小惯性不会增加，因为额外中心能复现原拟合；各次局部运行却未必单调。只看训练惯性容易偏向过多簇，应结合稳定性、任务意义或合理验证标准，没有方法普遍保证找出真实k。
 
 @@ M216 | x04-clustering | check | XCL:23,35
 Q_EN: Does ordinary k-means require every cluster to contain the same number of points?
@@ -207,8 +207,8 @@ A_ZH: 不强制，目标函数中没有等大小约束。欧氏最近中心分�
 @@ M217 | x04-clustering | learn | XCL:25-28
 Q_EN: What is a Gaussian mixture model?
 Q_ZH: 什么是高斯混合模型？
-A_EN: A GMM has density $p(x)=\sum_{k=1}^K\pi_k N(x;\mu_k,\Sigma_k)$, where $\pi_k\ge0$ and $\sum_k\pi_k=1$. A latent component selects a Gaussian, which then generates x. Means set locations and covariances set spread and orientation. The density sums components; choosing only the largest component is a different operation.
-A_ZH: GMM 的密度为 $p(x)=\sum_{k=1}^K\pi_k N(x;\mu_k,\Sigma_k)$，其中 $\pi_k\ge0$ 且 $\sum_k\pi_k=1$。潜在成分先选一个高斯，再生成 x。均值决定位置，协方差决定形状和方向。密度需要把各成分相加，只取最大成分是另一种操作。
+A_EN: A GMM has density $p(x)=\sum_{k=1}^K\pi_kN(x;\mu_k,\Sigma_k)$, with nonnegative weights summing to one and positive-definite covariances for ordinary nonsingular densities. First draw an unobserved component k with probability $\pi_k$, then draw x from its Gaussian. Means set locations; covariances set spread and orientation. Add component contributions rather than taking only the largest.
+A_ZH: GMM密度为 $p(x)=\sum_{k=1}^K\pi_kN(x;\mu_k,\Sigma_k)$，权重非负且和为一；普通非奇异高斯密度还要求协方差正定。先按 $\pi_k$ 抽取不可观测的成分k，再由其高斯产生x，像先选一台机器再生产零件。均值决定位置，协方差决定散布与方向；各成分贡献要相加，不能只取最大者。
 
 @@ M218 | x04-clustering | learn | XCL:28-30
 Q_EN: What is a GMM responsibility?
@@ -225,14 +225,14 @@ A_ZH: 用总和 0.20 归一化，得到 (0.6,0.4)。硬分配会选择第一成�
 @@ M220 | x04-clustering | learn | XCL:30
 Q_EN: How does the GMM M-step update weights and means?
 Q_ZH: GMM 的 M 步怎样更新混合权重和均值？
-A_EN: With responsibilities fixed, set $N_k=\sum_i r_{ik}$, $\pi_k=N_k/n$, and $\mu_k=\sum_i r_{ik}x_i/N_k$. These are soft counts and weighted means. A component with zero effective count needs a defined recovery strategy rather than division by zero.
-A_ZH: 固定责任度后，令 $N_k=\sum_i r_{ik}$、$\pi_k=N_k/n$，并更新 $\mu_k=\sum_i r_{ik}x_i/N_k$。它们分别是软计数和加权均值。若某个成分的有效计数为零，需要明确的恢复策略，不能直接除以零。
+A_EN: For n observations, hold responsibilities $r_{ik}=P(z_i=k\mid x_i)$ fixed. Set $N_k=\sum_i r_{ik}$, $\pi_k=N_k/n$, and, when $N_k>0$, $\mu_k=\sum_i r_{ik}x_i/N_k$. These are effective counts, proportions and weighted means. A zero-count component needs a defined recovery strategy instead of division by zero.
+A_ZH: 共有n个观测，固定责任度 $r_{ik}=P(z_i=k\mid x_i)$。令 $N_k=\sum_i r_{ik}$、$\pi_k=N_k/n$，并在 $N_k>0$ 时更新 $\mu_k=\sum_i r_{ik}x_i/N_k$。它们是有效计数、占比和加权均值。零有效计数的成分需要明确恢复策略，不能除以零。
 
 @@ M221 | x04-clustering | learn | XCL:30,33
 Q_EN: How is a GMM covariance updated, and why can unrestricted fitting become unstable?
 Q_ZH: GMM 如何更新协方差？为什么无限制拟合可能不稳定？
-A_EN: Use $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$, with the updated mean. An unrestricted component may collapse around a point with nearly zero covariance, making Gaussian likelihood grow without bound. A covariance floor, suitable constraints and adequate data help; diagonal covariance also reduces the number of parameters.
-A_ZH: 使用新均值，按 $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$ 更新。无约束成分可能塌缩到某个点附近、协方差接近零，使高斯似然无界增长。协方差下限、适当约束和充足数据有助于稳定，对角协方差还能减少参数量。
+A_EN: With fixed responsibilities r and $N_k=\sum_i r_{ik}>0$, use the newly updated mean in $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$. It averages weighted deviation outer products. An unrestricted mixture component can collapse onto a point as its covariance tends to zero, making likelihood unbounded. Covariance floors or constraints help prevent this; diagonal covariance only reduces parameter count.
+A_ZH: 固定责任度r，且 $N_k=\sum_i r_{ik}>0$，用新均值计算 $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$，即对偏差外积作加权平均。无约束混合成分可塌缩到某点、协方差趋零，使似然无界增长。协方差下限或约束可防止这种退化；仅改为对角形式主要是减少参数。
 
 @@ M222 | x04-clustering | learn | XEM:12-15
 Q_EN: What do the E-step and M-step optimize in general EM?
@@ -243,8 +243,8 @@ A_ZH: E 步用当前参数计算潜变量的后验分布；M 步在固定该后�
 @@ M223 | x04-clustering | learn | XEM:12-19
 Q_EN: Why does exact EM not decrease observed-data log likelihood?
 Q_ZH: 为什么精确 EM 不会降低观测数据的对数似然？
-A_EN: The E-step chooses a posterior that makes a lower bound tight at the current parameters. The M-step increases that bound, and the new likelihood is at least as large as the bound. Chaining these inequalities gives nondecrease. This is not a guarantee of a global optimum, strict improvement every step, or stability under inaccurate numerical updates.
-A_ZH: E 步选择后验，使似然下界在当前参数处取等号；M 步提高这个下界，而新参数的似然至少不低于下界。串联这些不等式即可证明不下降。但它不保证全局最优、每步严格提高，也不保证不准确的数值更新仍有该性质。
+A_EN: Let ell be observed log likelihood and F(q,theta) its EM lower bound. The E-step sets q to the current latent posterior, making $F(q,\theta_{old})=\ell(\theta_{old})$. Holding q fixed, the M-step raises F. Hence $\ell(\theta_{new})\ge F(q,\theta_{new})\ge F(q,\theta_{old})=\ell(\theta_{old})$. This proves nondecrease, not strict improvement or a global optimum; inaccurate updates may violate it.
+A_ZH: 令ell为观测对数似然，F(q,theta)为EM下界。E步令q等于当前潜变量后验，使 $F(q,\theta_{old})=\ell(\theta_{old})$；M步固定q提高F。因此 $\ell(\theta_{new})\ge F(q,\theta_{new})\ge F(q,\theta_{old})=\ell(\theta_{old})$。这只保证不下降，不保证严格提高或全局最优；不准确的更新可能破坏保证。
 
 @@ M224 | x04-clustering | learn | XCL:31,35; XEM:21-23
 Q_EN: In what sense are k-means and GMM/EM related?
@@ -261,8 +261,8 @@ A_ZH: 有效计数为 $N_k=0.8+0.2=1$。均值为 $(0.8\cdot0+0.2\cdot10)/1=2$�
 @@ M226 | x04-clustering | check | XCL:21-23,33; XEM:21-23
 Q_EN: What should I check before interpreting a clustering result as meaningful?
 Q_ZH: 把聚类结果解释为有意义的结构前，应检查什么？
-A_EN: Check scaling, distance/covariance assumptions, choice of k, sensitivity to initialization and whether the result is stable across reasonable data changes. Cluster identifiers can permute between runs. A visually separated projection can also hide overlap in the original space. Connect clusters to the actual learning question instead of treating every partition as a discovered truth.
-A_ZH: 检查缩放、距离或协方差假设、k 的选择、初始化敏感性，以及结果在合理数据变化下是否稳定。不同运行中的簇编号可以互换；低维投影中看似分离，也可能掩盖原空间的重叠。应把簇与具体学习问题联系起来，而不是把每次划分都当作客观真相。
+A_EN: Check feature scaling, distance/covariance assumptions, k, initialization and stability under reasonable data changes. Cluster numbers can permute across runs without changing the partition. A two-dimensional plot discards other coordinates and may distort distances, so visual appearance alone does not validate the full-space grouping. Relate the groups to the actual task rather than treating every partition as discovered truth.
+A_ZH: 检查特征缩放、距离或协方差假设、k、初始化及合理数据变化下的稳定性。不同运行可交换簇编号而不改变划分。二维图舍弃其他坐标，可能扭曲距离，因此不能只凭图形外观确认完整空间分组有意义。还须联系实际任务，不能把任意划分都当作发现了客观类别。
 
 @@ M227 | x05-pca | learn | XSVD:3-7
 Q_EN: How do feature selection and feature extraction differ?
@@ -279,14 +279,14 @@ A_ZH: 实数 n 行 d 列矩阵的 $X=U\Sigma V^T$ 使用正交方向和非负奇
 @@ M229 | x05-pca | learn | XSVD:21-22
 Q_EN: How does truncated SVD give a best low-rank approximation?
 Q_ZH: 截断 SVD 怎样给出最佳低秩近似？
-A_EN: Keep the k largest singular values: $X_k=U_k\Sigma_kV_k^T$. It minimizes Frobenius reconstruction error among matrices of rank at most k, with squared error $\sum_{j>k}\sigma_j^2$. This is an optimality statement for the chosen matrix norm, not automatically for classification accuracy or semantic preservation.
-A_ZH: 保留最大的 k 个奇异值，得到 $X_k=U_k\Sigma_kV_k^T$。它在秩不超过 k 的矩阵中最小化 Frobenius 重构误差，平方误差为 $\sum_{j>k}\sigma_j^2$。这是针对该矩阵范数的最优性结论，不自动保证分类准确率或语义信息最好。
+A_EN: Keep the k largest singular values: $X_k=U_k\Sigma_kV_k^T$. This minimizes $\|X-Y\|_F^2=\sum_{i,j}(X_{ij}-Y_{ij})^2$ among matrices of rank at most k. The minimum is $\sum_{j>k}\sigma_j^2$. Thus “best” means smallest sum of squared entrywise errors, not necessarily best label prediction or semantic preservation.
+A_ZH: 保留最大的k个奇异值：$X_k=U_k\Sigma_kV_k^T$。它在秩不超过k的矩阵中最小化 $\|X-Y\|_F^2=\sum_{i,j}(X_{ij}-Y_{ij})^2$，最小值为 $\sum_{j>k}\sigma_j^2$。“最佳”指所有元素的平方误差和最小，不必然指标签预测或语义保留最好。
 
 @@ M230 | x05-pca | check | XSVD:22; XPCA:7,16
 Q_EN: Is a best rank-k approximation always unique?
 Q_ZH: 最佳秩 k 近似总是唯一的吗？
-A_EN: No. A tie at the truncation boundary can make multiple subspaces equally good. For $X=I_2$ and k=1, projecting onto any unit direction gives the same squared Frobenius error 1. Signs of singular/eigenvectors can also flip without changing the represented subspace. This qualifies the lecture's unqualified uniqueness claim.
-A_ZH: 不是。截断位置处奇异值相同时，多个子空间可以同样好。例如 $X=I_2$、k=1 时，投影到任意单位方向的平方 Frobenius 误差均为 1。奇异向量或特征向量还可整体变号而不改变所表示的子空间。因此课件中不加条件的唯一性说法需要限定。
+A_EN: No. Equal singular values at the truncation boundary can produce different optimal approximating matrices. For $X=I_2$, k=1, every $uu^T$ with $u^Tu=1$ has squared Frobenius error 1. By contrast, simultaneously flipping both singular-vector signs in a rank-one term leaves that term unchanged; this is only nonuniqueness of its representation.
+A_ZH: 不总唯一。截断边界出现相同奇异值时，可能得到不同但同样好的近似矩阵。例如 $X=I_2$、k=1，任意 $u^Tu=1$ 的 $uu^T$ 都有平方Frobenius误差1。另一方面，一项中的左右奇异向量同时反号，该项本身不变；这只是表示不唯一，不是另一个近似矩阵。
 
 @@ M231 | x05-pca | learn | XPCA:9-12,17-18
 Q_EN: Why is mean-centering essential for standard PCA?
@@ -297,14 +297,14 @@ A_ZH: PCA 寻找围绕均值的变化。用训练均值构造 $X_c=X-\mathbf1\mu
 @@ M232 | x05-pca | learn | XPCA:10-16
 Q_EN: Why is the first principal component an eigenvector of the covariance matrix?
 Q_ZH: 为什么第一主成分是协方差矩阵的特征向量？
-A_EN: A unit direction v has projected variance $v^T\Sigma v$. Maximize it subject to $v^Tv=1$. Stationarity of $v^T\Sigma v-\lambda(v^Tv-1)$ gives $\Sigma v=\lambda v$. The objective at a unit eigenvector is its eigenvalue, so select a largest-eigenvalue direction. Orthogonality constraints give later components.
-A_ZH: 单位方向 v 上的投影方差为 $v^T\Sigma v$。在 $v^Tv=1$ 下最大化它，对 $v^T\Sigma v-\lambda(v^Tv-1)$ 求驻点得到 $\Sigma v=\lambda v$。单位特征向量处的目标值就是其特征值，因此选择最大特征值方向；后续分量再加正交约束。
+A_EN: A unit direction has variance $v^T\Sigma v$. For $L=v^T\Sigma v-\lambda(v^Tv-1)$, differentiation gives $2\Sigma v-2\lambda v=0$, hence $\Sigma v=\lambda v$. In an orthonormal eigenbasis the variance is a weighted average of eigenvalues, with nonnegative weights summing to one. Its maximum is therefore the largest eigenvalue, achieved by a corresponding unit eigenvector.
+A_ZH: 单位方向的方差为 $v^T\Sigma v$。对 $L=v^T\Sigma v-\lambda(v^Tv-1)$ 求导得 $2\Sigma v-2\lambda v=0$，所以 $\Sigma v=\lambda v$。在正交特征基中，该方差是特征值的加权平均，权重非负且和为一，因此最大值就是最大特征值，由相应单位特征向量取得。
 
 @@ M233 | x05-pca | learn | XPCA:17-18,28-30
 Q_EN: What are PCA scores and the reconstructed data matrix?
 Q_ZH: 什么是 PCA 得分矩阵？怎样重构数据？
-A_EN: With orthonormal component columns $V_k$, scores are $Z=X_cV_k$. Reconstruction is $\hat X=ZV_k^T+\mathbf1\mu^T$. For n samples, d features and k components, Z is n-by-k while the reconstruction is n-by-d. Projection coefficients and component vectors are different objects.
-A_ZH: 若 $V_k$ 的列是正交单位主成分，得分为 $Z=X_cV_k$，重构为 $\hat X=ZV_k^T+\mathbf1\mu^T$。n 个样本、d 个特征、k 个分量时，Z 为 n 行 k 列，重构仍为 n 行 d 列。投影系数与主成分向量是不同对象。
+A_EN: For n rows and d features, let $X_c=X-\mathbf1\mu^T$ use the training mean mu. With d-by-k orthonormal component columns $V_k$, scores are $Z=X_cV_k$ (n-by-k). Reconstruction is $\hat X=ZV_k^T+\mathbf1\mu^T$ (n-by-d). Scores are new coordinates; component vectors are the directions; adding mu restores the data location.
+A_ZH: n行样本、d个特征时，用训练均值mu构造 $X_c=X-\mathbf1\mu^T$。d行k列的 $V_k$ 存正交单位主方向，得分 $Z=X_cV_k$ 为n行k列；重构 $\hat X=ZV_k^T+\mathbf1\mu^T$ 恢复为n行d列。得分是新坐标，主成分向量是方向，加回mu恢复数据的位置。
 
 @@ M234 | x05-pca | worked | XPCA:21,25
 Q_EN: Covariance eigenvalues are (9,3,2,1). How many PCs retain at least 90% variance?
@@ -315,8 +315,8 @@ A_ZH: 总方差为 15。前两个保留 $12/15=80\%$，未达到目标；前三�
 @@ M235 | x05-pca | learn | XPCA:28-31
 Q_EN: How are PCA covariance eigenvalues related to singular values of centered data?
 Q_ZH: PCA 协方差特征值与中心化数据的奇异值有什么关系？
-A_EN: If $X_c=U\Sigma V^T$, then $X_c^TX_c=V\Sigma^2V^T$. Thus covariance eigenvalues are $\sigma_j^2/n$ under the lecture's 1/n convention, or $\sigma_j^2/(n-1)$ for unbiased sample covariance. Component directions and explained-variance ratios agree under either common scaling.
-A_ZH: 若 $X_c=U\Sigma V^T$，则 $X_c^TX_c=V\Sigma^2V^T$。按课件的 1/n 约定，协方差特征值为 $\sigma_j^2/n$；按无偏样本协方差约定，则为 $\sigma_j^2/(n-1)$。这两种整体缩放下，主成分方向和解释方差比例相同。
+A_EN: Use compact SVD $X_c=UDV^T$, with $D=\operatorname{diag}(\sigma_1,\ldots,\sigma_r)$ and orthonormal columns of U,V. Then $X_c^TX_c=VD^2V^T$. Covariance eigenvalues are $\sigma_j^2/n$, or $\sigma_j^2/(n-1)$ when n>1; remaining eigenvalues are zero if r<d. For nonzero total variance, these common scalings give the same explained-variance ratios and principal subspaces.
+A_ZH: 采用紧致SVD $X_c=UDV^T$，其中 $D=\operatorname{diag}(\sigma_1,\ldots,\sigma_r)$ 为方形对角矩阵，U、V的列正交归一。于是 $X_c^TX_c=VD^2V^T$。协方差特征值为 $\sigma_j^2/n$，或n>1时的 $\sigma_j^2/(n-1)$；r<d时其余特征值为零。总方差非零时，两种统一缩放得到相同解释方差比例与主子空间。
 
 @@ M236 | x05-pca | check | XPCA:9,23,26,32
 Q_EN: Does decorrelation by PCA establish statistical independence or optimal prediction?
@@ -339,14 +339,14 @@ A_ZH: 它利用内积 $k(x_i,x_j)$，在隐式特征空间 $\phi(x)$ 中执行 P
 @@ M239 | x05-pca | learn | XKPCA:10-13
 Q_EN: How is the training Gram matrix centered for kernel PCA?
 Q_ZH: 核 PCA 如何中心化训练 Gram 矩阵？
-A_EN: Let $H=I-\mathbf1\mathbf1^T/n$. Use $K_c=HKH$, which subtracts row/column means and adds the grand mean. This corresponds to subtracting the training mean in feature space. Subtracting the raw-input mean alone does not generally center nonlinear features. A new point must use the training centering statistics as well.
-A_ZH: 令 $H=I-\mathbf1\mathbf1^T/n$，使用 $K_c=HKH$，即减去行、列均值，再加回总体均值。它对应在特征空间中减去训练均值。仅减原始输入均值通常不能使非线性特征中心化，新样本也必须使用训练时的中心化统计量。
+A_EN: For n training points, let $\mathbf1$ be the n-entry ones vector and $H=I-\mathbf1\mathbf1^T/n$. Use $K_c=HKH$: subtract row and column means, then add the grand mean. It centers the feature vectors represented by the kernel. Centering raw inputs need not center nonlinear features. New queries must use the training feature-space centering statistics.
+A_ZH: 共有n个训练点，$\mathbf1$ 是n维全1列向量，令 $H=I-\mathbf1\mathbf1^T/n$。使用 $K_c=HKH$，即减行均值、减列均值、加总体均值。这是在核所代表的特征空间中中心化；原输入减均值不保证非线性特征也中心化，新查询仍须采用训练统计。
 
 @@ M240 | x05-pca | check | XKPCA:10-13,20
 Q_EN: Why must kernel-PCA eigenvectors be normalized using their eigenvalues?
 Q_ZH: 为什么核 PCA 的系数要结合特征值进行归一化？
-A_EN: If $K_c a=\lambda_K a$ and $a^Ta=1$, the unit feature-space direction uses coefficients $a/\sqrt{\lambda_K}$ for positive $\lambda_K$. Its training scores are $\sqrt{\lambda_K}a$. A zero eigenvalue cannot be divided by. This distinguishes Gram-matrix eigenvectors from unit principal directions and makes the projection scale explicit.
-A_ZH: 若 $K_c a=\lambda_K a$ 且 $a^Ta=1$，对于正的 $\lambda_K$，单位特征空间方向的系数为 $a/\sqrt{\lambda_K}$，训练得分为 $\sqrt{\lambda_K}a$。零特征值不能用于相除。这样才能区分 Gram 矩阵特征向量与单位主方向，并明确投影尺度。
+A_EN: Let $K_ca=\lambda_Ka$, $a^Ta=1$, and $\phi_c(x_i)$ be centered feature vectors. The squared norm of $v=\sum_i a_i\phi_c(x_i)$ is $a^TK_ca=\lambda_K$. Therefore divide v, equivalently its coefficients a, by $\sqrt{\lambda_K}$ to get a unit direction. Training scores are $K_ca/\sqrt{\lambda_K}=\sqrt{\lambda_K}a$. Only positive eigenvalues can be used in this normalization.
+A_ZH: 设 $K_ca=\lambda_Ka$、$a^Ta=1$，$\phi_c(x_i)$ 为中心化特征向量。组合 $v=\sum_i a_i\phi_c(x_i)$ 的范数平方是 $a^TK_ca=\lambda_K$，所以将v（等价地将系数a）除以 $\sqrt{\lambda_K}$ 才得到单位方向。训练得分为 $K_ca/\sqrt{\lambda_K}=\sqrt{\lambda_K}a$；只可用正特征值归一化。
 
 @@ M241 | x06-networks | learn | XNN:12-21
 Q_EN: How does the perceptron update a misclassified example?
@@ -417,14 +417,14 @@ A_ZH: 梯度为 $\nabla_W L=X^TG$、$\nabla_X L=GW^T$，偏置梯度为 $\nabla_
 @@ M252 | x06-networks | learn | XNN:33,35; XOPT:4-5
 Q_EN: How should the output layer and loss match a neural-network task?
 Q_ZH: 神经网络的输出层与损失应如何匹配任务？
-A_EN: A single-label multiclass task commonly uses class logits with softmax cross-entropy. A real-valued regression task can use a linear output with squared error. Binary and multi-label tasks need their own target and probability conventions. Do not add an activation merely because it appeared in another example; specify the target domain and the loss's expected input.
-A_ZH: 单标签多分类常用类别 logits 与 softmax 交叉熵；实数回归可用线性输出和平方误差。二分类与多标签任务还需各自的目标编码与概率约定。不能因为别的例子用了某激活就照搬，应明确目标取值范围，以及损失函数希望接收什么输入。
+A_EN: Single-label K-class: K logits, softmax probabilities, categorical cross-entropy. Binary: one logit, sigmoid probability, binary cross-entropy. Multi-label: one logit per separate yes/no target, per-label sigmoid and binary cross-entropy; probabilities need not sum to one. Unbounded real regression: linear output and, for example, squared error. A loss that expects logits already applies its probability transformation; do not apply it twice.
+A_ZH: 单标签K分类：K个logit，经softmax成为类别概率，配多类交叉熵。二分类：一个logit、sigmoid概率、二元交叉熵。多标签：每个“是/否”目标一个logit，逐标签sigmoid与二元交叉熵，概率无需合计为一。无界实数回归：线性输出，可配平方误差。若损失接口要求logits，它已内含相应变换，不要重复处理。
 
 @@ M253 | x06-networks | check | XNN:40
 Q_EN: What does the universal approximation theorem guarantee, and what does it leave open?
 Q_ZH: 通用逼近定理保证什么，又没有保证什么？
-A_EN: Under suitable activation assumptions, a sufficiently wide single hidden layer can approximate a continuous function on a compact domain to arbitrary prescribed accuracy. It is an existence statement. It does not require an actually infinite network for a fixed tolerance, and does not promise an efficient size, successful training, or generalization from limited data.
-A_ZH: 在适当激活函数条件下，足够宽的单隐藏层网络可以在紧致区域内，将连续函数逼近到任意给定精度。这是存在性结论：对固定误差容限，并不要求实际使用无限网络，也不保证网络规模高效、训练一定成功，或少量数据下能够泛化。
+A_EN: For example, a network with biases, one sufficiently wide sigmoid hidden layer and a linear output can uniformly approximate any continuous real-valued function on a compact input set (closed and bounded in finite dimensions) to any chosen positive tolerance. This asserts existence of a finite network for that tolerance. It does not guarantee a small network, successful training or generalization from limited samples.
+A_ZH: 例如，含偏置、单个足够宽的sigmoid隐藏层与线性输出层的网络，可在紧致输入集（有限维中闭且有界）上，把任意连续实值函数一致逼近到指定正误差内。它保证该容差下存在有限网络，不保证网络很小、训练成功，也不保证有限样本下的泛化。
 
 @@ M254 | x06-networks | check | XNN:38-39; XREG:39-48
 Q_EN: Why is fitting a tiny training subset useful for debugging a neural network?
@@ -445,8 +445,8 @@ A_EN: With input length L, kernel size k, padding p on each side, stride s and d
 A_ZH: 输入长度为 L，核大小 k，两侧各填充 p，步长 s，膨胀率 d 时，输出长度为 $\lfloor(L+2p-d(k-1)-1)/s\rfloor+1$。课件基础例子取 d=1。高度、宽度应分别计算；“same” 在步长 1 且采用相应填充约定时保持尺寸，并非任意步长都保持不变。
 
 @@ M257 | x07-cnn | worked | XCNN:20-25
-Q_EN: A 32×32 RGB input passes through six 5×5 filters, stride 1, no padding. What are the output shape and parameter count?
-Q_ZH: 32×32 RGB 输入经过 6 个 5×5 滤波器，步长 1、无填充，输出形状和参数量是多少？
+Q_EN: A 32×32 RGB input uses ordinary dense convolution with six 5×5 filters, stride 1, dilation 1, no padding and one bias per output channel. Find output shape and parameter count.
+Q_ZH: 32×32 RGB输入采用普通非分组卷积：6个5×5滤波器、步长1、膨胀率1、无填充、每输出通道一个偏置。求输出形状和参数量。
 A_EN: Each spatial output size is $32-5+1=28$, giving 28×28×6 under height-width-channel notation. Each filter has $5\cdot5\cdot3=75$ weights and one bias, so there are $6(75+1)=456$ trainable parameters. The 28×28 positions reuse these weights rather than each having a separate filter.
 A_ZH: 每个空间维度为 $32-5+1=28$，按高、宽、通道记法，输出是 28×28×6。每个滤波器有 $5\cdot5\cdot3=75$ 个权重和一个偏置，总计 $6(75+1)=456$ 个参数。28×28 个位置共享这些权重，不是每个位置另设滤波器。
 
@@ -465,12 +465,12 @@ A_ZH: 步长决定窗口在相邻输出间移动多远，并可对特征图降�
 @@ M260 | x07-cnn | learn | XCNN:29
 Q_EN: How does max pooling differ from a learned convolution?
 Q_ZH: 最大池化与可学习卷积有什么区别？
-A_EN: Max pooling takes the largest value in each window and usually has no learned weights. A convolution applies learned weighted sums. Pooling reduces spatial resolution and can discard exact position information. During backpropagation, a max operation routes gradient to a selected maximizing entry, with a convention for ties.
-A_ZH: 最大池化取窗口内最大值，通常没有可学习权重；卷积则执行可学习的加权和。池化减少空间分辨率，也可能丢失精确位置信息。反向传播时，最大值操作把梯度传给选定的最大元素，出现并列最大值时需采用约定。
+A_EN: Max pooling takes each window’s largest value and normally has no learned weights; convolution computes learned weighted sums. Pooling with a downsampling stride reduces resolution, whereas stride 1 with suitable padding can preserve size. Max pooling may discard within-window position information. Backpropagation routes gradient to a maximizing entry, with a stated rule for ties.
+A_ZH: 最大池化取各窗口最大值，通常没有可学习权重；卷积计算可学习加权和。采用降采样步长时池化降低分辨率，步长1配适当填充则可保持尺寸。池化可能丢失窗口内位置信息；反向传播把梯度传给最大元素，并列最大时需规定处理规则。
 
 @@ M261 | x07-cnn | worked | XCNN:26
-Q_EN: What is the receptive-field size of two consecutive 3×3 convolutions with stride 1 and no dilation?
-Q_ZH: 连续两个 3×3 卷积，步长均为 1、无膨胀时，理论感受野多大？
+Q_EN: Ignoring image-boundary effects, what is the theoretical receptive field of two consecutive 3×3 convolutions with stride 1 and dilation 1?
+Q_ZH: 忽略图像边界影响，连续两个3×3卷积、步长1、膨胀率1时，理论感受野为多大？
 A_EN: The first output sees a 3×3 input region. A 3×3 neighborhood of those outputs spans a 5×5 input region, so the second layer has a 5×5 theoretical receptive field. This is the set of possible dependencies; it does not mean every input pixel has equal influence on the final value.
 A_ZH: 第一层输出看到一个 3×3 区域；第二层使用第一层的 3×3 邻域，合起来覆盖原输入的 5×5 区域，因此理论感受野为 5×5。它表示可能影响输出的范围，不意味着其中每个输入像素的实际影响都相等。
 
@@ -495,8 +495,8 @@ A_ZH: 图像批次可能按 (B,C,H,W) 或 (B,H,W,C) 排列，混淆后会把空�
 @@ M265 | x08-training | learn | XOPT:4-8; XREG:33
 Q_EN: How do batch gradient descent, mini-batch SGD, an iteration and an epoch differ?
 Q_ZH: 批量梯度下降、小批量 SGD、迭代和 epoch 有何区别？
-A_EN: Full-batch descent uses every training example for one gradient. Mini-batch SGD uses a subset, giving cheaper but noisier updates. An iteration usually means one parameter update; an epoch is one pass through the training set. If n=1,000 and batch size is 100, one full pass has ten updates when every sample is used once.
-A_ZH: 全批量下降用全部训练样本计算一次梯度，小批量 SGD 用子集计算，单次更便宜但噪声更大。一次迭代通常指一次参数更新，一个 epoch 指遍历一遍训练集。若 n=1,000、批量大小为 100 且每个样本使用一次，则一遍包含十次更新。
+A_EN: Full-batch descent uses all training examples for one gradient; mini-batch SGD uses a subset. An optimizer step changes parameters; an epoch processes the dataset once. “Iteration” often means one step, but check the program’s convention. For n=1000, batch size 100, one update per batch and no gradient accumulation, an epoch has ten updates. Accumulating several batches changes update count without changing the data-pass definition.
+A_ZH: 全批量下降用全部训练样本求一次梯度，小批量SGD用子集。优化器步更新参数，epoch遍历一次数据；“iteration”常指一步，但应看代码约定。n=1000、batch=100、每批更新一次且无梯度累积时，一个epoch有十次更新。多批累积再更新会改变步数，不改变遍历次数定义。
 
 @@ M266 | x08-training | learn | XOPT:9-17
 Q_EN: What does momentum add to SGD?
@@ -507,14 +507,14 @@ A_ZH: 保存速度 $v_{t+1}=\rho v_t-\eta g_t$，再更新 $\theta_{t+1}=\theta_
 @@ M267 | x08-training | learn | XOPT:18-22
 Q_EN: How do AdaGrad and RMSProp adapt coordinatewise step sizes?
 Q_ZH: AdaGrad 和 RMSProp 怎样调整每个坐标的步长？
-A_EN: AdaGrad accumulates past squared gradients, while RMSProp uses an exponential moving average of them. Each scales a coordinate's gradient by the inverse square root of its accumulator plus a stabilizer. AdaGrad's accumulator grows continually, potentially shrinking steps too far. RMSProp forgets old history gradually. Neither method removes the need to choose a global learning rate.
-A_ZH: AdaGrad 累加历史梯度平方，RMSProp 则使用梯度平方的指数移动平均。两者都用相应累积量平方根的倒数，加数值稳定项后，对各坐标梯度缩放。AdaGrad 持续累加，步长可能过度缩小；RMSProp 逐渐遗忘旧历史。两者仍需选择全局学习率。
+A_EN: For coordinate gradient g, AdaGrad uses $s_t=s_{t-1}+g_t^2$; RMSProp uses $s_t=\rho s_{t-1}+(1-\rho)g_t^2$, $0\le\rho<1$. Starting from zero, update each coordinate by $-\eta g_t/(\sqrt{s_t}+\epsilon)$ with $\epsilon>0$. AdaGrad remembers every squared gradient; RMSProp gradually forgets old ones. Both still require a global learning rate eta.
+A_ZH: 对每坐标梯度g，AdaGrad累积 $s_t=s_{t-1}+g_t^2$；RMSProp用 $s_t=\rho s_{t-1}+(1-\rho)g_t^2$，$0\le\rho<1$。从零初始化，逐坐标更新 $-\eta g_t/(\sqrt{s_t}+\epsilon)$，其中 $\epsilon>0$。AdaGrad保留全部历史平方梯度，RMSProp逐渐遗忘旧值；两者仍需全局学习率eta。
 
 @@ M268 | x08-training | learn | XOPT:23-24
 Q_EN: What are Adam's two moment estimates and bias corrections?
 Q_ZH: Adam 的两个矩估计及偏差修正是什么？
-A_EN: Adam tracks $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ and $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$, elementwise. Starting at zero biases early estimates, so use $\hat m_t=m_t/(1-\beta_1^t)$ and $\hat v_t=v_t/(1-\beta_2^t)$. Update by $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$. These estimates do not guarantee a global optimum.
-A_ZH: Adam 逐元素维护 $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ 和 $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$。从零初始化会使早期估计偏小，因此用 $\hat m_t=m_t/(1-\beta_1^t)$、$\hat v_t=v_t/(1-\beta_2^t)$ 修正，再按 $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$ 更新。这些估计不保证全局最优。
+A_EN: Adam tracks a gradient mean $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ and raw second moment $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$ elementwise, starting at zero. This pulls early estimates toward zero. For t starting at 1, correct with $\hat m_t=m_t/(1-\beta_1^t)$ and $\hat v_t=v_t/(1-\beta_2^t)$. Apply $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$. Here $0\le\beta_1,\beta_2<1$, $\epsilon>0$; v is not centered variance.
+A_ZH: Adam逐元素维护梯度均值 $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ 与非中心二阶矩 $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$。零初始化使早期估计偏向零。t从1起，修正为 $\hat m_t=m_t/(1-\beta_1^t)$、$\hat v_t=v_t/(1-\beta_2^t)$，更新 $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$。其中 $0\le\beta_1,\beta_2<1$、$\epsilon>0$；v不是中心化方差。
 
 @@ M269 | x08-training | check | XOPT:25-26
 Q_EN: Why is AdamW's decoupled weight decay different from simply adding L2 loss to Adam?
@@ -531,8 +531,8 @@ A_ZH: 对 kH×kW 的核、Cin 个输入通道，fan-in 是 $k_Hk_WC_{\rm in}$，
 @@ M271 | x08-training | learn | XREG:15-19
 Q_EN: In inverted dropout, should surviving activations be divided by the drop probability or keep probability?
 Q_ZH: Inverted dropout 中，保留下来的激活应除以丢弃概率还是保留概率？
-A_EN: Divide by the keep probability q. With mask $m\sim\mathrm{Bernoulli}(q)$, use $\tilde h=mh/q$, giving $E[\tilde h]=h$. At ordinary inference, disable masking and use h. If dropout rate is 0.2, q=0.8 and a surviving value is multiplied by 1.25. Mixing up drop and keep probabilities gives incorrect scaling.
-A_ZH: 应除以保留概率 q。若掩码 $m\sim\mathrm{Bernoulli}(q)$，则使用 $\tilde h=mh/q$，从而 $E[\tilde h]=h$。通常推理时关闭掩码，直接使用 h。若丢弃率为 0.2，则 q=0.8，保留值乘 1.25。混淆丢弃概率与保留概率会导致缩放错误。
+A_EN: Divide by keep probability $0<q\le1$. For a fixed activation h and mask $m\sim\mathrm{Bernoulli}(q)$, use $\tilde h=mh/q$, so its mask-average is $E_m[\tilde h]=h$. Ordinary inference disables masking and passes h. Drop rate 0.2 means q=0.8 and surviving values scale by 1.25. This single-activation expectation does not imply equality after every later nonlinearity.
+A_ZH: 除以保留概率 $0<q\le1$。对固定激活h与掩码 $m\sim\mathrm{Bernoulli}(q)$，使用 $\tilde h=mh/q$，对掩码取期望有 $E_m[\tilde h]=h$。通常推理关闭掩码、直接传h。丢弃率0.2意味着q=0.8，保留值乘1.25；单个激活期望不变不代表后续任意非线性后仍相等。
 
 @@ M272 | x08-training | learn | XREG:21-24
 Q_EN: How do batch normalization and layer normalization choose their statistics?
@@ -603,8 +603,8 @@ A_ZH: 例如 $R+\lambda D$ 的率失真目标，在预期编码成本 R 与重�
 @@ M283 | x09-vision | check | XLOW:31-44
 Q_EN: Why can two reconstructions with similar MSE look perceptually different?
 Q_ZH: 为什么两个重构的 MSE 接近，视觉感受却可能不同？
-A_EN: MSE measures squared pixel-value differences, not perceived structure or texture directly. SSIM and learned feature losses emphasize other properties, so rankings can differ. Squared Euclidean distance is not itself a metric. For N compared scalar values, RMSE is Euclidean distance divided by sqrt(N); when averaging all RGB channel values, N counts channels as well as pixel locations.
-A_ZH: MSE 衡量像素数值的平方差，并不直接衡量感知结构或纹理。SSIM 和学习到的特征损失强调其他属性，因此排序可能不同。平方欧氏距离本身不是度量。比较 N 个标量数值时，RMSE 为欧氏距离除以 sqrt(N)；若对全部 RGB 通道值取平均，N 需同时计入通道数和像素位置。
+A_EN: MSE averages squared scalar errors and forgets their spatial arrangement. Errors (1,1,1,1) and (2,0,0,0) both give MSE 1, although one is spread out and the other localized. Perceived structure and texture can therefore differ; SSIM or learned feature losses assess other properties. MSE itself does not satisfy the triangle inequality and is not a distance metric. A score ranking alone does not replace viewing the reconstruction.
+A_ZH: MSE平均各标量的平方误差，会丢失误差的空间排列。误差(1,1,1,1)与(2,0,0,0)的MSE均为1，但前者分散、后者集中，所以结构和纹理感受可能不同；SSIM或学习特征损失强调其他属性。MSE本身不满足三角不等式，不是距离度量；指标排名不能替代查看重构图。
 
 @@ M284 | x09-vision | check | XVIS:37-40
 Q_EN: What can repeated reuse of a fixed test set hide when comparing vision models?
@@ -627,8 +627,8 @@ A_ZH: 生成器把噪声映射成合成数据，判别器学习区分真实训�
 @@ M287 | x10-generative | learn | XGEN:13-15
 Q_EN: Write the original GAN minimax objective with its optimization directions.
 Q_ZH: 写出原始 GAN 的极小极大目标，并说明优化方向。
-A_EN: One convention is $\min_G\max_D E_{x\sim p_{\rm data}}\log D(x)+E_z\log(1-D(G(z)))$. D maximizes correct discrimination, while G minimizes the expression to make generated samples harder to reject. If the expression is negated and called discriminator loss, min/max directions reverse. Compare the algebraic sign before declaring two formulas inconsistent.
-A_ZH: 一种约定为 $\min_G\max_D E_{x\sim p_{\rm data}}\log D(x)+E_z\log(1-D(G(z)))$。D 最大化正确区分能力，G 最小化该式，使生成样本更难被拒绝。若整体取负并称为判别器损失，极小与极大方向会反转，比较公式时应先核对符号。
+A_EN: Write $V=E_{x\sim p_{data}}\log D(x)+E_z\log(1-D(G(z)))$. Original GAN training is $\min_G\max_D V$: D raises the real/fake discrimination score, and G lowers V through generated examples. Equivalently D minimizes $-V$. A commonly used generator loss $-E_z\log D(G(z))$ is the non-saturating alternative, not simply the same original minimax loss with its sign flipped.
+A_ZH: 令 $V=E_{x\sim p_{data}}\log D(x)+E_z\log(1-D(G(z)))$。原始GAN为 $\min_G\max_D V$：D提高真假区分得分，G通过生成样本降低V。等价地，D最小化 $-V$。常见生成器损失 $-E_z\log D(G(z))$ 是非饱和替代目标，不能当成原始极小极大损失简单反号。
 
 @@ M288 | x10-generative | check | XGEN:13-15,19-20
 Q_EN: Why can alternating GAN optimization be difficult even if each network uses ordinary gradient updates?
@@ -691,16 +691,16 @@ A_EN: For n tokens with feature width D, use $Q=XW_Q$, $K=XW_K$, $V=XW_V$, where
 A_ZH: 对 n 个、特征宽度为 D 的 token，取 $Q=XW_Q$、$K=XW_K$、$V=XW_V$，其中 $W_Q,W_K$ 为 D 行 d_k 列，$W_V$ 为 D 行 d_v 列。于是 $A=\operatorname{softmax}(QK^T/\sqrt{d_k})$ 为 n 阶矩阵，AV 为 n 行 d_v 列。Softmax 对每个 query 的各 key 归一化，这修正了旧课件按 token 维度写投影矩阵的问题。
 
 @@ M298 | x11-transformers | worked | XATT:13
-Q_EN: One attention query has scaled scores (log 3,0) and scalar values (2,10). What is its output?
-Q_ZH: 某个注意力 query 的缩放后分数为 (log 3,0)，对应标量 value 为 (2,10)，输出是多少？
+Q_EN: One attention query has scaled scores (ln 3,0), where ln is the natural logarithm, and scalar values (2,10). What is its output?
+Q_ZH: 某个注意力query的缩放后分数为(ln 3,0)，ln表示自然对数；对应标量value为(2,10)。输出是多少？
 A_EN: Softmax gives weights (3/4,1/4), so the weighted value is $(3/4)2+(1/4)10=4$. The scores select weights; the values supply the information being averaged. Attention weights sum to one per query, but the output does not have to be a probability.
 A_ZH: Softmax 得到权重 (3/4,1/4)，所以加权输出为 $(3/4)2+(1/4)10=4$。分数决定权重，value 提供被加权的信息。每个 query 的注意力权重和为一，但输出本身不必是概率。
 
-@@ M299 | x11-transformers | learn | XATT:14-18
+@@ M299 | x11-transformers | learn | XATT:14-18; XFLASH:1,3.1
 Q_EN: What do multiple attention heads add, and why can global attention be expensive?
 Q_ZH: 多个注意力头增加了什么能力？全局注意力为什么可能昂贵？
-A_EN: Each head uses its own learned projections, allowing different combinations of features and token relationships. Head outputs are concatenated and projected. Standard dense attention forms pairwise token scores, giving n-by-n score storage and roughly quadratic dependence on token count. Multiple heads do not automatically remove this cost; windowed or sparse patterns change the interactions.
-A_ZH: 每个头有自己的可学习投影，可组合不同特征和 token 关系，输出再拼接并投影。标准稠密注意力形成两两 token 分数，需要 n×n 分数存储，对 token 数量具有近似二次依赖。增加头数不会自动消除这一成本，窗口或稀疏模式改变了交互范围。
+A_EN: Each head learns projections that combine different feature subspaces and token relationships; outputs are concatenated and projected. Dense attention compares all n-by-n token pairs, with quadratic pairwise arithmetic for fixed feature width. A naive implementation materializes n² scores per head; peak memory depends on implementation and need not store that entire matrix at once. More heads do not by themselves remove pairwise interactions.
+A_ZH: 每个头学习投影，组合不同特征子空间与token关系，输出再拼接并投影。稠密注意力比较n×n个token对，固定特征宽度时两两计算量呈二次增长。朴素实现每头显式保存n²个分数；峰值内存还取决于实现，不一定同时存完整矩阵。增加头数本身不会消除两两交互。
 
 @@ M300 | x11-transformers | learn | XATT:12,15
 Q_EN: What distinct roles do attention, the feed-forward block, residual paths and normalization play in a Transformer block?
@@ -723,8 +723,8 @@ A_ZH: 应说明数据、可访问的模型信息、扰动范数与预算、攻�
 @@ M303 | x12-problems | historical | XHA1:1; XHA1S:1-2
 Q_EN: Historical Assignment 1 gives die probabilities (0.1,0.1,0.2,0.2,0.4,0) for faces 1–6. What is the chance of an even result?
 Q_ZH: 往年 Assignment 1 中，骰子 1–6 面的概率依次为 (0.1,0.1,0.2,0.2,0.4,0)，掷出偶数的概率是多少？
-A_EN: Add the probabilities of mutually exclusive even faces: $P(2)+P(4)+P(6)=0.1+0.2+0=0.3$. A fair die gives 0.5, so the stated winning rule is less favorable with this biased die. Do not count three even faces and divide by six unless the faces are equally likely.
-A_ZH: 把互斥的偶数面概率相加：$P(2)+P(4)+P(6)=0.1+0.2+0=0.3$。公平骰子的概率为 0.5，因此这个偏置骰子对题中的获胜规则更不利。只有各面等可能时，才可以用三个偶数面除以六。
+A_EN: Add mutually exclusive even faces: $P(2)+P(4)+P(6)=0.1+0.2+0=0.3$. This is below a fair die's even probability 0.5. Counting three even faces out of six is valid only when all faces are equally likely.
+A_ZH: 把互斥偶数面相加：$P(2)+P(4)+P(6)=0.1+0.2+0=0.3$，低于公平骰子的偶数概率0.5。只有各面等可能时，才可用三个偶数面除以六。
 
 @@ M304 | x12-problems | historical | XHA1:1; XHA1S:1-2
 Q_EN: If X takes 3, 8 and 9 with probabilities p3, p8 and p9, what is $E[I(X=8)]$?
@@ -733,10 +733,10 @@ A_EN: The indicator is 0 at X=3 or 9 and 1 at X=8. Therefore its expectation is 
 A_ZH: X 为 3 或 9 时指示函数为 0，为 8 时为 1，因此期望为 $0p_3+1p_8+0p_9=p_8$。一般而言，事件指示函数的期望等于该事件的概率。它不是先求 X 的期望，再把该期望代入指示函数。
 
 @@ M305 | x12-problems | historical | XHA1:2; XHA1S:2-3
-Q_EN: Prove the discrete entropy chain rule $H(X,Y)=H(Y)+H(X|Y)$.
-Q_ZH: 证明离散熵的链式法则 $H(X,Y)=H(Y)+H(X|Y)$。
-A_EN: On positive-probability events, write $p(x,y)=p(y)p(x|y)$ and split its logarithm. In $-\sum_{x,y}p(x,y)\log p(x,y)$, the log p(y) part sums over x to H(Y), while the conditional part is H(X|Y). Use the convention $0\log0=0$ and consistent log bases; base 2 gives bits.
-A_ZH: 在正概率事件上，写成 $p(x,y)=p(y)p(x|y)$，再把对数拆开。在 $-\sum_{x,y}p(x,y)\log p(x,y)$ 中，log p(y) 那一项对 x 求和后得到 H(Y)，条件概率那项得到 H(X|Y)。采用 $0\log0=0$ 的约定，并保持对数底一致，底数 2 对应 bit。
+Q_EN: For finite-valued X,Y, prove $H(X,Y)=H(Y)+H(X\mid Y)$ using base-2 logarithms and $0\log0=0$.
+Q_ZH: X、Y取有限个值，以2为对数底、约定 $0\log0=0$，证明 $H(X,Y)=H(Y)+H(X\mid Y)$。
+A_EN: Use $p(x,y)=p(y)p(x\mid y)$ wherever p(x,y)>0. Splitting the joint-entropy sum gives $-\sum_y[\sum_xp(x,y)]\log_2p(y)-\sum_{x,y}p(x,y)\log_2p(x\mid y)$. Since $\sum_xp(x,y)=p(y)$, the first term is H(Y). The second is the definition of H(X|Y), the average remaining uncertainty about X after observing Y. Zero-probability terms contribute zero.
+A_ZH: 在p(x,y)>0处使用 $p(x,y)=p(y)p(x\mid y)$。拆开联合熵求和，得 $-\sum_y[\sum_xp(x,y)]\log_2p(y)-\sum_{x,y}p(x,y)\log_2p(x\mid y)$。因 $\sum_xp(x,y)=p(y)$，第一项为H(Y)；第二项按定义为H(X|Y)，即观察Y后X剩余不确定性的平均值。零概率项贡献零。
 
 @@ M306 | x12-problems | historical | XHA1:2; XHA1S:2-3
 Q_EN: Why does independence imply zero mutual information in the historical entropy exercise?
@@ -745,10 +745,10 @@ A_EN: Mutual information averages $\log[p(x,y)/(p(x)p(y))]$ under the joint dist
 A_ZH: 互信息是在联合分布下，对 $\log[p(x,y)/(p(x)p(y))]$ 求平均。独立时，在联合概率为正的地方，该比值等于 1，而 $\log1=0$；零概率项按零处理。这比仅有零协方差更强，后者只描述二阶矩。
 
 @@ M307 | x12-problems | historical | XHA1:2; XHA1S:3-5
-Q_EN: For a Laplace class-conditional feature density, how do I estimate location and scale by maximum likelihood?
-Q_ZH: 对 Laplace 类条件特征密度，怎样用最大似然估计位置和尺度？
-A_EN: Within each class, maximizing $\prod_i(2b)^{-1}e^{-|x_i-\mu|/b}$ makes mu a sample median, since it minimizes absolute deviations. Then $\hat b=\sum_i|x_i-\hat\mu|/n_c$ and the class prior is $n_c/n$. An even sample can admit several medians. Identical observations give a zero-scale boundary issue, requiring a positive floor or other modeling treatment.
-A_ZH: 在每一类内部，最大化 $\prod_i(2b)^{-1}e^{-|x_i-\mu|/b}$ 时，mu 应取样本中位数，因为它最小化绝对偏差。随后 $\hat b=\sum_i|x_i-\hat\mu|/n_c$，类别先验为 $n_c/n$。偶数个样本可能有多个中位数；若观测完全相同，会出现尺度趋零的边界问题，需要正下限或其他建模处理。
+Q_EN: Within one class, IID observations have Laplace density $p(x\mid\mu,b)=(2b)^{-1}e^{-|x-\mu|/b}$, with location mu and scale b>0. Find their maximum-likelihood estimates.
+Q_ZH: 某类的观测独立同分布，Laplace密度为 $p(x\mid\mu,b)=(2b)^{-1}e^{-|x-\mu|/b}$，mu为位置、b>0为尺度。求两参数的最大似然估计。
+A_EN: Let n>0 and $S(\mu)=\sum_i|x_i-\mu|$. The log likelihood is $-n\log(2b)-S(\mu)/b$. A sample median minimizes S, so choose it as mu. Differentiating in b gives $-n/b+S/b^2=0$, hence $\hat b=S(\hat\mu)/n$ when S>0. Even samples may admit a median interval. If all values coincide, S=0 and likelihood diverges as b approaches zero; no positive-scale unconstrained MLE exists.
+A_ZH: 令样本数n>0，$S(\mu)=\sum_i|x_i-\mu|$，对数似然为 $-n\log(2b)-S(\mu)/b$。中位数使S最小，所以mu取样本中位数；对b求导得 $-n/b+S/b^2=0$，S>0时 $\hat b=S(\hat\mu)/n$。偶数样本可有中位数区间。若观测全相同，S=0，b趋零时似然无界，不存在正尺度的无约束MLE。
 
 @@ M308 | x12-problems | historical | XHA1:2; XHA1S:5-6
 Q_EN: Why does binary LDA with shared covariance yield a sigmoid posterior?
@@ -775,10 +775,10 @@ A_EN: Let $q=ue^v-2ve^{-u}$. The chain rule gives $\partial_u\ell=2q(e^v+2ve^{-u
 A_ZH: 令 $q=ue^v-2ve^{-u}$。链式法则给出 $\partial_u\ell=2q(e^v+2ve^{-u})$ 和 $\partial_v\ell=2q(ue^v-2e^{-u})$。同时梯度下降应先在旧 (u,v) 处计算两个导数，再更新两个坐标。先更新 u，再用新 u 算 v 的导数，会变成不同算法。
 
 @@ M312 | x12-problems | historical | XHA2:1-2; XHA2S:2-4
-Q_EN: For $\ell(u,v)=(ue^v-2ve^{-u})^2$, start at (1,1) and use simultaneous gradient descent with learning rate 0.1. After how many updates does loss first fall below $10^{-14}$?
-Q_ZH: 对 $\ell(u,v)=(ue^v-2ve^{-u})^2$，从 (1,1) 出发，以学习率 0.1 同时更新两个坐标。损失首次低于 $10^{-14}$ 需要几次更新？
-A_EN: It takes 10 double-precision updates; the resulting parameters round to (0.045,0.024). Compute both gradient components at the old parameter pair before changing either coordinate. Count updates from the initial point and check loss after each step. The gradient derivation is in companion card CS5489-M311; rounding intermediate values or using sequential coordinate updates can change the result.
-A_ZH: 双精度下需 10 次更新，所得参数按三位小数舍入为 (0.045,0.024)。每次先在旧参数对处计算两个梯度分量，再更新两个坐标。从初始点开始计更新次数，每步后检查损失。梯度推导见配套卡 CS5489-M311；中途舍入或改成逐坐标顺序更新，可能改变结果。
+Q_EN: For $\ell=(ue^v-2ve^{-u})^2$, start at (1,1), step size 0.1, double precision. How should simultaneous gradient descent find the first update with $\ell<10^{-14}$? Give the stopping count.
+Q_ZH: 对 $\ell=(ue^v-2ve^{-u})^2$，从(1,1)开始、步长0.1、双精度，怎样用同时梯度下降找首次满足 $\ell<10^{-14}$ 的更新？给出停止计数。
+A_EN: At the old pair compute $q=ue^v-2ve^{-u}$, $g_u=2q(e^v+2ve^{-u})$ and $g_v=2q(ue^v-2e^{-u})$. Then replace both coordinates by $(u-0.1g_u,v-0.1g_v)$, increment the count, and evaluate the new loss. Do not round intermediate values. The first passing update is 10; parameters round to (0.045,0.024). Updating one coordinate before computing the other gradient changes the algorithm.
+A_ZH: 先在旧参数对计算 $q=ue^v-2ve^{-u}$、$g_u=2q(e^v+2ve^{-u})$、$g_v=2q(ue^v-2e^{-u})$，再同时换为 $(u-0.1g_u,v-0.1g_v)$，计数加一并检查新损失，中途不舍入。首次达标为第10次，参数舍入为(0.045,0.024)。先更新一个坐标再求另一梯度是不同算法。
 
 @@ M313 | x12-problems | historical | XHA2:2; XHA2S:4-5
 Q_EN: Minimize $x_1^2+x_2^2$ subject to both unit disks centered at (1,1) and (1,-1). What is the feasible set?
@@ -801,8 +801,8 @@ A_ZH: 构造拉格朗日函数 $L=\frac12\|x-x_0\|^2+\lambda(w^Tx+b)$。对 x �
 @@ M316 | x12-problems | historical | XHA2:3; XHA2S:8-10
 Q_EN: What steps derive the hard-margin SVM dual, and where does it differ from the ordinary soft-margin dual?
 Q_ZH: 硬间隔 SVM 对偶的推导步骤是什么？它与普通软间隔对偶在哪里不同？
-A_EN: Add nonnegative multipliers to the margin constraints, then minimize the Lagrangian over w and b. Stationarity yields $w=\sum_i\alpha_i y_i x_i$ and $\sum_i\alpha_i y_i=0$. Substitution gives the usual quadratic dual. Hard margin has $\alpha_i\ge0$ with no upper bound; the linear-slack soft-margin penalty adds $\alpha_i\le C$.
-A_ZH: 对间隔约束引入非负乘子，再对 w、b 最小化拉格朗日函数。驻点条件给出 $w=\sum_i\alpha_i y_i x_i$ 和 $\sum_i\alpha_i y_i=0$，代回得到标准二次对偶。硬间隔只有 $\alpha_i\ge0$，没有上界；对松弛量作线性惩罚的软间隔才增加 $\alpha_i\le C$。
+A_EN: For constraints $y_i(w^Tx_i+b)\ge1$, set $L=\frac12\|w\|^2+\sum_i\alpha_i[1-y_i(w^Tx_i+b)]$, $\alpha_i\ge0$. Minimizing in w,b yields $w=\sum_i\alpha_i y_ix_i$ and $\sum_i\alpha_i y_i=0$. Substitution gives $\max_\alpha\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$, subject to those alpha constraints. Hard margin has no upper bound; adding linear slack penalty $C\sum_i\xi_i$ adds $\alpha_i\le C$.
+A_ZH: 约束为 $y_i(w^Tx_i+b)\ge1$，取 $L=\frac12\|w\|^2+\sum_i\alpha_i[1-y_i(w^Tx_i+b)]$、$\alpha_i\ge0$。对w、b最小化得 $w=\sum_i\alpha_i y_ix_i$、$\sum_i\alpha_i y_i=0$。代回得到 $\max_\alpha\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j$，满足上述乘子约束。硬间隔无上界；线性松弛罚 $C\sum_i\xi_i$ 才加入 $\alpha_i\le C$。
 
 @@ M317 | x12-problems | historical | XHA3:1; XHA3S:1-2
 Q_EN: For compatible real matrices P, R and B, prove $(P^{-1}+B^TR^{-1}B)^{-1}B^TR^{-1}=PB^T(BPB^T+R)^{-1}$. Which inverses must exist?
@@ -817,10 +817,10 @@ A_EN: In order: false, false, true, true, false. Rank-nullity gives nullity $N-\
 A_ZH: 依次为：假、假、真、真、假。秩与零空间维数定理给出零空间维数 $N-\operatorname{rank}(A)$。零矩阵可反驳唯一性或总可解。N<M 时列空间维数至多 N，小于 M，因此存在列空间之外的 y；但高矩阵若列秩不足，仍可有非零零空间。
 
 @@ M319 | x12-problems | historical | XHA3:2; XHA3S:4-6
-Q_EN: What is the least-squares coordinate-descent update using the current residual?
-Q_ZH: 利用当前残差，最小二乘的坐标下降更新式是什么？
-A_EN: Let r=y-Xw and let xk be column k. If $x_k^Tx_k>0$, set $\Delta w_k=x_k^Tr/(x_k^Tx_k)$, update $w_k\leftarrow w_k+\Delta w_k$, then $r\leftarrow r-\Delta w_kx_k$. This exactly minimizes along that coordinate with others fixed. A zero column requires separate handling because it gives no information about its coefficient.
-A_ZH: 令 r=y-Xw，xk 为第 k 列。若 $x_k^Tx_k>0$，则取 $\Delta w_k=x_k^Tr/(x_k^Tx_k)$，更新 $w_k\leftarrow w_k+\Delta w_k$，再令 $r\leftarrow r-\Delta w_kx_k$。它在固定其他坐标时精确最小化该坐标方向。零列不提供其系数的信息，需要单独处理。
+Q_EN: For least squares, use residual $r=Xw-y$ and let x_k be column k of X. With other weights fixed, derive the coordinate increment and residual update when $x_k^Tx_k>0$.
+Q_ZH: 最小二乘采用残差 $r=Xw-y$，x_k为X第k列。固定其他权重且 $x_k^Tx_k>0$，推导坐标增量与残差更新。
+A_EN: An increment delta gives objective $\frac12\|r+\delta x_k\|^2$. Its derivative is $x_k^Tr+\delta x_k^Tx_k$, so $\Delta w_k=-x_k^Tr/(x_k^Tx_k)$. Set $w_k\leftarrow w_k+\Delta w_k$ and $r\leftarrow r+\Delta w_kx_k$. A zero column cannot use this division. The historical solution uses the opposite residual $y-Xw$, so its signs reverse consistently.
+A_ZH: 增量delta后的目标为 $\frac12\|r+\delta x_k\|^2$，导数为 $x_k^Tr+\delta x_k^Tx_k$。令零得 $\Delta w_k=-x_k^Tr/(x_k^Tx_k)$，再更新 $w_k\leftarrow w_k+\Delta w_k$、$r\leftarrow r+\Delta w_kx_k$。零列不能用于相除；往年解答使用反号残差 $y-Xw$，对应更新符号也一起反转。
 
 @@ M320 | x12-problems | historical | XHA3:2-3; XHA3S:6-8
 Q_EN: Why can the nonnegative-slack constraints be omitted in squared-slack SVM?
@@ -829,16 +829,16 @@ A_EN: Suppose a feasible point has $\xi_i<0$ under $y_if(x_i)\ge1-\xi_i$. Replac
 A_ZH: 若某可行点在 $y_if(x_i)\ge1-\xi_i$ 下满足 $\xi_i<0$，把 xi 换成零会放宽间隔约束，并在 C>0 时降低 $C\xi_i^2$。因此最优解无需负松弛量。该论证依赖此目标与约束，不能不加检查地删除其他模型的约束。
 
 @@ M321 | x12-problems | historical | XHA3:3; XHA3S:6-8
-Q_EN: How does a squared-slack penalty change the SVM dual?
-Q_ZH: 对松弛量作平方惩罚，会怎样改变 SVM 对偶？
+Q_EN: Use squared-slack SVM objective $\frac12\|w\|^2+C\sum_i\xi_i^2$, C>0, with $y_i(w^Tx_i+b)\ge1-\xi_i$ and labels $y_i\in\{-1,1\}$. How does its dual differ from linear-slack SVM?
+Q_ZH: 平方松弛SVM目标为 $\frac12\|w\|^2+C\sum_i\xi_i^2$，C>0；约束 $y_i(w^Tx_i+b)\ge1-\xi_i$，标签 $y_i\in\{-1,1\}$。对偶与线性松弛SVM有何不同？
 A_EN: For $\frac12\|w\|^2+C\sum_i\xi_i^2$, stationarity gives $\xi_i=\alpha_i/(2C)$. The dual maximizes $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j-\sum_i\alpha_i^2/(4C)$, subject to $\alpha_i\ge0$ and $\sum_i\alpha_i y_i=0$. There is no ordinary upper bound C; an added quadratic penalty plays that role differently.
 A_ZH: 对 $\frac12\|w\|^2+C\sum_i\xi_i^2$，驻点条件给出 $\xi_i=\alpha_i/(2C)$。对偶最大化 $\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_jx_i^Tx_j-\sum_i\alpha_i^2/(4C)$，约束为 $\alpha_i\ge0$、$\sum_i\alpha_i y_i=0$。这里没有普通的上界 C，而是增加了不同作用的二次惩罚。
 
 @@ M322 | x12-problems | historical | XHA4:1; XHA4S:1-2
 Q_EN: Why are eigenvalues of a real symmetric matrix real, and distinct-eigenvalue eigenvectors orthogonal?
 Q_ZH: 为什么实对称矩阵的特征值为实数，不同特征值对应的特征向量正交？
-A_EN: For a possibly complex eigenvector v, $\lambda=v^*Av/(v^*v)$ is real because A is Hermitian. For real eigenvectors u,v with eigenvalues lambda,mu, symmetry gives $\lambda u^Tv=(Au)^Tv=u^TAv=\mu u^Tv$. If lambda differs from mu, the inner product is zero. Repeated eigenvalues permit an orthonormal basis but do not force arbitrary chosen vectors to be orthogonal.
-A_ZH: 对可能为复数的特征向量 v，因 A 为 Hermitian，$\lambda=v^*Av/(v^*v)$ 是实数。对特征值为 lambda、mu 的实向量 u、v，对称性给出 $\lambda u^Tv=(Au)^Tv=u^TAv=\mu u^Tv$。特征值不同则内积为零。重特征值的空间可选择正交归一基，但任意选出的向量并非天然正交。
+A_EN: Here * means conjugate transpose. A real symmetric A obeys $A^*=A$. For a nonzero possibly complex eigenvector v, $\overline{v^*Av}=v^*A^*v=v^*Av$, so $\lambda=(v^*Av)/(v^*v)$ is real because $v^*v>0$. For real eigenvectors u,v, $\lambda u^Tv=(Au)^Tv=u^TAv=\mu u^Tv$. Distinct eigenvalues force $u^Tv=0$; repeated ones allow an orthonormal basis but do not force every chosen pair to be orthogonal.
+A_ZH: *表示共轭转置，实对称A满足 $A^*=A$。对非零、可为复数的特征向量v，$\overline{v^*Av}=v^*A^*v=v^*Av$，即分子为实数；又 $v^*v>0$，所以 $\lambda=(v^*Av)/(v^*v)$ 为实数。实特征向量u、v满足 $\lambda u^Tv=(Au)^Tv=u^TAv=\mu u^Tv$；特征值不同则内积为零，重值空间虽可选正交基，但任意选的向量未必正交。
 
 @@ M323 | x12-problems | historical | XHA4:1; XHA4S:2-4; XPCA:14-16
 Q_EN: Prove that the k-th PCA direction can be chosen as an eigenvector for the k-th largest covariance eigenvalue.
@@ -854,14 +854,14 @@ A_EN: The inputs give $x_4=2x_1-2x_2+x_3$, so linearity gives $y_4=2y_1-2y_2+y_3
 A_ZH: 由输入可得 $x_4=2x_1-2x_2+x_3$，线性性给出 $y_4=2y_1-2y_2+y_3$。在 n=(-1,0,1,2) 处的非零值为 (2,1,2,-2)。系统并非时不变：虽然 $x_2=x_1[n]+x_1[n-1]$，题给 y2 却不等于 $y_1[n]+y_1[n-1]$。线性并不蕴含平移不变。
 
 @@ M325 | x12-problems | historical | XHA4:1-2,4; XHA4S:5,8
-Q_EN: Compute full discrete convolution in two cases: (1) x=(1,1,1,1), h=(2,2,2,2), both starting at n=0; (2) x[n]=0.5δ[n−2], h=(1,2,3,2,1) starting at n=0. Samples outside the stated support are zero. Give output values and indices.
-Q_ZH: 求两例完整离散卷积：(1) x=(1,1,1,1)、h=(2,2,2,2)，均从 n=0 开始；(2) x[n]=0.5δ[n−2]，h=(1,2,3,2,1) 从 n=0 开始。所述支撑外均为零。写出输出值和对应下标。
+Q_EN: Compute full discrete convolution: (1) x=(1,1,1,1), h=(2,2,2,2), both starting at n=0; (2) $x[n]=0.5\delta[n-2]$, h=(1,2,3,2,1) starting at 0. Here delta[n] is 1 at n=0 and 0 elsewhere; unspecified samples are zero. Give values and indices.
+Q_ZH: 求完整离散卷积：(1)x=(1,1,1,1)、h=(2,2,2,2)，均从n=0开始；(2)$x[n]=0.5\delta[n-2]$，h=(1,2,3,2,1)从0开始。delta[n]在n=0为1、其余为0，未指定样本均为零。给出值与下标。
 MEDIA_FRONT: extra-ha4-page4-image1.png;extra-ha4-page4-image2.png
 A_EN: First, x is four ones and h is four twos, both supported at n=0..3. Their convolution at n=0..6 is (2,4,6,8,6,4,2). Second, $x[n]=0.5\delta[n-2]$, so $y[n]=0.5h[n-2]$. With h=(1,2,3,2,1) at n=0..4, y=(0.5,1,1.5,1,0.5) at n=2..6, and zero elsewhere.
 A_ZH: 第一例中，x 为四个 1，h 为四个 2，支撑均为 n=0..3，卷积在 n=0..6 处为 (2,4,6,8,6,4,2)。第二例 $x[n]=0.5\delta[n-2]$，故 $y[n]=0.5h[n-2]$。h 在 n=0..4 为 (1,2,3,2,1)，所以 y 在 n=2..6 为 (0.5,1,1.5,1,0.5)，其余位置为零。
 
 @@ M326 | x12-problems | historical | XHA4:2; XHA4S:5-6
-Q_EN: What is the key change of variables in proving the DTFT convolution theorem?
-Q_ZH: 证明 DTFT 卷积定理时，关键的变量替换是什么？
+Q_EN: For absolutely summable sequences, define DTFT $X(\omega)=\sum_nx[n]e^{-j\omega n}$, where $j^2=-1$ and omega is angular frequency. With $z[n]=\sum_mx[m]y[n-m]$, what substitution proves $Z(\omega)=X(\omega)Y(\omega)$?
+Q_ZH: 对绝对可和序列，定义离散时间傅里叶变换DTFT：$X(\omega)=\sum_nx[n]e^{-j\omega n}$，$j^2=-1$、omega为角频率。给定 $z[n]=\sum_mx[m]y[n-m]$，用什么变量替换证明 $Z(\omega)=X(\omega)Y(\omega)$？
 A_EN: Start with $\sum_n\sum_m x[m]y[n-m]e^{-j\omega n}$ and set t=n-m. Under conditions allowing the sums to be exchanged, such as absolute summability, it factors into $(\sum_m x[m]e^{-j\omega m})(\sum_t y[t]e^{-j\omega t})=X(\omega)Y(\omega)$. The exponential also splits because n=t+m.
 A_ZH: 从 $\sum_n\sum_m x[m]y[n-m]e^{-j\omega n}$ 出发，令 t=n-m。在绝对可和等允许交换求和的条件下，可分解成 $(\sum_m x[m]e^{-j\omega m})(\sum_t y[t]e^{-j\omega t})=X(\omega)Y(\omega)$。指数项能够拆开，是因为 n=t+m。

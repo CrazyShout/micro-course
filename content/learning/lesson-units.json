@@ -699,6 +699,80 @@
           "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
         }
       ]
+    },
+    {
+      "id": "kernel-pca-center-and-scale",
+      "card_ids": [
+        "CS5489-M238",
+        "CS5489-M239",
+        "CS5489-M240"
+      ],
+      "sources": [
+        {
+          "name": "Lecture8.2.pdf",
+          "locator": "page 6-13",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Lecture8.2.pdf",
+          "locator": "page 10-13",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Lecture8.2.pdf",
+          "locator": "page 10-13,20",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml23#kernel-pca-center-and-scale",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "核PCA：先在特征空间居中，再把方向缩成单位长度",
+        "en": "Kernel PCA: center features, then normalize directions"
+      },
+      "goal": {
+        "zh": "能从两点例子算中心化核矩阵、归一化系数和一个新点的得分。",
+        "en": "Compute a centered two-point kernel, normalized coefficients and a query score."
+      },
+      "explain": {
+        "zh": "普通PCA先减均值。核PCA同样做这件事，只是减的是特征映射 $\\phi(x)$ 的训练均值，不一定是原始x的均值。核 $k(x,z)=\\phi(x)^T\\phi(z)$ 让我们只用内积计算；训练核矩阵 $K_{ij}=k(x_i,x_j)$ 像两两相似性的表。\n\n对n个训练点，令 $H=I-\\mathbf1\\mathbf1^T/n$，$\\mathbf1$ 是全1列，中心化矩阵为 $K_c=HKH$：每格减所在行均值、减列均值、加全表均值。\n\n若 $K_ca=\\lambda_Ka$ 且 $a^Ta=1$，组合方向 $v=\\sum_i a_i\\phi_c(x_i)$ 的长度平方是 $a^TK_ca=\\lambda_K$。因此真正单位方向用系数 $a/\\sqrt{\\lambda_K}$，训练得分为 $\\sqrt{\\lambda_K}a$，只保留正特征值。新点也减原训练特征均值，不能重新拟合均值。",
+        "en": "Kernel PCA centers the training mean of feature vectors $\\phi(x)$, which differs from merely centering raw x. The kernel $k(x,z)=\\phi(x)^T\\phi(z)$ supplies feature inner products.\n\nFor n training points, $H=I-\\mathbf1\\mathbf1^T/n$ and $K_c=HKH$ subtract row and column means and add the grand mean.\n\nIf $K_ca=\\lambda_Ka$ and $a^Ta=1$, the direction $v=\\sum_i a_i\\phi_c(x_i)$ has squared length $a^TK_ca=\\lambda_K$. Its unit-length version therefore uses coefficients $a/\\sqrt{\\lambda_K}$ and training scores $\\sqrt{\\lambda_K}a$, only for positive eigenvalues. Center new queries with the same training feature mean."
+      },
+      "worked_q": {
+        "zh": "训练输入为0、2，特征映射phi(x)=x²。求特征均值、原K和Kc。再用a=(−1,1)/√2、特征值8求单位方向系数与训练得分。",
+        "en": "Train on x=0,2 with phi(x)=x². Find feature mean, K, Kc, then use a=(−1,1)/√2 with eigenvalue8 to find normalized coefficients and scores."
+      },
+      "worked_a": {
+        "zh": "特征为0、4，均值2，居中后为−2、2。故 $K=\\begin{pmatrix}0&0\\\\0&16\\end{pmatrix}$，$K_c=\\begin{pmatrix}4&-4\\\\-4&4\\end{pmatrix}$。乘a可验证特征值8。系数 $a/\\sqrt8=(-1/4,1/4)$，组成方向 $(-1/4)(-2)+(1/4)2=1$；训练得分为(−2,2)。",
+        "en": "Features0,4 have mean2 and centered values−2,2. Thus $K=\\begin{pmatrix}0&0\\\\0&16\\end{pmatrix}$ and $K_c=\\begin{pmatrix}4&-4\\\\-4&4\\end{pmatrix}$. Multiplication verifies eigenvalue8. Normalized coefficients are (−1/4,1/4), giving feature direction1 and training scores(−2,2)."
+      },
+      "practice_q": {
+        "zh": "另一个训练集的居中特征为(−1,1)，Kc=[[1,−1],[−1,1]]。a=(−1,1)/√2、特征值2。补出系数a/√2、特征方向长度及得分。",
+        "en": "Centered features are(−1,1), with Kc=[[1,−1],[−1,1]], a=(−1,1)/√2 and eigenvalue2. Find coefficients, direction length and scores."
+      },
+      "hint": {
+        "zh": "先算每个系数，再用它们加权两个居中特征；所得方向应长1。",
+        "en": "Compute coefficients first, then their weighted sum of centered features; its length should be one."
+      },
+      "practice_a": {
+        "zh": "系数(−1/2,1/2)，方向(−1/2)(−1)+(1/2)1=1，长度1；得分(−1,1)。",
+        "en": "Coefficients are(−1/2,1/2), direction1 has unit length, and scores are(−1,1)."
+      },
+      "transfer_q": {
+        "zh": "回到训练x=(0,2)、phi=x²、训练特征均值2，查询x=1。求居中特征、与训练点的居中核向量及得分。为什么不能先把原x减1再平方代替？",
+        "en": "Return to training x=(0,2), phi=x² and feature mean2. For query x=1, compute centered feature, centered kernel vector and score. Why is squaring after subtracting raw mean1 different?"
+      },
+      "transfer_a": {
+        "zh": "查询特征1减2得−1；与训练居中特征(−2,2)内积得到(2,−2)，乘系数(−1/4,1/4)得得分−1。若先在原空间减1再平方，训练特征会变成(1,1)，其变化全消失；两种操作并不等价。",
+        "en": "Query centered feature is−1; kernel vector with training features(−2,2) is(2,−2), yielding score−1 with coefficients(−1/4,1/4). Centering raw x first and then squaring gives training features(1,1), destroying their variation. The operations differ."
+      }
     }
   ],
   "ml25": [
@@ -789,8 +863,8 @@
         "en": "Compute MSE and state what it does not measure."
       },
       "explain": {
-        "zh": "MSE是各像素平方误差的平均；比较压缩还要说明码率、数值范围和感知/任务要求。",
-        "en": "MSE averages squared pixel errors; compression comparisons additionally need bitrate, numeric range and perceptual/task requirements."
+        "zh": "MSE是各像素平方误差的平均；比较压缩还要说明码率、数值范围和感知/任务要求。\n\n术语边界：MSE是平方误差均值，不一定是满足三角不等式的距离度量。一维数值0、1、2给出MSE(0,2)=4，但MSE(0,1)+MSE(1,2)=2；对应RMSE为绝对差，满足2≤1+1。不要把课件把MSE称作metric的措辞机械背下。",
+        "en": "MSE averages squared pixel errors; compression comparisons additionally need bitrate, numeric range and perceptual/task requirements.\n\nTerminology boundary: MSE need not be a metric. Scalars 0, 1, 2 give MSE(0,2)=4 but MSE(0,1)+MSE(1,2)=2, violating the triangle inequality. The corresponding RMSE is absolute difference and satisfies 2≤1+1. Do not inherit the source slide’s inaccurate metric label."
       },
       "worked_q": {
         "zh": "真值(0,2)，预测A=(1,1)、B=(0,0)，求MSE。",
@@ -1317,6 +1391,200 @@
           "locator": "net12#tcp-framing",
           "kind": "derived",
           "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    },
+    {
+      "id": "dns-sections-and-delegation",
+      "title": {
+        "zh": "DNS：下一台服务器，不等于网站地址",
+        "en": "DNS: the next server is not the website address"
+      },
+      "goal": {
+        "zh": "能读懂四个DNS区段，并区分域名委派与主机地址记录。",
+        "en": "Read the four DNS sections and distinguish domain delegation from a host address record."
+      },
+      "explain": {
+        "zh": "把一次DNS查询理解为“问谁、问什么、回了什么”。Question保留查询名与类型；answer放直接回答它的记录。若当前服务器只知道下一步该问谁，authority可放NS记录；additional可补这个NS名字对应的地址，帮助继续查询。否定回答的authority还可能放SOA区域记录，所以它不总是服务器名单。四区不必每次都有内容。\n\n注册域名取得相应管理权，父区的NS委派把查询引到该域的权威服务器；权威区里的A记录才描述具体主机的IPv4地址。改变“由谁回答”不会自动改变“网站地址是什么”。下面用保留示例域名和地址表示教学数据。",
+        "en": "Treat a DNS exchange as “whom to ask, what to ask, and what came back.” Question preserves the queried name and type; answer contains records answering it. A referral can put NS records in authority and supporting server addresses in additional. A negative answer can instead include a zone's SOA record in authority, so that section is not always a server list. Sections may be empty.\n\nRegistration establishes the relevant domain-management rights. NS delegation in the parent zone directs queries to the domain's authoritative servers; an A record in the authoritative zone describes a particular host's IPv4 address. Changing who answers does not automatically change the website address. Reserved example names and addresses below are synthetic teaching data."
+      },
+      "worked_q": {
+        "zh": "查询www.example.org的A记录时，父区服务器给出以下转介。下一步应向哪个地址继续问同一个问题？能把203.0.113.53当作网站地址吗？\n\n```text\nQuestion: www.example.org A\nAnswer: empty\nAuthority: example.org NS ns1.example.org\nAdditional: ns1.example.org A 203.0.113.53\n```",
+        "en": "An A-record query for www.example.org receives this referral from the parent-zone server. Which address should receive the next query for the same name? Is 203.0.113.53 the website address?\n\n```text\nQuestion: www.example.org A\nAnswer: empty\nAuthority: example.org NS ns1.example.org\nAdditional: ns1.example.org A 203.0.113.53\n```"
+      },
+      "worked_a": {
+        "zh": "向203.0.113.53继续查询www.example.org的A记录。Authority给的是负责回答的名称服务器ns1.example.org，additional把这个服务器名映射到地址；answer仍为空，因此还没有得到网站地址。不同记录的owner name（左侧名字）不同，不能仅看见一个A记录就当作原问题的答案。",
+        "en": "Query 203.0.113.53 for the A record of www.example.org. Authority names ns1.example.org as the server to ask; additional supplies that server's address. The answer section is empty, so the website address is still unknown. Check each record's owner name: an A record for the name server is not an A record for the queried website."
+      },
+      "practice_q": {
+        "zh": "随后ns1.example.org在answer中返回`www.example.org A 203.0.113.80`。补全：名称服务器地址是____，网站地址是____；浏览器取网页应连接哪一个？",
+        "en": "The authoritative server then returns `www.example.org A 203.0.113.80` in answer. Fill in the name-server address and website address. Which one should the browser contact for the page?"
+      },
+      "hint": {
+        "zh": "分别看A记录左侧是ns1.example.org还是www.example.org。",
+        "en": "Distinguish the owner names ns1.example.org and www.example.org."
+      },
+      "practice_a": {
+        "zh": "名称服务器为203.0.113.53，网站为203.0.113.80；取网页连接后者。前者用于这次DNS解析，不因能回答DNS就自动托管网站。",
+        "en": "The name server is 203.0.113.53; the website is 203.0.113.80, which the browser contacts for the page. Answering DNS does not imply that the name server also hosts the website."
+      },
+      "transfer_q": {
+        "zh": "域名管理员把委派从ns1.example.org改为ns2.example.org，并正确配置新服务器地址。两台权威服务器都保留`www.example.org A 203.0.113.80`。网站IP是否必须改变？所有解析器是否会立即换用ns2？说明两点理由。",
+        "en": "The administrator changes delegation from ns1.example.org to ns2.example.org and correctly configures the new server address. Both authoritative servers retain `www.example.org A 203.0.113.80`. Must the website IP change? Must every resolver immediately use ns2? Explain both conclusions."
+      },
+      "transfer_a": {
+        "zh": "网站IP不必改变：NS委派与www的A记录是不同记录，题设A记录保持不变。解析器也不必立刻换用ns2，因为已缓存的委派可在其有效TTL内继续使用；缓存更新后才按新委派继续查。这说明DNS配置改变和全网可见时刻不是同一件事。",
+        "en": "The website IP need not change: NS delegation and the www A record are different records, and the A record is unchanged here. Resolvers need not switch immediately because cached delegation can remain usable during its valid TTL. They use the new delegation after their cached information is refreshed. A configuration change is not an instantaneous global update."
+      },
+      "card_ids": [
+        "CS5222-N135",
+        "CS5222-N136"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slides 66–68",
+          "kind": "historical",
+          "note": "历史课件的DNS消息区段及域名注册/委派；示例名称与地址重新编写。 / Historical DNS message/delegation material; example names and addresses are newly authored."
+        },
+        {
+          "name": "RFC 2308 · Negative Caching of DNS Queries",
+          "locator": "sections 2.1, 3",
+          "kind": "reference",
+          "note": "协议依据：否定回答的authority可包含SOA；不是本学期新增范围声明。 / Protocol support for SOA in negative-answer authority sections, not a claim about current assessment scope."
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part2.pptx",
+          "locator": "slide 41",
+          "kind": "course",
+          "note": "当前Canvas的DNS缓存与TTL机制；未声明修改配置会即时清空远端缓存。 / Current Canvas caching/TTL mechanism; configuration changes do not instantly flush remote caches."
+        },
+        {
+          "name": "Original DNS referral and delegation examples / 原创DNS转介与委派例题",
+          "locator": "net12#dns-sections-and-delegation",
+          "kind": "derived",
+          "note": "记录列表与变式由上述规则构造，不是实测DNS结果。 / The record lists and variation are constructed from these rules, not measured DNS results."
+        }
+      ]
+    },
+    {
+      "id": "dash-cdn-delivery",
+      "title": {
+        "zh": "在线视频：选哪个版本，从哪里取得",
+        "en": "Video delivery: which version and which server"
+      },
+      "goal": {
+        "zh": "能区分DASH的版本选择与CDN的服务器选择，并用分段大小估计缓冲变化。",
+        "en": "Distinguish DASH representation selection from CDN server selection and estimate buffer change from segment size."
+      },
+      "explain": {
+        "zh": "DASH把视频组织成有多个编码版本的分段，清单告诉客户端有哪些选择。客户端结合可用吞吐与已缓存的播放时长，决定下一段请求哪个版本。CDN解决另一件事：从哪个边缘节点取得内容；节点可能已缓存，也可能要向上游取回。改变服务器和改变编码版本是两个不同决策。\n\n在下面的简化模型中，码率为b Mbps、播放时长T秒的分段大小为bT Mbit；以有效下载速率R Mbps获取，需bT/R秒。若持续播放，每轮下载完成后缓冲的净变化为T−下载时间；这是假定期间没有停播的存量收支；若已卡顿，应按实际播放时间扣除缓冲。是否卡顿还要看开始时有多少缓冲。忽略音频、协议开销与处理；真实自适应还需应对速率波动。",
+        "en": "DASH divides video into segments available in multiple encoded representations; a manifest describes the choices. The client uses available throughput and buffered playback duration to choose the next representation. A CDN makes a different decision: which delivery server supplies the content, possibly from a cache or after an upstream fetch. Server choice and representation choice are distinct.\n\nIn the simplified model below, bitrate b Mbps over T seconds of playback gives bT Mbit, requiring bT/R seconds at effective download rate R Mbps. During continuous playback, the net buffer change per completed download is T minus download time. This accounting assumes playback did not pause; if it stalled, buffer consumption uses actual playback time. Whether a stall occurs also depends on the starting buffer. Ignore audio, protocol overhead and processing. Real adaptation must handle changing rates."
+      },
+      "worked_q": {
+        "zh": "假定开始缓冲足够，下载期间持续播放。每段播放2秒，有2 Mbps与6 Mbps两个恒定码率版本。有效下载速率稳定为4 Mbps，无额外等待。分别求段大小、下载时间与净缓冲变化。哪一版本能长期避免因平均下载跟不上播放而耗空缓冲？",
+        "en": "Assume enough initial buffering for uninterrupted playback during this download. Each segment plays for 2 seconds and has constant-bitrate representations of 2 Mbps and 6 Mbps. Effective download rate is a steady 4 Mbps, with no additional waiting. Find segment sizes, download times, and net buffer changes. Which version avoids persistent buffer drain from downloading more slowly than playback?"
+      },
+      "worked_a": {
+        "zh": "2 Mbps版本大小为2×2=4 Mbit，下载4/4=1秒，净缓冲增加2−1=1秒。6 Mbps版本为6×2=12 Mbit，下载12/4=3秒，每段净消耗1秒缓冲。因此低版本可持续跟上；高版本可能靠已有缓冲播放一阵，但按此恒定模型会持续耗空。这里并未声称高版本的每一段都会立刻卡顿。",
+        "en": "The 2 Mbps version is 4 Mbit and downloads in 1 second, adding a net 1 second of playback buffer. The 6 Mbps version is 12 Mbit and downloads in 3 seconds, draining a net 1 second per segment. The lower version keeps up sustainably. The higher one may run temporarily on existing buffer but drains it under this steady model; that does not mean every high-rate segment immediately stalls."
+      },
+      "practice_q": {
+        "zh": "仍为2秒分段和同样两个版本，只把下载速率改为3 Mbps。补出低版本与高版本的下载时间及净缓冲变化。",
+        "en": "Keep the 2-second segments and the same representations, but change effective download rate to 3 Mbps. Find both download times and net buffer changes."
+      },
+      "hint": {
+        "zh": "分段大小仍为4与12 Mbit，只改变除数R。",
+        "en": "The sizes remain 4 and 12 Mbit; only the download-rate divisor changes."
+      },
+      "practice_a": {
+        "zh": "低版本需4/3秒，净增加2−4/3=2/3秒；高版本需12/3=4秒，净消耗2秒。换速率没有改变相同编码版本的段大小。",
+        "en": "The lower version takes 4/3 seconds and adds a net 2/3 second. The higher version takes 4 seconds and drains 2 seconds. Changing download rate does not change these fixed representation sizes."
+      },
+      "transfer_q": {
+        "zh": "改用另一个CDN节点后，有效速率为8 Mbps，但本次缓存未命中，下载前还需额外等待0.8秒。获取同样6 Mbps、2秒的段总共需多久？按持续播放计算的缓冲收支差是多少？仅凭这些值能断定发生卡顿吗？",
+        "en": "A different CDN node delivers at 8 Mbps, but this request misses its cache and adds 0.8 second of waiting before downloading. How long does the same 6 Mbps, 2-second segment take in total? What is the buffer balance assuming continuous playback? Do these values alone prove a playback stall?"
+      },
+      "transfer_a": {
+        "zh": "段仍为12 Mbit，下载12/8=1.5秒，加等待共2.3秒。若期间持续播放，净缓冲变化为2−2.3=−0.3秒，即消耗0.3秒存量；实际已停播时不能直接套此收支式。是否卡顿仍取决于开始时的缓冲和播放状态；不能只看CDN链路更快就保证不卡顿。CDN提供位置与缓存条件，DASH客户端仍需选择版本。",
+        "en": "The segment remains 12 Mbit. Downloading takes 12/8=1.5 seconds; with waiting, total time is 2.3 seconds. If playback continues throughout, net buffer change is 2−2.3=−0.3 second; a real stall changes the consumption term. A stall still depends on the starting buffer and playback state, so a faster CDN link alone cannot guarantee uninterrupted playback. CDN placement/cache conditions and the DASH client's representation decision remain distinct."
+      },
+      "card_ids": [
+        "CS5222-N141",
+        "CS5222-N142"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slides 82–92",
+          "kind": "historical",
+          "note": "历史DASH分段/清单/客户端自适应及CDN部署机制；不自动成为当前Canvas范围。 / Historical DASH segment/manifest/adaptation and CDN mechanisms; not automatically current Canvas scope."
+        },
+        {
+          "name": "Original bitrate and buffer examples / 原创码率与缓冲例题",
+          "locator": "net12#dash-cdn-delivery",
+          "kind": "derived",
+          "note": "分段码率、吞吐量和缓存等待数值为教学设定；按bit/s单位与缓冲收支独立计算。 / Bitrates, throughput, and miss delay are synthetic; calculations use bit/s units and buffer accounting."
+        }
+      ]
+    },
+    {
+      "id": "bittorrent-piece-and-peer-choices",
+      "title": {
+        "zh": "BitTorrent：选哪个块，给谁上传",
+        "en": "BitTorrent: which piece to request, whom to upload to"
+      },
+      "goal": {
+        "zh": "能分别按稀有程度选缺失块、按互惠规则选上传伙伴，并解释乐观解锁。",
+        "en": "Choose missing pieces by rarity, choose upload partners by reciprocation, and explain optimistic unchoking."
+      },
+      "explain": {
+        "zh": "节点可以一边下载缺块，一边上传自己已有的块。两个选择要分开：rarest-first决定先请求哪个块，优先取已知邻居中有人拥有、但副本最少的缺块，帮助稀缺内容继续传播。它不直接决定你给谁上传。\n\nChoke表示本节点暂不向某个对端上传；unchoke表示允许上传。在课件的简化下载中节点模型里，常规上传名额优先给近期向本节点发送得快的伙伴。Optimistic unchoke（乐观解锁）另给一个尚未入选的伙伴机会，探索更好的互惠关系；对方不保证立即回报。两个方向的许可由各自节点决定。\n\n下题统一采用两个常规名额加一个额外乐观名额；这是明确的教学设定。历史课件的四个常规伙伴、10/30秒周期并非所有现代实现的固定规则。",
+        "en": "A peer can download missing pieces while uploading pieces it already has. Separate two choices. Rarest-first selects which piece to request: among missing pieces available from known neighbors, prioritize the fewest copies. This helps scarce content spread; it does not itself select upload recipients.\n\nChoking means this peer temporarily withholds uploads to another peer; unchoking permits uploads. In the lecture's simplified downloading-peer model, regular upload slots favor partners recently sending data to this peer fastest. An optimistic unchoke gives an additional, otherwise unselected partner a chance, exploring possible reciprocation without guaranteeing it. Each peer controls its own outgoing permission.\n\nAll exercises below use two regular slots plus one additional optimistic slot, an explicit teaching assumption. The historical slides' four regular partners and 10/30-second intervals are not universal modern implementation rules."
+      },
+      "worked_q": {
+        "zh": "L已有块S，还缺P/Q/R。四个邻居都想向L下载S，已知情况如下。稀有度平局按Q先于R；本轮乐观名额已随机选定E。L先请求哪一块？L允许哪些邻居向自己下载S？\n\n```text\nPeer  Pieces held  Upload rate to L\nB     P,Q          6 Mbps\nC     P            4 Mbps\nD     P,R          1 Mbps\nE     P            0 Mbps\n```",
+        "en": "L owns piece S but lacks P/Q/R. All four neighbors want S from L, with the known state below. Break a rarity tie by choosing Q before R; the optimistic choice for this round is E. Which piece should L request first? Which neighbors may download S from L?\n\n```text\nPeer  Pieces held  Upload rate to L\nB     P,Q          6 Mbps\nC     P            4 Mbps\nD     P,R          1 Mbps\nE     P            0 Mbps\n```"
+      },
+      "worked_a": {
+        "zh": "P有4份、Q有1份、R有1份，所以按题设平局规则优先请求Q，已知B拥有它。常规名额给向L上传最快的B、C；加乐观E后，L向B/C/E开放上传，暂时choke D。Q的稀有程度与B/C的速率排名是两次不同判断。E目前速率为零仍获试用机会，正是为了发现可能的后续互惠。",
+        "en": "P has four known copies, Q one, and R one; the tie rule selects Q, which B has. The two regular slots go to B and C, the fastest uploaders to L. Adding optimistic E means L permits uploads to B/C/E and currently chokes D. Piece rarity and partner-rate ranking are separate decisions. E gets a trial despite its current zero rate, allowing possible future reciprocation to be discovered."
+      },
+      "practice_q": {
+        "zh": "其他条件不变，但D现在拥有P/Q/R，向L上传变为5 Mbps；本轮乐观名额选C。先选哪块，常规与乐观上传伙伴分别是谁？",
+        "en": "Keep the other conditions, but D now has P/Q/R and uploads to L at 5 Mbps; choose C for the optimistic slot this round. Which piece comes first, and who gets the regular and optimistic upload slots?"
+      },
+      "hint": {
+        "zh": "先重新数P/Q/R各有几份，再独立排序6、4、5、0 Mbps。乐观名额不替代两个常规名额。",
+        "en": "Recount copies of P/Q/R first, then separately rank 6, 4, 5, 0 Mbps. The optimistic slot is additional to the two regular slots."
+      },
+      "practice_a": {
+        "zh": "P有4份、Q有2份、R仍只有D的一份，所以选R。速率前两名是B与D，得到常规名额；C得到乐观名额，E本轮被L choke。某伙伴是否有最稀有块，不是常规上传名额的直接评分标准。",
+        "en": "Copy counts are P=4, Q=2, R=1, so select R from its known holder D. B and D have the two highest rates and get regular slots; C gets the optimistic slot, and L chokes E this round. Holding the rarest piece is not itself the regular-upload ranking criterion."
+      },
+      "transfer_q": {
+        "zh": "L仍缺P/Q/R，已知副本数为4/2/1，R仅D拥有。新测得B/C/D/E向L的速率为6/4/5/8 Mbps；两个常规名额，乐观名额选C。独立给出块优先级与上传伙伴。因为L会choke D，就能断定L一定不能从D收到R吗？",
+        "en": "L still lacks P/Q/R, whose known copy counts are 4/2/1; only D has R. Newly measured upload rates to L from B/C/D/E are 6/4/5/8 Mbps. There are two regular slots, and the optimistic slot goes to C. Give the piece priority and upload partners. Does L choking D prove that L cannot receive R from D?"
+      },
+      "transfer_a": {
+        "zh": "先选R；常规伙伴为E与B，加乐观C后，L给E/B/C上传，暂不向D上传。不能仅因此断定收不到R：L choke D控制的是L→D方向；D→L能否发送，要看D是否允许向L上传。D可能按自己的策略随后停止回报，但那是额外事件，不是choke一词自动保证的结果。",
+        "en": "Prioritize R. Regular partners are E and B; with optimistic C, L uploads to E/B/C and withholds uploads to D. That alone does not prove R is unavailable: L choking D controls the L→D direction. D→L depends on D's own permission to upload to L. D might later stop reciprocating under its policy, but that is an additional event, not an automatic consequence of the word choke."
+      },
+      "card_ids": [
+        "CS5222-N140"
+      ],
+      "sources": [
+        {
+          "name": "cs5222_cha2_2025_student.pptx",
+          "locator": "slides 77–80",
+          "kind": "historical",
+          "note": "已核对边下载边上传、缺块稀有度、互惠排名和乐观解锁；不把历史名额或周期作为通用实现规范。 / Checked simultaneous downloading/uploading, rarity, reciprocation ranking and optimistic unchoking; historical slot counts and intervals are not universal requirements."
+        },
+        {
+          "name": "Original four-neighbor piece and upload-slot examples / 原创四邻居分块与上传名额例题",
+          "locator": "net12#bittorrent-piece-and-peer-choices",
+          "kind": "derived",
+          "note": "块表、速率、两常规加一乐观名额与平局规则均在题干设定；不是实际客户端测量。 / Piece tables, rates, two-plus-one slots and tie rules are explicit teaching assumptions, not measured client behavior."
         }
       ]
     }
@@ -2084,6 +2352,693 @@
           "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
         }
       ]
+    }
+  ],
+  "ml02": [
+    {
+      "id": "objects-and-inheritance",
+      "title": {
+        "zh": "补一小步：对象保存谁的状态？",
+        "en": "A short bridge: whose state does an object store?"
+      },
+      "goal": {
+        "zh": "能跟踪实例属性和方法调用，并区分复用父类与重写方法。",
+        "en": "Trace instance attributes and method calls, distinguishing inherited behavior from an override."
+      },
+      "explain": {
+        "zh": "类是一套创建对象和操作对象的规则；实例是依规则创建的一个具体对象。属性保存对象的状态，方法是通过对象调用的函数。`self` 指本次调用的那个对象：`a.value` 与 `b.value` 可以保存不同的值。`__init__` 在创建实例时设置初始状态。\n\n下面 `DoubleCounter(Counter)` 表示单继承。它沿用父类的初始化方式，却重写同名的 `add`：先把输入乘二，再用 `super().add(...)` 调父类版本；这仍然更新子对象自身的 `value`。方法重写改变行为，不会把两个实例的状态合并。",
+        "en": "A class gives rules for creating and operating on objects; an instance is one particular object created by those rules. Attributes store state, and methods are functions called through an object. `self` is the object receiving this call: `a.value` and `b.value` can hold different values. `__init__` sets initial state when an instance is created.\n\nBelow, `DoubleCounter(Counter)` uses single inheritance. It inherits initialization but overrides the method named `add`: it doubles the input, then `super().add(...)` calls the parent version. That call still updates the child object’s own `value`. Overriding behavior does not merge the states of two instances."
+      },
+      "worked_q": {
+        "zh": "逐行运行下面的完整程序，最后打印哪四个数？指出两个实例、属性以及被重写的方法。\n\n```python\nclass Counter:\n    def __init__(self, start):\n        self.value = start\n\n    def add(self, amount):\n        self.value = self.value + amount\n        return self.value\n\nclass DoubleCounter(Counter):\n    def add(self, amount):\n        return super().add(2 * amount)\n\na = Counter(1)\nb = DoubleCounter(1)\nr = a.add(2)\ns = b.add(2)\nprint(a.value, b.value, r, s)\n```",
+        "en": "Trace this complete program. Which four numbers are printed? Identify the two instances, the attribute, and the overridden method.\n\n```python\nclass Counter:\n    def __init__(self, start):\n        self.value = start\n\n    def add(self, amount):\n        self.value = self.value + amount\n        return self.value\n\nclass DoubleCounter(Counter):\n    def add(self, amount):\n        return super().add(2 * amount)\n\na = Counter(1)\nb = DoubleCounter(1)\nr = a.add(2)\ns = b.add(2)\nprint(a.value, b.value, r, s)\n```"
+      },
+      "worked_a": {
+        "zh": "打印 `3 5 3 5`。a、b 是不同实例，开始各自 `value=1`。a 的普通 `add(2)` 把 a.value 改成 3，并把 3 返回给 r。b 调用重写后的 `add(2)`，把 4 交给父类方法，所以 b.value 变成 5，s 也为 5。b 沿用父类的 `__init__`，重写的是 `add`；没有任何一步修改另一个实例。",
+        "en": "It prints `3 5 3 5`. The distinct instances a and b each start with `value=1`. The ordinary `a.add(2)` changes a.value to 3 and returns 3 into r. The overridden `b.add(2)` passes 4 to the parent method, changing b.value to 5 and returning 5 into s. b inherits `__init__` but overrides `add`; neither call changes the other instance."
+      },
+      "practice_q": {
+        "zh": "沿用上面的类定义：`c = DoubleCounter(0)`、`d = Counter(10)`，然后执行 `c.add(3)`、`d.add(-2)`。c.value 与 d.value 各是多少？",
+        "en": "Reuse the class definitions: create `c = DoubleCounter(0)` and `d = Counter(10)`, then call `c.add(3)` and `d.add(-2)`. What are c.value and d.value?"
+      },
+      "hint": {
+        "zh": "先找对象属于哪个类，再决定实际加到该对象上的 amount；分别保留两份 value。",
+        "en": "First identify each object’s class, then determine the amount actually added to that object. Track two separate values."
+      },
+      "practice_a": {
+        "zh": "c.value 为 6，d.value 为 8。c 使用子类方法，输入 3 先变成 6，再加到 0；d 使用父类方法，把 −2 加到 10。类决定方法行为，实例保存本次变化的状态。",
+        "en": "c.value is 6 and d.value is 8. c uses the child method, doubling 3 to 6 before adding it to zero. d uses the parent method and adds −2 to 10. The class determines behavior; each instance stores its own changing state."
+      },
+      "transfer_q": {
+        "zh": "仍用相同定义，创建 `u = DoubleCounter(5)`、`v = Counter(5)`，依次调用 `u.add(1)`、`v.add(1)`、`u.add(-2)`。独立追踪最后的两份 value，并说明为什么第二次调用不会改变 u。",
+        "en": "Using the same definitions, create `u = DoubleCounter(5)` and `v = Counter(5)`. Call `u.add(1)`, `v.add(1)`, and `u.add(-2)` in that order. Trace both final values and explain why the second call does not change u."
+      },
+      "transfer_a": {
+        "zh": "u 先由 5 加 2 得 7，最后加 −4 得 3；v 由 5 加 1 得 6。因此最终是 `(3,6)`。第二次调用中的 self 是 v，只更新 v.value；同用一个父类不等于共享这里的实例属性。",
+        "en": "u first changes from 5 to 7 by adding 2, then to 3 by adding −4. v changes from 5 to 6. The final pair is `(3,6)`. In the second call, self is v, so only v.value changes. Sharing a parent class does not share these instance attributes."
+      },
+      "card_ids": [
+        "CS5489-M015",
+        "CS5489-M016"
+      ],
+      "sources": [
+        {
+          "name": "Lecture1a.ipynb",
+          "locator": "cells 137–143, 146–147",
+          "kind": "course",
+          "note": "已核对类、实例调用及继承代码；cell138把实例方法写成class method的注释未沿用。 / Checked class, instance-call and inheritance code; the misleading class-method comment in cell138 is not repeated."
+        },
+        {
+          "name": "原创对象状态追踪例题 / Original object-state tracing exercise",
+          "locator": "ml02#objects-and-inheritance",
+          "kind": "derived",
+          "note": "两类计数器是原创教学代码，所有调用已独立执行；仅讨论单继承。 / Both counter classes are original teaching code, executed independently; this example uses single inheritance only."
+        }
+      ]
+    }
+  ],
+  "ml07": [
+    {
+      "id": "determinant-and-gaussian-volume",
+      "title": {
+        "zh": "补一小步：|Σ| 到底是什么？",
+        "en": "A short bridge: what does |Σ| mean?"
+      },
+      "goal": {
+        "zh": "能计算二维行列式，并说明高斯密度为何使用其平方根。",
+        "en": "Compute a two-dimensional determinant and explain why Gaussian density uses its square root."
+      },
+      "explain": {
+        "zh": "对 $A=\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}$，行列式是一个数：$|A|=ad-bc$，不是把每个元素取绝对值。二维方阵行列式非零才可逆。把 A 当作平面线性变换时，$|\\det A|$ 是面积放大倍数；负号还表示方向反转。\n\n协方差矩阵进入高斯密度时，要用 $\\sqrt{|\\Sigma|}$。二维高斯在均值处的密度为 $1/(2\\pi\\sqrt{|\\Sigma|})$。马氏半径 r 是按协方差标准化后的距离，$r^2=(x-\\mu)^T\\Sigma^{-1}(x-\\mu)$，其中 x 是二维观测、$\\mu$ 是均值。固定 r 就固定了这种标准化距离。同一马氏半径的椭圆区域，其面积相对于单位协方差为 $\\sqrt{|\\Sigma|}$ 倍，而不是 $|\\Sigma|$ 倍。直观看，方差 4 对应标准差 2；面积用长度相乘，所以要开平方。这段假设协方差正定；行列式为零的退化分布不能直接使用这份含逆矩阵的密度公式。",
+        "en": "For $A=\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}$, the determinant is one number: $|A|=ad-bc$, not an elementwise absolute value. A two-dimensional square matrix is invertible exactly when its determinant is nonzero. As a planar linear transformation, A scales area by $|\\det A|$; a negative determinant also reverses orientation.\n\nGaussian density uses $\\sqrt{|\\Sigma|}$ when its covariance is $\\Sigma$. A two-dimensional Gaussian’s density at its mean is $1/(2\\pi\\sqrt{|\\Sigma|})$. The Mahalanobis radius r is covariance-standardized distance: $r^2=(x-\\mu)^T\\Sigma^{-1}(x-\\mu)$, where x is a two-dimensional observation and $\\mu$ is the mean. Fixing r fixes that standardized distance. An ellipse at a fixed Mahalanobis radius has area $\\sqrt{|\\Sigma|}$ times that for identity covariance, not $|\\Sigma|$ times. Intuitively, variance 4 corresponds to standard deviation 2; area multiplies lengths, requiring the square root. Covariance is assumed positive definite here; a singular distribution cannot use this density formula with a covariance inverse."
+      },
+      "worked_q": {
+        "zh": "零均值二维高斯的协方差为 $\\Sigma=\\begin{bmatrix}4&0\\\\0&1\\end{bmatrix}$。求行列式、同一马氏半径的面积倍数，以及均值处密度与单位协方差情形之比。",
+        "en": "A zero-mean two-dimensional Gaussian has $\\Sigma=\\begin{bmatrix}4&0\\\\0&1\\end{bmatrix}$. Find its determinant, area multiplier at a fixed Mahalanobis radius, and ratio of its density at the mean to the identity-covariance case."
+      },
+      "worked_a": {
+        "zh": "$|\\Sigma|=4\\cdot1-0\\cdot0=4$；面积倍数为 $\\sqrt4=2$。均值处密度为 $1/(4\\pi)$，单位协方差时为 $1/(2\\pi)$，所以峰值为原来的一半。分布在一个方向更宽，归一化峰值更低；峰值仍是密度，不是某一点的概率。",
+        "en": "$|\\Sigma|=4\\cdot1-0\\cdot0=4$, so the area multiplier is $\\sqrt4=2$. Density at the mean is $1/(4\\pi)$, versus $1/(2\\pi)$ for identity covariance: half as high. Spreading the distribution in one direction lowers its normalized peak. The peak is a density, not the probability of one exact point."
+      },
+      "practice_q": {
+        "zh": "把协方差换为 $\\begin{bmatrix}9&0\\\\0&4\\end{bmatrix}$，求行列式、面积倍数和均值处相对密度。",
+        "en": "Replace covariance by $\\begin{bmatrix}9&0\\\\0&4\\end{bmatrix}$. Find determinant, area multiplier, and relative density at the mean."
+      },
+      "hint": {
+        "zh": "先算 ad−bc，再开平方；密度前因子的变化与该平方根成倒数。",
+        "en": "Compute ad−bc, then take the square root. The density’s normalization factor changes by the reciprocal of that square root."
+      },
+      "practice_a": {
+        "zh": "行列式为 9×4=36，面积倍数为 6，均值处密度是单位协方差情形的 1/6。两个方向标准差分别为 3 和 2，面积倍数也可由 3×2=6 看出。",
+        "en": "The determinant is 9×4=36, the area multiplier is 6, and density at the mean is 1/6 of the identity-covariance value. Standard deviations 3 and 2 give the same area multiplier, 3×2=6."
+      },
+      "transfer_q": {
+        "zh": "独立处理 $\\Sigma=\\begin{bmatrix}1&0.6\\\\0.6&1\\end{bmatrix}$：行列式、面积倍数与相对峰值是多少？若把两个 0.6 都改成 1，为什么原密度公式不能继续套？",
+        "en": "Independently handle $\\Sigma=\\begin{bmatrix}1&0.6\\\\0.6&1\\end{bmatrix}$: find determinant, area multiplier, and relative peak. If both 0.6 entries become 1, why can the same density formula no longer be applied?"
+      },
+      "transfer_a": {
+        "zh": "行列式为 $1-0.6^2=0.64$，面积倍数 0.8，相对峰值为 $1/0.8=1.25$。相关性让固定马氏半径区域更窄，尽管两维方差仍是 1。改成 1 后行列式为 0，两列相同、矩阵不可逆，分布退化；不能把除零或逆矩阵错误当作合法密度。",
+        "en": "The determinant is $1-0.6^2=0.64$, the area multiplier is 0.8, and the relative peak is $1/0.8=1.25$. Correlation narrows the fixed-radius region despite both variances remaining 1. Replacing 0.6 by 1 makes the determinant zero and the columns identical. The covariance is singular and the distribution degenerate; division by zero or an invalid inverse is not a density."
+      },
+      "card_ids": [
+        "CS5489-M067",
+        "CS5489-M068"
+      ],
+      "sources": [
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cells 34–38",
+          "kind": "course",
+          "note": "已核对二维高斯公式、协方差及相关等高线；面积对应sqrt(detΣ)而非直接把detΣ当面积。 / Checked Gaussian normalization, covariance and correlated contours; the area factor is sqrt(detΣ), not detΣ itself."
+        },
+        {
+          "name": "原创二维行列式例题 / Original two-dimensional determinant examples",
+          "locator": "ml07#determinant-and-gaussian-volume",
+          "kind": "derived",
+          "note": "ad−bc、标准差面积解释与三组小矩阵均独立验算；不把奇异高斯说成普通二维密度。 / Determinants, standard-deviation area reasoning and all small matrices were checked independently; singular Gaussians are not treated as ordinary two-dimensional densities."
+        }
+      ]
+    }
+  ],
+  "ml09": [
+    {
+      "id": "gamma-poisson-mean",
+      "title": {
+        "zh": "可选扩展：伪计数与伪观察量从哪里来？",
+        "en": "Optional extension: where do pseudo-counts and exposure come from?"
+      },
+      "goal": {
+        "zh": "能从先验乘似然得到Gamma–Poisson更新，并区分后验均值与MAP。",
+        "en": "Obtain a Gamma–Poisson update by multiplying prior and likelihood, and distinguish posterior mean from MAP."
+      },
+      "explain": {
+        "zh": "这里不是教程未定义 alpha 的唯一解释，而是一个明确的贝叶斯扩展。令每次观察的长度都为一单位，计数 $x_i\\sim\\mathrm{Poisson}(\\mu)$ 相互独立；N 是观察次数，$T=\\sum_i x_i$ 是总事件数，μ 是每单位观察量的平均计数。\n\nPoisson 描述数据计数，Gamma 描述未知正参数 μ 的不确定性。采用形状 a>0、率 b>0 的 Gamma(a,b) 先验，其关于 μ 的密度正比于 $\\mu^{a-1}e^{-b\\mu}$；这里“率”是 b，尺度是 1/b。符号∝表示省掉与 μ 无关的归一化常数。N 次数据的似然正比于 $\\mu^T e^{-N\\mu}$。相乘后得到 $\\mu^{a+T-1}e^{-(b+N)\\mu}$，所以后验是 Gamma(a+T,b+N)。\n\n形状为 s、率为 r 的 Gamma 均值为 s/r，因此后验均值是 $(a+T)/(b+N)$：分子加伪事件，分母加伪观察量。MAP 则找密度最高处；s>1 时为 $(s-1)/r$，与均值不同。本单元例子都满足 s>1；s≤1 时需看零附近边界，不能照搬公式得到负参数。",
+        "en": "This is an explicitly specified Bayesian extension, not the only interpretation of the tutorial’s undefined alpha. Each observation has unit exposure, and counts $x_i\\sim\\mathrm{Poisson}(\\mu)$ are independent. N counts observations, $T=\\sum_i x_i$ counts events, and μ is the mean count per unit exposure.\n\nPoisson describes observed counts; Gamma describes uncertainty about the unknown positive parameter μ. A Gamma(a,b) prior with shape a>0 and rate b>0 has density proportional to $\\mu^{a-1}e^{-b\\mu}$. Here b is rate and 1/b is scale. The symbol ∝ omits normalization constants independent of μ. The N-observation likelihood is proportional to $\\mu^T e^{-N\\mu}$. Multiplication gives $\\mu^{a+T-1}e^{-(b+N)\\mu}$, hence a Gamma(a+T,b+N) posterior.\n\nA Gamma distribution with shape s and rate r has mean s/r, so the posterior mean is $(a+T)/(b+N)$: pseudo-events enter the numerator and pseudo-exposure the denominator. MAP locates the density peak; for s>1 it is $(s-1)/r$, not the mean. All examples here have s>1. When s≤1, inspect behavior near zero instead of blindly producing a negative parameter."
+      },
+      "worked_q": {
+        "zh": "先验Gamma(a=2,b=1)，独立单位观察量计数为(0,1,3)。逐步求N、T、后验形状/率、后验均值及MAP。",
+        "en": "Use a Gamma(a=2,b=1) prior and independent unit-exposure counts (0,1,3). Find N, T, posterior shape/rate, posterior mean, and MAP step by step."
+      },
+      "worked_a": {
+        "zh": "N=3，T=0+1+3=4。先验核 $\\mu^1e^{-\\mu}$ 乘似然核 $\\mu^4e^{-3\\mu}$，得 $\\mu^5e^{-4\\mu}$，即Gamma(6,4)。后验均值6/4=1.5；后验形状6>1，MAP=(6−1)/4=1.25。二者回答平均值与最高点两个不同问题，不是计算矛盾。",
+        "en": "N=3 and T=0+1+3=4. Multiplying prior kernel $\\mu^1e^{-\\mu}$ by likelihood kernel $\\mu^4e^{-3\\mu}$ gives $\\mu^5e^{-4\\mu}$: Gamma(6,4). The posterior mean is 6/4=1.5. Since shape 6>1, MAP is (6−1)/4=1.25. Mean and peak answer different questions; their difference is not an arithmetic contradiction."
+      },
+      "practice_q": {
+        "zh": "先验改为Gamma(1,1)，独立单位观察量计数为(0,2)。补出后验分布、均值和MAP。",
+        "en": "Change the prior to Gamma(1,1) and use independent unit-exposure counts (0,2). Find the posterior distribution, mean, and MAP."
+      },
+      "hint": {
+        "zh": "不要把“观察了几次”与“共发生几件事”混在一起；分别更新率和形状。先求均值，再单独找峰值。",
+        "en": "Distinguish number of observations from number of events when updating rate and shape. Compute the mean, then identify the peak separately."
+      },
+      "practice_a": {
+        "zh": "N=2、T=2，所以后验是Gamma(3,3)。均值3/3=1，MAP=(3−1)/3=2/3。分母中的2来自两次观察，不是因为泊松只有两个可能结果；泊松计数可以为任意非负整数。",
+        "en": "N=2 and T=2 give Gamma(3,3). Its mean is 3/3=1, while MAP is (3−1)/3=2/3. The added 2 in the rate comes from two observations, not two possible Poisson outcomes; counts can be any nonnegative integer."
+      },
+      "transfer_q": {
+        "zh": "当前后验为Gamma(6,4)。再进行一次独立单位观察，得到计数0，把旧后验作为新先验。新后验、均值和MAP分别是什么？为什么观察到零也提供信息？",
+        "en": "Your current posterior is Gamma(6,4). Observe one more independent unit exposure with count zero, using the old posterior as the new prior. Find the new posterior, mean, and MAP. Why does observing zero still provide information?"
+      },
+      "transfer_a": {
+        "zh": "新增事件数为0，但新增观察量为1，因此后验Gamma(6,5)，均值6/5=1.2，MAP=(6−1)/5=1。零计数不是没有观察：它增加了“一段时间没有事件”的证据，所以保持事件数不变而增加分母，降低平均率估计。",
+        "en": "The additional event count is zero, but exposure increases by one. The posterior becomes Gamma(6,5), with mean 6/5=1.2 and MAP (6−1)/5=1. Zero is an observed count, not a missing observation: extra exposure without events lowers the mean-rate estimate."
+      },
+      "card_ids": [
+        "CS5489-M111",
+        "CS5489-M112",
+        "CS5489-M115"
+      ],
+      "sources": [
+        {
+          "name": "Tutorial2v2.ipynb",
+          "locator": "cells 31–32",
+          "kind": "course",
+          "note": "已核对Poisson计数与未定义alpha模板；Gamma先验不是教师模板中已规定的公式。 / Checked the Poisson count model and undefined-alpha template; a Gamma prior is not a formula specified by that template."
+        },
+        {
+          "name": "UC Berkeley Stat 210A, Bayes Estimation (Fall 2024)",
+          "locator": "https://stat210a.berkeley.edu/fall-2024/reader/bayes-estimation.html — §§4.2, 2.1",
+          "kind": "reference",
+          "note": "已核对Gamma–Poisson共轭更新和平方误差下后验均值；作为扩展参考而非当前考核要求。 / Checked Gamma–Poisson conjugacy and the posterior mean under squared error; supplementary reference, not a current assessment requirement."
+        },
+        {
+          "name": "原创Gamma密度核与小计数例题 / Original Gamma-kernel and count examples",
+          "locator": "ml09#gamma-poisson-mean",
+          "kind": "derived",
+          "note": "省略常数后逐项相乘；均值与形状>1的MAP分开验算，零计数与无观察也分开。 / Multiply density kernels term by term; mean and interior MAP are checked separately, distinguishing zero counts from missing observations."
+        }
+      ]
+    }
+  ],
+  "ml30": [
+    {
+      "id": "entropy-and-information",
+      "card_ids": [
+        "CS5489-M305",
+        "CS5489-M306"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_1.pdf",
+          "locator": "page 2",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_1.pdf",
+          "locator": "page 2-3",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#entropy-and-information",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "概率之外：一句消息减少多少不确定性",
+        "en": "Entropy: how much uncertainty does a message remove?"
+      },
+      "goal": {
+        "zh": "能用两枚硬币的表格解释熵、条件熵、链式法则与互信息。",
+        "en": "Use coin tables to explain entropy, conditional entropy, the chain rule and mutual information."
+      },
+      "explain": {
+        "zh": "概率1/2的消息提供1 bit信息，因为 $-\\log_2(1/2)=1$；概率1/4对应2 bit。熵 $H(X)=-\\sum_xp(x)\\log_2p(x)$ 是平均信息量，零概率项按0处理，不是给某个结果贴“很惊讶”的主观标签。\n\n联合熵H(X,Y)度量知道两者前的不确定性；条件熵H(X|Y)是在各Y情形下算X的熵，再按Y概率加权。由 $p(x,y)=p(y)p(x|y)$ 拆对数得到 $H(X,Y)=H(Y)+H(X|Y)$。\n\n互信息 $I(X;Y)=H(X)-H(X|Y)$ 是观察Y平均省掉的不确定性，也等于联合分布下 $\\log_2[p(x,y)/(p(x)p(y))]$ 的平均。独立时比值为1，互信息为0。以下变量均有限取值。",
+        "en": "An event with probability1/2 carries one bit because $-\\log_2(1/2)=1$; probability1/4 carries two. Entropy $H(X)=-\\sum_xp(x)\\log_2p(x)$ averages this information, with zero-probability terms contributing zero.\n\nJoint entropy concerns both variables; conditional entropy averages the remaining entropy of X over observed Y values. Factoring $p(x,y)=p(y)p(x|y)$ and splitting its logarithm gives $H(X,Y)=H(Y)+H(X|Y)$.\n\nMutual information $I(X;Y)=H(X)-H(X|Y)$ is average uncertainty removed by Y. Equivalently average $\\log_2[p(x,y)/(p(x)p(y))]$ under the joint distribution. Independence makes the ratio one and information zero. All variables here have finite alphabets."
+      },
+      "worked_q": {
+        "zh": "X为公平0/1硬币，Y完全复制X。只有(0,0)、(1,1)，各概率1/2。求H(X)、H(Y)、H(X,Y)、H(X|Y)、I(X;Y)。",
+        "en": "X is a fair binary coin and Y copies X. Pairs(0,0),(1,1) each have probability1/2. Compute both marginal entropies, joint and conditional entropy, and mutual information."
+      },
+      "worked_a": {
+        "zh": "X与Y各有1 bit不确定性；联合只有两个等概率状态，所以H(X,Y)=1。知道Y就知道X，H(X|Y)=0；互信息1−0=1 bit。链式法则为1=1+0。",
+        "en": "Both marginal entropies are1 bit; the two-state joint entropy is1. Given Y, X is certain, so conditional entropy0 and mutual information1. The chain rule reads1=1+0."
+      },
+      "practice_q": {
+        "zh": "X、Y改为独立公平硬币，四个组合各1/4。補出H(X,Y)、H(X|Y)与互信息。",
+        "en": "Now X, Y are independent fair coins, with four equiprobable pairs. Complete joint entropy, conditional entropy and mutual information."
+      },
+      "hint": {
+        "zh": "知道另一枚硬币不会减少这一枚的两种可能。",
+        "en": "Knowing one coin does not reduce uncertainty about the other."
+      },
+      "practice_a": {
+        "zh": "联合熵为−4×(1/4)log₂(1/4)=2 bit；条件熵1 bit；互信息1−1=0。",
+        "en": "Joint entropy is2 bits, conditional entropy1 bit and mutual information0."
+      },
+      "transfer_q": {
+        "zh": "X取1的概率1/4、取0的概率3/4，Y恒等于0。已知log₂(1/4)=−2、log₂(3/4)≈−0.415037，求H(X)、H(Y)、H(X|Y)与I；Y能否帮助预测？",
+        "en": "X is1 with probability1/4 and0 with3/4; Y is always0. Using the supplied logarithms−2 and−0.415037, compute H(X), H(Y), H(X|Y), I and whether Y helps."
+      },
+      "transfer_a": {
+        "zh": "H(X)=1/4×2+3/4×0.415037≈0.811278 bit；H(Y)=0，H(X|Y)=H(X)，互信息0。Y没有变化，不提供关于X的新信息。",
+        "en": "H(X)≈0.811278 bits, H(Y)=0, and H(X|Y)=H(X), so I=0. A constant Y supplies no new information about X."
+      }
+    },
+    {
+      "id": "laplace-mle-from-deviations",
+      "card_ids": [
+        "CS5489-M307"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_1.pdf",
+          "locator": "page 2",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_1.pdf",
+          "locator": "page 3-5",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#laplace-mle-from-deviations",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "Laplace估计：为什么中心取中位数",
+        "en": "Laplace estimation: why the median is the center"
+      },
+      "goal": {
+        "zh": "能从绝对偏差推位置中位数与尺度MLE，并识别零尺度退化。",
+        "en": "Derive median location and mean-absolute-deviation scale and identify degeneracy."
+      },
+      "explain": {
+        "zh": "Laplace分布像顶端尖一些的山：位置mu平移山峰，尺度b>0控制宽度；密度为 $p(x|\\mu,b)=(2b)^{-1}\\exp(-|x-\\mu|/b)$。对同类n>0个IID观测，记 $S(\\mu)=\\sum_i|x_i-\\mu|$，对数似然是 $-n\\ln(2b)-S(\\mu)/b$。\n\n固定b时只需让S最小。把mu向右移动一小步，左侧每点的距离增加、右侧每点的距离减少；左右数量平衡处就是中位数。奇数样本的中位数常是折角，不必存在通常意义下等于0的导数。\n\n固定选好的mu，令 $-n/b+S/b^2=0$ 得 $\\hat b=S/n$（S>0）。它是到中位数的平均绝对距离，不是标准差。全体观测相同会令S=0，似然随b趋零无界，需要额外约束，不能把b=0代入密度。",
+        "en": "A Laplace density $p(x|\\mu,b)=(2b)^{-1}\\exp(-|x-\\mu|/b)$ has location mu and positive scale b. For n IID observations, set $S(\\mu)=\\sum_i|x_i-\\mu|$; log likelihood is $-n\\ln(2b)-S(\\mu)/b$.\n\nFor fixed b, minimize S. Moving mu right increases distances to left-side observations and decreases distances to right-side ones. A median balances these counts; at a data point the optimum can be a nondifferentiable corner.\n\nFor S>0, differentiating in b gives $-n/b+S/b^2=0$, hence $\\hat b=S/n$, the mean absolute distance from a median, not standard deviation. Identical observations give S=0 and unbounded likelihood as b approaches zero; b=0 is not a valid density parameter."
+      },
+      "worked_q": {
+        "zh": "观测为1、2、8，按IID Laplace模型求位置和尺度MLE，并比较在mu=1、2、8时的绝对偏差和。",
+        "en": "For observations1,2,8, find Laplace location and scale MLEs and compare absolute-deviation sums at mu=1,2,8."
+      },
+      "worked_a": {
+        "zh": "S(1)=0+1+7=8；S(2)=1+0+6=7；S(8)=7+6+0=13。中位数2最优，尺度b=7/3≈2.3333。不是取均值11/3作为位置。",
+        "en": "The sums are8,7,13 respectively. Median2 is optimal and b=7/3≈2.3333. The sample mean11/3 is not the Laplace location MLE."
+      },
+      "practice_q": {
+        "zh": "观测改为0、0、6。先找中位数，再算S和b。",
+        "en": "Use observations0,0,6. Find median, S and b."
+      },
+      "hint": {
+        "zh": "重复的0仍占两条观测；分母是三条样本。",
+        "en": "Both zeros count; divide by three observations."
+      },
+      "practice_a": {
+        "zh": "中位数0，S=0+0+6=6，b=2。",
+        "en": "Median0, S=6, b=2."
+      },
+      "transfer_q": {
+        "zh": "两观测为2、4。为什么mu=2、3、4都可最优？尺度分别多少？若两观测都改为4又发生什么？",
+        "en": "For observations2,4, why can mu=2,3,4 all be optimal, and what scale results? What changes if both observations equal4?"
+      },
+      "transfer_a": {
+        "zh": "区间[2,4]内S=(mu−2)+(4−mu)=2，故所有这些mu都是中位数，b=2/2=1。若都为4，S=0，正b域上没有有限尺度MLE；应明示正下限等新建模约束。",
+        "en": "Throughout[2,4], S=2, so every location in that interval is a median and b=1. If both equal4, S=0 and no positive-scale unconstrained MLE exists; a floor or other constraint changes the model."
+      }
+    },
+    {
+      "id": "conditional-gaussian-update",
+      "card_ids": [
+        "CS5489-M309"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_1.pdf",
+          "locator": "page 3-4",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_1.pdf",
+          "locator": "page 6-8",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#conditional-gaussian-update",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "看见一个坐标，怎样更新另一个",
+        "en": "Updating one Gaussian coordinate after observing another"
+      },
+      "goal": {
+        "zh": "能通过配方解释条件高斯，并计算观测引起的均值与方差变化。",
+        "en": "Explain Gaussian conditioning by completing a square and compute its mean and variance."
+      },
+      "explain": {
+        "zh": "“联合高斯”是关于两个量一起变化的模型。先用零均值、两个方差都为1、协方差rho（$|\\rho|<1$）的情形。联合密度 $p(a,b)\\propto\\exp\\{- [a^2-2\\rho ab+b^2]/[2(1-\\rho^2)]\\}$，注意指数前的负号。固定a后，分子可写 $(b-\\rho a)^2+(1-\\rho^2)a^2$；后一项与b无关，被归一化常数吸收。因此 $B|A=a\\sim N(\\rho a,1-\\rho^2)$。\n\n一般分块记号中，下标a是已观察部分、b是待预测部分，$\\Sigma_{ba}$ 表示两部分的交叉协方差。正定联合协方差下，条件均值为 $\\mu_b+\\Sigma_{ba}\\Sigma_{aa}^{-1}(x_a-\\mu_a)$，条件协方差为 $\\Sigma_{bb}-\\Sigma_{ba}\\Sigma_{aa}^{-1}\\Sigma_{ab}$。均值随观测偏差移动；协方差在这个模型里不依赖观测的具体数值。",
+        "en": "Start with a jointly Gaussian pair of zero means, unit variances, and covariance rho with $|\\rho|<1$. Its density is $p(a,b)\\propto\\exp\\{- [a^2-2\\rho ab+b^2]/[2(1-\\rho^2)]\\}$; note the minus sign in the exponent. Holding a fixed, rewrite the numerator as $(b-\\rho a)^2+(1-\\rho^2)a^2$. The last term is constant in b, so $B|A=a\\sim N(\\rho a,1-\\rho^2)$.\n\nIn general, a indexes observed coordinates and b predicted ones; $\\Sigma_{ba}$ is cross-covariance. With positive-definite joint covariance, the conditional mean is $\\mu_b+\\Sigma_{ba}\\Sigma_{aa}^{-1}(x_a-\\mu_a)$ and covariance $\\Sigma_{bb}-\\Sigma_{ba}\\Sigma_{aa}^{-1}\\Sigma_{ab}$. The observed deviation shifts the mean, but this model’s conditional covariance does not depend on the observed value."
+      },
+      "worked_q": {
+        "zh": "零均值、方差均1、rho=0.5的联合高斯，观察A=2。求B的条件均值、方差；它是否等于确定知道B=1？",
+        "en": "For zero means, unit variances, rho=0.5 and observation A=2, find conditional mean and variance. Does mean1 mean B is known exactly?"
+      },
+      "worked_a": {
+        "zh": "均值0.5×2=1；方差1−0.5²=0.75。仍是有散布的N(1,0.75)，不是B恒等于1。",
+        "en": "Mean1, variance0.75 give N(1,0.75); B remains uncertain rather than fixed at1."
+      },
+      "practice_q": {
+        "zh": "同一模型观察A=−2。哪些量改变、哪些不变？",
+        "en": "In the same model, observe A=−2. What changes and what remains?"
+      },
+      "hint": {
+        "zh": "均值式包含a，方差式只包含rho。",
+        "en": "Only the mean expression contains the observed a."
+      },
+      "practice_a": {
+        "zh": "条件均值变为−1，条件方差仍0.75。",
+        "en": "The conditional mean becomes−1; variance stays0.75."
+      },
+      "transfer_q": {
+        "zh": "一般二元高斯均值(10,20)，方差分别4、9，交叉协方差3。观察A=12，独立算B的条件均值和方差；若交叉协方差改为0呢？",
+        "en": "A general Gaussian pair has means(10,20), variances4 and9, and cross-covariance3. Observe A=12. Compute B’s conditional parameters, then repeat with zero cross-covariance."
+      },
+      "transfer_a": {
+        "zh": "均值20+(3/4)(12−10)=21.5；方差9−3×(1/4)×3=6.75。交叉协方差0时均值仍20、方差仍9：联合高斯中的不相关坐标独立，但此结论不能推广到所有分布。",
+        "en": "Mean21.5 and variance6.75. With zero cross-covariance they stay20 and9: uncorrelated jointly Gaussian coordinates are independent, a property not shared by arbitrary distributions."
+      }
+    },
+    {
+      "id": "rank-nullspace-and-solutions",
+      "card_ids": [
+        "CS5489-M318"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_3.pdf",
+          "locator": "page 1",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_3.pdf",
+          "locator": "page 2-4",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#rank-nullspace-and-solutions",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "方程有解与解唯一是两件事",
+        "en": "Existence and uniqueness are different questions"
+      },
+      "goal": {
+        "zh": "能用列空间、秩和零空间判定小线性方程组的解。",
+        "en": "Use column space, rank and nullspace to analyze a small linear system."
+      },
+      "explain": {
+        "zh": "把 $Ax=y$ 看成用x中的系数混合A的列。所有能混出的y组成列空间；秩rank(A)是这些列里独立方向的数量。y在列空间内才有解。\n\n零空间是所有使 $Az=0$ 的输入z。若x是一个解，x+z也是同一y的解，所以非零零空间方向会造成不唯一。A有M行、N列时，$\\dim\\operatorname{null}(A)=N-\\operatorname{rank}(A)$。有解且秩等于N时才唯一。\n\n因此方阵不自动可逆；宽矩阵N>M必有非零零空间，却不保证每个y都可解；高矩阵N<M一定有某些y不可解，却仍可能对可解的y有唯一解。先看方向是否独立，不只数方程个数。",
+        "en": "Think of $Ax=y$ as mixing columns of A with coefficients x. All obtainable outputs form its column space; rank counts independent column directions. A solution exists exactly when y belongs to that space.\n\nThe nullspace contains inputs z with $Az=0$. If x solves the system, so does x+z. For M rows and N columns,$\\dim\\operatorname{null}(A)=N-\\operatorname{rank}(A)$. A consistent system has a unique solution only when rank equals N.\n\nA square matrix need not be invertible. A wide matrix has a nonzero nullspace but need not reach every y. A tall matrix misses some y values but can give unique solutions for those it reaches."
+      },
+      "worked_q": {
+        "zh": "A=[[1,2],[2,4]]，y=(3,6)。求秩、零空间方向和所有解；若y改成(3,7)呢？",
+        "en": "For A=[[1,2],[2,4]], y=(3,6), find rank, null directions and all solutions. What if y=(3,7)?"
+      },
+      "worked_a": {
+        "zh": "第二列是第一列2倍，rank=1。Az=0等价z₁+2z₂=0，故z=(−2t,t)，零空间维数1。解为x=(3−2t,t)，无限多个；若y=(3,7)，第二式要求2x₁+4x₂=7，和第一式的两倍6冲突，所以无解。",
+        "en": "Rank is1 because column2 is twice column1. Null vectors are(−2t, t), so nullity1. Solutions are(3−2t, t). For y=(3,7), the second equation contradicts twice the first, so none exist."
+      },
+      "practice_q": {
+        "zh": "A=[[1],[2]]只有一个未知数，分别判断y=(3,6)与(3,7)，并求秩/零空间维数。",
+        "en": "For A=[[1],[2]], analyze y=(3,6) and(3,7), then find rank and nullity."
+      },
+      "hint": {
+        "zh": "列非零，因此独立方向为1；同一个x必须同时满足两行。",
+        "en": "The nonzero column provides one independent direction; one x must satisfy both rows."
+      },
+      "practice_a": {
+        "zh": "rank=1、N=1，所以nullity=0。y=(3,6)唯一解x=3；y=(3,7)无解。高矩阵可以零空间为零，但不能覆盖全部输出。",
+        "en": "Rank1 and N1 give nullity0. The first target has unique solution x=3; the second is inconsistent. A tall matrix can have zero nullspace yet miss outputs."
+      },
+      "transfer_q": {
+        "zh": "A=[[1,0,0],[0,0,0]]是2×3宽矩阵。独立求rank/nullity；分别判断y=(1,1)和(1,0)，写出有解时的全部解。",
+        "en": "For wide A=[[1,0,0],[0,0,0]], find rank/nullity and analyze y=(1,1) and(1,0), giving all solutions when consistent."
+      },
+      "transfer_a": {
+        "zh": "rank=1，nullity=3−1=2。第二行永远输出0，因此(1,1)无解；(1,0)有x=(1,s,t)，s、t任意。未知数多只保证自由方向存在，不保证任意右端都匹配。",
+        "en": "Rank1, nullity2. The second output is always0, so(1,1) is impossible; for(1,0), solutions are(1, s, t). More unknowns guarantee free directions, not universal consistency."
+      }
+    },
+    {
+      "id": "adjoint-gram-and-pca",
+      "card_ids": [
+        "CS5489-M322",
+        "CS5489-M323"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_4.pdf",
+          "locator": "page 1",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_4.pdf",
+          "locator": "page 1-2",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_4.pdf",
+          "locator": "page 2-4",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Lecture8.1.pdf",
+          "locator": "page 14-16",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#adjoint-gram-and-pca",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "从共轭内积到实特征值和PCA",
+        "en": "From conjugate inner products to real eigenvalues and PCA"
+      },
+      "goal": {
+        "zh": "能计算共轭二次型，解释对称矩阵实特征值，并检验PCA方向与重值情况。",
+        "en": "Compute a conjugate quadratic form and connect real eigenvalues to PCA and repeated values."
+      },
+      "explain": {
+        "zh": "复数 $i^2=-1$；a+bi的共轭是a−bi，星号*表示先共轭再转置。这样 $v^*v=\\sum_j|v_j|^2$ 始终为正（v非零）。例如v=(1,i)，普通 $v^Tv=0$，但 $v^*v=2$，后者才表示长度平方。实数时*就是普通转置。\n\n实对称矩阵也满足 $A^*=A$。因此 $\\overline{v^*Av}=v^*A^*v=v^*Av$，这个标量为实数。若v是满足 $Av=\\lambda v$ 的特征向量，其商 $(v^*Av)/(v^*v)$ 便等于该特征值，故特征值为实数。对任意v，这个商不一定是特征值；偶然等于某个特征值也不足以证明v是特征向量。对任意X，Gram矩阵 $X^*X$ 还满足 $v^*X^*Xv=\\|Xv\\|^2\\ge0$。\n\n对不同特征值，$\\lambda u^*v=(Au)^*v=u^*Av=\\mu u^*v$ 迫使内积为0。重值不强迫任意两向量正交。PCA在单位方向上最大化 $v^T\\Sigma v$；将v展开到正交特征基后，这是特征值的加权平均，所以依次选择最大且正交的方向。",
+        "en": "For $i^2=-1$, conjugation changes a+bi to a−bi. The star denotes conjugate transpose, so $v^*v=\\sum_j|v_j|^2>0$ for nonzero v. For v=(1, i), ordinary $v^Tv=0$ but conjugate norm squared is 2. On real vectors,* is ordinary transpose.\n\nA real symmetric matrix obeys $A^*=A$, giving $\\overline{v^*Av}=v^*A^*v=v^*Av$. This scalar is real. If v is additionally an eigenvector, the quotient $(v^*Av)/(v^*v)$ equals its eigenvalue, which is therefore real. For an arbitrary v the quotient need not be an eigenvalue; an accidental equality does not prove v is an eigenvector. Gram matrices also satisfy $v^*X^*Xv=\\|Xv\\|^2\\ge0$.\n\nFor distinct real eigenvalues,$\\lambda u^*v=(Au)^*v=u^*Av=\\mu u^*v$ forces orthogonality; repeated values do not force every chosen pair to be orthogonal. PCA variance in a unit direction is a weighted average of eigenvalues in an orthonormal eigenbasis, so choose the largest available orthogonal directions."
+      },
+      "worked_q": {
+        "zh": "A=diag(3,1)，v=(1,i)。计算v*v、v*Av及它们的商；商2是否就证明2是A的特征值？",
+        "en": "For A=diag(3,1), v=(1, i), compute v*v, v*Av and their quotient. Does quotient2 prove that2 is an eigenvalue?"
+      },
+      "worked_a": {
+        "zh": "v*=(1,−i)，v*v=1+(−i)i=2；Av=(3,i)，v*Av=3+1=4，商为2。但Av不等于2v，所以v不是特征向量，商不是特征值；A的特征值仍为3、1。",
+        "en": "Conjugate row(1,−i) gives norm squared2 and v*Av=4, so quotient2. But Av≠2v: v is not an eigenvector. The eigenvalues remain3 and1."
+      },
+      "practice_q": {
+        "zh": "协方差diag(5,2)，单位方向v=(3/5,4/5)。求投影方差并与第一轴比较。",
+        "en": "For covariance diag(5,2) and unit v=(3/5,4/5), compute projected variance and compare with the first axis."
+      },
+      "hint": {
+        "zh": "用两个坐标平方作权重；它们的和是1。",
+        "en": "Squared coordinates give weights summing to one."
+      },
+      "practice_a": {
+        "zh": "方差5×9/25+2×16/25=77/25=3.08；第一轴方差5更大，第二主方向可取第二轴且方差2。",
+        "en": "Variance is77/25=3.08, below first-axis variance5. The second orthogonal principal direction is the second axis, with variance2."
+      },
+      "transfer_q": {
+        "zh": "A=2I₂，u=(1,0)，v=(1,1)/√2。验证它们都是同一特征值的特征向量但不正交；PCA仍能选两条正交方向吗？",
+        "en": "For A=2I₂, u=(1,0), v=(1,1)/√2, verify both have the same eigenvalue yet are not orthogonal. Can PCA still select orthogonal directions?"
+      },
+      "transfer_a": {
+        "zh": "Au=2u、Av=2v，但内积1/√2不为0。可以改选(1,0)、(0,1)作为正交单位基，两方向方差都为2。重值允许多种最优基，不取消正交要求。",
+        "en": "Both eigenvalues are2, but inner product1/√2 is nonzero. Choose(1,0),(0,1) as an orthonormal basis instead; both variances are2. Repetition permits multiple optimal bases without removing orthogonality requirements."
+      }
+    },
+    {
+      "id": "linear-systems-impulses-convolution",
+      "card_ids": [
+        "CS5489-M324",
+        "CS5489-M325"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_4.pdf",
+          "locator": "page 1,3",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_4.pdf",
+          "locator": "page 4,7",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_4.pdf",
+          "locator": "page 1-2,4",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_4.pdf",
+          "locator": "page 5,8",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#linear-systems-impulses-convolution",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "先分清线性和时不变，再使用冲激响应",
+        "en": "Separate linearity from time invariance before convolving"
+      },
+      "goal": {
+        "zh": "能用冲激分解计算LTI输出，并给出线性但时变的反例。",
+        "en": "Compute an LTI response from impulses and recognize a linear time-varying system."
+      },
+      "explain": {
+        "zh": "离散信号x[n]是一列带整数下标的数。单位冲激 $\\delta[n]$ 只在n=0为1，其余为0；$\\delta[n-2]$ 的那个1位于n=2。系统T是把输入序列变输出序列的规则。\n\n线性要求 $T(ax_1+bx_2)=aT(x_1)+bT(x_2)$；时不变要求输入向后挪k格，输出也恰好挪k格。两者是独立条件，不可从线性自动推出时不变。\n\n同时满足两者的LTI系统中，令 $h[n]=T(\\delta)[n]$。对本单元的有限支撑输入，冲激分解是有限和：$x[n]=\\sum_kx[k]\\delta[n-k]$，每个冲激的输出为 $x[k]h[n-k]$，相加得到卷积 $y[n]=\\sum_kx[k]h[n-k]$。下面都是有限支撑序列，未列位置为0；记住下标而不只记一串数。",
+        "en": "A discrete signal x[n] is a sequence indexed by integers. The unit impulse $\\delta[n]$ equals 1 only at n=0; $\\delta[n-2]$ moves that one to n=2. A system T maps input sequences to outputs.\n\nLinearity means $T(ax_1+bx_2)=aT(x_1)+bT(x_2)$. Time invariance means an input shift produces the same output shift. Neither condition substitutes for the other.\n\nFor an LTI system, let $h[n]=T(\\delta)[n]$. For the finite-support inputs used here, decompose into a finite sum: $x[n]=\\sum_kx[k]\\delta[n-k]$; each impulse contributes $x[k]h[n-k]$. Adding yields convolution $y[n]=\\sum_kx[k]h[n-k]$. All examples have finite support and zero elsewhere; retain index positions."
+      },
+      "worked_q": {
+        "zh": "LTI系统的h[0]=1、h[1]=2。输入x[0]=2、x[1]=1。把输入写成冲激组合，给出输出各下标数值。",
+        "en": "An LTI system has h[0]=1, h[1]=2 and input x[0]=2, x[1]=1. Express the input as impulses and give indexed outputs."
+      },
+      "worked_a": {
+        "zh": "x[n]=2delta[n]+delta[n−1]，所以y[n]=2h[n]+h[n−1]。n=0得2；n=1得4+1=5；n=2得2，其余0。输出是从0开始的(2,5,2)。",
+        "en": "Input is2delta[n]+delta[n−1], so y=2h[n]+h[n−1]. Outputs are2,5,2 at indices0,1,2 respectively, and zero elsewhere."
+      },
+      "practice_q": {
+        "zh": "同一h，输入x[n]=0.5delta[n−2]。哪些下标非零、值是多少？",
+        "en": "With the same h, use x[n]=0.5delta[n−2]. Give nonzero indices and values."
+      },
+      "hint": {
+        "zh": "先整体后移两格，再乘0.5。",
+        "en": "Shift by two positions, then multiply by0.5."
+      },
+      "practice_a": {
+        "zh": "y[n]=0.5h[n−2]，n=2为0.5、n=3为1，其余0。",
+        "en": "y[n]=0.5h[n−2], giving0.5 at2 and1 at3, zero elsewhere."
+      },
+      "transfer_q": {
+        "zh": "新系统定义T{x}[n]=n x[n]。验证线性，再比较delta[n]与delta[n−1]的输出：它是否时不变，能否用对delta的响应h=0推断所有输入输出为0？",
+        "en": "A new system is T{x}[n]=n x[n]. Check linearity and compare responses to delta[n] and delta[n−1]. Is it time invariant, and can its zero impulse response imply all outputs are zero?"
+      },
+      "transfer_a": {
+        "zh": "n(ax₁+bx₂)=a n x₁+b n x₂，因此线性。对delta[n]输出0；对delta[n−1]在n=1输出1，而将原零输出后移仍为0，所以不是时不变，不能使用LTI卷积结论。",
+        "en": "Multiplication by n distributes over linear combinations, so the system is linear. The unshifted impulse produces zero, but the impulse at1 produces one at1; shifting the original zero output gives zero. It is not time invariant, so the LTI convolution conclusion is invalid."
+      }
+    },
+    {
+      "id": "dtft-convolution-product",
+      "card_ids": [
+        "CS5489-M326"
+      ],
+      "sources": [
+        {
+          "name": "Home_Assignments_4.pdf",
+          "locator": "page 2",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Home_Assignments_Solutions_4.pdf",
+          "locator": "page 5-6",
+          "kind": "historical",
+          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+        },
+        {
+          "name": "Original bridge examples / 原创衔接例子",
+          "locator": "ml30#dtft-convolution-product",
+          "kind": "derived",
+          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+        }
+      ],
+      "title": {
+        "zh": "卷积为什么在频域变成乘法",
+        "en": "Why convolution becomes multiplication in frequency"
+      },
+      "goal": {
+        "zh": "能解释DTFT符号、完成换元因式分解，并用有限序列核对定理。",
+        "en": "Explain DTFT notation, factor the changed sums, and verify the theorem on finite sequences."
+      },
+      "explain": {
+        "zh": "DTFT把整条离散序列变为角频率omega（rad/sample）的函数：$X(\\omega)=\\sum_nx[n]e^{-j\\omega n}$。这里 $j^2=-1$，Euler公式 $e^{-j\\theta}=\\cos\\theta-j\\sin\\theta$ 把单位圆上转过角度theta的横、纵坐标cos(theta)、sin(theta)写成紧凑形式；一整圈是2pi弧度；频率变量连续，不是有限长度DFT的频率格点。omega=0时权重都为1，所以X(0)是样本总和。\n\n若 $z[n]=\\sum_mx[m]h[n-m]$，代入变换得到双重求和。令t=n−m，即n=t+m，指数拆成 $e^{-j\\omega m}e^{-j\\omega t}$，于是\n\n$Z(\\omega)=\\sum_mx[m]e^{-j\\omega m}\\sum_th[t]e^{-j\\omega t}=X(\\omega)H(\\omega)$。\n\n交换求和需要条件，例如 $\\sum_n|x[n]|<\\infty$ 且h也绝对可和；本单元有限序列自然满足。这里是普通完整卷积，不是未经说明的循环卷积。",
+        "en": "The DTFT maps a discrete sequence to a function of continuous angular frequency omega in radians/sample: $X(\\omega)=\\sum_nx[n]e^{-j\\omega n}$. Here $j^2=-1$ and Euler’s identity $e^{-j\\theta}=\\cos\\theta-j\\sin\\theta$ packages the horizontal and vertical coordinates cos(theta) and sin(theta) on the unit circle; a full turn is 2pi radians. This continuous frequency is not a finite DFT grid. At omega=0, all weights are 1, so X(0) is the sample sum.\n\nSubstitute $z[n]=\\sum_mx[m]h[n-m]$ into the transform. Set t=n−m, hence n=t+m; the exponential splits into $e^{-j\\omega m}e^{-j\\omega t}$. Therefore $Z(\\omega)=\\sum_mx[m]e^{-j\\omega m}\\sum_th[t]e^{-j\\omega t}=X(\\omega)H(\\omega)$.\n\nExchanging sums requires conditions such as absolute summability of both sequences. Finite sequences satisfy them. This is full linear convolution, not an unstated circular operation."
+      },
+      "worked_q": {
+        "zh": "x=(1,1)、h=(1,−1)，均从n=0开始，其余0。求完整卷积与两个DTFT的乘积，核对结果。",
+        "en": "For x=(1,1), h=(1,−1), both starting at0 and zero elsewhere, compute full convolution and multiply their DTFTs."
+      },
+      "worked_a": {
+        "zh": "卷积为(1,0,−1)，下标0、1、2。令 $u=e^{-j\\omega}$，则X=1+u、H=1−u，乘积1−u²正是输出的DTFT。omega=0时为0；omega=pi/2时u=−j，结果1−(−j)²=2。",
+        "en": "Convolution is(1,0,−1) at0,1,2. With $u=e^{-j\\omega}$, X=1+u and H=1−u, giving1−u², the output transform. At omega0 it is0; at pi/2, u=−j and the value is 2."
+      },
+      "practice_q": {
+        "zh": "x[n]=delta[n−1]，h[0]=1、h[1]=2。求卷积的非零下标，以及其DTFT；omega=0时等于多少？",
+        "en": "Use x[n]=delta[n−1], h[0]=1, h[1]=2. Find nonzero convolution indices, its DTFT and the value at omega0."
+      },
+      "hint": {
+        "zh": "冲激让h整体后移1格；DTFT中下标1、2对应两个指数幂。",
+        "en": "The impulse shifts h by one; indices1 and2 determine exponential powers."
+      },
+      "practice_a": {
+        "zh": "z[1]=1、z[2]=2，$Z=e^{-j\\omega}+2e^{-2j\\omega}$。亦可由 $X=e^{-j\\omega}$ 与 $H=1+2e^{-j\\omega}$ 相乘得到；Z(0)=3。",
+        "en": "Values are1 at index1 and2 at index2, so $Z=e^{-j\\omega}+2e^{-2j\\omega}$. This equals the product of $X=e^{-j\\omega}$ and $H=1+2e^{-j\\omega}$; Z(0)=3."
+      },
+      "transfer_q": {
+        "zh": "独立计算从0开始的x=(1,2)、h=(1,1)之完整卷积。再令u=e^(−j omega)，写XH多项式并在omega=pi（u=−1）核验。",
+        "en": "Independently convolve x=(1,2), h=(1,1), both starting at0. Write the XH polynomial in u=e^(−j omega), then check at omega=pi, u=−1."
+      },
+      "transfer_a": {
+        "zh": "时域结果(1,3,2)；(1+2u)(1+u)=1+3u+2u²，与下标0、1、2一致。u=−1得1−3+2=0；直接变换输出也为0。",
+        "en": "The time result is(1,3,2). Product(1+2u)(1+u)=1+3u+2u² matches indices0,1,2. At u=−1 the value is0, both from the product and from the output transform."
+      }
     }
   ]
 }

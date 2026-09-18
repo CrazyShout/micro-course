@@ -49,7 +49,7 @@
     {
       "path": "CS5222/exports/CS5222-bilingual.apkg",
       "bytes": 7269503,
-      "sha256": "b419cdaad8aaa34e2ff9a6a589315099a5f0eb8e649ac1bca2e2819cc7c91012"
+      "sha256": "e195dbc1ee4856132724bf87d4eecc6dba0571d3dbd4841c901b040c0944bc75"
     },
     {
       "path": "CS5222/media/chapter1-slide-23.png",
@@ -259,7 +259,7 @@
     {
       "path": "CS5489/exports/CS5489-bilingual.apkg",
       "bytes": 3375737,
-      "sha256": "648880e7f55603c1858e27ccfba3e65fe1539410b6b8e12af31d782c88a0c6f5"
+      "sha256": "03faa7541fc5443215a5cf9cb5e5b99b296c959e94d3fabc10d7728ec888c539"
     },
     {
       "path": "CS5489/media/Lecture2a-cell-25.png",
@@ -389,7 +389,7 @@
     {
       "path": "cards.html",
       "bytes": 19005,
-      "sha256": "340951ebfc143a91e25e60a99d42cb0ba97d8a19b2ca4e4f1f5bde4700cd7ee5"
+      "sha256": "4a1e364add4efc6c48498420a17fe3fe838ed2cce01003c0bea09d08c368f65f"
     },
     {
       "path": "deck-introductions.json",
@@ -558,8 +558,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1793920,
-      "sha256": "f4c5e9d924614cc2aa775963e8bbee18bf7f6f0c507c5c7fadb65864ac920b42"
+      "bytes": 1794166,
+      "sha256": "dc9e2ef9940309d25ffaeb568cb4f3ccd5cb09db4b06b2612afa4f78cd903ab5"
     },
     {
       "path": "reading/figures/ml-margin.svg",

@@ -135,8 +135,8 @@ A_ZH: 反复抽取小样本集，拟合候选模型，再统计残差低于阈�
 @@ M205 | x03-robust | learn | XROB:8-9
 Q_EN: How is the ideal RANSAC trial count related to inlier probability?
 Q_ZH: 理想情况下，RANSAC 迭代次数如何由内点概率决定？
-A_EN: Let p be the target success probability. Under the ideal model, s independent draws are all inliers with probability $w^s$, and a clean sample is nondegenerate. T independent trials succeed with probability $1-(1-w^s)^T$. For $0<w<1$ and $0<p<1$, use $T=\lceil\log(1-p)/\log(1-w^s)\rceil$. If w=1 one trial suffices; w=0 cannot succeed. Without-replacement sampling or degeneracy changes this model.
-A_ZH: 令p为目标成功概率。理想模型下，独立抽s个点全部为内点的概率为 $w^s$，并假设全内点样本不退化。T次独立尝试的成功率为 $1-(1-w^s)^T$。当 $0<w<1$、$0<p<1$，取 $T=\lceil\log(1-p)/\log(1-w^s)\rceil$。w=1一次足够，w=0不可能成功；无放回抽样或退化会改变模型。
+A_EN: Let w be the inlier probability per draw, s the sample size, and p the target success probability. Under the ideal model, s independent draws are all inliers with probability $w^s$, and a clean sample is nondegenerate. T independent trials succeed with probability $1-(1-w^s)^T$. For $0<w<1$ and $0<p<1$, use $T=\lceil\log(1-p)/\log(1-w^s)\rceil$. If w=1 one trial suffices; w=0 cannot succeed. Without-replacement sampling or degeneracy changes this model.
+A_ZH: 令w为单次抽样取到内点的概率，s为每组样本大小，p为目标成功概率。理想模型下，独立抽s个点全部为内点的概率为 $w^s$，并假设全内点样本不退化。T次独立尝试的成功率为 $1-(1-w^s)^T$。当 $0<w<1$、$0<p<1$，取 $T=\lceil\log(1-p)/\log(1-w^s)\rceil$。w=1一次足够，w=0不可能成功；无放回抽样或退化会改变模型。
 
 @@ M206 | x03-robust | worked | XROB:8-9
 Q_EN: With inlier fraction 0.5, sample size 2 and target success 0.99, how many ideal RANSAC trials are needed?

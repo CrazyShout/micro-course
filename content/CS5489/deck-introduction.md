@@ -12,15 +12,15 @@ These 329 cards connect to 30 micro-lessons for understanding, retrieval practic
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-181 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。
+185 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。
 
-The 181 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope.
+The 185 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope.
 
 ## 怎样学才不会割裂 / How to learn coherently
 
-初学先看章节导读和先修微课，跟着完整例题手算，再独立完成提示练习与条件变化题。之后回 Markji 遮住答案检索，用英语复述。答不出时点卡片答案末尾的“微课 / Lesson”返回对应讲解；综合旧题还会提供相关概念课入口。长推导和 Notebook 练习须完整重做。
+初学先看本节“这一遍的重点”，跟着一个完整例题手算，再独立完成变式。先复习列出的少量首轮卡，其余在读过对应补课后分次练。网页卡片用于预览；正式复习在 Markji 按卡号查找，两个地方的记录不互通。开放题先说出核心点，再解释理由；保留中英文对照，但不用逐字背段落。
 
-Begin with the chapter guide and prerequisites, work through an example, and solve the guided and changed-condition exercises. Then retrieve from cards and explain in English. Use the Lesson links after each answer to repair gaps. Re-solve long derivations and execute notebook exercises independently.
+Start with “This pass”, work through one example, then solve the variation independently. Review the small first-pass set first; use the other cards after their relevant supplements. Web cards are previews; find the IDs in Markji for formal review. Their progress records do not synchronize. For open questions, recall the core points and explain why; bilingual text need not be memorized word for word.
 
 ## 课程信息移至网页 / Course guidance lives on the website
 

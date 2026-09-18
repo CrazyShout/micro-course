@@ -366,14 +366,14 @@
       "lesson_id": "ml07",
       "course": "CS5489",
       "status": "canvas",
-      "goal": "能区分完整逐类协方差、对角 Gaussian NB 和共享协方差。",
+      "goal": "能把一个新样本代入两类高斯模型，依次算距离、体积项和先验分数，解释预测为何随先验或方差变化。",
       "worked": {
-        "zh": "两个特征时，一类完整协方差有几个独立参数？对角模型呢？",
-        "en": "With two features, how many independent covariance parameters does one full model need, compared with a diagonal model?"
+        "zh": "教学模型中，A、B 的先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。新杯子的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。",
+        "en": "In a teaching model, A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463."
       },
       "independent": {
-        "zh": "K=3 类、d=2 特征，只统计协方差参数：每类完整、每类对角、三类共享一个完整协方差，各需要几个独立数？共享会带来什么限制？",
-        "en": "For three classes and two features, count covariance parameters for separate full, separate diagonal, and one shared full covariance. What does sharing restrict?"
+        "zh": "独立做：x=(2,0)，均值仍为 A：(0,0)、B：(4,0)，先验恢复各 1/2。A 的协方差仍为 diag(4,1)，B 改为 diag(16,1)。求 q、行列式和分数，再选类别。B 的校正距离更小，是否足以保证选 B？可用 log16≈2.7726。",
+        "en": "Independently use x=(2,0), means A:(0,0), B:(4,0), and equal priors. Keep A's covariance diag(4,1), but change B's to diag(16,1). Compute q, determinants, scores, and the decision. Does B's smaller adjusted distance guarantee that B wins? Use log16≈2.7726."
       },
       "card_ids": [
         "CS5489-M061",
@@ -784,14 +784,14 @@
       "lesson_id": "ml17",
       "course": "CS5489",
       "status": "supplement",
-      "goal": "能用四句英文连接任务、模型假设、决策规则和局限，并迁移到另一模型。",
+      "goal": "能说明文本模型的表示与假设，并在一个未指定方法的情境中选择模型、计算后验、按错误代价决策，再回答英文追问。",
       "worked": {
         "zh": "用四句英文介绍词元计数 Multinomial NB：说明输入/输出、给定类别的词元模型、如何预测以及一个局限。",
         "en": "Give a four-sentence English explanation of token-count multinomial NB: input/output, class-conditional token model, prediction rule, and one limitation."
       },
       "independent": {
-        "zh": "独立用四句英文解释二分类逻辑回归。必须包含：线性分数、sigmoid、交叉熵训练、概率或泛化的一个限制。",
-        "en": "Independently explain binary logistic regression in four English sentences, including linear score, sigmoid, cross-entropy training, and one probability or generalization limitation."
+        "zh": "独立情境题：一个短信过滤器只保存 free 是否出现，不保存出现次数。请在已学的生成式文本基线中选一个合适模型，说明表示。教学总体中垃圾占 20%，垃圾与正常短信含 free 的概率分别为 0.8、0.1；一条新短信含 free。先求垃圾后验，再决定是否拦截：误拦正常短信损失 9，放过垃圾损失 1，判断正确损失 0。假定所给概率适用于当前总体。最后用英文回答：① Would repeating “free” three times change this model's input? ② If the false-positive cost rises, must the posterior change?",
+        "en": "A filter stores only whether free occurs, not its count. Choose a suitable generative text baseline from those studied and state the representation. In a teaching population, 20% of messages are spam; free appears in 0.8 of spam and 0.1 of legitimate messages. A new message contains free. Find its spam posterior and decide whether to block it: a false block costs 9, missed spam costs 1, and correct decisions cost zero. Assume these probabilities apply to the current population. Then answer in English: (1) Would repeating “free” three times change this model's input? (2) If the false-positive cost rises, must the posterior change?"
       },
       "card_ids": [
         "CS5489-M101",
@@ -1517,12 +1517,12 @@
         {
           "id": "activity-probability",
           "goal": {
-            "zh": "能算小规模同时活跃概率并指出独立假设。",
-            "en": "Compute small simultaneous-activity probabilities and state independence."
+            "zh": "先数清“哪几个人在用”，再区分“恰好几人”和“超过容量”；能独立算五人小例子。",
+            "en": "Count which users are active, distinguish exactly k from exceeding capacity, and solve a five-user example independently."
           },
           "independent": {
-            "zh": "两人总是一起活跃，每人边际活跃概率仍0.2。两人同时活跃概率多少，为什么不是0.04？",
-            "en": "Two users always activate together, each with marginal probability 0.2. What is joint activity probability and why not 0.04?"
+            "zh": "又来了两位同学：现在共 5 名独立用户，每人活跃概率 0.2、活跃时需 300 kbps，链路恢复到 600 kbps。独立求恰好两人活跃、需求超过容量的概率，并说明各自要数哪些状态。可以用计算器，但先写出要加的项。",
+            "en": "Two more students join: five independent users now have activity probability 0.2 each and need 300 kbps when active; link capacity is back to 600 kbps. Independently find exactly-two and over-capacity probabilities, explaining which states each includes. A calculator is fine; first write the terms to add."
           },
           "card_ids": [
             "CS5222-N018",

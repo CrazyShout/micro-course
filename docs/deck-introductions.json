@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-17",
+  "updated": "2026-09-18",
   "courses": {
     "CS5489": {
       "title_zh": "CS5489 · 机器学习双语学习卡",
@@ -17,14 +17,14 @@
         {
           "title_zh": "当前内容与往年预习",
           "title_en": "Current scope and historical preview",
-          "body_zh": "181 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。",
-          "body_en": "The 181 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope."
+          "body_zh": "185 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。",
+          "body_en": "The 185 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope."
         },
         {
           "title_zh": "怎样学才不会割裂",
           "title_en": "How to learn coherently",
-          "body_zh": "初学先看章节导读和先修微课，跟着完整例题手算，再独立完成提示练习与条件变化题。之后回 Markji 遮住答案检索，用英语复述。答不出时点卡片答案末尾的“微课 / Lesson”返回对应讲解；综合旧题还会提供相关概念课入口。长推导和 Notebook 练习须完整重做。",
-          "body_en": "Begin with the chapter guide and prerequisites, work through an example, and solve the guided and changed-condition exercises. Then retrieve from cards and explain in English. Use the Lesson links after each answer to repair gaps. Re-solve long derivations and execute notebook exercises independently."
+          "body_zh": "初学先看本节“这一遍的重点”，跟着一个完整例题手算，再独立完成变式。先复习列出的少量首轮卡，其余在读过对应补课后分次练。网页卡片用于预览；正式复习在 Markji 按卡号查找，两个地方的记录不互通。开放题先说出核心点，再解释理由；保留中英文对照，但不用逐字背段落。",
+          "body_en": "Start with “This pass”, work through one example, then solve the variation independently. Review the small first-pass set first; use the other cards after their relevant supplements. Web cards are previews; find the IDs in Markji for formal review. Their progress records do not synchronize. For open questions, recall the core points and explain why; bilingual text need not be memorized word for word."
         },
         {
           "title_zh": "课程信息移至网页",
@@ -38,7 +38,13 @@
           "body_zh": "微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。",
           "body_en": "Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work."
         }
-      ]
+      ],
+      "counts": {
+        "total": 329,
+        "current_support": 185,
+        "historical_preview": 144,
+        "lessons": 30
+      }
     },
     "CS5222": {
       "title_zh": "CS5222 · 计算机网络双语学习卡",
@@ -62,8 +68,8 @@
         {
           "title_zh": "怎样使用题目与图示",
           "title_en": "How to use problems and diagrams",
-          "body_zh": "先读微课，再画网络路径或事件时间轴；统一 bit/byte、秒/毫秒等单位，明确首位、末位或整批完成事件，并写出忽略项。图题必须看原图后再作答。完成一道题后改变一个条件重做，再用英语解释机制。卡片答案末尾的“微课 / Lesson”可直接回到相关讲解。",
-          "body_en": "Read the lesson, draw the path or event timeline, normalize units, define the completion event, and state omitted costs. Inspect the original figure before solving a figure-based problem. Change one condition, solve again, then explain the mechanism in English. Lesson links after each answer return to the relevant explanation."
+          "body_zh": "先看“这一遍的重点”，画路径或事件时间轴，统一单位并定义首位、末位或整批完成。图题先看原图，再独立作答；同节其余卡片可在相应补课后分次练。网页卡片用于预览，正式复习在 Markji 按卡号查找，进度不互通。改变一个条件重算，并用英文解释理由。",
+          "body_en": "Start with “This pass”. Draw the path or event timeline, normalize units and define first-bit, last-bit or batch completion. Read question figures before solving; study the other cards after the relevant supplements. Web cards are previews; use the IDs in Markji for formal review, whose progress is separate. Change one condition, recalculate and explain the reason in English."
         },
         {
           "title_zh": "课程信息移至网页",
@@ -77,7 +83,13 @@
           "body_zh": "微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。",
           "body_en": "Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work."
         }
-      ]
+      ],
+      "counts": {
+        "total": 280,
+        "current_support": 129,
+        "historical_preview": 151,
+        "lessons": 20
+      }
     }
   }
 }

@@ -87,8 +87,8 @@ A_ZH: 子类可以复用父类的方法，并用自己的实现重写部分同�
 @@ M017 | 02-python | learn | P1:155-168
 Q_EN: How do text files, CSV and pickle differ?
 Q_ZH: 文本文件、CSV 和 pickle 有什么区别？
-A_EN: Plain text stores characters; CSV organizes text into rows and columns with quoting rules; pickle stores Python objects in a Python-specific binary representation. Use `with open(...)` to close files reliably. Use a CSV parser rather than splitting every comma, because messages may contain quoted commas. Load pickle only from a trusted source, since unpickling can execute code.
-A_ZH: 纯文本保存字符；CSV 按带引号规则的行列组织文本；pickle 用 Python 专用二进制表示保存对象。用 `with open(...)` 保证文件关闭。短信可能含被引号包住的逗号，因此应使用 CSV 解析器，不能简单按所有逗号切分。只读取可信来源的 pickle，因为反序列化可能执行代码。
+A_EN: Recall three formats and their traps: (1) Plain text stores characters. (2) CSV stores rows and columns with quoting rules: a quoted field such as "hello, world" stays one field, so use a CSV parser, not split(','). (3) Pickle stores Python objects in a Python-specific binary format; unpickling can execute code, so load only trusted files. Use `with open(...)` to close files reliably.
+A_ZH: 记住三种格式及其坑：(1) 纯文本保存字符。(2) CSV 按引号规则保存行列：带引号的 "hello, world" 仍是一格，别见到逗号就拆家，应使用 CSV 解析器，不能直接 split(',')。(3) pickle 用 Python 专用二进制格式保存对象；反序列化可能执行代码，只读取可信文件。用 `with open(...)` 保证文件关闭。
 
 @@ M018 | 02-python | learn | P1:169-170
 Q_EN: A Python file-loading operation raises an exception. What does `try/except` do, and does catching the exception mean the data were loaded?
@@ -569,8 +569,8 @@ A_ZH: 候选扩展包括字符 n-gram、URL 指示、数字比例和短信长度
 @@ M099 | 09-assignment | learn | A1:3
 Q_EN: What should an informative classification error analysis contain?
 Q_ZH: 有价值的分类错误分析应包含什么？
-A_EN: Show confusion patterns and a few actual validation examples, then propose reasons tied to features or assumptions: unseen vocabulary, ambiguous language, or overlapping spam/smishing signals. Distinguish an observed error from a causal explanation. Use validation errors for development; do not repeatedly tune on held-out test mistakes. Explain both improvements and unresolved failures.
-A_ZH: 展示混淆模式和少量实际验证样本，再提出与特征或假设相关的可能原因，例如未见词、语义歧义、垃圾与钓鱼信号重叠。区分观察到的错误与因果解释。开发模型使用验证错误，不应反复根据留出测试错误调参；既解释改进，也说明仍未解决的问题。
+A_EN: Cover three points: (1) What went wrong: a confusion pattern plus actual validation examples. (2) Why it might happen: connect text to features or assumptions, such as unseen words, ambiguity or overlapping spam/smishing signals; this is a hypothesis, not proven causation. (3) What to check next: test a targeted change on validation data, report improvements and remaining failures. Do not repeatedly tune on held-out test mistakes.
+A_ZH: 答清三点：(1) 错在哪：给出混淆模式和真实验证样本。(2) 可能为什么错：结合文本与特征或假设，例如未见词、语义歧义、垃圾与钓鱼信号重叠；这是假设，不是已证明的因果。(3) 下一步查什么：在验证集检验有针对性的改动，同时报告改进与剩余错误。不要反复根据留出测试错误调参。
 
 @@ M101 | 10-extension | extension | B2:93-99;NB:1.9.2
 Q_EN: Is a TF-IDF vector literally a multinomial count observation?
@@ -665,14 +665,14 @@ A_ZH: 它假设类内计数独立，且各计数的均值等于方差。真实�
 @@ M117 | 11-tutorial2 | classroom | T2:31-34
 Q_EN: What checks make a custom PoissonNB implementation credible?
 Q_ZH: 哪些检查能验证自定义 PoissonNB 实现？
-A_EN: Check nonnegative integer inputs, one rate per class/feature, normalized priors and explicit label mapping. Compare vectorized and direct Poisson log scores with the SAME prior and factorial constants, or compare their normalized posteriors. Omitting a class-independent factorial term shifts scores but should not change posteriors or labels. Check posterior rows sum to one; keep large word-count matrices sparse.
-A_ZH: 检查非负整数输入、每类每特征一个率参数、归一化先验及显式标签映射。对比向量化与逐项泊松对数分数时，两边须保留相同的先验和阶乘常数，或直接比较归一化后验。省略与类别无关的阶乘项会平移分数，却不应改变后验和标签。后验每行和应为 1，大词频矩阵保持稀疏。
+A_EN: Check three levels: (1) Inputs and parameters: nonnegative integer counts, one rate per class/feature, normalized priors and explicit label mapping. (2) Computation: compare vectorized and direct Poisson log scores using the SAME priors and factorial constants, or compare normalized posteriors. Dropping a class-independent factorial term shifts scores but not posteriors or labels. (3) Outputs and storage: posterior rows sum to one; large word-count matrices stay sparse.
+A_ZH: 从三层检查：(1) 输入与参数：非负整数计数、每类每特征一个率参数、归一化先验、显式标签映射。(2) 计算：向量化与逐项泊松对数分数须使用相同先验和阶乘常数，或比较归一化后验。省略与类别无关的阶乘项会平移分数，不应改变后验或标签。(3) 输出与存储：后验每行和为 1；大词频矩阵保持稀疏。
 
 @@ M118 | 11-tutorial2 | check | T2:21-28,35
 Q_EN: You compared Bernoulli, Multinomial and Poisson NB on the same labeled news dataset and saved predictions. What should you record, and how should actual misclassified articles support your explanation?
 Q_ZH: 你在同一带标签新闻数据集上比较了伯努利、多项式和泊松 NB，并保存了预测。应记录什么信息？怎样用实际错分文章支持解释？
-A_EN: Record model, representation, vocabulary size, smoothing, selection protocol and measured accuracy. Inspect a few errors for overlapping topics, missing vocabulary or misleading common words. “Business versus Sci/Tech overlap may explain this case” is a hypothesis; point to the actual text before presenting it as an explanation. Keep observed scores separate from expected behavior and untested improvements.
-A_ZH: 记录模型、表示、词表大小、平滑、选参流程与实测准确率。观察少量错误是否涉及主题交叉、词表缺词或常用词误导。“商业与科技交叉可能导致此例错分”是假设，必须结合实际文本说明。应区分观测分数、预期行为和未测试的改进。
+A_EN: Cover three points: (1) Reproducible comparison: record model, representation, vocabulary size, smoothing, selection protocol and measured accuracy. (2) Text evidence: show actual errors and inspect topic overlap, missing vocabulary or misleading common words. (3) Claim boundary: a business/technology overlap is a possible explanation only when supported by that article's text, not proven causation. Separate measured scores, expected behavior and untested improvements.
+A_ZH: 答清三点：(1) 比较可复现：记录模型、表示、词表大小、平滑、选参流程和实测准确率。(2) 有文本证据：展示真实错分文章，检查主题交叉、词表缺词或常用词误导。(3) 结论有边界：只有文章内容支持时，才能把商业/科技主题交叉作为可能解释；仍不能直接证明因果。分清实测分数、预期行为和未测试的改进。
 
 @@ M119 | 12-logistic | learn | L3A:4-7
 Q_EN: What does a discriminative classifier learn compared with a generative classifier?

@@ -182,5 +182,13 @@
       "zh": "BitTorrent：选哪个块，给谁上传",
       "en": "BitTorrent: which piece to request, whom to upload to"
     }
+  },
+  "CS5222-N020": {
+    "lesson": "net02",
+    "unit": "activity-probability",
+    "title": {
+      "zh": "三个人抢 Wi-Fi：从八种状态算到二项分布",
+      "en": "Three people sharing Wi-Fi: eight states to a binomial model"
+    }
   }
 }

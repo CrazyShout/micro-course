@@ -21,8 +21,8 @@ A_ZH: 客户端—服务器模式中，服务器向每个客户端上传完整�
 @@ N138 | x01-applications | learn | XN2:72-74
 Q_EN: What ideal lower bounds govern distribution of an F-bit file to N peers?
 Q_ZH: 向 N 个节点分发 F bit 文件，有哪些理想时间下界？
-A_EN: Let F be file bits, N the number of initially empty peers, us the only initial source's upload rate, ui peer i's upload rate, and dmin the slowest peer download rate; all rates are bit/s. Client-server requires at least $\max(NF/u_s,F/d_{\min})$: the server supplies N copies and every peer downloads one. P2P requires at least $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$: initial copy, slowest download, and total upload supply. Take the largest because all constraints must hold. These ideal lower bounds ignore overhead and scheduling limits.
-A_ZH: F 为文件比特数，N 为初始为空的节点数；us 是唯一初始源的上传速率，ui 是节点 i 上传速率，dmin 是最慢下载速率，均用 bit/s。客户端—服务器下界为 $\max(NF/u_s,F/d_{\min})$：服务器须发 N 份，每个节点须下载一份。P2P 下界为 $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$，分别限制首份注入、最慢下载和总上传供给。三个约束同时成立，所以取最大值；忽略开销及调度限制。
+A_EN: Recall three parts. (1) Symbols: F is file bits; N peers start empty; us is the only initial source's upload rate, ui peer i's upload rate, dmin the slowest download rate; all rates are bit/s. (2) Client-server: $\max(NF/u_s,F/d_{\min})$, because the server sends N copies and every peer downloads one. (3) P2P: $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$, from initial-copy injection, slowest download and total upload supply. All constraints hold together, so take the largest, not their sum. These are ideal lower bounds, ignoring overhead and scheduling limits.
+A_ZH: 答清三部分。(1) 符号：F 为文件比特数，N 个节点初始为空；us 为唯一初始源上传速率，ui 为节点 i 上传速率，dmin 为最慢下载速率，速率均用 bit/s。(2) 客户端—服务器：$\max(NF/u_s,F/d_{\min})$，服务器发 N 份，每个节点下载一份。(3) P2P：$\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$，分别受首份注入、最慢下载、总上传供给限制。约束同时成立，取最大值，不是相加。它们是忽略开销与调度限制的理想下界。
 
 @@ N139 | x01-applications | worked | XN2:73-75
 Q_EN: Distribute a file F=1 Gbit to N=10 clients. Server upload us=100 Mbps, each client upload is 10 Mbps, and the slowest client download dmin=50 Mbps. Find ideal client–server and P2P distribution-time lower bounds.
@@ -111,8 +111,8 @@ A_ZH: UDP 本身不保证交付、顺序、去重、重传或拥塞控制。应�
 @@ N153 | x02-transport | learn | XN3:19-20; XUDP:Fields
 Q_EN: How is the Internet checksum formed, and what does UDP additionally cover through its pseudo-header?
 Q_ZH: 互联网校验和如何形成？UDP 伪首部额外保护什么信息？
-A_EN: For UDP, set the checksum field to zero for calculation. Form 16-bit words from the pseudo-header, UDP header and data; if needed, append a zero byte only for calculation. Add with end-around carry, then invert all bits. The pseudo-header covers IP source/destination, protocol and UDP length without becoming an extra transmitted UDP header. A computed zero checksum is sent as all ones; in IPv4, a transmitted zero instead means no UDP checksum. Passing a checksum does not authenticate the sender.
-A_ZH: 计算 UDP 校验和时先把校验字段置零。将伪首部、UDP 首部和数据组成 16 位字；字节数为奇数时，仅为计算补一个零字节。相加时将最高位进位回卷，最后逐位取反。伪首部覆盖 IP 源/目的地址、协议及 UDP 长度，但不额外作为 UDP 首部发送。算得零时传全一；IPv4 中传零反而表示不使用 UDP 校验和。通过校验并不认证发送者。
+A_EN: Recall three checks. (1) Calculate: zero the UDP checksum field; form 16-bit words from pseudo-header, UDP header and data; pad an odd byte count with one zero byte for calculation only; add with end-around carry, then invert all bits. (2) Scope: the pseudo-header covers IP source/destination, protocol and UDP length; it is not an extra transmitted UDP header. (3) Interpret: send a computed zero as all ones. In IPv4, a transmitted zero means no UDP checksum. A passing checksum does not authenticate the sender.
+A_ZH: 记住三点。(1) 怎么算：UDP 校验字段先置零；把伪首部、UDP 首部和数据组成 16 位字，字节数为奇数时仅为计算补一个零字节；相加并回卷进位，最后逐位取反。(2) 覆盖什么：伪首部含 IP 源/目的地址、协议及 UDP 长度，但不额外作为 UDP 首部发送。(3) 怎么读：算得零要传全一；IPv4 中实际传零表示不用 UDP 校验和。通过校验也不等于认证了发送者。
 
 @@ N154 | x02-transport | worked | XN3:19-20
 Q_EN: Using 16-bit one's-complement addition, find the checksum of 0xFFFF (65535) and 0x0001 (1). The prefix 0x means hexadecimal.
@@ -777,8 +777,8 @@ A_ZH: 删除模式在收到相应回复后依次 DELE 1、RETR 2、DELE 2、QUIT
 @@ N263 | x08-assignments | historical | XNA1:3; XNA1S:6-8; XUDP:Format
 Q_EN: A student claims: “Video conferencing using UDP has no error detection, and media packets must be sent directly to the teacher’s computer.” What is wrong with these claims, and what deployment evidence would be needed?
 Q_ZH: 有人声称：“视频会议用 UDP，所以没有差错检测，而且媒体分组一定直接发往老师的电脑。”这两句话哪里有问题？还需要什么部署证据？
-A_EN: UDP defines a checksum, so “UDP has no error detection” is false; in IPv4 that checksum can be disabled, so also check the actual packet. Error detection is different from UDP's lack of built-in retransmission or ordering. A media relay may receive the student's packets instead of the teacher's host. To identify the deployed mode, inspect the trace's transport protocol/endpoints and dated official documentation for that client and call type. Do not infer P2P solely from a video-call label.
-A_ZH: UDP定义校验和，因此“UDP没有检错”错误；IPv4中可禁用该校验和，所以还要看实际分组。检错与UDP缺少内建重传/排序是不同问题。媒体中继可能代替教师主机接收学生的包。判断部署模式应检查抓包的传输协议和端点，并结合对应客户端/通话模式的有日期官方说明，不能仅凭“视频会议”就判为P2P。
+A_EN: Answer in three parts: (1) Detection: UDP defines a checksum, although IPv4 can disable it; inspect the packet. Detecting damage is not redelivering a lost parcel: UDP has no built-in retransmission or ordering. (2) Destination: a media relay may receive the packets instead of the teacher's host. (3) Evidence: inspect the trace's transport protocol and endpoints, plus dated official documentation for that client and call type. A video-call label alone does not establish P2P.
+A_ZH: 分三点回答：(1) 检错：UDP 定义校验和，IPv4 可禁用，需看实际分组。发现包裹损坏，不等于替你补寄；UDP 没有内建重传或排序。(2) 目的地：包可能先到媒体中继，而非教师主机。(3) 证据：检查抓包中的传输协议和端点，并结合对应客户端、通话模式的有日期官方说明。仅凭“视频会议”不能断定是 P2P。
 
 @@ N264 | x08-assignments | historical | XNA2:1; XNA2S:1
 Q_EN: Why can rdt3.0 reuse the alternating-bit receiver logic of rdt2.2 even though the sender adds a timeout?

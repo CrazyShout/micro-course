@@ -116,7 +116,7 @@ PREREQ: ml01
 GOAL: 能从人数表推回条件概率与后验公式。
 EXPLAIN: P(free|spam) 问的是“已经知道是垃圾短信，其中多少有 free”；P(spam|free) 问的是“已经看到 free，其中多少是垃圾”。它们筛选的分母人群不同，不能交换。
 
-想象 1,000 条短信，其中 20% 是垃圾。若垃圾中 60% 有 free，正常中 10% 有 free，那么看见 free 的人群包括 120 条垃圾和 80 条正常。后验就是在这 200 条中再数垃圾比例。贝叶斯公式中的分子是目标类别贡献的人数比例，分母是所有类别贡献之和。
+把 free 想成一道筛子：垃圾短信会留下，正常短信也可能留下。“free pizza” 可能只是同学请客，关键词还没资格当法官。先用各类原有比例乘各自通过筛子的比例，再看留下的短信中每类占多少；下面的完整例题只把这次计数算一遍。
 
 把人数换成比例就是 $P(c\mid x)=P(x\mid c)P(c)/\sum_k P(x\mid k)P(k)$，分母须大于零。先验像筛选前的底数，似然决定每类留下多少，后验才是筛选后的占比。连续特征将似然换成密度；密度可以大于 1，区间下的面积才是概率。
 SYMBOLS: $P(c)$ | 先验 prior；$P(x\mid c)$ | 似然 likelihood；$P(x)$ | 证据 evidence；$P(c\mid x)$ | 后验 posterior
@@ -155,20 +155,40 @@ BRIDGE: 多特征数据还需要说明特征之间如何一起变化，这决定
 @@ ml07 | 协方差：椭圆的方向也是信息 | Gaussian models and covariance
 CARDS: M061,M062,M063,M064,M065,M066,M067,M068,M069,M070,M071,M072,M073,M074
 PREREQ: ml03,ml06
-GOAL: 能区分完整逐类协方差、对角 Gaussian NB 和共享协方差。
-EXPLAIN: 一维高斯描述围绕均值的散布；二维高斯还要描述两个特征是一起变大、反向变化，还是缺少线性关联。协方差矩阵的对角线是各自方差，非对角线描述共同变化，等密度线可形成倾斜椭圆。
+GOAL: 能把一个新样本代入两类高斯模型，依次算距离、体积项和先验分数，解释预测为何随先验或方差变化。
+EXPLAIN: 想象两台咖啡机 A、B 都在出杯，记录却漏写了来源。我们把甜度、温度按固定规则换成两个无量纲特征，想从一杯的特征猜出机器。以下数字是手算用的教学模型，不是真实咖啡数据；分类器只能按模型猜，不能隔着屏幕尝一口。
 
-当协方差 $\Sigma$ 正定时，高斯密度中的 $(x-\mu)^T\Sigma^{-1}(x-\mu)$ 是按散布方向校正的平方距离。以 $\Sigma=\operatorname{diag}(4,1)$ 为例，偏移 (2,0) 与 (0,1) 的该距离都为 1：前一方向本来更分散，偏移两格才相当于后一方向偏移一格。行列式项校正密度占据的体积，比较不同协方差的类别时不能随意删掉。
+每类的均值 $\mu_c$ 是“典型出品”，协方差 $\Sigma_c$ 描述“平时允许多大波动”。对角线是各特征方差，非对角线描述共同变化。协方差正定时，$q_c=(x-\mu_c)^T\Sigma_c^{-1}(x-\mu_c)$ 是按散布校正的平方距离。若 $\Sigma_c=\operatorname{diag}(4,1)$，第一维偏 2 和第二维偏 1 都是偏一个标准差，因此 q 都是 1。这里 diag(4,1) 表示对角为 4、1，其他位置为 0。
 
-Gaussian NB 假设给定类别后特征独立，因此采用对角协方差。当前 GaussianBayes 每类拟合完整协方差；LDA 使用共享协方差。课堂代码的 `cov(Xc, rowvar=False)` 默认用每类样本数 Nc-1 作分母，不是上一节用 Nc 的 MLE。少量样本会使估计不稳；加正的 alpha I 可抬高各方向方差，避免奇异矩阵。
-RECAP_EN: Covariance describes both scale and joint variation. Gaussian NB uses diagonal class-conditional covariance; the current full Gaussian classifier estimates a separate full covariance for each class.
-WORKED_Q: 两个特征时，一类完整协方差有几个独立参数？对角模型呢？ || With two features, how many independent covariance parameters does one full model need, compared with a diagonal model?
-WORKED_A: 完整对称矩阵有两个方差和一个协方差，共 3 个；对角模型为 2 个。这还没计入均值和类别先验。 || A symmetric full covariance needs two variances and one covariance: three parameters. A diagonal covariance needs two, excluding means and class priors.
-PRACTICE_Q: d=4 时两种协方差分别需要几个参数？ || How many covariance parameters are needed when d=4?
-HINT: 对角 d 个，非对角只计上三角。 || Count d diagonal entries and only the upper triangle off the diagonal.
-PRACTICE_A: 完整为 d(d+1)/2=10，对角为 4。 || The full covariance needs 10 parameters and the diagonal covariance needs 4.
-TRANSFER_Q: K=3 类、d=2 特征，只统计协方差参数：每类完整、每类对角、三类共享一个完整协方差，各需要几个独立数？共享会带来什么限制？ || For three classes and two features, count covariance parameters for separate full, separate diagonal, and one shared full covariance. What does sharing restrict?
-TRANSFER_A: 单个完整对称矩阵有 2×3/2=3 个数，因此分别为 9、6、3。共享要求三类采用相同协方差形状和尺度；均值仍可不同。正定共享协方差使类别对数分数的相同二次项抵消。 || One full symmetric matrix has three independent entries, giving totals 9, 6, and 3. Sharing constrains class covariance shapes and scales to be equal while means may differ. A shared positive-definite covariance makes common quadratic score terms cancel.
+但“距离宽容”不是免费午餐：一类分布铺得越宽，同样的总概率就摊得越薄。把先验、体积、距离一起算，才得到对数分数 $s_c=\log\pi_c-\frac12\log|\Sigma_c|-\frac12q_c$。这里 $\pi_c>0$ 且各类先验和为 1，log 是自然对数，$|\Sigma_c|$ 是行列式；同维度各类共有的 $-d\log(2\pi)/2$ 已省略。分数越大越支持该类，负分也没有问题；分数本身不是概率。若要后验，再将 exp(s) 跨类别归一化。实际程序用 log-sum-exp 保持数值稳定。
+
+模型的差别仍要分清：Gaussian NB 用逐类对角协方差；当前 GaussianBayes 用逐类完整协方差；LDA 用各类共享的协方差。二维单个完整对称矩阵有 3 个独立数，对角矩阵有 2 个；若有三类，逐类完整、逐类对角、共享完整分别需 9、6、3 个协方差参数，未计均值和先验。
+
+课堂代码的 `cov(Xc, rowvar=False)` 默认用每类样本数 Nc−1 作分母，不是上一节用 Nc 的 MLE。少量样本会使估计不稳；加正的 alpha I 可抬高各方向方差，避免奇异矩阵。
+RECAP_EN: A Gaussian class score combines a positive prior, covariance-volume normalization, and spread-adjusted squared distance. Compare all three terms, not just proximity to a mean. The teaching example uses dimensionless features and positive-definite covariances; log scores become probabilities only after normalization. Gaussian NB uses separate diagonal covariances, a full Gaussian classifier allows correlations, and LDA shares one covariance across classes.
+WORKED_Q: 教学模型中，A、B 的先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。新杯子的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。 || In a teaching model, A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463.
+WORKED_A: ① 偏移为 A：(2,0)，B：(−2,0)，普通距离一样。
+
+② 对角矩阵只需逐维除方差：q_A=2²/4+0²/1=1，q_B=(−2)²/1+0²/1=4。
+
+③ 行列式为 4×1=4 与 1×1=1。
+
+④ s_A=log(1/2)−log4/2−1/2≈−1.8863；s_B=log(1/2)−0−4/2≈−2.6931。
+
+⑤ A 分数更大，选 A。先把分数变成正权重：P(A|x)=exp(s_A)/[exp(s_A)+exp(s_B)]。分子分母同时除以 exp(s_A)，得 1/[1+exp(s_B−s_A)]≈1/(1+0.4463)=0.6914。较宽的 A 更能容纳偏移，但也付出了行列式项的代价。 || Offsets are (2,0) and (−2,0), equal in ordinary distance.
+
+Divide squared deviations by diagonal variances: q_A=4/4=1 and q_B=4/1=4.
+
+Determinants are 4 and 1.
+
+Scores are s_A=log(1/2)−log4/2−1/2≈−1.8863 and s_B=log(1/2)−4/2≈−2.6931, so choose A.
+
+Normalize positive weights: P(A|x)=exp(s_A)/[exp(s_A)+exp(s_B)]. Divide numerator and denominator by exp(s_A) to get 1/[1+exp(s_B−s_A)]≈0.6914. A's broader spread tolerates the offset, while its determinant term still charges for that spread.
+PRACTICE_Q: 沿用示范的 x、均值和协方差，只把先验改为 A：0.2、B：0.8。自行补出两类对数分数，预测会不会改变？可用 log0.2≈−1.6094、log0.8≈−0.2231。 || Keep the worked example's x, means, and covariances, but change priors to A:0.2 and B:0.8. Compute both log scores and decide whether the prediction changes. Use log0.2≈−1.6094 and log0.8≈−0.2231.
+HINT: 距离和行列式没有变，只替换各自的 log 先验。比较分数大小时，−2.2 比 −2.8 大。 || Distances and determinants stay fixed; replace only the log priors. Remember that −2.2 is larger than −2.8.
+PRACTICE_A: s_A=log0.2−log4/2−1/2≈−2.8026；s_B=log0.8−0−2≈−2.2231，改选 B。x 更符合 A 的类条件密度，但 B 在观察 x 之前更常见，这次先验优势足以翻转结果。 || s_A≈−2.8026 and s_B≈−2.2231, so the decision flips to B. The class-conditional density favors A, but B's greater prevalence is sufficient to reverse the posterior ranking.
+TRANSFER_Q: 独立做：x=(2,0)，均值仍为 A：(0,0)、B：(4,0)，先验恢复各 1/2。A 的协方差仍为 diag(4,1)，B 改为 diag(16,1)。求 q、行列式和分数，再选类别。B 的校正距离更小，是否足以保证选 B？可用 log16≈2.7726。 || Independently use x=(2,0), means A:(0,0), B:(4,0), and equal priors. Keep A's covariance diag(4,1), but change B's to diag(16,1). Compute q, determinants, scores, and the decision. Does B's smaller adjusted distance guarantee that B wins? Use log16≈2.7726.
+TRANSFER_A: A：q=1、行列式 4、s≈−1.8863。B：q=4/16=0.25、行列式 16、s=−0.6931−1.3863−0.125≈−2.2044，仍选 A。B 的距离项较有利，却被更大的体积项抵消。只比 q 会错选 B；不能把“分布更宽容”理解成“所有点都更可能”。 || A has q=1, determinant 4, and score −1.8863. B has q=0.25, determinant 16, and score −0.6931−1.3863−0.125≈−2.2044, so A still wins. B's smaller distance penalty is outweighed by its volume penalty. Comparing only q would incorrectly choose B; broadening a density cannot make every point more likely.
 BRIDGE: 对文本词频而言，高斯未必是合适的观测模型；先决定“出现”还是“出现次数”。
 
 @@ ml08 | 同一条短信，为什么有不同的 NB 模型 | Text representation and naive Bayes
@@ -354,10 +374,10 @@ BRIDGE: QE 需要从实验与公式上升到“为什么、何时成立、何时
 @@ ml17 | QE 口述：把模型讲成可追问的论证 | Explaining assumptions and decisions
 CARDS: M101,M102,M103,M104,M105,M106
 PREREQ: ml07,ml08,ml10,ml16
-GOAL: 能用四句英文连接任务、模型假设、决策规则和局限，并迁移到另一模型。
+GOAL: 能说明文本模型的表示与假设，并在一个未指定方法的情境中选择模型、计算后验、按错误代价决策，再回答英文追问。
 EXPLAIN: 一个完整解释可以按五句话展开：解决什么任务；用什么表示；模型假设什么；怎样训练和预测；什么情况下会失败。公式应嵌在这条论证中，而不是突然背出来。比如朴素贝叶斯的 fast 来自可分解的统计量，局限也正来自条件独立等建模假设。
 
-预测概率和决策要分开。设 p 是垃圾短信后验，误封正常短信的代价为 C_FP，漏掉垃圾的代价为 C_FN；两者非负、和为正，正确判断代价均为零。预测垃圾的风险为 $C_{FP}(1-p)$，预测正常为 $C_{FN}p$。比较得阈值 $p>C_{FP}/(C_{FP}+C_{FN})$。换代价是在换决策规则，不是在重新证明 p 已校准。
+预测概率和决策要分开。设 p 是垃圾短信后验，误封正常短信的代价为 C_FP，漏掉垃圾的代价为 C_FN；两者非负、和为正，正确判断代价均为零。预测垃圾的风险为 $C_{FP}(1-p)$，预测正常为 $C_{FN}p$。比较得阈值 $p>C_{FP}/(C_{FP}+C_{FN})$。恰好等于阈值时，两种行动的期望损失相同，可约定放行。换代价是在换决策规则，不是在重新证明 p 已校准。
 
 高置信度不自动表示校准良好；零协方差也不自动表示独立。遇到追问时给出假设或反例，比用“通常都这样”更可靠。这里是表达练习，未宣称学校 QE 采用某个固定问答模板。
 RECAP_EN: Naive Bayes combines class priors with factorized class-conditional evidence. It is efficient, but dependence violations and poor probability calibration can affect decisions. A decision threshold should reflect the costs of errors.
@@ -366,8 +386,8 @@ WORKED_A: 示范：“I classify messages as spam or legitimate using token coun
 PRACTICE_Q: 改成 Bernoulli NB，输入改为每个词是否出现。补完四句框架：I classify …; given a class …; I score each class using …; a limitation is …。 || Switch to Bernoulli NB with word-presence indicators. Complete: I classify …; given a class …; I score each class using …; a limitation is … .
 HINT: 提到有/无表示、条件独立、先验与出现和缺失项、假设可能不成立。 || Mention binary representation, conditional independence, prior plus presence and absence terms, and a limitation.
 PRACTICE_A: “I classify messages using word-presence indicators. Given a class, the indicators are modeled as independent Bernoulli variables. I add the log prior and the log probabilities of both present and absent words. Correlated words can violate the assumption and produce overconfident predictions.” 不要求逐字背诵，四个意思一致即可。 || I classify messages using word-presence indicators. Given a class, the indicators are modeled as independent Bernoulli variables. I add the log prior and the log probabilities of both present and absent words. Correlated words can violate the assumption and produce overconfident predictions. Equivalent wording is acceptable.
-TRANSFER_Q: 独立用四句英文解释二分类逻辑回归。必须包含：线性分数、sigmoid、交叉熵训练、概率或泛化的一个限制。 || Independently explain binary logistic regression in four English sentences, including linear score, sigmoid, cross-entropy training, and one probability or generalization limitation.
-TRANSFER_A: 可答：“I predict a binary label from a feature vector. A linear score is mapped through a sigmoid to a class probability. I fit the parameters by minimizing binary cross-entropy on training data. A linear decision boundary or distribution shift may limit performance, so I validate the model on held-out data.” 检查四项内容，不按句型是否相同评分。 || I predict a binary label from a feature vector. A linear score is mapped through a sigmoid to a class probability. I fit parameters by minimizing binary cross-entropy on training data. A linear decision boundary or distribution shift may limit performance, so I validate the model on held-out data. Judge these four ideas rather than exact wording.
+TRANSFER_Q: 独立情境题：一个短信过滤器只保存 free 是否出现，不保存出现次数。请在已学的生成式文本基线中选一个合适模型，说明表示。教学总体中垃圾占 20%，垃圾与正常短信含 free 的概率分别为 0.8、0.1；一条新短信含 free。先求垃圾后验，再决定是否拦截：误拦正常短信损失 9，放过垃圾损失 1，判断正确损失 0。假定所给概率适用于当前总体。最后用英文回答：① Would repeating “free” three times change this model's input? ② If the false-positive cost rises, must the posterior change? || A filter stores only whether free occurs, not its count. Choose a suitable generative text baseline from those studied and state the representation. In a teaching population, 20% of messages are spam; free appears in 0.8 of spam and 0.1 of legitimate messages. A new message contains free. Find its spam posterior and decide whether to block it: a false block costs 9, missed spam costs 1, and correct decisions cost zero. Assume these probabilities apply to the current population. Then answer in English: (1) Would repeating “free” three times change this model's input? (2) If the false-positive cost rises, must the posterior change?
+TRANSFER_A: 合格回答抓住三件事：① 用有/无特征 x=1，Bernoulli NB 是合适的基线；这里只有一个词，多词时才需要额外的类内条件独立假设。② 垃圾贡献 0.2×0.8=0.16，正常贡献 0.8×0.1=0.08，后验 p=2/3。③ 拦截的期望损失为 9×(1−p)=3，放行是 1×p=2/3，因此放行。模型觉得“较像垃圾”，不等于值得冒险把导师的免费披萨通知也拦了。英文追问可答：“No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.” 必须区分表示、概率和行动，不要求逐字背。 || Three required points: (1) Use the binary feature x=1 and Bernoulli NB as a suitable baseline; with one feature, no additional multi-feature independence assumption is needed. (2) Contributions are 0.16 and 0.08, giving spam posterior p=2/3. (3) Blocking costs 9(1−p)=3 in expectation, versus p=2/3 for allowing it, so allow it. More likely spam need not mean blocking is the best action. Follow-ups: “No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.” Assess representation, probability, and action separately; equivalent wording is fine.
 BRIDGE: 后续 Extra Resources 可用于预习新模型；始终将它们映射回任务、假设、目标与验证这四个问题。
 
 @@ ml18 | k-NN：先用附近的例子回答 | Nearest-neighbor reasoning

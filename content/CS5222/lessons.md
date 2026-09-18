@@ -29,7 +29,7 @@ EXPLAIN: 电路交换先预留通信资源，例如固定时隙；即使某时�
 
 存储转发表示路由器先收到一个完整分组，再将它发上下一条链路。因此一个分组经过两条链路，需要在每条链路各付一次发送全部比特的时间。但不同分组可以在不同链路同时前进，后面会把这点写成流水线时间轴。
 
-简单统计复用模型还假设用户独立活跃。若每个用户以概率 p 活跃，总活跃数可用二项分布；真实用户可能相关，所以不能把理想概率当作网络无拥塞保证。当前课堂 Q&A 与 Tutorial 中同题的选项字母可能不同，应记判断依据。
+算概率时，先把每个用户想成“上传 / 休息”开关。三个人只有八种开关状态：下面“三个人抢 Wi-Fi”会先数一遍，再把这个计数方法写成二项分布。不必第一次见到公式就硬背 35 人的大题。模型要求用户独立且活跃概率相同；真实用户可能一起追直播，所以理想概率不是无拥塞保证。当前课堂 Q&A 与 Tutorial 同题的选项字母可能不同，应记判断依据。
 RECAP_EN: Circuit switching reserves resources; packet switching shares them on demand and may queue. Store-and-forward waits for a complete packet at each intermediate router.
 WORKED_Q: 1 Mbps 链路，每个活跃用户需 100 kbps，预留式可支持多少个同时用户？ || A 1 Mbps link allocates 100 kbps per active user. How many simultaneous reserved-rate users fit?
 WORKED_A: 1000/100=10 个。分组共享可接入更多用户，但若同时活跃超过 10，就不能都立即获得该速率。 || Ten users fit. Packet sharing may admit more users, but more than ten simultaneously active users cannot all immediately obtain that rate.

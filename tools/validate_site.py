@@ -50,9 +50,12 @@ def main():
     assert len(cards)==len(reader['cards'])==manifest['total_cards']
     assert len(lessons)==len(learning['lessons'])==manifest['total_lessons']
     assert set(index['card_context'])==set(cards)
-    linked=[];images=set();reading_figures=set();reading_count=0;beginner_figures=set()
+    linked=[];images=set();reading_figures=set();reading_count=0;beginner_figures=set();practice_assets=set()
     for lesson in lessons.values():
         assert 'foundations' in lesson and 'units' in lesson and 'practical_tasks' in lesson
+        study=lesson['study_route'];ids=study['first_pass']+study['after_practice']
+        assert study['first_pass'] and len(ids)==len(set(ids)) and set(ids)==set(lesson['card_ids'])
+        assert study['note']['zh'] and study['note']['en']
         for item in lesson['foundations']:
             for field in ['title','body','worked_q','worked_a','check_q','check_a']:
                 assert item[field]['zh'] and item[field]['en'] and item[field+'_html']['zh'] and item[field+'_html']['en']
@@ -64,6 +67,12 @@ def main():
         for task in lesson['practical_tasks']:
             assert lesson['id'] in task['lessons']
             for field in ['title','goal','instructions','acceptance']:assert task[field]['zh'] and task[field]['en']
+            for attachment in task.get('attachments',[]):
+                local_link(attachment['href']);practice_assets.add(attachment['href'])
+                assert attachment['label']['zh'] and attachment['label']['en']
+            if task.get('figure'):
+                f=task['figure'];local_link(f['src']);practice_assets.add(f['src'])
+                assert f['alt'] and f['caption']['zh'] and f['caption']['en']
         beginner=lesson['first_pass']
         assert len(beginner['steps'])==len(beginner['steps_html'])==3,lesson['id']
         for pair in [beginner['start'],beginner['trap'],*beginner['steps']]:
@@ -122,6 +131,8 @@ def main():
     assert not list(site.rglob('*.apkg')), 'Retired package files must not be published'
     for page in site.glob('*.html'):
         assert '.apkg' not in page.read_text().lower(), 'Retired package download link'
+    assert len(practice_assets)==manifest['practice_assets']
+    assert sum(len(l['study_route']['first_pass']) for l in lessons.values())==manifest['first_pass_cards']
     assert len(images)==manifest['images']
     assert reading_count==manifest['reading_supplements']
     assert len(reading_figures)==manifest['reading_figures']
@@ -131,6 +142,11 @@ def main():
     assert set(introductions['courses'])==set(manifest['courses'])
     for course,intro in introductions['courses'].items():
         assert len(intro['short_description'])<=256
+        own=[c for c in cards.values() if c['course']==course]
+        npreview=sum(c['source_status']=='historical_preview' for c in own)
+        assert intro['counts']=={'total':len(own),'current_support':len(own)-npreview,'historical_preview':npreview,'lessons':manifest['courses'][course]['lessons']}
+        scope=next(s for s in intro['sections'] if s['title_en']=='Current scope and historical preview')
+        assert re.search(r'\b'+str(len(own)-npreview)+r'\b',scope['body_en']) and re.search(r'\b'+str(npreview)+r'\b',scope['body_en'])
         assert intro['guide_url'].endswith('guide.html?course='+course)
         assert 'id="'+course+'"' in (site/'guide.html').read_text()
     for course,counts in manifest['courses'].items():
@@ -138,7 +154,7 @@ def main():
         assert sum(l['course']==course for l in lessons.values())==counts['lessons']
     forbidden=re.compile(r'/Users/|/private/tmp/|(?:https?://)?(?:localhost|127\.0\.0\.1)(?=[:/])|(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{25,})')
     for file in site.rglob('*'):
-        if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md']:
+        if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md','.py','.txt']:
             assert not forbidden.search(file.read_text()),('Local path or credential-like data',str(file.relative_to(site)))
         assert not any(part in ['materials','checks','.git','markji-ready'] for part in file.relative_to(site).parts),file
     print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))

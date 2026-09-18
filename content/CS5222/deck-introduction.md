@@ -18,9 +18,9 @@ The 129 Canvas/support cards cover Chapter 1, the available two parts of Chapter
 
 ## 怎样使用题目与图示 / How to use problems and diagrams
 
-先读微课，再画网络路径或事件时间轴；统一 bit/byte、秒/毫秒等单位，明确首位、末位或整批完成事件，并写出忽略项。图题必须看原图后再作答。完成一道题后改变一个条件重做，再用英语解释机制。卡片答案末尾的“微课 / Lesson”可直接回到相关讲解。
+先看“这一遍的重点”，画路径或事件时间轴，统一单位并定义首位、末位或整批完成。图题先看原图，再独立作答；同节其余卡片可在相应补课后分次练。网页卡片用于预览，正式复习在 Markji 按卡号查找，进度不互通。改变一个条件重算，并用英文解释理由。
 
-Read the lesson, draw the path or event timeline, normalize units, define the completion event, and state omitted costs. Inspect the original figure before solving a figure-based problem. Change one condition, solve again, then explain the mechanism in English. Lesson links after each answer return to the relevant explanation.
+Start with “This pass”. Draw the path or event timeline, normalize units and define first-bit, last-bit or batch completion. Read question figures before solving; study the other cards after the relevant supplements. Web cards are previews; use the IDs in Markji for formal review, whose progress is separate. Change one condition, recalculate and explain the reason in English.
 
 ## 课程信息移至网页 / Course guidance lives on the website
 

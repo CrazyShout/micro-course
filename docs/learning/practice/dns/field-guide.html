@@ -1,0 +1,90 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DNS 字段导览 / DNS field guide</title><style>body{margin:0;background:#f3f6f4;color:#17343b;font:16px/1.75 system-ui,-apple-system,"PingFang SC",sans-serif}main{max-width:900px;margin:32px auto;padding:24px;background:white;border-radius:12px}a{color:#087c75}h1{font-size:26px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 ui-monospace,SFMono-Regular,monospace}@media(max-width:600px){main{margin:0;padding:20px 16px;border-radius:0}}</style></head><body><main><a href="https://crazyshout.github.io/micro-course/?lesson=net09&amp;task=dns-trace">← 回到 DNS 练习 / Back to DNS practice</a><h1>DNS 字段导览 / DNS field guide</h1><p>人工构造的教学样例 / Synthetic teaching fixture</p><pre>SYNTHETIC DNS TRAINING PAIR / 人工 DNS 教学报文
+================================================
+This is a constructed fixture, NOT a real capture. No packets were sent.
+这不是任何人的真实抓包；报文由程序写入文件，从未发送。
+
+Open synthetic-dns-pair.pcap with Wireshark: File → Open.
+用 Wireshark 的 File → Open 打开文件；不用点击开始抓包。
+The top table lists packets; click a row, then expand the protocol tree in
+Packet Details below. The display filter `dns` keeps DNS packets visible.
+上方是报文列表；点击一行，再在下方 Packet Details 展开协议树。
+顶部显示过滤框输入 dns 并回车。本文件只包含下面两条报文。
+
+1. Read the question / 先看它在问什么
+------------------------------------
+Select row 1 → Domain Name System (query) / 选择第 1 行：
+  Transaction ID: 0x5222
+  Flags → Response: 0 (query / 查询)
+  Queries → coffee.example → Name: coffee.example
+  Queries → coffee.example → Type: A (IPv4 address / IPv4 地址)
+  Queries → coffee.example → Class: IN (Internet)
+
+Names in the expanded tree can differ slightly with the Wireshark version.
+版本不同，树形标题略有变化；以下显示字段名称是稳定定位线索：
+  dns.id             Transaction ID / 事务 ID
+  dns.qry.name       Question name / 查询名称
+  dns.qry.type       Question type / 查询类型
+  dns.flags.response Query or response / 查询或回复
+
+2. Read the reply / 再看它怎么回答
+--------------------------------
+Select row 2 → Domain Name System (response) / 选择第 2 行：
+  Transaction ID: 0x5222
+  Flags → Response: 1 (reply / 回复)
+  Flags → Reply code: No error (0)  [dns.flags.rcode]
+  Answers → coffee.example → Type: A
+  Answers → coffee.example → Time to live: 60 seconds [dns.resp.ttl]
+  Answers → coffee.example → Address: 203.0.113.80 [dns.a]
+
+The answer says &quot;coffee.example has this IPv4 address&quot; in this fixture.
+回复中的 A 记录把 coffee.example 对应到 203.0.113.80。
+RCODE=0 means no DNS error; by itself it does not mean a website will open.
+RCODE=0 表示本次 DNS 查询无错误，不保证网站一定能打开。
+
+3. Match the pair / 把问和答配成一对
+-----------------------------------
+Click Internet Protocol Version 4 and User Datagram Protocol to find:
+展开 IPv4 与 UDP 可看到：
+
+  #1 query / 查询:
+     192.0.2.10 : 53000  →  192.0.2.53 : 53
+  #2 reply / 回复:
+     192.0.2.53 : 53     →  192.0.2.10 : 53000
+
+The endpoints reverse; ID, question name, type and class agree.
+端点反向，事务 ID、查询名、查询类型和类相同。
+An ID is not globally unique; do not pair arbitrary packets by ID alone.
+ID 不是全世界唯一的快递单号，不能只凭相同 ID 乱配报文。
+
+Three different things / 三件不同的东西：
+  coffee.example  = the name asked about / 被查询名称
+  192.0.2.53      = the replying DNS server / 回复的 DNS 服务器
+  203.0.113.80    = the address INSIDE the answer / 答案里的地址
+Do not mistake the mail carrier for the café named inside the letter.
+别把送信的邮差当成信里要找的咖啡店。
+
+4. Know the limits / 这份例子能说明什么
+--------------------------------------
+The query/reply gap is constructed as 10 ms. TTL is constructed as 60 s.
+10 ms 间隔和 60 s TTL 都是人为设定；没有真实网速或缓存命中结论。
+TTL is a record&#x27;s cache-lifetime limit, not the query&#x27;s travel time.
+TTL 是记录的缓存生存时间上限，不是查询来回耗时。
+The fixture shows one stub-to-resolver exchange, not root/TLD/authority hops.
+这里只示范客户端到解析器的一问一答，没有展示根/TLD/权威服务器的后续步骤。
+Reading it is preparation; completing the practical task requires your own
+trace or an honest record of why capture could not be obtained.
+读懂它是练习准备；真实任务仍需自己的记录，或如实说明抓不到的排查过程。
+
+Sources / 格式依据
+-------------------
+RFC 1035 §§4.1.1–4.1.3, 4.2.1 — DNS fields and UDP transport:
+https://www.rfc-editor.org/rfc/rfc1035.html
+Wireshark User&#x27;s Guide §3.19 — packet-details tree:
+https://www.wireshark.org/docs/wsug_html_chunked/ChUsePacketDetailsPaneSection.html
+Wireshark DNS display fields:
+https://www.wireshark.org/docs/dfref/d/dns.html
+RFC 2606 §2 — reserved .example names:
+https://www.rfc-editor.org/rfc/rfc2606.html
+RFC 5737 §3 — 192.0.2.0/24 and 203.0.113.0/24 documentation addresses:
+https://www.rfc-editor.org/rfc/rfc5737.html
+</pre></main></body></html>

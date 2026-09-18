@@ -52,7 +52,7 @@ def guide_html(courses, lessons, introductions):
     return '''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="CS5489 和 CS5222 连续微课、双语记忆卡与交互演示的使用方法。"><title>怎样使用 · Micro Course</title><link rel="stylesheet" href="learning.css"></head><body>
 <header><a class="brand" href="index.html">MICRO COURSE</a><nav><a href="index.html">连续微课</a><a href="cards.html">复习卡片</a><a href="notices.html">课程信息 / Notices</a></nav></header>
 <main style="max-width:900px;margin:28px auto;padding:0 16px"><section class="hero"><div class="eyebrow">LEARN → PRACTICE → RECALL</div><h1>先理解，再检索</h1><p>'''+str(count)+' 节连续微课 · '+str(cards)+''' 张双语卡片</p></section>
-<section class="panel"><h2>课程信息 / Course information</h2><p>评分、提交清单、课件范围与运行提醒见<a href="notices.html">课程信息与学习指南</a>，不再作为记忆卡复习。 / Assessment, submissions, material scope, and setup notes are on the information board.</p></section><section class="panel"><h2>从这里开始</h2>'''+course_links+'''<ol><li>先读具体场景和三个分步例子，再看概念与公式；不熟悉的概念沿“先修补课”返回。</li><li>跟着完整例题手算，再独立尝试提示练习。需要时才展开提示，完成后核对答案。</li><li>不看答案做条件变化题，并用英语解释机制、假设和结论。</li><li>打开对应卡片做检索，再用 Markji 安排间隔复习。长推导和编程题仍应完整重做。</li></ol></section>
+<section class="panel"><h2>课程信息 / Course information</h2><p>评分、提交清单、课件范围与运行提醒见<a href="notices.html">课程信息与学习指南</a>，不再作为记忆卡复习。 / Assessment, submissions, material scope, and setup notes are on the information board.</p></section><section class="panel"><h2>从这里开始</h2>'''+course_links+'''<ol><li>先看本节“这一遍的重点”，读具体场景，再看概念和一个完整例题；不熟悉时展开对应基础补课。</li><li>跟着完整例题手算，再独立尝试提示练习。需要时才展开提示，完成后核对答案。</li><li>不看答案做条件变化题，并用英语解释机制、假设和结论。</li><li>先预览本节2–5张首轮重点卡，再在Markji按卡号复习；其余卡片按专题分次进入。长推导和编程题仍应完整重做。</li></ol></section>
 '''+deck_guides+'''<section class="panel"><h2>语言与范围</h2><p>中文用于连续串讲；英文术语、英语摘要及中英双语题答帮助过渡到英文考试。“英语口述训练”展示英文摘要与题答，不是整篇中文讲解的逐句翻译。</p><p>本学期 Canvas 是课程范围基准。Extra Resources 来自往年资料，尚未确认为本学期或 QE 的完整范围。新增串讲、类比和练习是 AI 编写的学习辅助。</p><p>卡片中保留原图，以及资料文件名、页码或 Notebook 单元号。Canvas 和历史仓库的完整原文件留在本地资料库；公开的官方文档仍可通过出处链接访问。</p></section>
 <section class="panel"><h2>参考书怎么读 / Reading companion</h2><p>50 节均有双语入门场景、150 个讲解步骤与 22 幅入门图。另有 26 节参考书补充、14 幅图示和 26 道双语自测。先看机制，再沿图读一遍例子，最后独立回答自测；图示可点击放大。决策树和 AdaBoost 折叠为选读，可按兴趣展开。</p><p>Machine Learning in Action（2012）与《机器学习实战》（2013）是同一著作的两个语言版本。网络部分参考 Computer Networking: A Top-Down Approach 第 8 版及《图解 HTTP》（2014）；HTTP 缓存、TLS 与 HTTP/3 的版本差异另核对 RFC 9111、8446、9114。新增段落有单独的书页定位，原始 PDF 留在本地。</p><p class="english">Reading supplements add original diagrams and bilingual checks. Book chapters explain mechanisms; Canvas remains the assessment baseline. The English and Chinese editions of Machine Learning in Action are the same work. Legacy code and protocol descriptions are qualified where needed.</p></section><section class="panel"><h2>学习记录与换设备</h2><p>完成标记和待复习标记保存在当前浏览器，可导出 JSON；网站没有账户或云同步。手机、电脑和原来的本地学习页各自保存记录，不会自动合并。自评标记也不会改变 Markji 的复习进度。</p><p>Markji 链接打开原课程牌组，间隔复习继续使用该牌组；网页用于连续讲解和题目预览。</p></section>
 <section class="panel"><h2>课程维护</h2><p>页面内容随仓库更新发布。发现解释跳步时，应补那个中间步骤，再用变式检查能否迁移。</p><p><a href="https://github.com/CrazyShout/micro-course" target="_blank" rel="noopener">GitHub 仓库</a> · <a href="publication.json">当前内容与资源清单</a></p></section></main><script>const course=new URLSearchParams(location.search).get('course');const section=course&&document.getElementById(course);if(section)section.scrollIntoView();</script></body></html>'''
@@ -115,6 +115,17 @@ def main():
                 assert rel.parent==Path('reading/figures') and rel.suffix=='.svg',rel
                 dst=out/rel;dst.parent.mkdir(parents=True,exist_ok=True)
                 shutil.copy2(source/rel,dst);figures.add(str(rel))
+        practice_assets=set()
+        for lesson in learning['lessons']:
+            for task in lesson.get('practical_tasks',[]):
+                refs=[a['href'] for a in task.get('attachments',[])]
+                if task.get('figure'):refs.append(task['figure']['src'])
+                for name in refs:
+                    rel=Path(name)
+                    assert not rel.is_absolute() and '..' not in rel.parts and rel.parts[:2]==('learning','practice')
+                    assert rel.suffix in {'.py','.md','.txt','.svg','.pcap','.html'}
+                    dst=out/rel;dst.parent.mkdir(parents=True,exist_ok=True)
+                    shutil.copy2(source/rel,dst);practice_assets.add(name)
         for card in reader['cards']:
             for name in card['media']:
                 relative=Path(card['course'])/'media'/name
@@ -144,6 +155,8 @@ def main():
                   'optional_foundations':len({f['id'] for l in learning['lessons'] for f in l.get('foundations',[])}),
                   'focused_units':sum(len(l.get('units',[])) for l in learning['lessons']),
                   'practical_tasks':len({t['id'] for l in learning['lessons'] for t in l.get('practical_tasks',[])}),
+                  'practice_assets':len(practice_assets),
+                  'first_pass_cards':sum(len(l['study_route']['first_pass']) for l in learning['lessons']),
                   'reading_revision':learning.get('reading_revision'),
                   'reading_supplements':sum(bool(l.get('reading')) for l in learning['lessons']),
                   'reading_figures':len(figures),
@@ -168,7 +181,7 @@ def main():
     reading_dest=ROOT/'content/reading';reading_dest.mkdir(parents=True,exist_ok=True)
     beginner_dest=ROOT/'content/learning';beginner_dest.mkdir(parents=True,exist_ok=True)
     shutil.copy2(source/'learning/first-pass.md',beginner_dest/'first-pass.md')
-    for name in ['foundations.json','lesson-units.json','practical-tasks.json','coverage-scope.json','coverage.json','card-recovery.json']:
+    for name in ['foundations.json','lesson-units.json','practical-tasks.json','coverage-scope.json','coverage.json','card-recovery.json','study-routes.json']:
         shutil.copy2(source/'learning'/name,beginner_dest/name)
     shutil.copy2(source/'reading/authoring.md',reading_dest/'lessons.md')
     source_catalog=json.loads((source/'reading/sources.json').read_text())

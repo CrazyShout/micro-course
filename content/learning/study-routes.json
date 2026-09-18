@@ -1,0 +1,1109 @@
+{
+  "ml01": {
+    "first_pass": [
+      "CS5489-M001",
+      "CS5489-M002",
+      "CS5489-M004",
+      "CS5489-M003"
+    ],
+    "after_practice": [
+      "CS5489-M327",
+      "CS5489-M328"
+    ],
+    "note": {
+      "zh": "先用短信分拣把特征、标签和训练流程讲顺。T/E/P 的正式表述与三类学习范式留到这个场景讲得通以后。",
+      "en": "First explain features, labels and the training workflow through message sorting. Add the formal T/E/P framing and learning paradigms after that story makes sense."
+    }
+  },
+  "ml02": {
+    "first_pass": [
+      "CS5489-M008",
+      "CS5489-M334",
+      "CS5489-M012",
+      "CS5489-M013",
+      "CS5489-M020"
+    ],
+    "after_practice": [
+      "CS5489-M007",
+      "CS5489-M009",
+      "CS5489-M010",
+      "CS5489-M011",
+      "CS5489-M014",
+      "CS5489-M015",
+      "CS5489-M016",
+      "CS5489-M017",
+      "CS5489-M018",
+      "CS5489-M019",
+      "CS5489-M335",
+      "CS5489-M336",
+      "CS5489-M337"
+    ],
+    "note": {
+      "zh": "先看 Python 补课，按“变量→余数→循环→return→完整因数函数”走一遍，能自己改 n 就算完成第一圈。再用 M007 检查 Notebook 执行顺序；对象与继承读完专题再做，文件、异常和 pandas 随实际读数据任务进入。",
+      "en": "Read the Python primer, then follow variables → remainder → loop → return → a complete divisor function, and rerun it for another n. Next use M007 to check notebook execution order. Study objects/inheritance after their unit, and file handling, exceptions and pandas alongside data-loading practice."
+    }
+  },
+  "ml03": {
+    "first_pass": [
+      "CS5489-M021",
+      "CS5489-M029",
+      "CS5489-M030",
+      "CS5489-M023",
+      "CS5489-M028"
+    ],
+    "after_practice": [
+      "CS5489-M022",
+      "CS5489-M024",
+      "CS5489-M025",
+      "CS5489-M026",
+      "CS5489-M027",
+      "CS5489-M031",
+      "CS5489-M032",
+      "CS5489-M033",
+      "CS5489-M034",
+      "CS5489-M329",
+      "CS5489-M330",
+      "CS5489-M035",
+      "CS5489-M036"
+    ],
+    "note": {
+      "zh": "第一遍先手算小矩阵，盯住“每个数代表什么、形状是什么、算完有几个数”，并用 M028 检查列向量与一维数组相减时的广播陷阱。归约、其他广播情形与视图再各做小数组实验；绘图卡在亲手画过图后进入。",
+      "en": "First calculate a small matrix by hand, tracking entries, shapes and expected outputs; use M028 to check the broadcasting trap when subtracting a one-dimensional array from a column. Later test reductions, other broadcasting cases and views on small arrays; add plotting cards after drawing the figures."
+    }
+  },
+  "ml04": {
+    "first_pass": [
+      "CS5489-M037",
+      "CS5489-M038",
+      "CS5489-M039",
+      "CS5489-M040",
+      "CS5489-M041"
+    ],
+    "after_practice": [],
+    "note": {
+      "zh": "卡少但彼此紧密相连：先画投影，再手算两步，最后用 E 的形状、正交性与列空间检查结果。零残差是“没有新方向”，不是硬除一次试试。",
+      "en": "These five cards form one chain: draw a projection, calculate two steps, then check shape, orthogonality and column space. A zero residual means no new direction is available."
+    }
+  },
+  "ml05": {
+    "first_pass": [
+      "CS5489-M043",
+      "CS5489-M044",
+      "CS5489-M045",
+      "CS5489-M046",
+      "CS5489-M047"
+    ],
+    "after_practice": [
+      "CS5489-M042",
+      "CS5489-M048",
+      "CS5489-M049"
+    ],
+    "note": {
+      "zh": "先用人数表分清“谁里面的比例”，再写贝叶斯公式和条件独立。密度、期望及三类分布不急着一起装进脑袋，进入 MLE 前再补。",
+      "en": "Start with counts and the population being conditioned on, then write Bayes and conditional independence. Return to densities, moments and distribution families before MLE."
+    }
+  },
+  "ml06": {
+    "first_pass": [
+      "CS5489-M051",
+      "CS5489-M052",
+      "CS5489-M053",
+      "CS5489-M058",
+      "CS5489-M059"
+    ],
+    "after_practice": [
+      "CS5489-M050",
+      "CS5489-M054",
+      "CS5489-M055",
+      "CS5489-M056",
+      "CS5489-M057",
+      "CS5489-M060"
+    ],
+    "note": {
+      "zh": "先把硬币似然与“先验×似然选类别”走通。求导不熟先读导数补课；高斯均值、方差推导在高斯估计单元后做，对数稳定计算在连乘时再回看。",
+      "en": "First connect the coin likelihood to classification by prior times likelihood. Use the derivative primer if needed; do Gaussian mean/variance derivations after that unit and revisit log stability when multiplying probabilities."
+    }
+  },
+  "ml07": {
+    "first_pass": [
+      "CS5489-M066",
+      "CS5489-M061",
+      "CS5489-M067",
+      "CS5489-M063",
+      "CS5489-M071"
+    ],
+    "after_practice": [
+      "CS5489-M062",
+      "CS5489-M064",
+      "CS5489-M065",
+      "CS5489-M068",
+      "CS5489-M069",
+      "CS5489-M070",
+      "CS5489-M072",
+      "CS5489-M073",
+      "CS5489-M074"
+    ],
+    "note": {
+      "zh": "跟同一小样本走完“各类怎么算分、最后选谁”，并把分数归一化成后验。行列式不熟先补 |Σ| 单元；参数计数、正则化、log-sum-exp 的程序实现和标签映射等细节第二遍再练。",
+      "en": "Score one sample under each class, choose its label and normalize the scores into a posterior. Read the determinant unit if needed; leave parameter counting, regularization, numerical log-sum-exp implementation and label-mapping details for later practice."
+    }
+  },
+  "ml08": {
+    "first_pass": [
+      "CS5489-M075",
+      "CS5489-M079",
+      "CS5489-M081",
+      "CS5489-M086",
+      "CS5489-M088"
+    ],
+    "after_practice": [
+      "CS5489-M076",
+      "CS5489-M077",
+      "CS5489-M078",
+      "CS5489-M080",
+      "CS5489-M082",
+      "CS5489-M083",
+      "CS5489-M084",
+      "CS5489-M085",
+      "CS5489-M087",
+      "CS5489-M089",
+      "CS5489-M331",
+      "CS5489-M332",
+      "CS5489-M333"
+    ],
+    "note": {
+      "zh": "先用“free free win”区分出现过与出现次数，再各算一个平滑概率。缺词贡献、TF-IDF、词表流程和其他文本表示，在对应实验或补充讲解后进入。",
+      "en": "Use “free free win” to separate presence from counts and calculate smoothed probabilities. Add absent-word evidence, TF-IDF, vocabulary workflows and other representations after the relevant explanation or experiment."
+    }
+  },
+  "ml09": {
+    "first_pass": [
+      "CS5489-M111",
+      "CS5489-M112",
+      "CS5489-M113",
+      "CS5489-M114",
+      "CS5489-M116"
+    ],
+    "after_practice": [
+      "CS5489-M108",
+      "CS5489-M109",
+      "CS5489-M110",
+      "CS5489-M115",
+      "CS5489-M117",
+      "CS5489-M118"
+    ],
+    "note": {
+      "zh": "先从次数、率参数走到一条文档的类分数。Gamma 平滑看完专题再做 M115；完成最小实现后做 M117，真实比较过模型后再做 M108–M110 与 M118。",
+      "en": "First move from counts and rates to one document's class scores. Read the Gamma unit before M115, implement a tiny model before M117, and run an actual comparison before M108–M110 and M118."
+    }
+  },
+  "ml10": {
+    "first_pass": [
+      "CS5489-M121",
+      "CS5489-M123",
+      "CS5489-M127",
+      "CS5489-M128",
+      "CS5489-M129"
+    ],
+    "after_practice": [
+      "CS5489-M119",
+      "CS5489-M120",
+      "CS5489-M122",
+      "CS5489-M124",
+      "CS5489-M125",
+      "CS5489-M126",
+      "CS5489-M130",
+      "CS5489-M131",
+      "CS5489-M132"
+    ],
+    "note": {
+      "zh": "先沿“线性分数→概率→损失→一次更新”走一遍，确认减去负梯度为什么会增大权重。±1 标签推导、先验正则与可分数据边界放到第二遍。",
+      "en": "Follow score → probability → loss → one update, including why subtracting a negative gradient raises a weight. Defer the ±1-label derivation, prior-based regularization and separable-data boundary case."
+    }
+  },
+  "ml11": {
+    "first_pass": [
+      "CS5489-M133",
+      "CS5489-M134",
+      "CS5489-M135"
+    ],
+    "after_practice": [
+      "CS5489-M136",
+      "CS5489-M137",
+      "CS5489-M138",
+      "CS5489-M139",
+      "CS5489-M140",
+      "CS5489-M141"
+    ],
+    "note": {
+      "zh": "第一遍只完成一件事：用同一组验证折公平选超参数。多类别部分另开一轮：看 softmax 单元，再做 M136–M140；系数解释可与逻辑回归一起回看。",
+      "en": "First make a fair hyperparameter choice on shared validation folds. Treat multiclass modeling as a separate pass: read the softmax unit, then do M136–M140; revisit coefficient interpretation with logistic regression."
+    }
+  },
+  "ml12": {
+    "first_pass": [
+      "CS5489-M143",
+      "CS5489-M144",
+      "CS5489-M145",
+      "CS5489-M154",
+      "CS5489-M155"
+    ],
+    "after_practice": [
+      "CS5489-M146",
+      "CS5489-M156",
+      "CS5489-M159",
+      "CS5489-M160",
+      "CS5489-M161",
+      "CS5489-M162",
+      "CS5489-M163",
+      "CS5489-M164"
+    ],
+    "note": {
+      "zh": "先画间隔、算点到边界的距离，再理解松弛变量。手算两点 SVM 后做 M160；hinge loss 等价式、C 的取舍与多类别实现留到第二遍。",
+      "en": "Draw the margin, calculate distance to the boundary and interpret slack. Do M160 after the two-point SVM example; defer hinge-loss equivalence, C tradeoffs and multiclass implementation."
+    }
+  },
+  "ml13": {
+    "first_pass": [
+      "CS5489-M147",
+      "CS5489-M148",
+      "CS5489-M149",
+      "CS5489-M150",
+      "CS5489-M151"
+    ],
+    "after_practice": [
+      "CS5489-M152",
+      "CS5489-M153",
+      "CS5489-M157",
+      "CS5489-M158"
+    ],
+    "note": {
+      "zh": "先跟两点例题逐项求导，再逐项检查 KKT；别把“乘子为零”误读成“约束必定松”。软间隔边界、偏置恢复与 SMO 放在主练习之后。",
+      "en": "Differentiate the two-point example and check each KKT condition; a zero multiplier does not prove strict slack. Leave soft-margin cases, bias recovery and SMO until after the main exercise."
+    }
+  },
+  "ml14": {
+    "first_pass": [
+      "CS5489-M165",
+      "CS5489-M166",
+      "CS5489-M167"
+    ],
+    "after_practice": [
+      "CS5489-M168",
+      "CS5489-M169",
+      "CS5489-M170",
+      "CS5489-M171",
+      "CS5489-M172"
+    ],
+    "note": {
+      "zh": "第一遍用显式二次映射验证“核确实算的是内积”。RBF 距离直觉和 C/γ 调参读完对应单元再做；合法性与大样本代价随后补。",
+      "en": "First verify the quadratic kernel through its explicit feature map. Do RBF distance intuition and C/γ tuning after their unit, then study validity and large-sample costs."
+    }
+  },
+  "ml15": {
+    "first_pass": [
+      "CS5489-M173",
+      "CS5489-M174",
+      "CS5489-M175",
+      "CS5489-M176"
+    ],
+    "after_practice": [
+      "CS5489-M177",
+      "CS5489-M178",
+      "CS5489-M179",
+      "CS5489-M180",
+      "CS5489-M181",
+      "CS5489-M182"
+    ],
+    "note": {
+      "zh": "先把缩放与类别表示做对：训练统计不能偷看测试集，类别编号也不是尺子。多项式、对数、类别权重和损失框架等需要时再各学一组。",
+      "en": "First handle scaling and categorical representations: fit statistics on training data, and do not treat category codes as a ruler. Add polynomial/log transforms, class weights and loss frameworks in separate groups."
+    }
+  },
+  "ml16": {
+    "first_pass": [
+      "CS5489-M093",
+      "CS5489-M091",
+      "CS5489-M092",
+      "CS5489-M094",
+      "CS5489-M099"
+    ],
+    "after_practice": [
+      "CS5489-M095",
+      "CS5489-M096"
+    ],
+    "note": {
+      "zh": "先亲手填混淆矩阵、算各类召回率，再建立一个能复现的基线。复杂特征等基线跑通后才加；错误分析要拿真实短信说话，不凭想象替模型写检讨。",
+      "en": "Fill a confusion matrix, calculate class recalls and build a reproducible baseline. Add complex features after the baseline runs; support error explanations with actual messages, not an imagined confession from the model."
+    }
+  },
+  "ml17": {
+    "first_pass": [
+      "CS5489-M105",
+      "CS5489-M103",
+      "CS5489-M102",
+      "CS5489-M106"
+    ],
+    "after_practice": [
+      "CS5489-M101",
+      "CS5489-M104"
+    ],
+    "note": {
+      "zh": "先从二元短信表示自行选模型，算后验，再按 9:1 的误拦正常短信/漏过垃圾短信代价解释为什么决定可能改变。用英文回答两次追问；零协方差与独立、TF-IDF 的模型边界留到相应补课后。",
+      "en": "Choose a model from binary message features, calculate the posterior, then explain how a 9:1 false-positive/false-negative cost changes the decision. Answer both English follow-ups; defer zero covariance versus independence and TF-IDF model boundaries to the relevant supplements."
+    }
+  },
+  "ml18": {
+    "first_pass": [
+      "CS5489-M183",
+      "CS5489-M184",
+      "CS5489-M185",
+      "CS5489-M186"
+    ],
+    "after_practice": [],
+    "note": {
+      "zh": "先手算邻居投票，再改一次特征尺度，最后解释为什么样本多不等于 1-NN 自动最优。四张卡属于同一条小链。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Calculate a neighbor vote, change a feature scale, then explain why more data do not automatically make 1-NN optimal. The four cards form one short chain. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml19": {
+    "first_pass": [
+      "CS5489-M187",
+      "CS5489-M188",
+      "CS5489-M189",
+      "CS5489-M190",
+      "CS5489-M191"
+    ],
+    "after_practice": [
+      "CS5489-M192",
+      "CS5489-M193",
+      "CS5489-M194",
+      "CS5489-M195",
+      "CS5489-M196",
+      "CS5489-M197",
+      "CS5489-M198",
+      "CS5489-M199",
+      "CS5489-M200",
+      "CS5489-M201",
+      "CS5489-M202"
+    ],
+    "note": {
+      "zh": "先看残差、写带截距的设计矩阵，再推正规方程并检查是否唯一。Ridge/Lasso、MAP 与系数解释留到对应正则化和建模讲解后。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Start with residuals and an intercept-augmented design matrix, derive the normal equations and check uniqueness. Defer Ridge/Lasso, MAP and coefficient interpretation to the relevant regularization and modeling explanations. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml20": {
+    "first_pass": [
+      "CS5489-M203",
+      "CS5489-M204",
+      "CS5489-M205",
+      "CS5489-M206"
+    ],
+    "after_practice": [
+      "CS5489-M207",
+      "CS5489-M208",
+      "CS5489-M209",
+      "CS5489-M210"
+    ],
+    "note": {
+      "zh": "第一遍只让 RANSAC 从“抽几次碰到好样本”变成可算的概率。非线性特征、核岭回归和 SVR 属于另一组损失/模型问题，读对应补充再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First turn RANSAC's repeated sampling into a probability calculation. Nonlinear features, kernel ridge and SVR form a separate group to study after the relevant supplements. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml21": {
+    "first_pass": [
+      "CS5489-M211",
+      "CS5489-M212",
+      "CS5489-M213",
+      "CS5489-M214"
+    ],
+    "after_practice": [
+      "CS5489-M215",
+      "CS5489-M216"
+    ],
+    "note": {
+      "zh": "把四个点分到最近中心，再重新算均值，就能看见两个步骤各在忙什么。做完两轮后，再检查初始化、簇数与簇大小的误区。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Assign four points to nearby centers and recompute means to see each step's job. After two rounds, examine initialization, the number of clusters and cluster-size misconceptions. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml22": {
+    "first_pass": [
+      "CS5489-M217",
+      "CS5489-M218",
+      "CS5489-M219",
+      "CS5489-M220",
+      "CS5489-M225"
+    ],
+    "after_practice": [
+      "CS5489-M221",
+      "CS5489-M222",
+      "CS5489-M223",
+      "CS5489-M224",
+      "CS5489-M226"
+    ],
+    "note": {
+      "zh": "先让每个点把“归属票”分给两类，再用这些软票数更新均值和权重。协方差更新与 EM 不降性证明放到这轮 E/M 计算真正做通之后。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Let each point split its membership votes between two components, then update weighted means and mixture weights. Study covariance updates and the monotonicity argument after completing one E/M cycle. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml23": {
+    "first_pass": [
+      "CS5489-M231",
+      "CS5489-M232",
+      "CS5489-M233",
+      "CS5489-M234",
+      "CS5489-M236"
+    ],
+    "after_practice": [
+      "CS5489-M227",
+      "CS5489-M228",
+      "CS5489-M229",
+      "CS5489-M230",
+      "CS5489-M235",
+      "CS5489-M237",
+      "CS5489-M238",
+      "CS5489-M239",
+      "CS5489-M240"
+    ],
+    "note": {
+      "zh": "先中心化、选方向、投影和重构，再解释保留方差不等于预测最好。SVD、重根唯一性与核 PCA 分别读对应补充后进入，不在第一遍挤成一团。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Center, choose directions, project and reconstruct; explain why retained variance need not maximize prediction quality. Study SVD, repeated-eigenvalue uniqueness and kernel PCA in later focused passes. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml24": {
+    "first_pass": [
+      "CS5489-M243",
+      "CS5489-M248",
+      "CS5489-M249",
+      "CS5489-M250",
+      "CS5489-M254"
+    ],
+    "after_practice": [
+      "CS5489-M241",
+      "CS5489-M242",
+      "CS5489-M244",
+      "CS5489-M245",
+      "CS5489-M246",
+      "CS5489-M247",
+      "CS5489-M251",
+      "CS5489-M252",
+      "CS5489-M253"
+    ],
+    "note": {
+      "zh": "先区分前向、反向和更新，手算一张小图的乘法与分叉，再用小数据过拟合调试。批量矩阵梯度、感知机、激活边界和输出损失匹配分组补。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Separate forward, backward and update steps, differentiate one small branching graph, then use tiny-data overfitting to debug. Add batch gradients, perceptrons, activation edge cases and output/loss matching by topic. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml25": {
+    "first_pass": [
+      "CS5489-M255",
+      "CS5489-M256",
+      "CS5489-M257",
+      "CS5489-M259",
+      "CS5489-M263"
+    ],
+    "after_practice": [
+      "CS5489-M258",
+      "CS5489-M260",
+      "CS5489-M261",
+      "CS5489-M262",
+      "CS5489-M264"
+    ],
+    "note": {
+      "zh": "先拿小窗口滑一次，数输出位置和共享参数；“共享”不是每个位置另请一个检测员。池化、感受野与严格的离散卷积，读对应例题后再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Slide one small window and count output positions and shared parameters; each position does not hire its own detector. Study pooling, receptive fields and mathematical convolution after their examples. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml26": {
+    "first_pass": [
+      "CS5489-M265",
+      "CS5489-M271",
+      "CS5489-M273"
+    ],
+    "after_practice": [
+      "CS5489-M266",
+      "CS5489-M267",
+      "CS5489-M268",
+      "CS5489-M269",
+      "CS5489-M270",
+      "CS5489-M272",
+      "CS5489-M274",
+      "CS5489-M275",
+      "CS5489-M276"
+    ],
+    "note": {
+      "zh": "第一圈只抓训练步、dropout 与训练/评估模式。先看训练步单元；Momentum→AdaGrad/RMSProp→Adam/AdamW 另开一轮，读懂各自状态后再复习，不把优化器名字当菜单一口吞。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First focus on training steps, dropout and train/eval modes, using the training-steps unit. Study Momentum → AdaGrad/RMSProp → Adam/AdamW in a separate pass after understanding each state variable. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml27": {
+    "first_pass": [
+      "CS5489-M277",
+      "CS5489-M280",
+      "CS5489-M284"
+    ],
+    "after_practice": [
+      "CS5489-M278",
+      "CS5489-M279",
+      "CS5489-M281",
+      "CS5489-M282",
+      "CS5489-M283"
+    ],
+    "note": {
+      "zh": "先问“最终要输出什么”：类别、框还是像素，随后明确评价数据的边界。检测架构、残差连接、恢复和压缩各按对应专题进入。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First identify the required output—class, boxes or pixels—and the evaluation boundary. Enter detector architectures, residual connections, restoration and compression through their relevant units. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml28": {
+    "first_pass": [
+      "CS5489-M285",
+      "CS5489-M290",
+      "CS5489-M291",
+      "CS5489-M293"
+    ],
+    "after_practice": [
+      "CS5489-M286",
+      "CS5489-M287",
+      "CS5489-M288",
+      "CS5489-M289",
+      "CS5489-M292",
+      "CS5489-M294"
+    ],
+    "note": {
+      "zh": "第一遍只跟一个样本完成加噪，再分清训练时已知噪声与生成时预测噪声。GAN 博弈、反向分布的条件和引导方法另起一轮。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First add noise to one sample and distinguish known training noise from predicted generation noise. Study GAN games, reverse-distribution conditions and guidance in another pass. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml29": {
+    "first_pass": [
+      "CS5489-M295",
+      "CS5489-M296",
+      "CS5489-M297",
+      "CS5489-M298",
+      "CS5489-M299"
+    ],
+    "after_practice": [
+      "CS5489-M300",
+      "CS5489-M301",
+      "CS5489-M302"
+    ],
+    "note": {
+      "zh": "先把图像切块，再用一行 query 算取信息的权重，最后核对矩阵维度与代价。完整 Transformer 块和对抗鲁棒性留到对应讲解后。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Patch the image, calculate weights for one query, then check matrix dimensions and cost. Defer the complete Transformer block and adversarial robustness to the relevant explanation. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "ml30": {
+    "first_pass": [
+      "CS5489-M311",
+      "CS5489-M312"
+    ],
+    "after_practice": [
+      "CS5489-M303",
+      "CS5489-M304",
+      "CS5489-M305",
+      "CS5489-M306",
+      "CS5489-M307",
+      "CS5489-M308",
+      "CS5489-M309",
+      "CS5489-M310",
+      "CS5489-M313",
+      "CS5489-M314",
+      "CS5489-M315",
+      "CS5489-M316",
+      "CS5489-M317",
+      "CS5489-M318",
+      "CS5489-M319",
+      "CS5489-M320",
+      "CS5489-M321",
+      "CS5489-M322",
+      "CS5489-M323",
+      "CS5489-M324",
+      "CS5489-M325",
+      "CS5489-M326"
+    ],
+    "note": {
+      "zh": "第一轮只跟主例题做链式法则与同时更新，两张就够。其余是跨章题库：熵、Laplace、条件高斯、秩/PCA、线性系统各读对应专题；KKT 与矩阵恒等式等长推导放第二遍，别一口气刷完 24 张。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First follow the main chain-rule example and simultaneous update; these two cards are enough for one pass. Other cards form a cross-topic problem bank: use the entropy, Laplace, conditional-Gaussian, rank/PCA and systems units, and defer long KKT/matrix proofs. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net01": {
+    "first_pass": [
+      "CS5222-N001",
+      "CS5222-N002",
+      "CS5222-N003",
+      "CS5222-N010",
+      "CS5222-N012"
+    ],
+    "after_practice": [
+      "CS5222-N004",
+      "CS5222-N005",
+      "CS5222-N006",
+      "CS5222-N007",
+      "CS5222-N008",
+      "CS5222-N009",
+      "CS5222-N011"
+    ],
+    "note": {
+      "zh": "先沿一次网页请求认清主机、链路与路由器，再分开比特率和传播速度。各种接入技术与介质是第二圈的地图注释，不必先背全设备名。",
+      "en": "Trace one web request through hosts, links and routers, then separate bit rate from propagation speed. Add access technologies and media as annotations on that map in a second pass."
+    }
+  },
+  "net02": {
+    "first_pass": [
+      "CS5222-N013",
+      "CS5222-N015",
+      "CS5222-N018",
+      "CS5222-N019",
+      "CS5222-N021"
+    ],
+    "after_practice": [
+      "CS5222-N014",
+      "CS5222-N016",
+      "CS5222-N017",
+      "CS5222-N020",
+      "CS5222-N022",
+      "CS5222-N023",
+      "CS5222-N024",
+      "CS5222-N095",
+      "CS5222-N096",
+      "CS5222-N097",
+      "CS5222-N098"
+    ],
+    "note": {
+      "zh": "先理解固定预留与临时共享：食堂座位够平均人数，不代表大家能同时坐下。二项概率 N020 先看“三人状态→组合数”补课；互联结构和章末辨错随后进入。",
+      "en": "Compare fixed reservation with shared capacity: seats for average attendance need not seat everyone at once. Read the three-user-to-binomial bridge before N020; defer interconnection structure and chapter checks."
+    }
+  },
+  "net03": {
+    "first_pass": [
+      "CS5222-N025",
+      "CS5222-N026",
+      "CS5222-N027",
+      "CS5222-N028",
+      "CS5222-N030"
+    ],
+    "after_practice": [
+      "CS5222-N029",
+      "CS5222-N031",
+      "CS5222-N032"
+    ],
+    "note": {
+      "zh": "先画首位、末位时间线，所有数字先换单位。收费站题与多链路公式用来检验同一幅时间线，不另背一套口诀。",
+      "en": "Draw the first-bit/last-bit timeline and convert units before calculating. Use tollbooth and multi-link problems to test that same timeline rather than memorize another rule."
+    }
+  },
+  "net04": {
+    "first_pass": [
+      "CS5222-N033",
+      "CS5222-N034",
+      "CS5222-N035",
+      "CS5222-N037"
+    ],
+    "after_practice": [
+      "CS5222-N036",
+      "CS5222-N038",
+      "CS5222-N039",
+      "CS5222-N040"
+    ],
+    "note": {
+      "zh": "先算“每秒送来多少、链路每秒搬走多少”，再看积压与瓶颈。公平共享吞吐量看补充例题；traceroute 的往返语义可随抓包或测量任务进入。",
+      "en": "Compare incoming bits per second with link service capacity, then reason about backlog and bottlenecks. Study shared throughput with its example and traceroute round trips alongside measurement practice."
+    }
+  },
+  "net05": {
+    "first_pass": [
+      "CS5222-N041",
+      "CS5222-N042",
+      "CS5222-N044",
+      "CS5222-N045",
+      "CS5222-N046"
+    ],
+    "after_practice": [
+      "CS5222-N043",
+      "CS5222-N047",
+      "CS5222-N048",
+      "CS5222-N049",
+      "CS5222-N050",
+      "CS5222-N051"
+    ],
+    "note": {
+      "zh": "先顺着消息一层层加首部，分清交换机和路由器实际看哪层。OSI 对照、安全概览、历史和设计原则放到封装主线讲顺之后。",
+      "en": "Follow headers being added layer by layer and identify what switches and routers inspect. Add OSI mapping, security, history and design principles after the encapsulation story is clear."
+    }
+  },
+  "net06": {
+    "first_pass": [
+      "CS5222-N057",
+      "CS5222-N058",
+      "CS5222-N060",
+      "CS5222-N061",
+      "CS5222-N063"
+    ],
+    "after_practice": [
+      "CS5222-N052",
+      "CS5222-N053",
+      "CS5222-N054",
+      "CS5222-N055",
+      "CS5222-N056",
+      "CS5222-N059",
+      "CS5222-N062",
+      "CS5222-N064",
+      "CS5222-N065"
+    ],
+    "note": {
+      "zh": "先把 socket 当通信门口，再按应用的可靠性、速率和时延需求比较 TCP/UDP。架构、流控/拥塞及加密是后续追问；实时应用别只凭一个标签选协议。",
+      "en": "Treat a socket as the communication doorway and compare TCP/UDP against reliability, rate and delay needs. Study architectures, flow/congestion control and encryption as follow-ups; an application label alone does not select a protocol."
+    }
+  },
+  "net07": {
+    "first_pass": [
+      "CS5222-N068",
+      "CS5222-N100",
+      "CS5222-N101",
+      "CS5222-N102",
+      "CS5222-N109"
+    ],
+    "after_practice": [
+      "CS5222-N066",
+      "CS5222-N067",
+      "CS5222-N069",
+      "CS5222-N103",
+      "CS5222-N104",
+      "CS5222-N105",
+      "CS5222-N106",
+      "CS5222-N107",
+      "CS5222-N108",
+      "CS5222-N110"
+    ],
+    "note": {
+      "zh": "先画一次连接、一次请求和缓存命中的时间线。多对象并发/流水线、请求首部、方法与 Cookie 分组进入，别把不同 HTTP 模型的 RTT 混成一锅。",
+      "en": "First draw one connection, request and cache hit. Add concurrent/pipelined objects, request headers, methods and cookies in separate groups, keeping each HTTP timing model explicit."
+    }
+  },
+  "net08": {
+    "first_pass": [
+      "CS5222-N111",
+      "CS5222-N112",
+      "CS5222-N113",
+      "CS5222-N117",
+      "CS5222-N118"
+    ],
+    "after_practice": [
+      "CS5222-N114",
+      "CS5222-N115",
+      "CS5222-N116",
+      "CS5222-N119",
+      "CS5222-N120"
+    ],
+    "note": {
+      "zh": "先区分“寄到服务器”和“从邮箱读取”，沿一封邮件走完整流程。信封/首部专题、POP3 状态、250 回复与字符编码边界第二遍补。",
+      "en": "Separate delivery to a mail server from reading a mailbox and trace one message end to end. Study envelopes/headers, POP3 states, 250 replies and encoding boundaries in a second pass."
+    }
+  },
+  "net09": {
+    "first_pass": [
+      "CS5222-N121",
+      "CS5222-N123",
+      "CS5222-N124",
+      "CS5222-N125",
+      "CS5222-N127"
+    ],
+    "after_practice": [
+      "CS5222-N122",
+      "CS5222-N126",
+      "CS5222-N128",
+      "CS5222-N129",
+      "CS5222-N130",
+      "CS5222-N131",
+      "CS5222-N132",
+      "CS5222-N133",
+      "CS5222-N134"
+    ],
+    "note": {
+      "zh": "先让本地解析器沿层级问路，再算一次消息数，最后加缓存。记录类型与 TTL 逐类补，串联 HTTP 的总时延等两条流程各自清楚后再算。",
+      "en": "Follow the local resolver through the hierarchy, count exchanges and add caching. Study record types and TTL separately; combine DNS and HTTP delays after both individual flows are clear."
+    }
+  },
+  "net10": {
+    "first_pass": [
+      "CS5222-N071",
+      "CS5222-N072",
+      "CS5222-N076",
+      "CS5222-N079",
+      "CS5222-N081"
+    ],
+    "after_practice": [
+      "CS5222-N073",
+      "CS5222-N074",
+      "CS5222-N075",
+      "CS5222-N077",
+      "CS5222-N078",
+      "CS5222-N080",
+      "CS5222-N082",
+      "CS5222-N083",
+      "CS5222-N084",
+      "CS5222-N085",
+      "CS5222-N099"
+    ],
+    "note": {
+      "zh": "第一圈每题先写单位、从何时计时、以何事件算完成，再计算。电路环图单独练；N078 先看 NET02 的“三人状态→二项概率”补课，排队与 traceroute 题按相应微课再进入。",
+      "en": "For the first batch, state units, the start time and the completion event before calculating. Practice circuit-ring diagrams separately; read NET02's three-user-to-binomial unit before N078, and revisit the relevant lessons for queues and traceroute."
+    }
+  },
+  "net11": {
+    "first_pass": [
+      "CS5222-N093",
+      "CS5222-N094",
+      "CS5222-N086"
+    ],
+    "after_practice": [
+      "CS5222-N087",
+      "CS5222-N088"
+    ],
+    "note": {
+      "zh": "先用英文解释共享机制，再诊断“平均带宽够却卡顿”的反例，最后说明带宽时延积的单位与时延约定。现代 HTTP/TLS 名称边界作为后续纠错。",
+      "en": "Explain sharing in English, diagnose stuttering despite sufficient average bandwidth, then state the units and delay convention for bandwidth-delay product. Add modern HTTP/TLS terminology as later checks."
+    }
+  },
+  "net12": {
+    "first_pass": [
+      "CS5222-N137",
+      "CS5222-N138",
+      "CS5222-N139"
+    ],
+    "after_practice": [
+      "CS5222-N135",
+      "CS5222-N136",
+      "CS5222-N140",
+      "CS5222-N141",
+      "CS5222-N142",
+      "CS5222-N143",
+      "CS5222-N144",
+      "CS5222-N145",
+      "CS5222-N146",
+      "CS5222-N147",
+      "CS5222-N148"
+    ],
+    "note": {
+      "zh": "第一圈只做文件分发：三个瓶颈谁最慢，谁限制下界。其余按专题分次进入：DNS 区段、BitTorrent、DASH/CDN、TCP 消息边界；socket 编程卡等实际收发字节后再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First study file distribution and identify which bottleneck sets the lower bound. Enter DNS sections, BitTorrent, DASH/CDN and TCP framing in separate units; do socket implementation cards after sending and receiving actual bytes. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net13": {
+    "first_pass": [
+      "CS5222-N156",
+      "CS5222-N157",
+      "CS5222-N158",
+      "CS5222-N164",
+      "CS5222-N166"
+    ],
+    "after_practice": [
+      "CS5222-N149",
+      "CS5222-N150",
+      "CS5222-N151",
+      "CS5222-N152",
+      "CS5222-N153",
+      "CS5222-N154",
+      "CS5222-N155",
+      "CS5222-N159",
+      "CS5222-N160",
+      "CS5222-N161",
+      "CS5222-N162",
+      "CS5222-N163",
+      "CS5222-N165"
+    ],
+    "note": {
+      "zh": "先用一次损坏或丢包说明 ACK、序号、定时器各救哪种场，再用同一次丢包比较 GBN/SR。校验和计算、利用率与序号空间各留一轮。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Use corruption or loss to explain each job of ACKs, sequence numbers and timers, then compare GBN/SR on the same loss event. Study checksum arithmetic, utilization and sequence-space limits in later passes. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net14": {
+    "first_pass": [
+      "CS5222-N167",
+      "CS5222-N168",
+      "CS5222-N169",
+      "CS5222-N170",
+      "CS5222-N175"
+    ],
+    "after_practice": [
+      "CS5222-N171",
+      "CS5222-N172",
+      "CS5222-N173",
+      "CS5222-N174",
+      "CS5222-N176",
+      "CS5222-N177"
+    ],
+    "note": {
+      "zh": "先把每段覆盖的字节范围写出来，缺口在哪里，累计 ACK 就停在哪里。窗口限额结合补充例题；RTO、快速重传、握手与关闭随后分组进入。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Write each segment's byte range; a cumulative ACK stops at the first gap. Use the window-limit example, then study RTO, fast retransmit, connection setup and closing in separate groups. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net15": {
+    "first_pass": [
+      "CS5222-N178",
+      "CS5222-N179",
+      "CS5222-N180",
+      "CS5222-N182"
+    ],
+    "after_practice": [
+      "CS5222-N181",
+      "CS5222-N183",
+      "CS5222-N184"
+    ],
+    "note": {
+      "zh": "先画“增长—收到信号—改变窗口”的三段故事，始终标明 Tahoe/Reno 模型。Reno 快速恢复的逐个 ACK 状态、公平性与 ECN 等主线算顺再补。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Draw growth, feedback and window response while labeling the Tahoe/Reno model. Add per-ACK Reno recovery states, fairness and ECN after the main window calculation is clear. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net16": {
+    "first_pass": [
+      "CS5222-N193",
+      "CS5222-N194",
+      "CS5222-N195",
+      "CS5222-N196",
+      "CS5222-N187"
+    ],
+    "after_practice": [
+      "CS5222-N185",
+      "CS5222-N186",
+      "CS5222-N188",
+      "CS5222-N189",
+      "CS5222-N190",
+      "CS5222-N191",
+      "CS5222-N192",
+      "CS5222-N197",
+      "CS5222-N198",
+      "CS5222-N199",
+      "CS5222-N200",
+      "CS5222-N201",
+      "CS5222-N202",
+      "CS5222-N284",
+      "CS5222-N285"
+    ],
+    "note": {
+      "zh": "第一圈只做地址定位：写出前缀、地址块和最长匹配。IP 首部、分片、NAT、IPv6 与路由器内部结构是不同小任务，按对应例题分开学。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First locate addresses using prefixes, blocks and longest matching routes. Headers, fragmentation, NAT, IPv6 and router internals are separate tasks to study with their own examples. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net17": {
+    "first_pass": [
+      "CS5222-N203",
+      "CS5222-N204",
+      "CS5222-N205",
+      "CS5222-N206"
+    ],
+    "after_practice": [
+      "CS5222-N207",
+      "CS5222-N208",
+      "CS5222-N209",
+      "CS5222-N210",
+      "CS5222-N211",
+      "CS5222-N212",
+      "CS5222-N213",
+      "CS5222-N214",
+      "CS5222-N215",
+      "CS5222-N216"
+    ],
+    "note": {
+      "zh": "第一圈手工更新 Dijkstra 表，分清“前驱是谁”与“第一步走向谁”。距离向量看对应单元；AS、OSPF、BGP 与策略随后按层次补，不把全网当一张 Dijkstra 表。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First update a Dijkstra table and distinguish predecessor from first hop. Use the distance-vector unit, then add ASes, OSPF, BGP and policy; the whole Internet is not one Dijkstra table. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net18": {
+    "first_pass": [
+      "CS5222-N219",
+      "CS5222-N222",
+      "CS5222-N223",
+      "CS5222-N224",
+      "CS5222-N225"
+    ],
+    "after_practice": [
+      "CS5222-N217",
+      "CS5222-N218",
+      "CS5222-N220",
+      "CS5222-N221",
+      "CS5222-N226",
+      "CS5222-N227",
+      "CS5222-N228",
+      "CS5222-N229",
+      "CS5222-N230",
+      "CS5222-N282",
+      "CS5222-N283"
+    ],
+    "note": {
+      "zh": "第一圈只把 CRC 的补零、异或长除和余数检查做通。偶校验、ALOHA 各有独立练习；ARP/交换机学习等切到本地交付场景时再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First complete CRC zero-padding, XOR division and remainder checking. Parity and ALOHA have separate exercises; enter ARP and switch learning with the local-delivery scenario. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net19": {
+    "first_pass": [
+      "CS5222-N258",
+      "CS5222-N259"
+    ],
+    "after_practice": [
+      "CS5222-N231",
+      "CS5222-N232",
+      "CS5222-N233",
+      "CS5222-N234",
+      "CS5222-N235",
+      "CS5222-N236",
+      "CS5222-N237",
+      "CS5222-N238",
+      "CS5222-N239",
+      "CS5222-N240",
+      "CS5222-N241",
+      "CS5222-N242",
+      "CS5222-N243",
+      "CS5222-N244",
+      "CS5222-N245",
+      "CS5222-N246",
+      "CS5222-N247",
+      "CS5222-N248",
+      "CS5222-N249",
+      "CS5222-N250",
+      "CS5222-N251",
+      "CS5222-N252",
+      "CS5222-N253",
+      "CS5222-N254",
+      "CS5222-N255",
+      "CS5222-N256",
+      "CS5222-N257"
+    ],
+    "note": {
+      "zh": "先做 A 发给 G、G 再回复 A 的两张交换机卡，每次只更新实际见过的源地址。其余 27 张是分散在不同章节的往年题，按回链一次选一个主题，别当成本节一次作业。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Start with A sending to G and G replying, updating only source addresses actually observed. The other 27 cards are a cross-chapter historical bank: follow recovery links and take one topic per session. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  },
+  "net20": {
+    "first_pass": [
+      "CS5222-N270",
+      "CS5222-N271",
+      "CS5222-N273"
+    ],
+    "after_practice": [
+      "CS5222-N260",
+      "CS5222-N261",
+      "CS5222-N262",
+      "CS5222-N263",
+      "CS5222-N264",
+      "CS5222-N265",
+      "CS5222-N266",
+      "CS5222-N267",
+      "CS5222-N268",
+      "CS5222-N269",
+      "CS5222-N272",
+      "CS5222-N274",
+      "CS5222-N275",
+      "CS5222-N276",
+      "CS5222-N277",
+      "CS5222-N278",
+      "CS5222-N279",
+      "CS5222-N280",
+      "CS5222-N281"
+    ],
+    "note": {
+      "zh": "第一圈只串起 DHCP、DNS、ARP、TCP 和 HTTP，再核对每一跳的 IP/MAC。邮件、CRC、TLS、抓包及 socket 题按各自回链进入；长 GBN 窗口推理放第二遍。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "First connect DHCP, DNS, ARP, TCP and HTTP, checking IP/MAC addresses at each hop. Use recovery links for mail, CRC, TLS, trace and socket tasks; defer the longer GBN-window argument. This is historical preview, not confirmed current Canvas/QE scope."
+    }
+  }
+}

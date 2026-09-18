@@ -30,9 +30,9 @@ TRAP: 残差为零说明没有新方向，不能再除以它的长度。正交�
 
 @@ ml05
 START: “垃圾短信常含 free”不等于“含 free 的短信大多是垃圾”。像“猫常有四条腿”不能倒推“四条腿的动物大多是猫”：筛选的人群变了。 || “Spam often contains free” does not imply “most messages containing free are spam.” Reversing the condition changes the population being counted.
-STEP1: 从 1,000 条短信出发：垃圾 200 条，正常 800 条。先验就是看到关键词之前的这份比例。 || Start with 200 spam and 800 legitimate messages. These proportions are the prior.
-STEP2: free 留下垃圾中的 60%，即 120 条；同时留下正常中的 10%，即 80 条。观察词语像一道筛子。 || The word keeps 120 spam and 80 legitimate messages. Think of the observation as a filter.
-STEP3: 现在只在留下的 200 条中数：垃圾占 120/200=60%。贝叶斯公式就是把这次重新计数写成通用形式。 || Recount within the 200 retained messages: 120/200=60% are spam. Bayes' rule expresses this calculation generally.
+STEP1: 先看全部短信里垃圾与正常的比例。此时还没读到关键词，这是先验。 || Start with the spam and legitimate proportions before observing any keyword: these are the priors.
+STEP2: 再看 free 会留下每类的多大比例。正常短信也会说 free，例如免费披萨通知；筛子不只留下垃圾。 || Next ask what fraction of each class contains free. Legitimate messages can offer free pizza too; the filter does not retain only spam.
+STEP3: 最后只在含 free 的短信里重新计算垃圾占比。下面的完整例题会把“先分组→再筛选→重新数”算出来。 || Finally recount spam among messages containing free. The worked example below carries out the group, filter, and recount steps.
 TRAP: 分母必须包含所有能产生该证据的类别，不能只看目标类别的数量。 || The denominator includes every class that can produce the evidence, not only the class of interest.
 
 @@ ml06
@@ -43,7 +43,7 @@ STEP3: 数据始终没变，变化的是待选参数。换成高斯数据时，�
 TRAP: 这不表示“p=0.75 的概率是 0.1055”。似然评价参数怎样解释数据，不是直接给参数分配概率。 || A likelihood is not the probability that the parameter itself equals 0.75.
 
 @@ ml07
-START: 同班学生的身高和臂展可能一起增大。分别记录“身高有多分散”和“臂展有多分散”，还没记录两者怎样一起变化；这正是协方差补上的信息。 || Height and arm span may increase together. Their separate variances omit this joint pattern; covariance adds it.
+START: 两台咖啡机做出的饮料，甜度和温度都会波动。分别记下“甜度有多散”和“温度有多散”，还没说明它们是不是一起变高；协方差补的就是这条线索。稍后用一杯忘了贴来源标签的咖啡，练习给它选机器。 || Two coffee machines produce drinks with varying sweetness and temperature. Separate variances do not tell us whether the two rise together; covariance adds that clue. We will classify a cup whose machine label went missing.
 STEP1: 看一个点离均值多远之前，先问该方向平时有多分散。标准差为 2 的方向偏离 2，与标准差为 1 的方向偏离 1，都偏离一个标准差。 || A deviation of 2 along a standard-deviation-2 axis equals a deviation of 1 along a standard-deviation-1 axis in standardized units.
 STEP2: 对角协方差只保留各轴散布；非零的交叉协方差还能让二维密度椭圆倾斜。 || A diagonal covariance keeps axis-wise spread; cross-covariance can tilt density contours.
 STEP3: 每个类别可以有自己的椭圆，也可以被要求共用同一种形状。不同限制改变参数量和分类边界。 || Classes may have separate covariance shapes or share one. The restriction changes parameter count and decision boundaries.

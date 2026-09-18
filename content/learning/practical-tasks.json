@@ -14,12 +14,12 @@
       "en": "Implement and check a small function from a blank file, rather than only recognizing its answer."
     },
     "instructions": {
-      "zh": "在自己的 Python 环境新建文件。先不看讲解，写 count_factors(n)：输入整数 n≥2，输出不含 1 和 n 的正因数个数。先用普通 for 和 if，不必用一行表达式。\n\n手写 2、4、12 的预期结果，再运行函数比较。最后统计 2 到 100 的 99 个结果：一个图画 n 与计数，另一个图统计各计数出现的频数。",
-      "en": "Create a file in your Python environment. Without looking at the explanation, implement count_factors(n) for integer n≥2, excluding 1 and n. Start with an ordinary for loop and if statement.\n\nWrite expected results for 2, 4 and 12 before running the code. Then process the 99 integers from 2 through 100: plot n against its count, and separately count the frequency of each divisor count."
+      "zh": "先下载下面的 factor_starter.py，放进你的练习文件夹。打开该文件夹的终端，运行 `python3 factor_starter.py`。第一次应看到“Python 已启动”和“骨架运行正常”；这只是确认程序能启动，不表示因数题已做完。\n\n只改 count_factors 函数，把其中的 `raise NotImplementedError` 换成你自己的代码：输入整数 n≥2，输出除 1 和 n 自身外的正因数个数。把候选数当作排队进场的人：只有能把 n 分得整整齐齐的才放行，1 和 n 本人今天不算嘉宾。先用普通 for/if，不用追求“一行炫技”。下方 main 已替你安排打印，不必先读懂它。\n\n先手算 2、4、12，再运行核对。遇到 None，多半漏了 return；遇到缩进错误，检查 if/for 下方是否缩进一致。若终端找不到文件，先确认文件夹与文件名；若找不到 python3，就用学校已配置的 Python/Notebook 环境运行，不必换一套开发工具。\n\n再手算 7 和 100 作新检查。最后对2到100的99个整数作图：一幅画整数n和它的计数，一幅画各计数的频数。可使用课程里已有的 matplotlib；先把函数跑对，再画图。",
+      "en": "Download factor_starter.py below into your practice folder. Open a terminal in that folder and run `python3 factor_starter.py`. The first run should print “Python ready” and “Starter ready”; that checks startup, not the finished divisor algorithm.\n\nEdit only count_factors, replacing `raise NotImplementedError` with your own code: for integer n≥2, return the number of positive divisors excluding 1 and n itself. Think of candidate numbers queuing at a door: only exact divisors get in, and 1 and n are off today’s guest list. Start with an ordinary for/if; no one-line tricks are required. The supplied main handles printing, so you need not understand it first.\n\nHand-check 2, 4 and 12 before running. A None output usually means a missing return; for indentation errors, check the nesting beneath for/if. If the terminal cannot find the file, check the folder and name. If python3 is unavailable, use the course’s configured Python/Notebook environment instead of switching tools.\n\nHand-check 7 and 100 as new cases. Then plot the 99 results from 2 through 100: integer n versus its count, and the frequencies of the counts. Use the course’s existing matplotlib setup; get the function working before plotting."
     },
     "acceptance": {
-      "zh": "2→0、4→1、12→4；范围包含 100，总共 99 个输出；频数之和为 99。能解释 range 的右端为何写 n，以及“计数为 4”和“有 4 个整数”为什么不同。故意把范围改成 range(2,100)，能定位少了哪个样本。运行结果由你自己核对，这里不记录完成状态。",
-      "en": "Check 2→0, 4→1 and 12→4; include 100 and produce exactly 99 outputs; histogram frequencies must sum to 99. Explain why range ends at n and distinguish a divisor count of 4 from a frequency of 4. Deliberately use range(2,100) and identify the missing sample. Verify your own run; this task stores no completion state."
+      "zh": "2→0、4→1、12→4；范围包含 100，总共 99 个输出；频数之和为 99。能解释 range 的右端为何写 n，以及“计数为 4”和“有 4 个整数”为什么不同。故意把 main 中生成99个样本的外层 range(2,101) 改成 range(2,100)，能定位少了哪个样本；不要与函数内部检查因数的 range(2,n) 混淆。运行结果由你自己核对，这里不记录完成状态。",
+      "en": "Check 2→0, 4→1 and 12→4; include 100 and produce exactly 99 outputs; histogram frequencies must sum to 99. Explain why range ends at n and distinguish a divisor count of 4 from a frequency of 4. Deliberately change the outer range(2,101) in main to range(2,100) and identify the missing sample; distinguish this sample loop from the candidate-divisor range(2,n) inside your function. Verify your own run; this task stores no completion state."
     },
     "sources": [
       {
@@ -27,6 +27,15 @@
         "locator": "cells 14–24",
         "kind": "course",
         "note": "因数及绘图任务；独立运行与故障定位清单为教学补充。"
+      }
+    ],
+    "attachments": [
+      {
+        "href": "learning/practice/python/factor_starter.py",
+        "label": {
+          "zh": "下载空白练习骨架（Python 3）",
+          "en": "Download the starter (Python 3)"
+        }
       }
     ]
   },
@@ -98,20 +107,20 @@
       "net20"
     ],
     "title": {
-      "zh": "动手：识别一次自己的 DNS 查询与响应",
-      "en": "Inspect your own DNS query and response"
+      "zh": "动手：先认一对 DNS 报文，再观察自己的查询",
+      "en": "First read a DNS pair, then inspect your own lookup"
     },
     "goal": {
       "zh": "在真实记录中辨认请求、响应和缓存边界，而不是背某张截图。",
       "en": "Recognize a request, response and cache boundary in a real trace instead of memorizing a screenshot."
     },
     "instructions": {
-      "zh": "在自己的电脑上用 Wireshark 选择正在联网的接口开始短时抓包，然后在终端运行 nslookup example.com。停止抓包，用 dns 过滤；只查看这次练习相关的流量，不上传无关记录。\n\n找出查询名、查询类型、事务 ID、响应状态，以及实际返回的地址或名称记录；用事务 ID 和端点配对查询与响应。若没有看到记录，先检查接口和命令输出，并区分普通 DNS 与加密 DNS，不能直接认定“没有发生查询”。",
-      "en": "On your own computer, start a short Wireshark capture on the active network interface, run nslookup example.com in a terminal, then stop the capture and filter by dns. Inspect only this exercise traffic and do not upload unrelated records.\n\nLocate the query name, type, transaction ID, response status and returned address or name records. Pair messages by transaction ID and endpoints. If no record is visible, first check the interface and command output, and distinguish conventional from encrypted DNS; absence from this view does not prove no lookup occurred."
+      "zh": "先走一次“训练场”。下载下方 SYNTHETIC 示例包，在 Wireshark 用 File → Open 打开，不用开始抓包。它只有两条人工编造的报文，没有任何人的真实流量；域名、地址、时间都是教学道具。没有 Wireshark 时也可先读旁边的字段导览，但那不算完成真实抓包。\n\n在顶部显示过滤框输入 `dns` 并按回车。点第 1 行，在下方 Packet Details 展开 Domain Name System → Queries：Name 是 `coffee.example`，Type 是 A（询问 IPv4 地址）；Transaction ID 是 `0x5222`。再点第 2 行，展开 Flags 与 Answers：Response=1 表示回复，RCODE=0 表示本次查询无 DNS 错误，Answers 里的 Address 为 `203.0.113.80`。这是“地址写在回信里”；IP 层发送者 `192.0.2.53` 是给你回信的 DNS 服务器，别把邮差当成你要找的店。\n\n用相同事务 ID、相同问题（名称/类型/类）、反向 IP 地址和 UDP 端口配对；ID 不是全世界唯一的快递单号。找到这几个字段就可以了，第一遍不用啃完整棵协议树。\n\n再做自己的记录：从 Wireshark 欢迎页选择你正在上网的接口（常见为 Wi-Fi；旁边通常有流量曲线），开始短时抓包；在终端运行 `nslookup -type=A example.com`，随后停止，用 `dns` 过滤。命令输出中的 Server 是 DNS 服务器，Name/Address 下的结果才是被查询名称的记录；与抓包逐项核对。只查看本次练习相关流量，不上传无关记录。\n\n没看到记录时，先核对接口和命令是否成功；本地解析器也可能走回环接口，某些系统会用加密 DNS。普通 `dns` 视图看不到，不等于从未查询。重复查询时只观察，不先假定一定经过哪个缓存。",
+      "en": "Start in a training sandbox. Download the SYNTHETIC example below and use File → Open in Wireshark; do not start capturing. It contains only two constructed packets, no real person’s traffic. The name, addresses and timestamps are teaching props. Without Wireshark you can first read the field guide, but that does not complete the real-capture task.\n\nEnter `dns` in the top display-filter bar and press Enter. Select row 1, then expand Domain Name System → Queries in Packet Details: Name is `coffee.example`, Type is A (asking for an IPv4 address), and Transaction ID is `0x5222`. Select row 2 and expand Flags and Answers: Response=1 means reply, RCODE=0 means no DNS error for this query, and Address in Answers is `203.0.113.80`. The IP-layer sender `192.0.2.53` is the replying DNS server. Do not mistake the mail carrier for the café whose address is inside the letter.\n\nMatch the ID, question (name/type/class), reversed IP addresses and UDP ports. An ID is not a globally unique tracking number. Find these fields first; you need not decipher the whole protocol tree.\n\nNow collect your own trace. On Wireshark’s welcome page choose your active network interface, often Wi-Fi with a traffic graph, and start a short capture. Run `nslookup -type=A example.com` in a terminal, then stop capturing and filter by `dns`. In the command output, Server identifies the DNS server; the result under Name/Address belongs to the queried name. Compare with the captured fields. Inspect only exercise traffic and do not upload unrelated records.\n\nIf nothing appears, check the interface and whether the command succeeded. A local resolver may use loopback, and some systems use encrypted DNS. Absence from the ordinary `dns` view does not prove no lookup occurred. Observe repeated queries without assuming which cache answered."
     },
     "acceptance": {
-      "zh": "至少说明一对查询/响应的对应依据，区分查询名和返回的 A 记录地址；记录实际值，不背固定 IP 或耗时。重复查询时若更快，只把它当作线索，不能单凭一次测量证明命中了哪一级缓存。没有数据时记录排查过程，不虚构抓包结果。",
-      "en": "Explain how at least one query/response pair matches and distinguish the queried name from an address in an A record. Record actual values instead of fixed IPs or timings. A faster repeated query is a clue, not proof of which cache responded. If capture data is unavailable, document diagnosis instead of inventing a trace."
+      "zh": "训练场：能指出第 1 行问 coffee.example 的 A 记录，第 2 行回答 203.0.113.80；两条的 ID 都是 0x5222，端点从 192.0.2.10:53000 → 192.0.2.53:53 反向返回。字段导览列出每项位置。示例里的 10 ms 和 TTL=60 s 都是设定值，不能拿来证明真实网络速度或缓存命中。\n\n自己的记录：保存或记下一对查询/响应的名称、类型、ID、端点、响应状态和实际答案，并说明配对依据。区分被查询名称、DNS 服务器地址和返回的 A 记录地址；不要照抄示例地址。更快的重复查询只是缓存线索，单次测量无法证明命中了哪一级。没抓到数据就记录排查过程，不把训练场报文冒充自己的实验。",
+      "en": "Training file: identify row 1 as an A query for coffee.example and row 2 as the answer 203.0.113.80. Both IDs are 0x5222; endpoints reverse from 192.0.2.10:53000 → 192.0.2.53:53. The guide locates each field. Its 10 ms gap and TTL=60 s are constructed values, not evidence of real speed or a cache hit.\n\nYour own trace: record the name, type, ID, endpoints, response status and actual answer for one matching pair, explaining the match. Distinguish the queried name, DNS server address and returned A-record address; do not copy the fixture’s addresses. A faster repeated query is a cache clue, not proof of which cache answered. If capture fails, document diagnosis rather than presenting training packets as your own experiment."
     },
     "sources": [
       {
@@ -125,6 +134,40 @@
         "locator": "slides 66–67",
         "kind": "historical",
         "note": "查询与响应报文格式、事务 ID；历史补充，不自动视为当前考核范围。"
+      },
+      {
+        "name": "RFC 1035 — DNS message format",
+        "locator": "§§4.1.1–4.1.3, 4.2.1; https://www.rfc-editor.org/rfc/rfc1035.html",
+        "kind": "reference",
+        "note": "DNS 头、问题、资源记录与 UDP 53 的格式依据。 Header, question, resource-record and UDP transport conventions."
+      },
+      {
+        "name": "Wireshark User’s Guide and DNS display fields",
+        "locator": "§§3.19, 5.2; https://www.wireshark.org/docs/dfref/d/dns.html",
+        "kind": "reference",
+        "note": "官方 Packet Details / Open Capture Files 操作与 dns.id、dns.qry.name、dns.flags.response、dns.flags.rcode 字段。 Official opening, details-pane and field references."
+      },
+      {
+        "name": "RFC 2606 and RFC 5737 — documentation names and addresses",
+        "locator": "RFC 2606 §2; RFC 5737 §3",
+        "kind": "reference",
+        "note": ".example、192.0.2.0/24、203.0.113.0/24 仅作人工文档示例；未发送报文。 Synthetic reserved examples; no packets sent."
+      }
+    ],
+    "attachments": [
+      {
+        "href": "learning/practice/dns/synthetic-dns-pair.pcap",
+        "label": {
+          "zh": "下载 SYNTHETIC DNS 示例包（仅两条人工报文）",
+          "en": "Download SYNTHETIC DNS pair (two constructed packets)"
+        }
+      },
+      {
+        "href": "learning/practice/dns/field-guide.html",
+        "label": {
+          "zh": "打开双语字段导览（无 Wireshark 也可读）",
+          "en": "Open bilingual field guide (readable without Wireshark)"
+        }
       }
     ]
   },

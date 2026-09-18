@@ -368,8 +368,8 @@
       "status": "canvas",
       "goal": "能把一个新样本代入两类高斯模型，依次算距离、体积项和先验分数，解释预测为何随先验或方差变化。",
       "worked": {
-        "zh": "教学模型中，A、B 的先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。新杯子的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。",
-        "en": "In a teaching model, A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463."
+        "zh": "两类花 A、B 的无量纲教学模型（非真实 iris 拟合）中，先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。一朵待分类花的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。",
+        "en": "In a dimensionless two-flower-class teaching model (not fitted to the real iris data), A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463."
       },
       "independent": {
         "zh": "独立做：x=(2,0)，均值仍为 A：(0,0)、B：(4,0)，先验恢复各 1/2。A 的协方差仍为 diag(4,1)，B 改为 diag(16,1)。求 q、行列式和分数，再选类别。B 的校正距离更小，是否足以保证选 B？可用 log16≈2.7726。",

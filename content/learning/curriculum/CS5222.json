@@ -1,0 +1,1042 @@
+{
+  "course": "CS5222",
+  "title": {
+    "zh": "CS5222 · 计算机网络与互联网",
+    "en": "CS5222 · Computer Networks & Internets"
+  },
+  "introduction": {
+    "zh": "浏览网页、发邮件、上传文件，看起来是不同的事情，却都要让设备把信息送到别处。设备如何约定消息的含义？很多人同时使用时怎样共享线路？为什么有时快、有时要等？\n\n这门课先沿一份数据认识网络里的角色、路径和时间，再看应用怎样用协议完成具体任务。按老师的 Chapter 往下走，每章的 Tutorial 放在相应知识旁；跨章研究报告单独保留。",
+    "en": "Browsing, email and file uploads look different, but each requires devices to move information elsewhere. How do they agree on message meanings, share connections and determine how long delivery takes?\n\nThe course first follows data through network roles, paths and timing, then examines how applications use protocols to complete tasks. Follow the lecturer’s Chapters with their tutorials alongside the relevant knowledge; the cross-chapter research report remains separate."
+  },
+  "units": [
+    {
+      "id": "chapter-1",
+      "title": {
+        "zh": "Chapter 1 · Introduction：先看清网络，再讨论快慢",
+        "en": "Chapter 1 · Introduction: understand the network before measuring it"
+      },
+      "intro": {
+        "zh": "你在手机上点开网页，手机就需要向远处的设备发送一条取网页的信息。信息不是瞬间出现的：它要经过连接设备的线路和中间转发设备，还可能与别人的数据争用资源。先把这趟旅程看清楚，后面的速率与时延计算才有具体对象。\n\n老师先介绍互联网与通信规则，再从端系统和接入方式走到网络核心。我们跟着这条路线，理解交换与共享、计算传输时间、解释排队和吞吐量，最后用分层把不同职责组织起来。Tutorial 1 练交换与资源，Tutorial 2 练时间与观测；安全和历史保留在章末回顾。",
+        "en": "When you open a webpage on a phone, the phone must send a request to a remote device. That information travels over connections and through forwarding devices, sometimes competing with other data. Understanding the journey gives rate and delay calculations concrete objects.\n\nThe lecturer introduces the Internet and communication rules, then moves from end systems and access networks to the core. We follow switching and sharing, transmission time, queues and throughput, and finally layers that organize responsibilities. Tutorial 1 practices switching and resources, Tutorial 2 timing and observation, with security and history in the chapter review."
+      },
+      "outcomes": [
+        {
+          "zh": "能用主机、链路、路由器和协议解释一次数据传输，而不只背设备名。",
+          "en": "Explain data delivery using hosts, links, routers and protocols, rather than only naming devices."
+        },
+        {
+          "zh": "能比较电路预留与分组共享，识别存储转发和统计复用的假设。",
+          "en": "Compare circuit reservation with packet sharing and state the assumptions of store-and-forward and statistical multiplexing."
+        },
+        {
+          "zh": "能分项计算时延、识别瓶颈并解读基础traceroute结果。",
+          "en": "Calculate delay components, identify bottlenecks and interpret basic traceroute results."
+        },
+        {
+          "zh": "能解释分层、封装，以及本章安全与历史概览中的关键区别。",
+          "en": "Explain layering, encapsulation and the chapter’s key security and historical distinctions."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "net01",
+          "lead": {
+            "zh": "从一次网页访问认清端系统、协议、接入网和链路。",
+            "en": "Identify end systems, protocols, access networks and links through a web visit."
+          }
+        },
+        {
+          "id": "net02",
+          "lead": {
+            "zh": "看文件怎样被分组、链路怎样预留或共享；再做容量与活跃人数的小例子。",
+            "en": "See how data are packetized and capacity is reserved or shared, then work through small capacity and activity examples."
+          }
+        },
+        {
+          "id": "net03",
+          "lead": {
+            "zh": "跟踪首比特与末比特，区分发送、传播和多包流水线。",
+            "en": "Track first and last bits to distinguish transmission, propagation and pipelining."
+          }
+        },
+        {
+          "id": "net04",
+          "lead": {
+            "zh": "把容量、吞吐量、排队和测量分清，解释平均够用为何仍会等待。",
+            "en": "Separate capacity, throughput, queueing and measurement, including why adequate average load can still queue."
+          }
+        },
+        {
+          "id": "net05",
+          "lead": {
+            "zh": "理解层的职责和封装；按需回顾安全威胁与历史设计原则。",
+            "en": "Understand layer responsibilities and encapsulation; revisit security and historical design principles as needed."
+          }
+        }
+      ],
+      "activities": [
+        "cs5222-tutorial-1",
+        "cs5222-tutorial-2",
+        "cs5222-chapter-1-check"
+      ],
+      "review": {
+        "zh": "先做与刚学概念相配的Tutorial题，再回到该微课的少量首轮卡主动回忆。原题和图在活动内引用现有卡，不另造一份卡组；复习排程由Markji负责。",
+        "en": "Attempt tutorial questions tied to the concept just learned, then actively recall the lesson’s small first-pass card set. Activities reuse existing question cards and figures; Markji handles review scheduling."
+      },
+      "sources": [
+        {
+          "name": "cs5222_overview_semA2026.pdf",
+          "locator": "page 11",
+          "kind": "course",
+          "note": "课程概览的Chapter 1目标。"
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slides 3, 10, 20, 43, 56, 66, 72; content slides 4–77",
+          "kind": "course",
+          "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+        },
+        {
+          "name": "tutorial-1_semA2026.pdf",
+          "locator": "pages 1–3",
+          "kind": "course",
+          "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+        },
+        {
+          "name": "tutorial-2_semA2026.pdf",
+          "locator": "pages 1–3",
+          "kind": "course",
+          "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+        }
+      ],
+      "missing": [
+        {
+          "zh": "目录对应已下载材料，不等于已确认所有内容都已在课堂讲完，也不等于正式QE范围。",
+          "en": "The directory maps downloaded materials, not confirmed classroom completion or the official QE scope."
+        },
+        {
+          "zh": "概览列有三个普通作业和一次Wireshark作业，但当前任务文件未下载；它们的章级对应尚不能确认，不用历史题单补成当前任务。",
+          "en": "The overview lists three regular assignments and one Wireshark assignment, but their current task documents are missing. Chapter correspondence is unconfirmed; historical sheets do not stand in for current tasks."
+        }
+      ]
+    },
+    {
+      "id": "chapter-2",
+      "title": {
+        "zh": "Chapter 2 · Application Layer：进程怎样使用网络",
+        "en": "Chapter 2 · Application Layer: how processes use the network"
+      },
+      "intro": {
+        "zh": "上一章看清了信息经过哪些设备、为什么需要等待。现在往上走一步：浏览器、邮件程序和其他应用究竟要向对方说什么，才能把事情办成？仅仅连通两台机器，还不足以让它们理解彼此。\n\n先看应用之间怎样组织、程序怎样通过 socket 使用传输服务，再看具体的消息约定：HTTP 怎样取网页，邮件怎样发送和读取，DNS 怎样从名字找到记录。这样，每个协议都回到它要完成的任务，而不是一串缩写。",
+        "en": "The previous chapter explained the devices data crosses and why it may wait. Now ask what browsers, email programs and other applications must say to one another to complete a task. Connecting machines alone does not make them understand each other.\n\nStart with application organization and the socket interface to transport services, then examine concrete message rules: HTTP retrieves web resources, mail protocols send and access messages, and DNS looks up records by name. Each protocol answers a task rather than remaining just an acronym."
+      },
+      "outcomes": [
+        {
+          "zh": "能根据应用需求解释socket、进程寻址以及课堂TCP/UDP服务差别。",
+          "en": "Explain sockets, process addressing and the lecture’s TCP/UDP service comparison from application requirements."
+        },
+        {
+          "zh": "能跟踪HTTP对象获取、邮件发送/读取、DNS查找与缓存的不同流程。",
+          "en": "Trace distinct workflows for HTTP objects, email sending/retrieval and DNS resolution/caching."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "net06",
+          "lead": {
+            "zh": "先有通信中的应用进程，再理解socket接口、地址与所需服务。",
+            "en": "Begin with communicating application processes, then sockets, addressing and required services."
+          }
+        },
+        {
+          "id": "net07",
+          "lead": {
+            "zh": "沿浏览器与服务器的请求顺序，理解连接、对象、RTT、cookie和缓存。",
+            "en": "Follow browser–server requests to understand connections, objects, RTTs, cookies and caches."
+          }
+        },
+        {
+          "id": "net08",
+          "lead": {
+            "zh": "把发信、服务器间投递和用户读信分成不同阶段。",
+            "en": "Separate sending, server-to-server delivery and mailbox retrieval."
+          }
+        },
+        {
+          "id": "net09",
+          "lead": {
+            "zh": "从主机名到地址，理解DNS层级、查询与缓存。",
+            "en": "Follow a hostname to its address through DNS hierarchy, queries and caches."
+          }
+        }
+      ],
+      "activities": [],
+      "review": {
+        "zh": "使用对应微课已有题答与首轮卡巩固；目前Tutorial 1–2都属于Chapter 1，不把它们挪来充当应用层练习。",
+        "en": "Use existing lesson exercises and first-pass cards. Tutorials 1–2 support Chapter 1 and are not relabelled as application-layer practice."
+      },
+      "sources": [
+        {
+          "name": "cs5222_overview_semA2026.pdf",
+          "locator": "page 12",
+          "kind": "course",
+          "note": "Chapter 2总体范围。"
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part1.pptx",
+          "locator": "slides 2–22",
+          "kind": "course",
+          "note": "应用原则及HTTP入门，文件内页码。"
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part2.pptx",
+          "locator": "slides 1–43",
+          "kind": "course",
+          "note": "HTTP继续、邮件与DNS；页码在本文件重新从1开始。"
+        }
+      ],
+      "missing": [
+        {
+          "zh": "尚未下载可确认归属Chapter 2的当前Tutorial/Assignment题单。",
+          "en": "No current tutorial or assignment sheet with confirmed Chapter 2 correspondence has been downloaded."
+        },
+        {
+          "zh": "当前P2P仅有架构简介；FTP、P2P细节、socket编程、视频/CDN在大纲或目标中出现，但后续完整正文未到齐。历史预习仍单列。",
+          "en": "Current P2P content is an architectural introduction. FTP, detailed P2P, socket programming and video/CDN appear in outlines or goals, but their complete subsequent material is not available. Historical previews remain separate."
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "cs5222-tutorial-1",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 1 · 交换、资源与流水线",
+        "en": "Tutorial 1 · Switching, resources and pipelines"
+      },
+      "intro": {
+        "zh": "这份 Tutorial 配套 Chapter 1。按 Q1–Q4 保留老师的题目顺序，每题先确认对象和完成事件，再看必要补课。题干/图和双语答案引用已有卡，以下方法是帮助你独立做题的教学整理；不把自拟的 800 包例子当作本表原题。",
+        "en": "This tutorial supports Chapter 1. Keep the original Q1–Q4 order: identify objects and completion events before using the linked explanation. Existing cards supply the questions, necessary figures and bilingual answers; the approaches below are teaching guidance, not additional instructor questions. The separate 800-packet example is not an original question on this sheet."
+      },
+      "units": [
+        "chapter-1"
+      ],
+      "lesson_ids": [
+        "net02",
+        "net03",
+        "net10"
+      ],
+      "items": [
+        {
+          "id": "q1-store-forward",
+          "title": {
+            "zh": "Q1 · 一个包与三个包，计时终点不同",
+            "en": "Q1 · One packet and three packets finish at different events"
+          },
+          "task": {
+            "zh": "一个发送端经一个存储转发交换设备到接收端，共两条链路。(a) 单个 L 比特分组，速率分别 R₁、R₂ 比特/秒，求整包到齐时间；(b) 三个 L 比特分组连续发送，两链路同速 R，求三个包全部到齐时间。都忽略处理、传播和排队。",
+            "en": "A sender reaches a receiver through one store-and-forward switch: two links. (a) One L-bit packet uses link rates R₁ and R₂ bit/s; find complete-packet arrival time. (b) Three L-bit packets are sent back-to-back with both links at rate R; find when all three arrive. Ignore processing, propagation and queueing."
+          },
+          "approach": {
+            "zh": "先画两条链路的发送时间条。每个包收齐后才能进入下一条链路；不同包可以在不同链路上重叠。先做(a)，再在同一时间轴上加入后两包。",
+            "en": "Draw a transmission timeline for each link. A packet must arrive in full before entering the next link, while different packets may occupy different links simultaneously. Solve (a), then add the remaining packets to the same timeline."
+          },
+          "check": {
+            "zh": "(a) L/R₁+L/R₂。(b) 令 t=L/R，三个包到齐时刻依次是 2t、3t、4t，总计4L/R。检查自己的图是否显示流水线重叠。",
+            "en": "(a) L/R₁+L/R₂. (b) With t=L/R, packets finish at 2t, 3t and 4t; total time is 4L/R. Your timeline should show pipelining."
+          },
+          "pitfall": {
+            "zh": "不要把三个包各自的两跳时间简单相加成6L/R；也不能用瓶颈吞吐量代替首包时延。",
+            "en": "Do not sum three separate two-hop delays into 6L/R, or replace first-packet latency with bottleneck throughput."
+          },
+          "lesson_ids": [
+            "net02",
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N071",
+            "CS5222-N072"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-1_semA2026.pdf",
+              "locator": "page 1, Q1(a–b)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+            },
+            {
+              "name": "tutorial-1-solution_semA2026.pptx",
+              "locator": "slides 3–4",
+              "kind": "course",
+              "note": "当前 Tutorial 1 教师解答。"
+            }
+          ]
+        },
+        {
+          "id": "q2-circuit-square",
+          "title": {
+            "zh": "Q2 · 方环网络，逐条边数资源",
+            "en": "Q2 · Count reserved resources on each edge"
+          },
+          "task": {
+            "zh": "按下方题图，方环 A–B–C–D–A 的每条边有4条电路。(a) 端点不限时最多几条同时连接？(b) 全部连接均为A到对角C时最多几条？(c) 能否同时安排4条A–C和4条B–D？每个连接占用所走路径各边的一条电路。",
+            "en": "In the figure below, each edge of the square A–B–C–D–A has four circuits. (a) What is the maximum with unrestricted endpoints? (b) What if every connection is A–C? (c) Can four A–C and four B–D connections coexist? Each connection consumes one circuit on every edge of its route."
+          },
+          "approach": {
+            "zh": "先给出一套可行走法，再找不能超过的资源上界。对(c)把每对连接拆到两侧，做一张AB、BC、CD、DA的占用表。",
+            "en": "Give a feasible routing, then a resource upper bound. For (c), split each pair’s traffic over the two sides and tabulate usage on AB, BC, CD and DA."
+          },
+          "check": {
+            "zh": "(a)16条单边连接。(b)8条：两条边不重合路径各4条，也达到A出口总容量8。(c)可以：每对各分2条走两侧，四条边各占4。必要方环图引用三张原卡的正面教学重绘。",
+            "en": "(a) Sixteen single-edge connections. (b) Eight: four on each edge-disjoint route, matching A’s total exit capacity. (c) Yes: split each pair two-and-two, giving four uses on every edge. The required square is the existing front-side teaching redraw."
+          },
+          "pitfall": {
+            "zh": "不能只数起点端口；也不能为某对端点只选一条路径后就断言不可行。连接数与使用的“边电路数”不是同一计数。",
+            "en": "Do not count only the starting node or declare failure after trying one route. A connection and an occupied edge circuit are different counting units."
+          },
+          "lesson_ids": [
+            "net02",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N073",
+            "CS5222-N074",
+            "CS5222-N075"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-1_semA2026.pdf",
+              "locator": "pages 1–2, Q2(a–c)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+            },
+            {
+              "name": "tutorial-1-solution_semA2026.pptx",
+              "locator": "slides 6–7",
+              "kind": "course",
+              "note": "当前 Tutorial 1 教师解答。"
+            }
+          ]
+        },
+        {
+          "id": "q3-fdm-time",
+          "title": {
+            "zh": "Q3 · 先分到自己的速率，再计算时间",
+            "en": "Q3 · Find the reserved rate before calculating time"
+          },
+          "task": {
+            "zh": "发送160000比特，链路总速率1.536 Mbps，以FDM均分为12条电路，你使用其中一条。建连需600 ms；按题目简化忽略传播等其他时延。求从开始建连到文件发完的总时间。",
+            "en": "Send 160000 bits over one of twelve equal FDM circuits on a 1.536 Mbps link. Setup takes 600 ms; use the question’s simplified model without propagation or other delays. Find total time from starting setup to finishing transmission."
+          },
+          "approach": {
+            "zh": "总速率除以12得到连接速率；比特数除以该速率得到数据发送时间，再加一次建连时间。",
+            "en": "Divide the total rate by twelve, divide file length by that reserved rate, then add setup time once."
+          },
+          "check": {
+            "zh": "每条128000 bit/s；发送1.25 s；加0.6 s，共1.85 s。三个量的单位分别写清。",
+            "en": "Each circuit gets 128000 bit/s; transmission takes 1.25 s; adding 0.6 s gives 1.85 s. Keep rate, data length and time units explicit."
+          },
+          "pitfall": {
+            "zh": "不能把全链路速率给一个连接，也不能把600 ms写成600 s。",
+            "en": "Do not allocate the full link rate to one circuit or treat 600 ms as 600 s."
+          },
+          "lesson_ids": [
+            "net02",
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N076"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-1_semA2026.pdf",
+              "locator": "pages 2–3, Q3",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+            },
+            {
+              "name": "tutorial-1-solution_semA2026.pptx",
+              "locator": "slide 9",
+              "kind": "course",
+              "note": "当前 Tutorial 1 教师解答。"
+            }
+          ]
+        },
+        {
+          "id": "q4-active-users",
+          "title": {
+            "zh": "Q4 · 固定预留与恰好n人活跃",
+            "en": "Q4 · Reservations and exactly n active users"
+          },
+          "task": {
+            "zh": "3 Mbps链路上，每名用户发送时需150 kbps，仅10%的时间发送。(a) 电路交换可支持多少用户？(b) 分组共享时单个用户正在发送的概率？(c) 有120名用户，在独立、相同活跃概率的模型下，恰好n人发送的概率是多少？",
+            "en": "A 3 Mbps link serves users requiring 150 kbps while transmitting, active 10% of the time. (a) How many circuit-switched users fit? (b) What is one user’s transmission probability? (c) With 120 users under the independent, equal-activity model, what is the probability of exactly n transmitting?"
+          },
+          "approach": {
+            "zh": "(a)用峰值需求做固定预留；(b)把百分比变成概率；(c)先确定恰好哪些n人活跃、其他人不活跃，再数选出这些人的方式。NET02三人例子是先修，不是另一道老师原题。",
+            "en": "Use the active rate for fixed reservation, convert the percentage to a probability, then count which n users are active while all others are idle. NET02’s three-user example is a prerequisite teaching aid, not another instructor question."
+          },
+          "check": {
+            "zh": "(a)3000/150=20；(b)p=0.1；(c)P(K=n)=C(120,n)×0.1ⁿ×0.9^(120−n)，n=0,…,120。老师解答第10张明确使用独立二项模型。",
+            "en": "(a) 3000/150=20; (b) p=0.1; (c) P(K=n)=C(120,n)×0.1ⁿ×0.9^(120−n), for n=0,…,120. Instructor solution slide 10 explicitly uses an independent binomial model."
+          },
+          "pitfall": {
+            "zh": "平均每人15 kbps不能用来算固定电路上限。“恰好n人”是一项；“超过容量”才是尾和，不能把课堂35人题直接照搬。",
+            "en": "Average demand of 15 kbps does not determine the reservation limit. Exactly n is one term; exceeding capacity needs a tail sum. Do not copy the lecture’s 35-user tail event unchanged."
+          },
+          "lesson_ids": [
+            "net02",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N077",
+            "CS5222-N078"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-1_semA2026.pdf",
+              "locator": "page 3, Q4(a–c)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+            },
+            {
+              "name": "tutorial-1-solution_semA2026.pptx",
+              "locator": "slide 10",
+              "kind": "course",
+              "note": "当前 Tutorial 1 教师解答。"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "tutorial-1_semA2026.pdf",
+          "locator": "pages 1–3",
+          "kind": "course",
+          "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+        },
+        {
+          "name": "tutorial-1-solution_semA2026.pptx",
+          "locator": "slides 3–10",
+          "kind": "course",
+          "note": "当前 Tutorial 1 教师解答。"
+        }
+      ]
+    },
+    {
+      "id": "cs5222-tutorial-2",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 2 · 组包、时延、排队与测量",
+        "en": "Tutorial 2 · Packetization, delay, queues and measurement"
+      },
+      "intro": {
+        "zh": "虽然题目出现语音通话与traceroute，这份Tutorial考查的是Chapter 1的网络性能。按Q1–Q5练习“从哪个事件开始、到哪个事件结束”。当前只有题目文件；网页解答是已有卡片的教学推导，不称教师标准答案。",
+        "en": "Although the questions mention voice calls and traceroute, they assess Chapter 1 performance concepts. Work through Q1–Q5 by identifying the starting and finishing events. Only the question sheet is currently available; web explanations are teaching derivations from existing cards, not a claimed instructor solution."
+      },
+      "units": [
+        "chapter-1"
+      ],
+      "lesson_ids": [
+        "net03",
+        "net04",
+        "net10"
+      ],
+      "items": [
+        {
+          "id": "q1-packetization",
+          "title": {
+            "zh": "Q1 · 第一比特为什么还得等其他比特？",
+            "en": "Q1 · Why does the first bit wait for the others?"
+          },
+          "task": {
+            "zh": "语音以128 kbps连续编码，每64字节组成一包，链路4 Mbps，传播8 ms；接收端收齐整包才播放。按原卡明确的计时约定，求从开始组包到最早编码比特可播放的时间。",
+            "en": "Voice is encoded continuously at 128 kbps into 64-byte packets. The link is 4 Mbps with 8 ms propagation; playback waits for the full packet. Using the existing card’s explicit timing convention, find time from packet assembly starting until the earliest encoded bit can be played."
+          },
+          "approach": {
+            "zh": "把时间线分成等整包数据产生、整包发送、末比特传播三段。64字节先转成512比特。",
+            "en": "Separate collecting a full packet, serializing it and propagating its final bit. Convert 64 bytes to 512 bits first."
+          },
+          "check": {
+            "zh": "4 ms组包＋0.128 ms发送＋8 ms传播＝12.128 ms。原题“一个比特”的位置可能让人混淆，因此这里明确是最早比特，不声称包中每一位都等相同时间。",
+            "en": "4 ms packetization + 0.128 ms transmission + 8 ms propagation = 12.128 ms. The original wording can obscure a bit’s position, so this explicitly concerns the earliest bit; not every bit waits equally long."
+          },
+          "pitfall": {
+            "zh": "128 kbps是编码数据产生速率，4 Mbps是链路发送速率；两者不能互换。",
+            "en": "128 kbps generates encoded data; 4 Mbps transmits packets. Do not swap their roles."
+          },
+          "lesson_ids": [
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N079"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-2_semA2026.pdf",
+              "locator": "page 1, Q1",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            }
+          ]
+        },
+        {
+          "id": "q2-three-links",
+          "title": {
+            "zh": "Q2 · 三条链路，两个路由器",
+            "en": "Q2 · Three links and two routers"
+          },
+          "task": {
+            "zh": "(a)L比特分组经过三条存储转发链路，第i条速率Rᵢ、距离dᵢ、传播速度sᵢ；两路由器各处理d_proc，无排队，写出整包时延。(b)代入1500字节、各链路2 Mbps、传播速度2.5×10⁸ m/s、距离5000/4000/1000 km、每路由器3 ms。",
+            "en": "(a) An L-bit packet crosses three store-and-forward links with rate Rᵢ, distance dᵢ and propagation speed sᵢ; two routers each process for d_proc, with no queueing. Find complete-packet delay. (b) Use 1500 bytes, 2 Mbps on every link, 2.5×10⁸ m/s propagation, distances 5000/4000/1000 km and 3 ms at each router."
+          },
+          "approach": {
+            "zh": "逐链路列发送与传播项，再按实际中间设备数加处理项；最后统一到毫秒。",
+            "en": "List transmission and propagation for each link, add processing for the actual number of intermediate routers, then convert to milliseconds."
+          },
+          "check": {
+            "zh": "(a)Σᵢ(L/Rᵢ+dᵢ/sᵢ)+2d_proc；(b)发送18 ms、传播40 ms、处理6 ms，总64 ms。",
+            "en": "(a) Σᵢ(L/Rᵢ+dᵢ/sᵢ)+2d_proc. (b) Transmission 18 ms, propagation 40 ms and processing 6 ms give 64 ms."
+          },
+          "pitfall": {
+            "zh": "三条链路不是三个路由器；byte、km必须转换。不要把三个速率相加后只除一次。",
+            "en": "Three links do not imply three routers. Convert bytes and kilometres, and do not add link rates before dividing once."
+          },
+          "lesson_ids": [
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N080",
+            "CS5222-N081"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-2_semA2026.pdf",
+              "locator": "page 1, Q2(a–b)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            }
+          ]
+        },
+        {
+          "id": "q3-cut-through",
+          "title": {
+            "zh": "Q3 · 规则变了，不能继续用存储转发公式",
+            "en": "Q3 · A changed forwarding rule changes the timeline"
+          },
+          "task": {
+            "zh": "沿用Q2(b)的包长、三条链路及总距离，但各链路同速2 Mbps，处理时间为0；路由器收到每个比特就立即转发，不等整包。求整包到达时间。",
+            "en": "Keep Q2(b)’s packet length, three links and total distance, but use equal 2 Mbps rates and zero processing. Routers immediately forward each arriving bit without waiting for the packet. Find complete arrival time."
+          },
+          "approach": {
+            "zh": "追踪第一比特和末比特。各链路同速使发送过程重叠，仍要累加沿途传播时间。",
+            "en": "Track the first and final bits. Equal link rates let serialization overlap, while propagation along the path still adds."
+          },
+          "check": {
+            "zh": "只计一次L/R=6 ms，加40 ms传播，得到46 ms；这依赖题设的理想立即转发。",
+            "en": "Count one L/R=6 ms plus 40 ms propagation: 46 ms. This relies on the stated ideal immediate-forwarding model."
+          },
+          "pitfall": {
+            "zh": "不能保留原来的三个发送项或处理项；也不能把理想规则当作所有真实交换机的实现。",
+            "en": "Do not retain three serialization terms or processing delays, or assume every real switch implements this ideal rule."
+          },
+          "lesson_ids": [
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N082"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-2_semA2026.pdf",
+              "locator": "page 2, Q3",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            }
+          ]
+        },
+        {
+          "id": "q4-fifo-queue",
+          "title": {
+            "zh": "Q4 · 排队只数你前面的工作",
+            "en": "Q4 · Queueing counts work ahead of you"
+          },
+          "task": {
+            "zh": "FIFO输出链路2 Mbps，包均为1500字节：一个包已发一半，另外4包在新包前等待。求新包到开始发送的等待。再推广为包长L比特、当前已发x比特、前方另有n包、速率R，速率及优先级不变。",
+            "en": "A FIFO 2 Mbps output link serves 1500-byte packets: one packet is half sent, and four more wait ahead of a new arrival. Find waiting time until the new packet starts. Generalize to L-bit packets, x bits already sent, n other queued packets and rate R, with unchanged service rate and priorities."
+          },
+          "approach": {
+            "zh": "数当前包的剩余量，再加前面完整排队包；把总比特数除以速率。新包自身的发送还没开始，不在等待量里。",
+            "en": "Count the current packet’s remaining bits and all complete packets ahead, then divide by rate. The new packet’s own serialization is outside its waiting time."
+          },
+          "check": {
+            "zh": "(0.5+4)×6=27 ms；一般式为[(L−x)+nL]/R。若问自身发完才额外加L/R。",
+            "en": "(0.5+4)×6=27 ms; the general expression is [(L−x)+nL]/R. Add L/R only if completion of the new packet is requested."
+          },
+          "pitfall": {
+            "zh": "不要把“前面4包”误读成包含正在发送的包，也不要把自身L比特加进排队时延。",
+            "en": "The four waiting packets exclude the one in service. Do not include the arriving packet’s own L bits in queueing delay."
+          },
+          "lesson_ids": [
+            "net04",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N083",
+            "CS5222-N084"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-2_semA2026.pdf",
+              "locator": "page 2, Q4",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            }
+          ]
+        },
+        {
+          "id": "q5-traceroute",
+          "title": {
+            "zh": "Q5 · traceroute测到了什么？",
+            "en": "Q5 · What does traceroute actually measure?"
+          },
+          "task": {
+            "zh": "对你获准探测的目标运行一次系统的traceroute（Windows为tracert），保存实际输出。解释每列、星号、后面一跳RTT反而较小的可能原因。下方N099的数据只是示例，不能当你的运行结果。",
+            "en": "Run your system’s traceroute (tracert on Windows) against a destination you are permitted to probe and save the actual output. Explain columns, asterisks and possible causes of a later hop having a smaller RTT. N099 below is illustrative data, not your run."
+          },
+          "approach": {
+            "zh": "按跳号、回应地址、各次探测往返时间读取；把每个探测当独立测量，必要时重复，区分路径转发与设备回应行为。",
+            "en": "Read hop number, responding address and each probe’s round-trip time. Treat probes as separate measurements; repeat as needed and distinguish traffic forwarding from router response behaviour."
+          },
+          "check": {
+            "zh": "能指出星号只说明未及时收到该次回复；RTT包含往返，且不是同一个包的逐跳累计时间。保存自己的输出并写明目标与测量时刻；仅阅读示例不算完成实践。",
+            "en": "An asterisk means no timely reply to that probe; RTT is round-trip and not cumulative timing of one packet at successive hops. Save your own output with target and time; reading the example does not complete the practical task."
+          },
+          "pitfall": {
+            "zh": "不能仅凭一个星号断定普通数据丢包，也不能把相邻RTT相减直接当作单链路传播时延。",
+            "en": "One asterisk does not prove ordinary packet loss, and subtracting adjacent RTTs does not directly measure one link’s propagation delay."
+          },
+          "lesson_ids": [
+            "net04",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N085",
+            "CS5222-N099"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-2_semA2026.pdf",
+              "locator": "page 3, Q5(a–c)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            },
+            {
+              "name": "cs5222_cha1_2026_student.pptx",
+              "locator": "slides 50–51",
+              "kind": "course",
+              "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "tutorial-2_semA2026.pdf",
+          "locator": "pages 1–3",
+          "kind": "course",
+          "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slides 44–55",
+          "kind": "course",
+          "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+        }
+      ]
+    },
+    {
+      "id": "cs5222-chapter-1-check",
+      "kind": "class_check",
+      "title": {
+        "zh": "Chapter 1 · 课堂Q&A与章末概览",
+        "en": "Chapter 1 · Class Q&A and closing overview"
+      },
+      "intro": {
+        "zh": "先完成概念微课与相关Tutorial，再回看老师Q&A。这里按问题实际依赖的概念提供回链，不因卡片旧归属就把全部检查挤进NET02。安全与历史是本章原课件的概览内容，单列为章末回顾；不代表正式QE范围。",
+        "en": "After the relevant lessons and tutorials, revisit the instructor Q&A. Links follow the concepts each question needs rather than grouping every check under NET02. Security and history are introductory topics in the chapter’s original slides, retained for closing review; this is not a confirmed QE syllabus."
+      },
+      "units": [
+        "chapter-1"
+      ],
+      "lesson_ids": [
+        "net01",
+        "net02",
+        "net03",
+        "net04",
+        "net05"
+      ],
+      "items": [
+        {
+          "id": "qa-edge",
+          "title": {
+            "zh": "Q&A slide 2 · 端系统与路由器",
+            "en": "Q&A slide 2 · End systems and routers"
+          },
+          "task": {
+            "zh": "在电脑、手机、服务器、路由器中，按课堂端系统/核心网络分类，哪个不是端系统边缘设备？",
+            "en": "Among PCs, phones, servers and routers, which is not an end-system edge device under the lecture’s classification?"
+          },
+          "approach": {
+            "zh": "先看是否运行端点应用，还是承担链路间转发，不以设备摆在哪里判断。",
+            "en": "Distinguish endpoint applications from forwarding between links, rather than using physical location."
+          },
+          "check": {
+            "zh": "路由器；服务器仍是端系统。说明家庭路由器位于接入边界并不改变本题的分类约定。",
+            "en": "Router; a server is still an end system. A home router’s boundary location does not change this question’s convention."
+          },
+          "pitfall": {
+            "zh": "“边缘”在业界有其他用法，本题按课堂端系统定义。",
+            "en": "Industry uses of edge vary; use the question’s end-system convention."
+          },
+          "lesson_ids": [
+            "net01"
+          ],
+          "card_ids": [
+            "CS5222-N095"
+          ],
+          "sources": [
+            {
+              "name": "Q&A_cha1_2026_student.pptx",
+              "locator": "slide 2",
+              "kind": "course",
+              "note": "当前 Chapter 1 课堂检查题。"
+            }
+          ]
+        },
+        {
+          "id": "qa-pipeline",
+          "title": {
+            "zh": "Q&A slide 3 · 三包两链路",
+            "en": "Q&A slide 3 · Three packets on two links"
+          },
+          "task": {
+            "zh": "三个L比特分组经过两条R比特/秒存储转发链路，忽略处理、传播、排队，求全部到齐时间。该问题也出现在Tutorial 1 Q1(b)。",
+            "en": "Three L-bit packets cross two store-and-forward links of rate R, with no processing, propagation or queueing. Find completion time. The same problem appears in Tutorial 1 Q1(b)."
+          },
+          "approach": {
+            "zh": "复用两行时间轴，核对首包与后续包的完成时刻。",
+            "en": "Reuse the two-row timeline and check first and subsequent completion times."
+          },
+          "check": {
+            "zh": "4L/R；用到达时刻2L/R、3L/R、4L/R解释，不必重复创建一张新卡。",
+            "en": "4L/R, explained by arrivals at 2L/R, 3L/R and 4L/R. The existing card serves both sources."
+          },
+          "pitfall": {
+            "zh": "两份资料的选项字母可能不同，记推理而非字母。",
+            "en": "Option letters may differ between documents; retain the reasoning."
+          },
+          "lesson_ids": [
+            "net03"
+          ],
+          "card_ids": [
+            "CS5222-N072"
+          ],
+          "sources": [
+            {
+              "name": "Q&A_cha1_2026_student.pptx",
+              "locator": "slide 3",
+              "kind": "course",
+              "note": "当前 Chapter 1 课堂检查题。"
+            },
+            {
+              "name": "tutorial-1_semA2026.pdf",
+              "locator": "page 1, Q1(b)",
+              "kind": "course",
+              "note": "当前 2026–27 Tutorial 1 原题；网页方法提示为教学整理。"
+            }
+          ]
+        },
+        {
+          "id": "qa-delay-throughput",
+          "title": {
+            "zh": "Q&A slides 4–5 · 哪个量变，哪个瓶颈留下？",
+            "en": "Q&A slides 4–5 · Which delay changes and which bottleneck remains?"
+          },
+          "task": {
+            "zh": "一题问基本模型中哪种时延受拥塞影响；另一题将54 Mbps Wi-Fi换成1 Gbps，但前面的调制解调器仍为100 Mbps。分别判断时延类型与理想端到端吞吐量。",
+            "en": "One question asks which delay varies with congestion in the basic model. Another upgrades 54 Mbps Wi-Fi to 1 Gbps while the modem remains at 100 Mbps. Identify the delay component and the ideal end-to-end throughput."
+          },
+          "approach": {
+            "zh": "分别固定题设的包长、速率、距离，检查排队等待；再对串行链路找最小速率。",
+            "en": "Hold stated packet length, rate and distance fixed when analysing waiting, then identify the minimum serial-link rate."
+          },
+          "check": {
+            "zh": "对应排队时延；升级后理想吞吐量100 Mbps。能解释增加某段速率为何可能只把瓶颈移到另一段。",
+            "en": "Queueing delay; ideal throughput after upgrade is 100 Mbps. Explain how a faster segment can move the bottleneck elsewhere."
+          },
+          "pitfall": {
+            "zh": "不要把现实处理负荷影响混入题设固定处理模型；速率不能相加。",
+            "en": "Do not silently replace fixed processing assumptions with a different real-system model, and do not add serial-link rates."
+          },
+          "lesson_ids": [
+            "net03",
+            "net04"
+          ],
+          "card_ids": [
+            "CS5222-N096",
+            "CS5222-N097"
+          ],
+          "sources": [
+            {
+              "name": "Q&A_cha1_2026_student.pptx",
+              "locator": "slides 4–5",
+              "kind": "course",
+              "note": "当前 Chapter 1 课堂检查题。"
+            }
+          ]
+        },
+        {
+          "id": "qa-transport",
+          "title": {
+            "zh": "Q&A slide 6 · 传输层向谁提供服务？",
+            "en": "Q&A slide 6 · Which layer receives transport services?"
+          },
+          "task": {
+            "zh": "检查“总可靠”“从下数第4层”“向网络层提供服务”“加首部后上交应用层”四个陈述，说明对错原因。",
+            "en": "Assess always reliable, fourth from the bottom, serving the network layer, and adding a header before handing data upward to applications; explain each judgement."
+          },
+          "approach": {
+            "zh": "从五层顺序与发送方向开始；区分向上提供服务和向下使用服务。",
+            "en": "Start with the five-layer order and sending direction; distinguish providing services upward from using services below."
+          },
+          "check": {
+            "zh": "只有按自下而上编号的第4层正确。UDP反驳总可靠；发送时传输层接收应用数据，加首部后向下交网络层。",
+            "en": "Only fourth from the bottom is correct. UDP disproves always reliable; on sending, transport receives application data, adds its header and passes downward to the network layer."
+          },
+          "pitfall": {
+            "zh": "不要把发送和接收方向混在一段推理里。",
+            "en": "Do not mix sending and receiving directions in the same argument."
+          },
+          "lesson_ids": [
+            "net05"
+          ],
+          "card_ids": [
+            "CS5222-N098"
+          ],
+          "sources": [
+            {
+              "name": "Q&A_cha1_2026_student.pptx",
+              "locator": "slide 6",
+              "kind": "course",
+              "note": "当前 Chapter 1 课堂检查题。"
+            }
+          ]
+        },
+        {
+          "id": "security-overview",
+          "title": {
+            "zh": "章末概览 · 安全威胁改变了什么？",
+            "en": "Closing overview · What does each security threat affect?"
+          },
+          "task": {
+            "zh": "按原课件解释恶意软件/病毒/蠕虫/僵尸网络、DoS/DDoS、嗅探与源IP伪造。每类说清入口或行为及所影响的资源/信任。只做概念辨析。",
+            "en": "Explain the slide categories: malware/viruses/worms/botnets, DoS/DDoS, sniffing and source-IP spoofing. Identify an entry mechanism or action and its affected resource or trust assumption. This is conceptual classification."
+          },
+          "approach": {
+            "zh": "用“怎样进入或传播—影响什么—为什么不能只凭一个字段或增加带宽解决”组织解释。",
+            "en": "Organize explanations by entry or propagation, affected resources, and why a single field or more bandwidth does not resolve every issue."
+          },
+          "check": {
+            "zh": "能区分观察流量与伪造来源、带宽耗尽与计算耗尽；不把源IP当身份证明。",
+            "en": "Distinguish observing traffic from claiming a false source, and bandwidth exhaustion from computation exhaustion; a source IP alone is not proof of identity."
+          },
+          "pitfall": {
+            "zh": "这些是Chapter 1概览，不扩展成未下载的Chapter 8课程或实验。",
+            "en": "These are Chapter 1 overviews, not a claim to cover or perform Chapter 8 material."
+          },
+          "lesson_ids": [
+            "net05"
+          ],
+          "card_ids": [
+            "CS5222-N047",
+            "CS5222-N048",
+            "CS5222-N049"
+          ],
+          "sources": [
+            {
+              "name": "cs5222_cha1_2026_student.pptx",
+              "locator": "slides 67–71",
+              "kind": "course",
+              "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+            }
+          ]
+        },
+        {
+          "id": "history-principles",
+          "title": {
+            "zh": "章末概览 · 历史怎样解释今天的设计？",
+            "en": "Closing overview · How does history explain the architecture?"
+          },
+          "task": {
+            "zh": "把分组交换、ARPANET、异构网络互联、TCP/IP、Web的发展连成概念线，并解释尽力而为、自治、分散控制。",
+            "en": "Connect packet switching, ARPANET, heterogeneous internetworking, TCP/IP and the Web as architectural developments; explain best effort, autonomy and decentralization."
+          },
+          "approach": {
+            "zh": "每个阶段说新增的能力或解决的问题，不以背全部年份和旧设备数量为目标。",
+            "en": "Explain the capability or problem addressed at each stage rather than memorizing every date or old device count."
+          },
+          "check": {
+            "zh": "能说明上层可靠传输不自动把底层尽力而为服务变成固定时延保证；旧年份统计保持历史标签。",
+            "en": "Explain why reliable delivery at a higher layer does not turn best effort into guaranteed delay, and keep old statistics labelled as historical."
+          },
+          "pitfall": {
+            "zh": "不要把课件2016等年份的规模统计说成当前互联网数据。",
+            "en": "Do not present counts labelled with years such as 2016 as current statistics."
+          },
+          "lesson_ids": [
+            "net05"
+          ],
+          "card_ids": [
+            "CS5222-N050",
+            "CS5222-N051"
+          ],
+          "sources": [
+            {
+              "name": "cs5222_cha1_2026_student.pptx",
+              "locator": "slides 73–77",
+              "kind": "course",
+              "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "Q&A_cha1_2026_student.pptx",
+          "locator": "slides 2–6",
+          "kind": "course",
+          "note": "当前 Chapter 1 课堂检查题。"
+        },
+        {
+          "name": "cs5222_cha1_2026_student.pptx",
+          "locator": "slides 67–77",
+          "kind": "course",
+          "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+        }
+      ]
+    },
+    {
+      "id": "cs5222-research-report",
+      "kind": "report",
+      "title": {
+        "zh": "课程级任务 · Research Report",
+        "en": "Course-level task · Research Report"
+      },
+      "intro": {
+        "zh": "这是跨章研究任务，选题关联教材Chapters 1–7，不包括Chapter 8安全主题；不预先归到某一个Chapter。现有NET11提供解释、证据和英文表述的方法。以下是依当前任务文件整理的准备路径，实际提交仍由你完成。",
+        "en": "This is a cross-chapter research task tied to textbook Chapters 1–7, excluding Chapter 8 security topics. It is not assigned to one chapter in advance. NET11 supports explanation, evidence and English expression. The steps below organize the current task document; you still perform and submit the work."
+      },
+      "units": [],
+      "lesson_ids": [
+        "net11"
+      ],
+      "items": [
+        {
+          "id": "choose-and-explain",
+          "title": {
+            "zh": "从实际遇到的技术，提出能讲明白的问题",
+            "en": "Turn an encountered technology into an explainable question"
+          },
+          "task": {
+            "zh": "选一种日常接触的新网络技术，说明在哪里遇到它、与教材Ch1–7的哪些机制相关，并收集可核对的一手材料。用自己的话解释工作原理、动机、挑战、创新与局限。",
+            "en": "Choose a new networking technology encountered in daily life, identify where you encountered it and which Chapter 1–7 mechanisms it uses, and collect verifiable primary material. Explain its operation, motivation, challenges, innovation and limitations in your own words."
+          },
+          "approach": {
+            "zh": "先确定具体问题，再画一张服务于解释的图；区分材料中的事实、自己的推断与尚待验证的问题。不要为了显得高级而只列术语。",
+            "en": "Specify the question first, then make a figure that aids explanation. Separate sourced facts, your inferences and unresolved questions; do not substitute technical vocabulary for an explanation."
+          },
+          "check": {
+            "zh": "读者能知道系统做什么、为什么这样做、证据支持到哪里；每个引用能定位到真实原文，图示准确并标来源。",
+            "en": "A reader can state what the system does, why and how far the evidence supports the claims. Every reference resolves to a real original source, and figures are accurate and credited."
+          },
+          "pitfall": {
+            "zh": "不要把教学模型的示例数字写成自己的测量，或把AI输出当作未经核验的一手证据。",
+            "en": "Do not present teaching numbers as your measurements or unverified AI output as primary evidence."
+          },
+          "lesson_ids": [
+            "net11"
+          ],
+          "card_ids": [],
+          "sources": [
+            {
+              "name": "CS5222 Research Report 2026.pdf",
+              "locator": "page 1, Goal and Part A",
+              "kind": "course",
+              "note": "当前课程级研究报告要求；不是某一章的单独作业。"
+            },
+            {
+              "name": "CS5222 Research Report 2026.pdf",
+              "locator": "page 2, citation requirements",
+              "kind": "course",
+              "note": "当前课程级研究报告要求；不是某一章的单独作业。"
+            }
+          ]
+        },
+        {
+          "id": "write-and-reflect",
+          "title": {
+            "zh": "交付报告，也交代自己怎样核验",
+            "en": "Deliver the report and document your verification"
+          },
+          "task": {
+            "zh": "用英文把技术问题、工作原理、证据与局限写成连贯报告，再写真实的学习反思：学到了什么、哪一步最难、GenAI怎样帮助或妨碍、怎样核验、下次怎样改进。版式、篇幅与提交手续统一在课程信息栏查阅。",
+            "en": "Write a coherent English report connecting the technical problem, mechanism, evidence and limitations. Then reflect on what you learned, the hardest step, how GenAI helped or hindered, how you verified the content and what you would change. Consult the course notices for formatting, length and submission requirements."
+          },
+          "approach": {
+            "zh": "先围绕技术问题写正文，再逐项核对任务要求。使用过GenAI时依文件要求承认和引用；核验其参考文献及图像技术内容，并诚实写反思。",
+            "en": "Write the technical argument first, then check the task requirements. Acknowledge and cite GenAI use as required; verify references and figure content, and write an honest reflection."
+          },
+          "check": {
+            "zh": "检查每个关键技术结论是否能追溯到实际读过的来源，图是否准确支持论述，事实与推断是否区分；反思是否真实回答学到什么、难点、GenAI作用、核验方式及下一次改进。",
+            "en": "Check that each key technical claim traces to a source you actually read, figures support the explanation accurately, and facts are distinguished from inferences. Verify that the reflection honestly addresses learning, difficulties, GenAI use, verification and future improvements."
+          },
+          "pitfall": {
+            "zh": "不要用流畅措辞代替机制解释，不要引用没核验的文献、把自动生成的图当作技术事实，或把未执行的实验写成自己的结果。",
+            "en": "Do not substitute fluent prose for a mechanism, cite unchecked references, treat generated diagrams as technical facts, or report unperformed experiments as your own results."
+          },
+          "lesson_ids": [
+            "net11"
+          ],
+          "card_ids": [],
+          "sources": [
+            {
+              "name": "CS5222 Research Report 2026.pdf",
+              "locator": "pages 1–3, format, reflection and rubric",
+              "kind": "course",
+              "note": "当前课程级研究报告要求；不是某一章的单独作业。"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "CS5222 Research Report 2026.pdf",
+          "locator": "pages 1–3",
+          "kind": "course",
+          "note": "当前课程级研究报告要求；不是某一章的单独作业。"
+        }
+      ]
+    }
+  ],
+  "course_activities": [
+    "cs5222-research-report"
+  ],
+  "extension_lessons": []
+}

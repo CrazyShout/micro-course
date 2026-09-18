@@ -1,0 +1,950 @@
+{
+  "course": "CS5489",
+  "title": {
+    "zh": "CS5489｜跟着 Lecture 学懂，再动手与复习",
+    "en": "CS5489 | Follow the lectures, practice, and recall"
+  },
+  "introduction": {
+    "zh": "一封新邮件该进收件箱还是垃圾箱？一朵没见过的花属于哪个品种？这些判断很难靠人逐条写死规则；机器学习尝试从已有例子中找规律，再对新数据作判断。\n\n这门课先准备处理数据的工具，再学习不同的分类方法，最后通过实验比较它们的选择与局限。下面按老师的 Lecture 组织：每讲有知识微课、配套原任务和回顾，学到哪里就可以复习到哪里。",
+    "en": "Should a new email go to the inbox or spam folder? Which species is an unfamiliar flower? Rather than hand-writing a rule for every case, machine learning looks for patterns in examples and uses them to judge new data.\n\nThe course first prepares tools for handling data, then develops classification methods and compares their choices and limitations through experiments. Follow the lecturer’s units below, each with concept lessons, original activities and a review."
+  },
+  "units": [
+    {
+      "id": "lecture-1",
+      "title": {
+        "zh": "Lecture 1｜先让程序、数组与概率说得通",
+        "en": "Lecture 1 | Programs, arrays and probability"
+      },
+      "intro": {
+        "zh": "在让电脑从数据里学规律之前，我们得先能把一条指令说清楚、把一组数据读进来，也能检查计算有没有按预期发生。这一讲就从这里开始：用 Python 表达步骤，用 NumPy 整理成行和列，再把数据画出来。\n\n概率是之后描述不确定性的语言：同样的测量不一定对应同一种花，我们需要表达“更可能”而不是一口咬定。Tutorial 1 把这些准备连起来，从因子计数、读数据画图一直做到一个小矩阵算法。",
+        "en": "Before a computer can learn patterns, we must express a procedure, load data and check that the computation did what we intended. This class starts with Python steps, organizes data into rows and columns with NumPy, and plots it.\n\nProbability then gives us a language for uncertainty: a measurement need not determine a species with certainty. Tutorial 1 links these preparations through divisor counting, data loading and plotting, and a small matrix algorithm."
+      },
+      "outcomes": [
+        {
+          "zh": "能跟踪 Notebook 状态、数组形状和一段简单循环。",
+          "en": "Trace notebook state, array shapes and a simple loop."
+        },
+        {
+          "zh": "能区分图的坐标含义，并用概率说明条件改变时分母为什么变。",
+          "en": "Explain plot axes and how conditioning changes the probability denominator."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "ml01",
+          "lead": {
+            "zh": "先把学习任务说清：输入是什么，要预测什么，如何检验。",
+            "en": "State the inputs, prediction target and evaluation."
+          }
+        },
+        {
+          "id": "ml02",
+          "lead": {
+            "zh": "把步骤写成可从头运行的 Python，不靠隐藏状态。",
+            "en": "Write Python that runs from a clean state."
+          }
+        },
+        {
+          "id": "ml03",
+          "lead": {
+            "zh": "用数组表示样本，先看行列与形状再算。",
+            "en": "Represent samples as arrays and inspect shapes before computing."
+          }
+        },
+        {
+          "id": "ml05",
+          "lead": {
+            "zh": "用具体人数理解条件概率与 Bayes，为下一讲做准备。",
+            "en": "Use concrete counts to prepare for conditional probability and Bayes."
+          }
+        }
+      ],
+      "activities": [
+        "cs5489-tutorial-1"
+      ],
+      "review": {
+        "zh": "回到老师安排的基础训练：能自己运行、检查、解释一段程序，再说清数组与概率符号的含义。Tutorial 中的投影需要时进入 ML04，不必把每个补课当额外必背章节。",
+        "en": "Return to the foundations: run, check and explain code, then interpret arrays and probability notation. Use ML04 for the tutorial’s projection work rather than treating every bridge as another chapter to memorize."
+      },
+      "sources": [
+        {
+          "name": "Lecture1a.ipynb",
+          "locator": "cells 14, 95, 124, 154",
+          "kind": "course",
+          "note": "原 Python 分段纲要 / Original Python outlines."
+        },
+        {
+          "name": "Lecture1b.ipynb",
+          "locator": "cells 2, 121, 127–137",
+          "kind": "course",
+          "note": "原 NumPy、绘图、概率衔接 / Original NumPy, plotting and probability sequence."
+        },
+        {
+          "name": "CS5489 Tutorial1.ipynb",
+          "locator": "cells 2–46",
+          "kind": "course",
+          "note": "本讲对应实际练习 / Associated practical tasks."
+        }
+      ],
+      "missing": []
+    },
+    {
+      "id": "lecture-2",
+      "title": {
+        "zh": "Lecture 2｜从花朵与文本，学会用概率分类",
+        "en": "Lecture 2 | Classify flowers and text with probability"
+      },
+      "intro": {
+        "zh": "上一讲已经准备好保存数据、画图和描述概率的工具。现在老师给出两种鸢尾花的测量记录，也给出正常邮件和垃圾邮件的例子：已有样本知道类别，新来的花或邮件却还没有标签。我们要解决的是，怎样根据已有记录判断新的样本。\n\n先看每类样本多常见、各类会出现怎样的测量；再从数据估计这些规律，反过来判断新观测更支持哪一类。Lecture 2a 建立这条训练与决策路线；2b 继续问，两项测量能否各自提供证据、它们一起变化时怎么办，以及字符串怎样变成可计算的证据。\n\n随后在 Tutorial 2 亲手给四类新闻分类，比较表示和模型、读错误，再实现 Poisson NB。Assignment 1 把这些方法用于短信三分类，也允许后续接入 Lecture 3 的分类器。",
+        "en": "The previous class supplied tools for storing data, plotting it and describing probability. The lecturer now gives labeled measurements from two iris species and examples of normal and spam email. Existing examples have known categories; a new flower or message does not. Our task is to use the records to classify a new observation.\n\nFirst describe how common each category is and what measurements it produces. Estimate those patterns from data, then ask which category a new observation supports. Lecture 2a builds this training-and-decision route. Lecture 2b asks how two measurements combine, what changes when they vary together, and how text becomes computable evidence.\n\nTutorial 2 applies the route to four news categories, representation and model comparisons, error inspection and Poisson NB. Assignment 1 transfers the methods to three-way SMS classification and can later use Lecture 3 classifiers."
+      },
+      "outcomes": [
+        {
+          "zh": "能区分先验、类条件分布、参数估计和预测各做什么。",
+          "en": "Explain priors, class-conditional models, estimation and prediction."
+        },
+        {
+          "zh": "能根据连续测量、出现标记或计数选择合适的模型假设。",
+          "en": "Match model assumptions to continuous features, presence indicators or counts."
+        },
+        {
+          "zh": "能将课堂骨架用于新数据，并用留出预测和错误说明表现。",
+          "en": "Apply the lecture skeleton to new data and inspect held-out predictions/errors."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "ml06",
+          "lead": {
+            "zh": "已有带标签记录，怎样估出分类需要的概率与参数？",
+            "en": "Estimate the probabilities and parameters from labeled records."
+          }
+        },
+        {
+          "id": "ml07",
+          "lead": {
+            "zh": "只量花的两处，怎样从各自证据走到共同变化？",
+            "en": "Combine two flower measurements and account for joint variation."
+          }
+        },
+        {
+          "id": "ml08",
+          "lead": {
+            "zh": "换成邮件字符串后，先决定模型究竟看到什么。",
+            "en": "For email strings, choose what the model actually observes."
+          }
+        }
+      ],
+      "activities": [
+        "cs5489-tutorial-2",
+        "cs5489-assignment-1"
+      ],
+      "review": {
+        "zh": "回看 Lecture2a 单元 48 与 Lecture2b 单元 98：训练时估计类别先验及类条件模型；预测时比较后验。模型是否合适要结合数据与未见样本表现，不是把公式背熟就算完成实验。",
+        "en": "Return to Lecture2a cell 48 and Lecture2b cell 98: estimate priors/class-conditionals during training, then compare posteriors for prediction. Suitability depends on data and held-out behavior, not formula recall alone."
+      },
+      "sources": [
+        {
+          "name": "Lecture2a.ipynb",
+          "locator": "cells 2, 4–9, 11–26, 32–48",
+          "kind": "course",
+          "note": "原场景、估计与 Bayes 决策路线 / Original examples, estimation and decision sequence."
+        },
+        {
+          "name": "Lecture2b.ipynb",
+          "locator": "cells 2–3, 14–54, 55–98",
+          "kind": "course",
+          "note": "Iris 两种模型再到文本 NB / Two iris models followed by text NB."
+        },
+        {
+          "name": "CS5489 Tutorial2v2.ipynb",
+          "locator": "cells 2–35",
+          "kind": "course",
+          "note": "新闻实现与比较 / News implementation and comparison."
+        }
+      ],
+      "missing": []
+    },
+    {
+      "id": "lecture-3",
+      "title": {
+        "zh": "Lecture 3｜直接学分界，再检验是否泛化",
+        "en": "Lecture 3 | Learn a boundary and test generalization"
+      },
+      "intro": {
+        "zh": "上一讲先描述每类数据怎样出现；这一讲开始问能否直接学习分类分界。材料从 logistic regression 的概率与损失，走到 SVM 的几何间隔和核，再回到表示、正则化、验证与不平衡数据。",
+        "en": "The previous lecture models how each class generates data; this one asks how to learn the decision function directly. It moves from logistic probabilities/loss to SVM margins/kernels, then returns to representation, regularization, validation and imbalance."
+      },
+      "outcomes": [
+        {
+          "zh": "能连接线性分数、概率或间隔、训练目标与预测。",
+          "en": "Connect linear scores, probabilities/margins, training objectives and predictions."
+        },
+        {
+          "zh": "能说明模型复杂度、特征和验证选择怎样影响未见数据表现。",
+          "en": "Explain how complexity, features and validation affect unseen-data behavior."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "ml10",
+          "lead": {
+            "zh": "从线性分数走到 logistic 概率、损失与更新。",
+            "en": "Connect linear scores to logistic probability, loss and updates."
+          }
+        },
+        {
+          "id": "ml11",
+          "lead": {
+            "zh": "怎样选参数，并把二分类推广到多类？",
+            "en": "Select settings and extend classification to multiple classes."
+          }
+        },
+        {
+          "id": "ml12",
+          "lead": {
+            "zh": "SVM 为什么关心最靠近分界的样本？",
+            "en": "Why does SVM focus on points nearest the boundary?"
+          }
+        },
+        {
+          "id": "ml13",
+          "lead": {
+            "zh": "把间隔限制变成对偶，理解哪些点支持分界。",
+            "en": "Use the dual to understand constraints and support vectors."
+          }
+        },
+        {
+          "id": "ml14",
+          "lead": {
+            "zh": "不显式造高维特征，怎样用核改变比较方式？",
+            "en": "Use kernels to change comparisons without explicit high-dimensional features."
+          }
+        },
+        {
+          "id": "ml15",
+          "lead": {
+            "zh": "把表示、尺度、不平衡与评价放回真实分类任务。",
+            "en": "Return representation, scale, imbalance and evaluation to the task."
+          }
+        }
+      ],
+      "activities": [
+        "cs5489-assignment-1"
+      ],
+      "review": {
+        "zh": "回到 Lecture3c 的模型比较：方法在目标、假设、损失和复杂度上各有取舍。用相同验证协议比较，而不是寻找永远最好的分类器；Assignment 1 可成为这条判断链的实践场景。",
+        "en": "Return to the Lecture3c comparison: objectives, assumptions, loss and complexity involve trade-offs. Compare under one validation protocol rather than seeking a universally best classifier; Assignment 1 provides a practical setting."
+      },
+      "sources": [
+        {
+          "name": "Lecture3a.ipynb",
+          "locator": "cells 2, 4–8, 24–98",
+          "kind": "course",
+          "note": "从生成式到 logistic 与模型选择 / Generative-to-logistic transition and selection."
+        },
+        {
+          "name": "Lecture3b.ipynb",
+          "locator": "cells 2, 4–124",
+          "kind": "course",
+          "note": "间隔、对偶、核与参数选择 / Margins, duality, kernels and selection."
+        },
+        {
+          "name": "Lecture3c.ipynb",
+          "locator": "cells 7–53",
+          "kind": "course",
+          "note": "特征、不平衡与综合比较 / Features, imbalance and synthesis."
+        }
+      ],
+      "missing": [
+        {
+          "zh": "当前下载目录未见独立 Tutorial 3；这里不虚构原题。可先做 Lecture3 Notebook 的课堂示例，并在 Assignment 1 中应用相关方法。",
+          "en": "No separate Tutorial 3 is present in the current downloads. Use the Lecture3 notebook examples and Assignment 1 without inventing missing tutorial questions."
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "cs5489-tutorial-1",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 1｜把基础写成真的能运行的程序",
+        "en": "Tutorial 1 | Turn the foundations into working code"
+      },
+      "intro": {
+        "zh": "按原 Notebook 的活动顺序练：先理解单元状态，再数因数并画图，加载数组，最后实现 Gram–Schmidt。每段先列出输入和应看到的结果；参考卡用于核对思路，不替代自己运行。",
+        "en": "Follow the notebook: understand cell state, count factors and plot them, load an array, then implement Gram–Schmidt. State the inputs and expected checks before coding; reference cards help check reasoning, not replace execution."
+      },
+      "units": [
+        "lecture-1"
+      ],
+      "lesson_ids": [
+        "ml02",
+        "ml03",
+        "ml04"
+      ],
+      "items": [
+        {
+          "id": "notebook-state",
+          "title": {
+            "zh": "同一行代码，为什么第二次结果会变？",
+            "en": "Why can the same cell give a different result?"
+          },
+          "task": {
+            "zh": "运行原单元的 x=0，再把 x+=1 单元运行两次；随后重启 kernel，先运行 x+=1。解释每次结果和最后的错误，并从上到下恢复一次干净运行。",
+            "en": "Run the original x=0 cell, then run the x+=1 cell twice. Restart the kernel and try x+=1 first. Explain each result and the error, then restore a clean top-to-bottom run."
+          },
+          "approach": {
+            "zh": "把 Notebook 看成共享一份变量表的多个小程序：先写下 x 当前是否存在，再跟踪赋值与自增。遇到不懂的对象可用原末尾的 object? 帮助入口。",
+            "en": "Treat notebook cells as small programs sharing one variable table. Track whether x exists, then follow assignment and increment. Use the final object? help example when an object is unclear."
+          },
+          "check": {
+            "zh": "初始化显示 0，随后是 1、2；重启后 x 尚未定义。完成后 Restart and Run All，不依赖跳着运行留下的状态。",
+            "en": "Initialization shows 0, then 1 and 2. After restart x is undefined. Finish with Restart and Run All so execution does not rely on hidden previous state."
+          },
+          "pitfall": {
+            "zh": "保存着的旧输出不证明当前 kernel 中仍有这个变量；不要靠重复点运行碰巧“修好”。",
+            "en": "Saved output does not prove the variable still exists in the current kernel. Repeated clicks are not a substitute for a correct execution order."
+          },
+          "lesson_ids": [
+            "ml02"
+          ],
+          "card_ids": [
+            "CS5489-M007"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial1.ipynb",
+              "locator": "cells 3–13, 46",
+              "kind": "course",
+              "note": "原 Notebook 的状态实验和帮助操作 / Original notebook state and help activities."
+            }
+          ]
+        },
+        {
+          "id": "factors-and-plots",
+          "title": {
+            "zh": "数 99 个整数的因数，再读懂两种图",
+            "en": "Count divisors for 99 integers and explain two plots"
+          },
+          "task": {
+            "zh": "对 2 到 100 每个整数 n，统计不含 1 和 n 的正因数个数；输出 xs 与 fs。画“整数→因数个数”的图，再画因数个数的直方图并标轴。",
+            "en": "For each integer n from 2 through 100, count positive divisors excluding 1 and n and create xs and fs. Plot integer versus divisor count, then a histogram of the counts, with labeled axes."
+          },
+          "approach": {
+            "zh": "先单独算一个 n：依次试除 2,…,n−1，整除就计数。把这一步放进外层整数循环，再选择两张图各自的横轴与纵轴。",
+            "en": "First handle one n: try divisors 2,…,n−1 and count exact divisions. Put that inside the loop over integers, then choose what each plot’s axes mean."
+          },
+          "check": {
+            "zh": "先检验 2→0、4→1、12→4；xs、fs 长度均为 99。直方图所有箱的频数总和必须为 99。下方原有题卡含示意图可核对。",
+            "en": "Check 2→0, 4→1, and 12→4; both arrays have length 99. Histogram bin frequencies must total 99. The existing reference card includes the explanatory figure."
+          },
+          "pitfall": {
+            "zh": "不要计入 1 和自身；“因数有几个”和“有多少整数拥有这个因数个数”是不同量。",
+            "en": "Do not count 1 or n. A divisor count and the frequency of that count across integers are different quantities."
+          },
+          "lesson_ids": [
+            "ml02",
+            "ml03"
+          ],
+          "card_ids": [
+            "CS5489-M020",
+            "CS5489-M035"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial1.ipynb",
+              "locator": "cells 14–24",
+              "kind": "course",
+              "note": "原题条件、折线/点图与直方图 / Original conditions and two plotting tasks."
+            }
+          ]
+        },
+        {
+          "id": "array-from-file",
+          "title": {
+            "zh": "一行数据怎样变成图上的一个点？",
+            "en": "How does a data row become a plotted point?"
+          },
+          "task": {
+            "zh": "加载课堂提供的可信 data1.pickle 到 mydata，检查数组形状；用第一列作 x、第二列作 y，把所有样本画成散点。",
+            "en": "Load the trusted supplied data1.pickle into mydata and inspect its shape. Plot all samples with column 0 as x and column 1 as y."
+          },
+          "approach": {
+            "zh": "先区分行是样本、列是特征；取 mydata[:,0] 和 mydata[:,1]。文件加载和画图分两步检查。",
+            "en": "Identify rows as samples and columns as features. Select mydata[:,0] and mydata[:,1], checking file loading before plotting."
+          },
+          "check": {
+            "zh": "原题说明形状为 (120,2)，因此每个坐标数组应有 120 项；检查轴标签及每行 x/y 的配对。实际读入形状不符时先核对文件。",
+            "en": "The task describes shape (120,2), so each coordinate array should contain 120 entries. Check labels and same-row coordinate pairing; if the loaded shape differs, check the file first."
+          },
+          "pitfall": {
+            "zh": "不要把两行当两列；这里没有第三列类别标签，不需要自己虚构分组。",
+            "en": "Do not swap rows and columns. There is no third class-label column, so no invented class grouping is needed."
+          },
+          "lesson_ids": [
+            "ml03"
+          ],
+          "card_ids": [
+            "CS5489-M036"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial1.ipynb",
+              "locator": "cells 26–33",
+              "kind": "course",
+              "note": "原 pickle/NumPy/散点活动 / Original pickle, NumPy and scatter activity."
+            }
+          ]
+        },
+        {
+          "id": "gram-schmidt",
+          "title": {
+            "zh": "让三个方向各司其职：实现 Gram–Schmidt",
+            "en": "Implement Gram–Schmidt and verify the resulting directions"
+          },
+          "task": {
+            "zh": "编写 myGS(V)，按原题处理 V 的列向量并返回 E。使用原测试矩阵 V=[[1,−1,2],[0,2,3],[−1,2,1],[4,−1,−3]]，它的形状是 (4,3)。",
+            "en": "Write myGS(V) to orthonormalize its columns and return E. Use the original test matrix V=[[1,−1,2],[0,2,3],[−1,2,1],[4,−1,−3]], with shape (4,3)."
+          },
+          "approach": {
+            "zh": "每列先减去在已有正交单位列上的投影，再把非零残差除以长度。先手算两列小例子，再写可处理多列的循环。",
+            "en": "For each column, subtract its projections onto the existing orthonormal columns, then normalize the nonzero residual. Work through a two-column example before writing the general loop."
+          },
+          "check": {
+            "zh": "E 应为 (4,3)，原题检查 E.T@E≈I。额外用 E@(E.T@V)≈V 核对保留输入列空间；这是补充检查，不是原题新增提交要求。",
+            "en": "E should have shape (4,3); the original task checks E.T@E≈I. Also check E@(E.T@V)≈V to verify the input span is preserved; this is an added diagnostic, not a new submission requirement."
+          },
+          "pitfall": {
+            "zh": "投影与归一化不可颠倒；残差为零时不能继续除。仅 E.T@E≈I 还不能证明输出就是输入张成的空间。",
+            "en": "Keep projection removal before normalization, and do not divide by a zero residual. E.T@E≈I alone does not prove that the intended input span was preserved."
+          },
+          "lesson_ids": [
+            "ml04"
+          ],
+          "card_ids": [
+            "CS5489-M038",
+            "CS5489-M039",
+            "CS5489-M040",
+            "CS5489-M041"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial1.ipynb",
+              "locator": "cells 35–45",
+              "kind": "course",
+              "note": "原算法、函数任务、矩阵及正交检查 / Original algorithm, task, matrix, and orthogonality check."
+            },
+            {
+              "name": "教学补充 / Teaching diagnostic",
+              "locator": "span-preservation check",
+              "kind": "derived",
+              "note": "用原矩阵复查列空间，非额外课程要求 / Checks the original column span; not an extra course requirement."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "CS5489 Tutorial1.ipynb",
+          "locator": "cells 2–46",
+          "kind": "course",
+          "note": "按 Notebook 原有活动组织 / Organized by the original notebook activities."
+        }
+      ]
+    },
+    {
+      "id": "cs5489-tutorial-2",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 2｜用三种 NB 给新闻分类",
+        "en": "Tutorial 2 | Classify news with three NB models"
+      },
+      "intro": {
+        "zh": "把 Lecture 2 的“表示→估参数→算类分数”用于 AGNews 的 World、Sports、Business、Sci/Tech 四类。除运行模型外，原任务还要求观察词、解释错分、改变参数并实现 Poisson NB；这些活动一起构成 Tutorial。",
+        "en": "Apply Lecture 2’s representation–estimation–scoring workflow to four AGNews classes: World, Sports, Business, and Sci/Tech. The tutorial also examines words and errors, varies settings, and implements Poisson NB; it is not just a formula exercise."
+      },
+      "units": [
+        "lecture-2"
+      ],
+      "lesson_ids": [
+        "ml08",
+        "ml09"
+      ],
+      "items": [
+        {
+          "id": "news-to-vectors",
+          "title": {
+            "zh": "先认识新闻，再建立词表",
+            "en": "Inspect the news and build a vocabulary"
+          },
+          "task": {
+            "zh": "读取 dataAG.json，核对 train/test 文档数、四类标签和各类计数，先读几篇带标签新闻。只用训练文本建立词表，再转换训练和留出文本。",
+            "en": "Load dataAG.json, check train/test sizes, four labels and per-class counts, and read some labeled articles. Fit a vocabulary on training text and transform both training and held-out text."
+          },
+          "approach": {
+            "zh": "把标签与文本分开保存；固定词序，确认每列是什么词。先画清“fit on train / transform held-out”的流程，再处理高维稀疏矩阵。",
+            "en": "Keep labels and text aligned, fix vocabulary order, and identify each column’s word. Establish fit-on-train and transform-held-out before handling the sparse matrix."
+          },
+          "check": {
+            "zh": "打印矩阵行数、词表大小和标签长度，逐一对应。当前本地 JSON 实际是 train 2000、test 1000；Notebook 文字中的 2034/1353 与当前文件不同，应以实际加载结果核对并记录。",
+            "en": "Match matrix rows, vocabulary size and label counts. The current local JSON contains 2000 training and 1000 test articles, unlike the notebook prose’s 2034/1353; verify and record the actual loaded sizes."
+          },
+          "pitfall": {
+            "zh": "不要让留出文本参与词表或 IDF 拟合；不应为了凑注释数字删改数据。",
+            "en": "Do not fit vocabulary or IDF on held-out text, and do not alter the dataset just to match an old comment."
+          },
+          "lesson_ids": [
+            "ml08"
+          ],
+          "card_ids": [
+            "CS5489-M077",
+            "CS5489-M078"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial2v2.ipynb",
+              "locator": "cells 2–12",
+              "kind": "course",
+              "note": "原加载和词向量任务 / Original loading and vectorization task."
+            },
+            {
+              "name": "dataAG.json",
+              "locator": "train/test list lengths",
+              "kind": "course",
+              "note": "本地本轮只读盘点，实际计数为 2000/1000 / Local read-only count: 2000/1000."
+            }
+          ]
+        },
+        {
+          "id": "two-text-models",
+          "title": {
+            "zh": "同一批新闻，比较两种表示与 NB",
+            "en": "Compare two representations and NB models"
+          },
+          "task": {
+            "zh": "在相同划分上训练 Bernoulli NB，以及原任务指定的 TF-IDF + Multinomial NB，记录各自的表示、alpha、max_features 和预测。",
+            "en": "On the same split, train Bernoulli NB and the requested TF-IDF + Multinomial NB combination; record representations, alpha, max_features and predictions."
+          },
+          "approach": {
+            "zh": "Bernoulli 输入明确转成 0/1 出现标记；Multinomial 实验沿原题用训练拟合的 TF-IDF。先让一套基线从输入跑到输出，再比较另一套。",
+            "en": "Explicitly use 0/1 presence for Bernoulli NB. For the requested multinomial experiment, fit TF-IDF on training data. Run one complete baseline before comparing the other."
+          },
+          "check": {
+            "zh": "两套预测长度都应与同一留出标签相同；固定划分与评价方式。说明 TF-IDF 是实用权重，不把它说成整数词元的严格多项式观测。",
+            "en": "Both prediction arrays must align with the same held-out labels and evaluation protocol. Explain that TF-IDF is a practical weighting, not literal integer multinomial observations."
+          },
+          "pitfall": {
+            "zh": "同为 NB 不代表表示可以随意互换；不要只贴一个最高准确率而省略设置。",
+            "en": "Sharing the NB name does not make the representations interchangeable. Report settings, not just a highest accuracy."
+          },
+          "lesson_ids": [
+            "ml08"
+          ],
+          "card_ids": [
+            "CS5489-M108"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial2v2.ipynb",
+              "locator": "cells 13–18",
+              "kind": "course",
+              "note": "Bernoulli 与 Multinomial/TF-IDF 原任务 / Original Bernoulli and Multinomial/TF-IDF tasks."
+            }
+          ]
+        },
+        {
+          "id": "words-and-errors",
+          "title": {
+            "zh": "模型看中了哪些词，哪里仍会认错？",
+            "en": "Which words matter, and where does the model fail?"
+          },
+          "task": {
+            "zh": "运行两模型的高概率词列表，挑实际错分新闻，写出真实类、预测类和可能误导模型的文本片段。",
+            "en": "Inspect each model’s high-probability word lists and actual misclassified articles. Record true/predicted labels and text fragments that may explain the mistake."
+          },
+          "approach": {
+            "zh": "先区分“该类常见词”与“能区别该类的词”：后者要跨类比较。错因从文章与表示找证据，例如词表遗漏或主题交叉。",
+            "en": "Distinguish words common within a class from discriminative words, which require a cross-class comparison. Link error hypotheses to the article and representation."
+          },
+          "check": {
+            "zh": "每条解释都能指回真实预测与文本；把“可能原因”与已检验改动分开。沿同一协议比较三种 NB 时保留这些记录。",
+            "en": "Every explanation should refer to a real prediction and text. Separate hypotheses from tested changes, and keep the records when comparing all three NB models."
+          },
+          "pitfall": {
+            "zh": "feature_log_prob_ 是对数值；类内概率高不自动等于最有区分力。不要凭类别名称编一个错分故事。",
+            "en": "feature_log_prob_ stores log values. A large within-class probability does not guarantee discrimination; do not invent an error story from category names alone."
+          },
+          "lesson_ids": [
+            "ml08",
+            "ml09"
+          ],
+          "card_ids": [
+            "CS5489-M109",
+            "CS5489-M118"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial2v2.ipynb",
+              "locator": "cells 15–24, 35",
+              "kind": "course",
+              "note": "原高概率词、错误观察与模型比较 / Original word, error, and model-comparison tasks."
+            }
+          ]
+        },
+        {
+          "id": "smoothing-and-vocabulary",
+          "title": {
+            "zh": "逐次改变一个设置，看曲线而不只看冠军",
+            "en": "Vary one setting and inspect the curve"
+          },
+          "task": {
+            "zh": "按原任务分别画准确率随 alpha、随词表大小变化的图；每种设置都重新拟合相应变换/模型，保存结果。",
+            "en": "Produce the requested accuracy-versus-alpha and accuracy-versus-vocabulary-size plots, refitting the relevant transformation/model for each setting and saving results."
+          },
+          "approach": {
+            "zh": "先固定划分、评价和另一项设置，再逐项比较。原 Tutorial 用名为 test 的集合探索参数；若据此选参，它实际已承担验证角色。迁移到 Assignment 1 时，必须用指定验证协议。",
+            "en": "Keep the split, metric and other settings fixed. The tutorial explores settings on a set named test; using it for selection makes it validation in practice. Assignment 1 must follow its stated validation protocol."
+          },
+          "check": {
+            "zh": "图轴写清参数和评价指标；结论既提较好区域，也说明高分是否来自选参数据。更严格的扩展是在训练集内部选参，最后只评价一次留出集。",
+            "en": "Label the parameter and metric axes. Report promising regions and whether scores came from selection data. A stricter extension selects within training data, then evaluates held-out data once."
+          },
+          "pitfall": {
+            "zh": "不要把反复挑出的 test 最高分当成独立最终成绩；避免同时改很多因素后无法解释原因。",
+            "en": "Do not call the highest repeatedly selected test score an independent final estimate, and avoid changing many factors at once."
+          },
+          "lesson_ids": [
+            "ml08",
+            "ml11"
+          ],
+          "card_ids": [
+            "CS5489-M110"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial2v2.ipynb",
+              "locator": "cells 25–28",
+              "kind": "course",
+              "note": "原两组参数曲线活动 / Original parameter-sweep activities."
+            },
+            {
+              "name": "评估方法衔接 / Evaluation bridge",
+              "locator": "Assignment1-Doc.ipynb cell 3",
+              "kind": "derived",
+              "note": "区分 Tutorial 探索与作业验证要求 / Distinguishes tutorial exploration from assignment validation."
+            }
+          ]
+        },
+        {
+          "id": "poisson-implementation",
+          "title": {
+            "zh": "沿用课堂骨架，换一个计数分布",
+            "en": "Reuse the lecture skeleton with a count distribution"
+          },
+          "task": {
+            "zh": "按照原 PoissonNB 模板，用词的非负整数计数实现 fit、log CCD、joint score、posterior 和 predict，再在同一新闻协议下与两种 NB 比较。",
+            "en": "Complete the original PoissonNB template on nonnegative integer word counts: fit, log CCD, joint score, posterior and predict. Compare it with the two other NB models on the same news protocol."
+          },
+          "approach": {
+            "zh": "原单元 31 明确从课堂 GaussianBayes/GaussBayes 骨架改起：类内估每个词的平均计数，把高斯 log CCD 换成逐词 Poisson log 概率和；保留先验、归一化与预测接口。",
+            "en": "Cell 31 explicitly reuses the lecture GaussianBayes/GaussBayes skeleton: estimate class-wise mean counts, replace the Gaussian log CCD with summed Poisson log probabilities, and retain priors, normalization and prediction interfaces."
+          },
+          "check": {
+            "zh": "先用小数据比对逐项与向量化分数/后验，检查后验每行和为 1、标签映射和输出形状，再跑实际新闻。只能报告亲自运行得到的成绩。",
+            "en": "Compare direct and vectorized scores/posteriors on a small case, check posterior row sums, label mapping and shapes, then run on the news data. Report only measured results."
+          },
+          "pitfall": {
+            "zh": "不能遗漏负均值项；零率须显式处理或定义平滑。模板未定义 alpha 的唯一公式，不应把补充方法冒充老师标准答案；TF-IDF 不是这里的整数计数。",
+            "en": "Do not omit negative-rate terms. Handle zero rates explicitly or define smoothing. The template does not prescribe one alpha formula, and TF-IDF is not a literal integer count here."
+          },
+          "lesson_ids": [
+            "ml09",
+            "ml07"
+          ],
+          "card_ids": [
+            "CS5489-M112",
+            "CS5489-M113",
+            "CS5489-M114",
+            "CS5489-M117",
+            "CS5489-M116"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Tutorial2v2.ipynb",
+              "locator": "cells 29–35",
+              "kind": "course",
+              "note": "原 Poisson 理论、模板、测试与比较 / Original Poisson definition, template, test and comparison."
+            },
+            {
+              "name": "Lecture2b.ipynb",
+              "locator": "cell 44",
+              "kind": "course",
+              "note": "原高斯分类器接口骨架 / Original Gaussian classifier interface skeleton."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "CS5489 Tutorial2v2.ipynb",
+          "locator": "cells 2–35",
+          "kind": "course",
+          "note": "五组任务覆盖原文档活动，而非仅 Poisson 一题 / Five task groups cover the notebook, not just Poisson NB."
+        }
+      ]
+    },
+    {
+      "id": "cs5489-assignment-1",
+      "kind": "assignment",
+      "title": {
+        "zh": "Assignment 1｜从课堂方法到短信三分类实验",
+        "en": "Assignment 1 | Turn classroom methods into an SMS experiment"
+      },
+      "intro": {
+        "zh": "要区分 normal、spam、smishing 三类短信。Lecture 2 提供文本 NB 起点，Lecture 3 提供其他分类器、选参与评估方法；作业允许自主选特征和算法，因此在两讲下共享这一份实践入口。这里引导实验与检验，提交要求和日期仍看课程信息栏及最新 Canvas。",
+        "en": "Classify normal, spam and smishing messages. Lecture 2 supplies a text-NB starting point; Lecture 3 adds classifiers, selection and evaluation. Because the assignment allows feature/model choice, both lectures link to this one activity. This page guides experiments; submission rules and dates remain in course notices and current Canvas."
+      },
+      "units": [
+        "lecture-2",
+        "lecture-3"
+      ],
+      "lesson_ids": [
+        "ml16",
+        "ml08",
+        "ml11",
+        "ml15",
+        "ml02"
+      ],
+      "items": [
+        {
+          "id": "data-and-protocol",
+          "title": {
+            "zh": "先固定要预测什么、怎样选择模型",
+            "en": "Fix the prediction task and selection protocol"
+          },
+          "task": {
+            "zh": "核对短信、0/1/2 类别映射、训练文件与给定验证/测试划分。写下词表、IDF、模型参数各自在哪一部分数据上学习。",
+            "en": "Check texts, the 0/1/2 label mapping, training file and provided validation/test allocation. State which data fit the vocabulary, IDF and model parameters."
+          },
+          "approach": {
+            "zh": "按原代码读取 smishing_train.txt、smishing_val_test.txt 和 smishing_val_test.csv；后者含 Id、Prediction、Usage，使用给定标记辨认划分，不另拿测试部分挑超参数。",
+            "en": "Follow the provided code’s smishing_train.txt, smishing_val_test.txt and smishing_val_test.csv. The CSV has Id, Prediction and Usage; use the provided split markers and do not select hyperparameters on test data."
+          },
+          "check": {
+            "zh": "文本行、Id、预测顺序对齐；任何需拟合的预处理只从训练部分学习。记录固定划分，后续所有候选用同一规则。",
+            "en": "Align text rows, IDs and prediction order. Fit learned preprocessing only on training data and use one recorded evaluation protocol for all candidates."
+          },
+          "pitfall": {
+            "zh": "说明文字有旧文件名 smishing_test.txt，但当前代码/文件是 smishing_val_test.txt；不要因为看得到测试标签就把它用于选参。",
+            "en": "The prose contains the old name smishing_test.txt; current code/files use smishing_val_test.txt. Visibility of test labels does not authorize using them for selection."
+          },
+          "lesson_ids": [
+            "ml16",
+            "ml08"
+          ],
+          "card_ids": [
+            "CS5489-M095"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Assignment1-Doc.ipynb",
+              "locator": "cells 3, 5, 8–12",
+              "kind": "course",
+              "note": "原目标、协议、文件读取与标签 / Original task, protocol, loaders and labels."
+            }
+          ]
+        },
+        {
+          "id": "baseline",
+          "title": {
+            "zh": "先跑通一个可信的基线",
+            "en": "Run one complete baseline first"
+          },
+          "task": {
+            "zh": "先评估多数类预测，再做训练拟合词袋与平滑 NB 的基线；保存验证预测、类别召回与 balanced accuracy。",
+            "en": "Evaluate a majority-class predictor, then a training-fitted word-vectorizer plus smoothed NB baseline. Save validation predictions, class recalls and balanced accuracy."
+          },
+          "approach": {
+            "zh": "只先选一种明确表示，例如计数+Multinomial NB；确认训练、变换、预测、评价每步可重跑，再尝试其他方法。",
+            "en": "Start with one explicit representation, such as counts plus Multinomial NB. Make fit, transform, predict and evaluate reproducible before branching out."
+          },
+          "check": {
+            "zh": "预测与标签数量一致；三类召回均列出，不能只报多数类主导的总体准确率。基线分数来自实际运行，不照抄示例数字。",
+            "en": "Match prediction/label counts and report all three recalls, not only overall accuracy. Baseline scores must come from actual runs."
+          },
+          "pitfall": {
+            "zh": "这是建议的起点，不是老师限定唯一算法；随机预测示例只演示写 CSV，并不是可靠基线模型。",
+            "en": "This is a suggested starting point, not a prescribed algorithm. The random-prediction snippet demonstrates CSV writing, not a useful learned baseline."
+          },
+          "lesson_ids": [
+            "ml16",
+            "ml08"
+          ],
+          "card_ids": [
+            "CS5489-M094"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Assignment1-Doc.ipynb",
+              "locator": "cell 3; cells 13–14",
+              "kind": "course",
+              "note": "作业目标及随机写文件示范 / Task and random CSV-writing demonstration."
+            },
+            {
+              "name": "教学建议 / Teaching suggestion",
+              "locator": "majority and NB baselines",
+              "kind": "derived",
+              "note": "先建立可比较起点，不新增提交要求 / Establishes a comparison point, not a new submission rule."
+            }
+          ]
+        },
+        {
+          "id": "compare-candidates",
+          "title": {
+            "zh": "一次改一个有理由的因素",
+            "en": "Test changes with a stated reason"
+          },
+          "task": {
+            "zh": "比较不同文本表示或分类器，列出“改了什么、为什么可能有用、怎样验证”。可结合 Lecture 3 的 logistic/SVM，不把作业限制成 NB。",
+            "en": "Compare representations or classifiers and state what changed, why it might help and how to test it. Logistic regression/SVM from Lecture 3 are options; the assignment is not limited to NB."
+          },
+          "approach": {
+            "zh": "固定验证协议后，再比较词/字符特征、模型或关键超参数。交叉验证中词表等预处理也须在每折训练部分重新拟合。",
+            "en": "Fix evaluation first, then compare word/character features, models or key hyperparameters. Fit preprocessing within each cross-validation training fold."
+          },
+          "check": {
+            "zh": "记录候选、特征、参数范围、选择依据和实际验证指标；把想法与已经验证的提升分开。",
+            "en": "Record candidates, features, search ranges, selection rule and measured validation results. Distinguish proposed ideas from verified gains."
+          },
+          "pitfall": {
+            "zh": "一次换表示、模型和数据划分，无法清楚归因；更复杂方法并不保证更好。",
+            "en": "Changing representation, model and split at once obscures attribution; complexity does not guarantee improvement."
+          },
+          "lesson_ids": [
+            "ml16",
+            "ml11",
+            "ml15"
+          ],
+          "card_ids": [
+            "CS5489-M096",
+            "CS5489-M133"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Assignment1-Doc.ipynb",
+              "locator": "cell 3: Methodology, Hyperparameters",
+              "kind": "course",
+              "note": "原开放模型选择与验证要求 / Original open choice and validation requirements."
+            }
+          ]
+        },
+        {
+          "id": "diagnose-errors",
+          "title": {
+            "zh": "三类里，到底哪一类没学会？",
+            "en": "Which classes are still being missed?"
+          },
+          "task": {
+            "zh": "列三类混淆矩阵、召回率和 balanced accuracy，挑真实验证错分短信分析。若测试阶段展示错误，应在模型选择完成后分析，不据此再反复调参。",
+            "en": "Report the three-class confusion matrix, recalls and balanced accuracy, and inspect real validation errors. Analyze test errors only after model selection, without using them for repeated tuning."
+          },
+          "approach": {
+            "zh": "先说明矩阵行列约定，再看漏掉哪类；结合文本和表示提出可验证原因，下一次改动在验证协议中检验。",
+            "en": "State matrix conventions, identify missed classes, then connect text and representation to a testable hypothesis and evaluate changes under the validation protocol."
+          },
+          "check": {
+            "zh": "balanced accuracy 应是三类 recall 的平均；原文、真实标签和预测都能核对。报告保留没解决的错误。",
+            "en": "Balanced accuracy is the mean of the three recalls. Keep verifiable text, true labels and predictions, including unresolved errors."
+          },
+          "pitfall": {
+            "zh": "“像垃圾邮件”只是可能解释，不是证明；正常类占比高时总体 accuracy 很容易掩盖小类失败。",
+            "en": "A plausible explanation is not a proof; high normal-class prevalence can hide minority-class failure in overall accuracy."
+          },
+          "lesson_ids": [
+            "ml16",
+            "ml15"
+          ],
+          "card_ids": [
+            "CS5489-M091",
+            "CS5489-M092",
+            "CS5489-M093",
+            "CS5489-M099"
+          ],
+          "sources": [
+            {
+              "name": "CS5489 Assignment1-Doc.ipynb",
+              "locator": "cell 3: Evaluation, Results and Visualization",
+              "kind": "course",
+              "note": "原指标与错误分析要求 / Original metric and qualitative-analysis requirements."
+            }
+          ]
+        },
+        {
+          "id": "reproduce-final-predictions",
+          "title": {
+            "zh": "让最终预测可以从干净环境重现",
+            "en": "Reproduce the final predictions from a clean state"
+          },
+          "task": {
+            "zh": "把选定流程放到 Assignment1-Final.ipynb，从干净 kernel 读取数据、训练/加载固定流程并生成同顺序预测；与文档中选定配置一致。",
+            "en": "Place the selected procedure in Assignment1-Final.ipynb and run from a clean kernel to load data, fit/load the fixed procedure and generate ordered predictions consistent with the documented choice."
+          },
+          "approach": {
+            "zh": "把预处理、标签映射、随机种子和模型配置显式写清；对输出数量、Id 顺序、预测标签范围做检查。",
+            "en": "Make preprocessing, label mapping, seed and model configuration explicit; check output counts, ID order and allowed labels."
+          },
+          "check": {
+            "zh": "Restart and Run All 可生成结果，且在约定环境与随机种子下能复现；若不一致，先定位状态、文件或随机来源，不改测试标签求一致。",
+            "en": "Restart and Run All should generate the result reproducibly under the stated environment and seed. Investigate state, files or randomness rather than changing evaluation labels."
+          },
+          "pitfall": {
+            "zh": "只提交一份旧输出不能证明代码可复现；页面不替你制造运行成绩。文件交付细节去信息栏核对。",
+            "en": "Saved output alone does not prove reproducibility; this page does not supply fabricated results. Check delivery details in course notices."
+          },
+          "lesson_ids": [
+            "ml16",
+            "ml02"
+          ],
+          "card_ids": [
+            "CS5489-M007",
+            "CS5489-M034"
+          ],
+          "sources": [
+            {
+              "name": "Assignment1-Final.ipynb",
+              "locator": "cell 3",
+              "kind": "course",
+              "note": "原复现要求 / Original reproducibility requirement."
+            },
+            {
+              "name": "CS5489 Assignment1-Doc.ipynb",
+              "locator": "cell 3: What to hand in",
+              "kind": "course",
+              "note": "技术要求源，提交清单留信息栏 / Technical provenance; submission checklist stays in notices."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "CS5489 Assignment1-Doc.ipynb",
+          "locator": "cell 3",
+          "kind": "course",
+          "note": "开放任务、验证选择、balanced accuracy、解释与复现 / Open task, validation, metric, analysis and reproducibility."
+        },
+        {
+          "name": "Assignment1-Final.ipynb",
+          "locator": "cell 3",
+          "kind": "course",
+          "note": "最终预测生成可复现 / Reproducible final predictions."
+        }
+      ]
+    }
+  ],
+  "course_activities": [],
+  "extension_lessons": [
+    "ml17"
+  ]
+}

@@ -7,8 +7,8 @@
   function gaussian(host) {
     const id = `gaussian-article-${++sequence}`;
     host.innerHTML = `
-      <p><strong>换一个条件，机器会改口吗？ / Change one assumption</strong></p>
-      <p>固定样本 x = (2, 0)，均值 μ<sub>A</sub> = (0, 0)、μ<sub>B</sub> = (4, 0)，Σ<sub>A</sub> = diag(4, 1)，Σ<sub>B</sub> = diag(v, 1)。只改变 B 的第一维方差 v 或 A 的先验。独立教学演示，不改变正文题目的条件。</p>
+      <p><strong>换一个条件，分类判断会改变吗？ / Change one assumption</strong></p>
+      <p>以下是两类花的无量纲手算模型，不是真实 iris 数据的拟合结果。固定样本 x = (2, 0)，均值 μ<sub>A</sub> = (0, 0)、μ<sub>B</sub> = (4, 0)，Σ<sub>A</sub> = diag(4, 1)，Σ<sub>B</sub> = diag(v, 1)。只改变 B 的第一维方差 v 或 A 的先验。独立教学演示，不改变正文题目的条件。</p>
       <div class="demo-controls">
         <label for="${id}-variance">B 的方差 v / Variance
           <select id="${id}-variance" data-variance>

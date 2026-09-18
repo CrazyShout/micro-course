@@ -45,6 +45,10 @@
     "ml07",
     "net02"
   ],
+  "article_figures": 1,
+  "teaching_units": 5,
+  "teaching_activities": 7,
+  "activity_items": 31,
   "images": 66,
   "assets": [
     {
@@ -394,13 +398,13 @@
     },
     {
       "path": "guide.html",
-      "bytes": 13277,
-      "sha256": "70298d9f435bc81670cabaf8a64ce01048d42880ebf27fe9f4d7fd5724ad5691"
+      "bytes": 13365,
+      "sha256": "c0e831e4ad03cd9aa753bd55209c3f1bf46436d49009ec480f62df6e3bd71dd0"
     },
     {
       "path": "index.html",
-      "bytes": 2468,
-      "sha256": "c3955a9b82c58abe75e063c2057265367ed111fd4e81629934f13c4008cba6f2"
+      "bytes": 2598,
+      "sha256": "ecd7768893b861aff1bfa56ea7ad5eed925373b6668348e5dbeaae4664b76574"
     },
     {
       "path": "learning/figures/attention-values.svg",
@@ -451,6 +455,11 @@
       "path": "learning/figures/forward-noising.svg",
       "bytes": 11026,
       "sha256": "4362a3aafcc3d9fd85e4f6a003e9e0b02905101862aba6f06838cd4766886b32"
+    },
+    {
+      "path": "learning/figures/iris-classroom.svg",
+      "bytes": 16360,
+      "sha256": "d07289beb27ff8521c3cd0cb9aa329c0a5aa30b65888f47e4de3d5d5df15324a"
     },
     {
       "path": "learning/figures/mail-route.svg",
@@ -529,8 +538,8 @@
     },
     {
       "path": "learning-article-demos.js",
-      "bytes": 9062,
-      "sha256": "2eb0f139e36c80ed06a833983b1585d41bb132f25ba809c1bf3de67904b2dd16"
+      "bytes": 9155,
+      "sha256": "1fffb5018e9c3d0a8ce9a09bd27564a0ba715bd403901e3d246b16bf74c6149b"
     },
     {
       "path": "learning-article.css",
@@ -539,13 +548,23 @@
     },
     {
       "path": "learning-article.js",
-      "bytes": 10197,
-      "sha256": "8c30f46c5b175921bec0b1a226b812dc8f3a22590de892f079db6b543eb097d1"
+      "bytes": 10254,
+      "sha256": "ebabce423f13a8e72124c0ef8a1846442e7297202b9bb4f974a25adb5f692095"
+    },
+    {
+      "path": "learning-curriculum.css",
+      "bytes": 4533,
+      "sha256": "e19e022d5749371281d36675c68dc572c7bc0c0f8555bdc8e364d6abd4fdaa16"
+    },
+    {
+      "path": "learning-curriculum.js",
+      "bytes": 15128,
+      "sha256": "a9d45e7d3f3389ec36cd6d8f31e879911b9f29a6495cc8a32644708f72cb3678"
     },
     {
       "path": "learning-data.js",
-      "bytes": 2273392,
-      "sha256": "47cb6cb6a8e2b88db9663d97fd42ae06a9f385d435167bd7ab2675fe2c5df62d"
+      "bytes": 2504402,
+      "sha256": "949979957914f442fd00bf5aa377918c4bccc5240a0825c99c726f3b39ef7ec8"
     },
     {
       "path": "learning-demos.js",
@@ -564,8 +583,8 @@
     },
     {
       "path": "learning.js",
-      "bytes": 21763,
-      "sha256": "2a32d3d2fd1ff57fe8f20940e6c9512b6a662821a2d6aaab245259e6c5519f1c"
+      "bytes": 22291,
+      "sha256": "fc60ecb530936062c442cf95022c6c4ded260e4806257cc006e7cf60483fca8e"
     },
     {
       "path": "notices-data.js",

@@ -156,17 +156,17 @@ BRIDGE: 多特征数据还需要说明特征之间如何一起变化，这决定
 CARDS: M061,M062,M063,M064,M065,M066,M067,M068,M069,M070,M071,M072,M073,M074
 PREREQ: ml03,ml06
 GOAL: 能把一个新样本代入两类高斯模型，依次算距离、体积项和先验分数，解释预测为何随先验或方差变化。
-EXPLAIN: 想象两台咖啡机 A、B 都在出杯，记录却漏写了来源。我们把甜度、温度按固定规则换成两个无量纲特征，想从一杯的特征猜出机器。以下数字是手算用的教学模型，不是真实咖啡数据；分类器只能按模型猜，不能隔着屏幕尝一口。
+EXPLAIN: 课堂已经记录两种鸢尾花的花瓣长度、萼片宽度和真实类别。任务是给一朵未知花的两项测量，预测其花种。先看原始点云，再分别描述每类的常见位置与波动；Gaussian NB 给定类别后把两个高斯特征视为独立，完整高斯则进一步描述它们怎样共同变化。
 
-每类的均值 $\mu_c$ 是“典型出品”，协方差 $\Sigma_c$ 描述“平时允许多大波动”。对角线是各特征方差，非对角线描述共同变化。协方差正定时，$q_c=(x-\mu_c)^T\Sigma_c^{-1}(x-\mu_c)$ 是按散布校正的平方距离。若 $\Sigma_c=\operatorname{diag}(4,1)$，第一维偏 2 和第二维偏 1 都是偏一个标准差，因此 q 都是 1。这里 diag(4,1) 表示对角为 4、1，其他位置为 0。
+均值 $\mu_c$ 是类别 c 的典型位置，协方差 $\Sigma_c$ 的对角线是方差、非对角线描述共同变化。正定时，$q_c=(x-\mu_c)^T\Sigma_c^{-1}(x-\mu_c)$ 是按散布与相关性校正的平方距离。对角矩阵 diag(4,1) 表示两维方差为 4、1，其他项为 0。
 
-但“距离宽容”不是免费午餐：一类分布铺得越宽，同样的总概率就摊得越薄。把先验、体积、距离一起算，才得到对数分数 $s_c=\log\pi_c-\frac12\log|\Sigma_c|-\frac12q_c$。这里 $\pi_c>0$ 且各类先验和为 1，log 是自然对数，$|\Sigma_c|$ 是行列式；同维度各类共有的 $-d\log(2\pi)/2$ 已省略。分数越大越支持该类，负分也没有问题；分数本身不是概率。若要后验，再将 exp(s) 跨类别归一化。实际程序用 log-sum-exp 保持数值稳定。
+分类还要考虑密度的体积归一化与先验，不能只比 q。对正先验 $\pi_c$、同维度类别，比较自然对数分数 $s_c=\log\pi_c-\frac12\log|\Sigma_c|-\frac12q_c$。其中 $|\Sigma_c|$ 是行列式，共同常数已省略；负分正常，最大分数在等错误成本下对应最大后验。将 exp(s) 跨类归一化才得到后验概率。
 
-模型的差别仍要分清：Gaussian NB 用逐类对角协方差；当前 GaussianBayes 用逐类完整协方差；LDA 用各类共享的协方差。二维单个完整对称矩阵有 3 个独立数，对角矩阵有 2 个；若有三类，逐类完整、逐类对角、共享完整分别需 9、6、3 个协方差参数，未计均值和先验。
+下面 A/B 花类的数字是中心化、缩放后的无量纲教学小模型，为手算指定，不是课堂 iris2.csv 的拟合结果。完成它后应回到课堂 Notebook：GaussianNB 与逐类完整协方差 GaussianBayes 都只在训练集拟合，再用同一测试集检查错分，不能把更复杂或图更漂亮当作必然更好。
 
-课堂代码的 `cov(Xc, rowvar=False)` 默认用每类样本数 Nc−1 作分母，不是上一节用 Nc 的 MLE。少量样本会使估计不稳；加正的 alpha I 可抬高各方向方差，避免奇异矩阵。
-RECAP_EN: A Gaussian class score combines a positive prior, covariance-volume normalization, and spread-adjusted squared distance. Compare all three terms, not just proximity to a mean. The teaching example uses dimensionless features and positive-definite covariances; log scores become probabilities only after normalization. Gaussian NB uses separate diagonal covariances, a full Gaussian classifier allows correlations, and LDA shares one covariance across classes.
-WORKED_Q: 教学模型中，A、B 的先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。新杯子的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。 || In a teaching model, A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463.
+模型区分：Gaussian NB 用逐类对角协方差；当前 GaussianBayes 用逐类完整协方差；LDA 用各类共享协方差。课堂 `cov(Xc, rowvar=False)` 默认分母为 Nc−1，与 MLE 的 Nc 约定不同。少量数据可能产生奇异估计，正的 alpha I 可增加各方向方差。
+RECAP_EN: Start from labeled iris measurements and predict an unfamiliar flower. Gaussian NB models features independently within each class; full Gaussian classification also models their covariance. A class score combines prior, covariance-volume normalization, and adjusted squared distance. The hand calculation uses an assigned dimensionless flower model, not fitted iris parameters. Return to the lecture code: fit on training data and compare predictions and actual errors on the same held-out test data.
+WORKED_Q: 两类花 A、B 的无量纲教学模型（非真实 iris 拟合）中，先验各为 1/2，均值分别是 (0,0)、(4,0)，协方差分别为 diag(4,1)、diag(1,1)。一朵待分类花的特征 x=(2,0)。依次求两类偏移、校正平方距离 q、行列式、对数分数和预测；再算 A 的后验。可用 log2≈0.6931、exp(−0.8069)≈0.4463。 || In a dimensionless two-flower-class teaching model (not fitted to the real iris data), A and B have priors 1/2, means (0,0) and (4,0), and covariances diag(4,1) and diag(1,1). For x=(2,0), find offsets, adjusted squared distances q, determinants, log scores, and the prediction; then find A's posterior. Use log2≈0.6931 and exp(−0.8069)≈0.4463.
 WORKED_A: ① 偏移为 A：(2,0)，B：(−2,0)，普通距离一样。
 
 ② 对角矩阵只需逐维除方差：q_A=2²/4+0²/1=1，q_B=(−2)²/1+0²/1=4。

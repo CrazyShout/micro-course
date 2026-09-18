@@ -119,7 +119,7 @@ def main():
             assert block['type'] in {'prose','figure','foundation','exercise','unit','demo','recap'}
             if block['type']=='prose':assert block['text'] and block['html']
             elif block['type']=='figure':
-                assert block['ref'] in {f['src'] for f in lesson['first_pass']['figures']};local_link(block['ref'])
+                assert block['ref'] in {f['src'] for f in lesson['first_pass']['figures']+article.get('figures',[])};local_link(block['ref'])
             elif block['type']=='foundation':assert block['ref'] in foundation_ids
             elif block['type']=='unit':assert block['ref'] in unit_ids
             elif block['type']=='demo':assert block['ref'] in {'gaussian-score','cafe-capacity'}
@@ -134,6 +134,42 @@ def main():
     assert article_ids==manifest.get('article_lessons',[])
     if article_ids:
         for name in ['learning-article.js','learning-article.css','learning-article-demos.js']:local_link(name)
+    article_figures={f['src'] for l in lessons.values() for f in l.get('article',{}).get('figures',[])}
+    assert len(article_figures)==manifest.get('article_figures',0)
+    for name in article_figures:
+        local_link(name);svg=(site/name).read_text()
+        assert '<title' in svg and '<desc' in svg and '<script' not in svg
+    route=learning['curriculum'];assert set(route['courses'])==set(learning['courses'])
+    unit_count=activity_count=item_count=0
+    preview_ids=set()
+    for course,c in route['courses'].items():
+        units={u['id']:u for u in c['units']};activities={a['id']:a for a in c['activities']}
+        assert len(units)==len(c['units']) and len(activities)==len(c['activities'])
+        unit_count+=len(units);activity_count+=len(activities)
+        reached=set(c['extension_lessons'])
+        for u in units.values():
+            reached.update(l['id'] for l in u['lessons'])
+            assert all(a in activities and u['id'] in activities[a]['units'] for a in u['activities'])
+            for l in u['lessons']:assert l['lead_html']['zh'] and l['lead_html']['en']
+            assert u['intro_html']['zh'] and u['intro_html']['en'] and u['outcomes_html'] and u['sources']
+        for a in activities.values():
+            assert all(u in units and a['id'] in units[u]['activities'] for u in a['units'])
+            assert bool(a['units']) != (a['id'] in c['course_activities'])
+            reached.update(a['lesson_ids']);item_count+=len(a['items'])
+            assert len({i['id'] for i in a['items']})==len(a['items'])
+            for item in a['items']:
+                reached.update(item['lesson_ids']);preview_ids.update(item['card_ids'])
+                for field in ['title','task','approach','check','pitfall']:
+                    assert item[field+'_html']['zh'] and item[field+'_html']['en']
+                assert item['sources'] and all(cid in cards and cards[cid]['course']==course for cid in item['card_ids'])
+        assert reached=={l['id'] for l in lessons.values() if l['course']==course and l['status']!='preview'}
+    assert set(route['card_previews'])==preview_ids
+    for cid,card in route['card_previews'].items():
+        assert set(card)=={'id','course','question_zh_html','question_en_html','answer_zh_html','answer_en_html','front_media','back_media'}
+        assert all(card[f]==cards[cid][f] for f in card)
+        for name in card['front_media']+card['back_media']:local_link(card['course']+'/media/'+name)
+    assert (unit_count,activity_count,item_count)==(manifest['teaching_units'],manifest['teaching_activities'],manifest['activity_items'])
+    for name in ['learning-curriculum.js','learning-curriculum.css']:local_link(name)
     assert {o['lesson_id'] for o in learning['coverage']['objectives']}==set(lessons)
     assert manifest['optional_foundations']==len({f['id'] for l in lessons.values() for f in l['foundations']})
     assert manifest['focused_units']==sum(len(l['units']) for l in lessons.values())
@@ -190,6 +226,6 @@ def main():
         if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md','.py','.txt']:
             assert not forbidden.search(file.read_text()),('Local path or credential-like data',str(file.relative_to(site)))
         assert not any(part in ['materials','checks','.git','markji-ready'] for part in file.relative_to(site).parts),file
-    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'article_lessons':article_ids,'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
+    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'article_lessons':article_ids,'teaching_units':unit_count,'activities':activity_count,'activity_items':item_count,'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
 
 if __name__=='__main__':main()

@@ -2,7 +2,7 @@
 
 [打开学习网站](https://crazyshout.github.io/micro-course/) · [部署状态](https://github.com/CrazyShout/micro-course/actions/workflows/pages.yml)
 
-先理解，再检索：50 节微课都从具体场景和三个双语小步骤开始，再进入正式概念、公式与练习。新增 22 幅入门图；卡片题干补齐独立作答条件，必要题图放在正面。另有参考书补充、先修链接及交互演示。
+从一个问题开始，顺着例子学懂，再用 Markji 巩固。先试读两篇连续文章样板：[ML07 · 咖啡与高斯分类](https://crazyshout.github.io/micro-course/?lesson=ml07)、[NET02 · 咖啡店共享网络](https://crazyshout.github.io/micro-course/?lesson=net02)。正文采用单列阅读，双语题答可展开，图与交互放在解释难点的位置。其余 48 节保留原分步微课，待样板试读后再推广。
 
 材料快照为 2026-09-15，教学整理更新于 2026-09-18：CS5489 30 节微课 / 329 张知识卡，CS5222 20 节微课 / 280 张知识卡。当前 Canvas 内容和往年 Extra Resources 分别标明；AI 讲解不代表教师已确认的考试范围。
 
@@ -16,7 +16,7 @@
 
 ## 更新内容
 
-`Course/codexing` 仍是主稿工作区。该仓库的 `docs/` 是生成后的公开网站；`content/` 保留本次导出的可读微课和卡片主稿。
+`Course/codexing` 仍是主稿工作区。该仓库的 `docs/` 是生成后的公开网站；`content/` 保留本次导出的可读微课和卡片主稿。两篇文章的源位于 `Course/codexing/learning/articles/`，通过 ID 引用现有双语练习、基础与专题；不要另外复制一套答案。公开副本在 `content/learning/articles/`。
 
 在本仓库运行：
 

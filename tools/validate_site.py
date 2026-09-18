@@ -101,6 +101,39 @@ def main():
                 assert f['alt'] and all(f['caption_'+lang] for lang in ['zh','en'])
                 svg=(site/f['src']).read_text()
                 assert '<title ' in svg and '<desc ' in svg and '<script' not in svg
+    # Article pilots retain the existing bilingual exercises and recovery anchors.
+    article_ids=[]
+    for lesson in lessons.values():
+        article=lesson.get('article')
+        if not article:continue
+        article_ids.append(lesson['id'])
+        assert article['lesson_id']==lesson['id']
+        assert all(article['lede_html'][lang] and article['title'][lang] for lang in ['zh','en'])
+        sections=article['sections'];section_ids={s['id'] for s in sections}
+        assert len(section_ids)==len(sections)
+        blocks=[b for s in sections for b in s['blocks']]
+        assert sum(b['type']=='demo' for b in blocks)==1
+        assert sorted(b['part'] for b in blocks if b['type']=='exercise')==['practice','transfer','worked']
+        unit_ids={u['id'] for u in lesson['units']};foundation_ids={f['id'] for f in lesson['foundations']}
+        for block in blocks:
+            assert block['type'] in {'prose','figure','foundation','exercise','unit','demo','recap'}
+            if block['type']=='prose':assert block['text'] and block['html']
+            elif block['type']=='figure':
+                assert block['ref'] in {f['src'] for f in lesson['first_pass']['figures']};local_link(block['ref'])
+            elif block['type']=='foundation':assert block['ref'] in foundation_ids
+            elif block['type']=='unit':assert block['ref'] in unit_ids
+            elif block['type']=='demo':assert block['ref'] in {'gaussian-score','cafe-capacity'}
+        mapped=set()
+        for objective in article['objective_map']:
+            assert set(objective['sections'])<=section_ids
+            assert set(objective['cards'])<=set(lesson['card_ids'])
+            mapped.update(objective['cards'])
+        assert set(lesson['study_route']['first_pass'])<=mapped
+        assert article['sources']
+        assert all(s['name'] and s['locator'] and 'path' not in s for s in article['sources'])
+    assert article_ids==manifest.get('article_lessons',[])
+    if article_ids:
+        for name in ['learning-article.js','learning-article.css','learning-article-demos.js']:local_link(name)
     assert {o['lesson_id'] for o in learning['coverage']['objectives']}==set(lessons)
     assert manifest['optional_foundations']==len({f['id'] for l in lessons.values() for f in l['foundations']})
     assert manifest['focused_units']==sum(len(l['units']) for l in lessons.values())
@@ -157,6 +190,6 @@ def main():
         if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md','.py','.txt']:
             assert not forbidden.search(file.read_text()),('Local path or credential-like data',str(file.relative_to(site)))
         assert not any(part in ['materials','checks','.git','markji-ready'] for part in file.relative_to(site).parts),file
-    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
+    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'article_lessons':article_ids,'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
 
 if __name__=='__main__':main()

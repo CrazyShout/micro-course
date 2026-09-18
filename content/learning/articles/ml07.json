@@ -1,0 +1,275 @@
+{
+  "lesson_id": "ml07",
+  "title": {
+    "zh": "这杯咖啡到底是哪台机器做的？",
+    "en": "Which machine made this cup of coffee?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "一杯咖啡离两台机器的“典型出品”一样远，为什么模型仍会偏向其中一台？沿着这个问题，读懂协方差、高斯密度和分类分数，再亲手改变条件检验判断。",
+    "en": "A cup is equally far from the two machines’ typical outputs. Why can a model still prefer one? Follow this question through covariance, Gaussian density, and classification scores, then test the decision under changed conditions."
+  },
+  "sections": [
+    {
+      "id": "missing-label",
+      "title": {
+        "zh": "标签掉了，先别急着尝一口",
+        "en": "The label is missing—start with the measurements"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "咖啡店有 A、B 两台机器。一杯刚做好的咖啡忘了贴来源标签，记录只剩甜度和温度。你要根据这两个数猜：它来自哪一台？分类器没有舌头，只能看数据；我们得教它什么样的波动算“这台机器的正常发挥”。\n\n把甜度、温度按固定规则中心化并缩放，得到两个无量纲特征，写成 $x=(x_1,x_2)^T$。$T$ 表示把一排数写成列；$x_1$、$x_2$ 是同一杯的两项测量。中心化后的 0 表示选定的参考水平，不是咖啡温度为零度。训练和预测必须用同一套转换。\n\n本节的咖啡、数字和练习都是依据课堂模型编写的教学例子，不是真实测量，也不是 Tutorial 原题。课堂 `Lecture2b.ipynb` 使用的是鸢尾花的花瓣长度、萼片宽度；换场景后，推理步骤相同。当前 Tutorial 2 主要练文本朴素贝叶斯，后续 ML08 再接它。\n\n先设 A 的均值为 $(0,0)^T$，B 为 $(4,0)^T$。均值 $\\mu_c$ 就是类别 $c$ 的“典型位置”。新杯子恰好落在 $x=(2,0)^T$，到两个中心的普通距离都是 2。最近均值这把尺子分不出胜负——我们还不知道两台机器平时各有多稳定。"
+        },
+        {
+          "type": "foundation",
+          "ref": "vectors-matrices"
+        }
+      ]
+    },
+    {
+      "id": "spread-has-a-direction",
+      "title": {
+        "zh": "稳定不稳定，要看往哪个方向",
+        "en": "Variation has a direction"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "假设 A 的甜度平时比较随性，标准差是 2；温度则更稳定，标准差是 1。标准差描述典型波动尺度，方差是它的平方，所以两个方差是 4 和 1。这里先忽略甜度与温度的共同变化，写成 $\\Sigma_A=\\operatorname{diag}(4,1)$：对角放 4、1，其他位置放 0。\n\n但现实还可能有另一种规律：某台机器出品偏甜时也常偏热，偏淡时也常偏凉。只记录两个单独的方差，会漏掉这条关系。协方差 covariance 先分别减去均值，再看两个偏移的乘积平均如何：$\\Sigma_{ij}=E[(X_i-\\mu_i)(X_j-\\mu_j)]$。$E$ 表示按分布取平均，$X_i$ 是第 $i$ 个随机特征，$\\mu_i$ 是它的均值；此处都在同一个类别内部计算。\n\n两个偏移常同号，乘积就常为正；常异号，就常为负。令 $i=j$，得到偏移的平方平均，正是方差。所以协方差矩阵的对角线记录各自有多散，非对角线记录怎样一起变化。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/covariance-ellipses.svg"
+        },
+        {
+          "type": "prose",
+          "text": "把图上的椭圆看成密度地图的等高线：同一条线上密度相同。对角协方差让椭圆沿坐标轴伸展；完整协方差允许椭圆倾斜。例如两维方差均为 1、交叉协方差为 0.9 时，云团沿“甜度高、温度也高”的方向拉长。这个图解释形状，不是下面两台咖啡机具体数字的散点图。\n\n协方差矩阵是对称的：两项相乘顺序不影响结果。它也一定半正定，意思是任意方向上的方差不会为负。零协方差只表示没有线性共同变化，一般不能推出独立；在本节的联合高斯模型中，对角协方差才对应各特征独立。协方差数值还依赖单位，不能把摄氏度换成华氏度后继续照搬原参数。"
+        }
+      ]
+    },
+    {
+      "id": "a-fair-ruler",
+      "title": {
+        "zh": "偏离 2，究竟算不算离谱？",
+        "en": "A distance should be judged against its normal spread"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "甜度标准差为 2 时，偏离均值 2 只是一个标准差；标准差为 1 时，同样偏离 2 已经是两个标准差。把各自的“正常波动”当尺子，比一律用原始距离公平得多。就像迟到两分钟：放在不同波动尺度里，含义也不同；这里是统计尺度，不是在给机器找借口。\n\n对角协方差下，先把每一维偏移除以该维标准差，再平方相加：$q_c=\\sum_{j=1}^d (x_j-\\mu_{cj})^2/\\sigma_{cj}^2$。$d$ 是特征数，本例为 2；$\\sigma_{cj}^2$ 是类别 $c$ 在第 $j$ 维的方差。注意分母是方差，因为标准化后的偏移又被平方了。\n\n有相关性时，不能只对各轴分别缩放，还要照顾倾斜方向。统一写法是 $q_c=(x-\\mu_c)^T\\Sigma_c^{-1}(x-\\mu_c)$，称为马氏平方距离（squared Mahalanobis distance）。逆矩阵 $\\Sigma_c^{-1}$ 负责这次校正；上标 $-1$ 不是逐个元素取倒数。若协方差是对角矩阵，它才简化成刚才那条逐维公式。\n\n这里要求协方差正定：每个非零方向都有正方差，因此可以求逆。若样本完全压在一条线上，某个方向没有波动，普通的二维高斯密度公式就不能直接套。需要逆矩阵或正定的补课时，再展开下面一小段；本次手算只用对角情形。"
+        },
+        {
+          "type": "foundation",
+          "ref": "linear-algebra"
+        }
+      ]
+    },
+    {
+      "id": "spread-is-not-free",
+      "title": {
+        "zh": "越“宽容”的机器，不能白拿高分",
+        "en": "A broader model must spread its probability mass"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在似乎有个漏洞：把某台机器的方差调得无限大，它岂不是觉得任何杯子都“不算离谱”？确实，距离罚分会下降；但一个合法的概率密度总共只能分配 1 份概率质量，铺得更宽，密度就得摊薄。它不能一边自称什么都能做，一边对每种出品都拍胸脯说“最像我”。\n\n先分清密度 density 和概率 probability。连续测量模型里，某个精确点的概率为 0；一个小区域的概率来自该区域里密度的积分。可以把积分暂时理解为“把这片区域的小块概率加起来”。二维时，在足够小且密度近似不变的区域里，概率约等于密度乘面积。密度可以大于 1，而一个事件的概率不能大于 1。\n\n高斯模型用 $\\sqrt{|\\Sigma_c|}$ 表示散布带来的体积尺度。$|\\Sigma_c|$ 是行列式 determinant，不是对每个元素取绝对值。对角协方差的行列式就是各维方差相乘；取平方根后，得到各维标准差的乘积。二维时，对相同马氏半径的椭圆区域，这正是相对于单位协方差的面积倍数。\n\n将距离和归一化合起来，得到完整公式：\n\n$p(x\\mid c)=\\dfrac{\\exp(-q_c/2)}{(2\\pi)^{d/2}\\sqrt{|\\Sigma_c|}}$。\n\n$\\exp(t)=e^t$，$e$ 是自然指数的底；这里的 $\\pi$ 是圆周率。分子随校正距离增大而下降，分母保证密度总积分为 1。读公式时先抓住这两个动作，之后再练习完整写出它。下面的行列式小专题可跳过，适合仍困惑“为什么要开平方”的时候看。"
+        },
+        {
+          "type": "unit",
+          "ref": "determinant-and-gaussian-volume",
+          "part": "all",
+          "collapsed": true
+        }
+      ]
+    },
+    {
+      "id": "score-and-posterior",
+      "title": {
+        "zh": "看起来像谁，还要结合谁更常见",
+        "en": "Combine the evidence with the prior"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "即使两台机器做出这杯咖啡的密度相同，如果店里平时八成咖啡来自 B，猜 B 也更有依据。类别先验 $\\pi_c=P(C=c)$ 是看到这杯测量之前，对来源类别的概率；带下标的 $\\pi_c$ 与刚才的圆周率 $\\pi$ 不是同一个量。本节先验都大于 0，且跨类别相加为 1。\n\nBayes 规则让我们比较 $\\pi_c p(x\\mid c)$：先验乘以类条件密度。取自然对数 log 后，乘法变成加法，正数的大小顺序保持不变。指数函数的对数会还原指数，于是高斯模型的三部分变成一张可逐项核对的账单：\n\n$s_c=\\log\\pi_c-\\frac12\\log|\\Sigma_c|-\\frac12q_c$。\n\n第一项是先验，第二项是体积归一化，第三项是校正距离。完整对数密度还含 $-d\\log(2\\pi)/2$；各类别的特征维度相同，因此这项相同，可以在比较中一起省去。负分完全正常，$-2$ 比 $-3$ 大；这个分数本身不是概率。\n\n选最大分数的类别，就得到等错误成本下的最大后验预测。若还想知道模型有多倾向 A，需要再归一化：$P(C=c\\mid x)=\\exp(s_c)/\\sum_k\\exp(s_k)$，求和遍历所有类别。分子是正权重，分母是全部正权重之和，所以各类后验才会相加为 1。这是模型给出的条件概率，不是机器来源已经被证实。"
+        },
+        {
+          "type": "foundation",
+          "ref": "probability"
+        }
+      ]
+    },
+    {
+      "id": "classify-the-cup",
+      "title": {
+        "zh": "把这杯咖啡完整判一次",
+        "en": "Follow one cup through the complete calculation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "回到那杯离两类中心一样远的咖啡。下面把所有条件列齐，沿着“偏移 → 距离 → 行列式 → 分数 → 后验”走完一次。先用两分钟顺着每一步算，不必一口气背住整条公式。读完后，留意哪一项让两台机器分出了胜负。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "prose",
+          "text": "这一轮的经验是：普通距离相同，不代表在两个模型里同样典型。接着只动一个条件，才能看清究竟是哪一步改变了判断。下一题保持这杯咖啡和两台机器的分布不变，只改变店里两台机器的出杯比例。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "change-one-knob",
+      "title": {
+        "zh": "动一个旋钮，先猜再看",
+        "en": "Change one parameter and predict what will happen"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在可以用小演示检验自己的直觉。它固定这杯的测量、两个均值和 A 的协方差；你只改变 A 的先验，或 B 在第一维的方差。每次先猜哪项分数会动，再看展开的各项和后验。改变的是模型假设，不是让咖啡在杯子里自动变甜。\n\n先把 B 的第一维方差留在 1，改变先验；再恢复两类各占一半，只逐渐增大 B 的方差。你会同时看到 B 的距离罚分和体积项发生变化。演示里的操作不会改下面独立题的数据；做题时以题干为准。"
+        },
+        {
+          "type": "demo",
+          "ref": "gaussian-score"
+        },
+        {
+          "type": "prose",
+          "text": "最后这道题把“越宽容是否越好”变成可核对的数值。请先收起演示或重置它，在纸上重新列出两类的三项账单，再展开答案。若结论与只比距离时不同，用一句话说明原因。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "three-models",
+      "title": {
+        "zh": "课堂里的三种模型，差在允许什么形状",
+        "en": "Three models impose different covariance restrictions"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "刚才为了手算方便用了对角矩阵。现在把这套推理接回课堂模型，重点看协方差受到什么限制。\n\nGaussian naive Bayes（高斯朴素贝叶斯）给每个类别、每个特征分别拟合一维高斯，并假设给定类别后特征独立：$p(x\\mid c)=\\prod_{j=1}^d\\mathcal N(x_j\\mid\\mu_{cj},\\sigma_{cj}^2)$。$\\prod$ 表示逐项相乘，$\\mathcal N$ 表示高斯密度。它等价于逐类对角协方差：可以各有宽窄，但不能表达类内倾斜的相关性。“朴素”说的是条件独立假设，不是这些特征在所有类别混在一起后仍独立。\n\n把对角矩阵的距离展开、把行列式写成方差乘积，再取对数，就得到课堂 NB 分数：\n\n$s_c=\\log\\pi_c-\\frac12\\sum_{j=1}^d\\left[\\log(2\\pi\\sigma_{cj}^2)+\\frac{(x_j-\\mu_{cj})^2}{\\sigma_{cj}^2}\\right]$。\n\n它和前面的三项账单是同一件事；这个写法比前面的三项账单多保留了所有类别共有的常数。因此当你看到两种公式时，不需要再背一个完全陌生的算法。\n\n当前课堂的 `GaussianBayes` 则在每个类别的样本 `Xc` 上分别算完整协方差；加上 `alpha*I`（alpha>0，I 是单位矩阵，即在各对角线加上 alpha）后仍然各算各的，完全没有因为加了同样的正则项就变成“共享”。它允许不同类别有不同倾斜方向和宽窄，决策边界一般是二次的。\n\nLDA（线性判别分析）要求所有类别共享一份协方差。比较两类分数时，共同的 $x^T\\Sigma^{-1}x$ 二次项会抵消，得到线性边界。即便共享矩阵各维方差不同，也仍可得到线性判别；关键是不同类别之间是否共享，而不是矩阵是不是圆形。类别协方差不同时可能有弯曲边界，但不能保证一定弯曲，更不能保证测试表现更好。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    },
+    {
+      "id": "after-the-main-story",
+      "title": {
+        "zh": "准备看课堂代码时，再补这几件事",
+        "en": "Optional: connect the calculation to the lecture code"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "均值和协方差在上面的练习里已给定；真实训练时要从带标签样本估计它们。每类有 $d$ 个均值；对称完整协方差有 $d(d+1)/2$ 个独立数，对角协方差只有 $d$ 个。在二维、三类的例子中，逐类完整、逐类对角、共享完整分别需要 9、6、3 个协方差参数，尚未计均值和先验。灵活的形状需要更多数据来估计，不能只看训练集拟合得漂亮。\n\n`Lecture2b.ipynb` 单元 39 写出的协方差 MLE 用每类样本数 $N_c$ 作分母；单元 44 的 `cov(Xc, rowvar=False)` 默认按 $N_c-1$ 归一化。阅读公式与代码时要分清这处约定，而不是硬说它们逐字相同。`rowvar=False` 表示每列是一个特征、每行是一条样本。\n\n加 $\\alpha I$（$\\alpha>0$）给每个方向增加方差；$I$ 是对角为 1、其余为 0 的单位矩阵。它能把半正定但奇异的估计变成正定，使求逆稳定一些。$\\alpha$ 太大会冲淡结构，应通过验证选择。课堂类还假设标签连续为 0 到 $K-1$，因此代码把原标签 1、2 减 1；换数据时不能漏掉这个检查。\n\n大量小密度连乘可能数值下溢，所以课堂用对数。程序计算后验时还使用 log-sum-exp：先给所有分数减去共同最大值，再取指数、相加。共同平移不改变最终归一化比例，却能避免直接计算极端指数。本节手算的数不大，直接指数归一化即可。\n\n若你要动手运行课堂 Notebook，仍需划分训练与测试数据、只在训练集拟合参数，再在未见数据上评价。本文的手算帮助读懂模型，不等于已经完成那项编程实践。"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "CS5489 Lecture2b.ipynb",
+      "locator": "1-based cells 3, 7, 14–19, 23–27",
+      "kind": "course",
+      "note": "当前 Canvas：条件独立、Gaussian NB、鸢尾花特征和密度/后验图。 / Current Canvas: conditional independence, Gaussian NB, iris features, and density/posterior plots."
+    },
+    {
+      "name": "CS5489 Lecture2b.ipynb",
+      "locator": "1-based cells 33–44, 46–52",
+      "kind": "course",
+      "note": "当前 Canvas：多元高斯公式、协方差、逐类完整协方差代码、正则化和后验。正文区分公式的 N 分母与代码 cov 默认的 N−1 分母。 / Current Canvas: multivariate Gaussian density, covariance, separate full covariances, regularization, and posteriors; the text distinguishes the formula and code denominator conventions."
+    },
+    {
+      "name": "CS5489 Tutorial2v2.ipynb",
+      "locator": "1-based cells 2, 13, 17, 29–35",
+      "kind": "course",
+      "note": "范围核对：本 Tutorial 是文本分类的 Bernoulli、Multinomial、Poisson NB；咖啡例并非其中原题。 / Scope check: this tutorial covers text classifiers; the coffee calculation is not a tutorial question."
+    },
+    {
+      "name": "原创咖啡机教学例与模型对照 / Original coffee-machine teaching example and model comparison",
+      "locator": "本微课正文；原例题见 ML07 worked / practice / transfer；行列式专题见 determinant-and-gaussian-volume",
+      "kind": "derived",
+      "note": "无量纲特征、咖啡场景、数值变式与 LDA 二次项抵消解释为教学补充；计算已用密度和对数分数两条路径复算。 / Dimensionless features, coffee scenarios, numeric variations, and the LDA cancellation explanation are teaching additions; density and log-score calculations were checked independently."
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "解释方差、交叉协方差和相关方向，并处理行列式为零的限制。",
+      "sections": [
+        "spread-has-a-direction",
+        "a-fair-ruler",
+        "spread-is-not-free"
+      ],
+      "practice": "unit:determinant-and-gaussian-volume:transfer",
+      "cards": [
+        "CS5489-M066",
+        "CS5489-M067"
+      ]
+    },
+    {
+      "goal": "由高斯密度写出可比较分数，计算改变方差后的类别并解释体积与距离的竞争。",
+      "sections": [
+        "a-fair-ruler",
+        "spread-is-not-free",
+        "score-and-posterior",
+        "classify-the-cup",
+        "change-one-knob"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M063",
+        "CS5489-M067"
+      ]
+    },
+    {
+      "goal": "解释 Gaussian NB 的条件独立限制及逐类对角协方差；用已有卡主动回忆其类条件模型。",
+      "sections": [
+        "three-models",
+        "change-one-knob"
+      ],
+      "practice": "card:CS5489-M061",
+      "cards": [
+        "CS5489-M061"
+      ]
+    },
+    {
+      "goal": "区分逐类完整协方差与共享协方差；用已有卡主动辨认代码及可能的边界差异。",
+      "sections": [
+        "three-models",
+        "after-the-main-story",
+        "change-one-knob"
+      ],
+      "practice": "card:CS5489-M071",
+      "cards": [
+        "CS5489-M071"
+      ]
+    }
+  ]
+}

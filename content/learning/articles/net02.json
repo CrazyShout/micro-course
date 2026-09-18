@@ -1,0 +1,301 @@
+{
+  "lesson_id": "net02",
+  "title": {
+    "zh": "咖啡店的网络，为什么突然堵了？",
+    "en": "Why does the café network work—until everyone uses it?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "一起上传文件，网络就开始“思考人生”。从这件小事出发，我们会算清一条链路能服务多少人、共享为什么省资源，以及怎样判断“偶尔挤一下”的概率。",
+    "en": "A shared upload slows down when everyone joins in. Learn how reservations differ from sharing, count the users a link can support, and calculate the probability that simultaneous demand exceeds capacity."
+  },
+  "sections": [
+    {
+      "id": "reserve-or-share",
+      "title": {
+        "zh": "先问清楚：给每人留一份，还是谁要用谁来？",
+        "en": "Reserve a share, or share on demand?"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "咖啡店里，有人上传实验结果，有人读论文，有人盯着屏幕假装在读论文。假设这些设备要经过同一条瓶颈链路（bottleneck link）上传：其他部分都够快，只有这条链路限制总速率。我们先研究这一个限制，不把整个互联网一次塞进咖啡杯。"
+        },
+        {
+          "type": "prose",
+          "text": "一种安排是：连接开始前，沿通信路径给它预留资源，之后这份容量就归它使用。这叫电路交换（circuit switching）。即使用户暂停上传去喝咖啡，预留份额也不能随便分给别人。好处是服务份额可预测；代价是空闲份额可能浪费，开始前还可能需要建立连接。这里的“电路”是逻辑上的资源预留，不要求每个人都拉一根专属网线。"
+        },
+        {
+          "type": "prose",
+          "text": "另一种安排是：把应用数据拆成分组（packet），谁有包要发，谁就参与共享链路的传输服务。这叫分组交换（packet switching）。一个人停下来，其他人的包可以继续用链路；每个连接不永久占一块预留份额。对“发一阵、歇一阵”的突发流量，这通常更灵活。"
+        },
+        {
+          "type": "prose",
+          "text": "但共享没有变出新带宽。若一段时间内到来的数据比输出链路能送走的更多，尚未送出的包就进入队列（queue）。短暂超额可以由缓冲区吸收；缓冲区满时，新来的包可能被丢弃；这里先看这种由拥塞造成的丢包。以上对应当前 Chapter 1 第 21–27 张课件；咖啡店是帮助理解的教学场景。"
+        }
+      ]
+    },
+    {
+      "id": "count-the-capacity",
+      "title": {
+        "zh": "先算账：连接着 12 人，不等于 12 人都在上传",
+        "en": "Connected users are not necessarily active users"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "算人数之前先统一单位：本课使用十进制网络速率，1 Mbps = 1000 kbps；小写 b 是 bit（比特），不是 byte（字节）。把链路容量记作 $R$，每位活跃用户所需速率记作 $r$。只有把两者换到相同单位，$R/r$ 才是可用的份数；不能凑成完整一份的余量不算一个用户。"
+        },
+        {
+          "type": "foundation",
+          "ref": "bits-rates"
+        },
+        {
+          "type": "prose",
+          "text": "先用课件第 29 张的原始数字练一次。把它理解为咖啡店的一种理想套餐：每人预留 100 kbps，总容量 1 Mbps。这里问的是“能预留多少份”，并不需要活跃概率。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "prose",
+          "text": "老板考虑另一种套餐：2 Mbps，每人活跃时需要 250 kbps。下面请补上计算。尤其留意题目给的两个人数：12 人已接入，只有 5 人此刻活跃；决定此刻需求的是后者。题目是基于课堂模型的教学变式。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "现在保留同一套餐，把使用习惯改掉。大家同时开始活动，原来闲置的容量就不够分了。先自己算，再打开答案；这次还要用一句话解释原因。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "eight-states",
+      "title": {
+        "zh": "把人缩减到三个，所有可能就能摊开看",
+        "en": "Three users make every possibility visible"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "容量题已经会做了，接着才问概率：某一时刻，到底会有多少人同时上传？为看清每一种情况，我们另设一个更小的教学网络：只留 A、B、C 三个人。下面的 600 kbps、300 kbps 是为枚举挑选的数字，不是上一种套餐悄悄变速，也不是咖啡店的实测数据。"
+        },
+        {
+          "type": "foundation",
+          "ref": "probability"
+        },
+        {
+          "type": "unit",
+          "ref": "activity-probability",
+          "part": "explain"
+        },
+        {
+          "type": "prose",
+          "text": "先拨动下面三个开关，亲手选出一个状态。再看八种状态的概率：手动点出某个状态，不会改变它在这个随机模型中的概率。尤其比较 000 和 111；“都是一种状态”不等于“机会一样大”。"
+        },
+        {
+          "type": "demo",
+          "ref": "cafe-capacity"
+        },
+        {
+          "type": "prose",
+          "text": "把刚才的观察写成计算。先判断哪些状态属于题目要求，再相加；别看到“概率”就急着把数字往公式里倒。"
+        },
+        {
+          "type": "unit",
+          "ref": "activity-probability",
+          "part": "worked"
+        }
+      ]
+    },
+    {
+      "id": "change-the-conditions",
+      "title": {
+        "zh": "网络降速、朋友加入：先改判断，再改计算",
+        "en": "Change the event before changing the arithmetic"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "下面先做一个有提示的变式：活跃概率提高，链路容量减半。最容易漏的步骤不是乘法，而是重新判断“几个人开始超额”。"
+        },
+        {
+          "type": "unit",
+          "ref": "activity-probability",
+          "part": "practice"
+        },
+        {
+          "type": "prose",
+          "text": "然后请独立处理五个人的情形。人数变多，无需手画 32 种状态；组合数会替你数清同类状态。仍然先写“哪些人数要加”，再按计算器。"
+        },
+        {
+          "type": "unit",
+          "ref": "activity-probability",
+          "part": "transfer"
+        },
+        {
+          "type": "prose",
+          "text": "到这里，统计复用（statistical multiplexing）的收益才有了具体含义：共享服务的是“此刻真正需要传输的人”。经常空闲、突发又不总重合的用户，可以让更多连接共用一条链路，同时保持较低的需求超额概率。这个收益依赖流量模式；它不保证每个人同时需要时都能满速。"
+        }
+      ]
+    },
+    {
+      "id": "back-to-class",
+      "title": {
+        "zh": "回到课件与 Tutorial：识别“恰好”和“超过”",
+        "en": "Return to the lecture and Tutorial 1"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "课堂的 35 人题就是同一个故事放大：链路 1 Mbps，每人活跃时需 100 kbps，每人独立以 0.1 的概率活跃。先求容量是 10 人，再令 $K$ 为同时活跃人数。题目问超过容量，事件就是 $K>10$；要把 11、12、…、35 人的概率全部加上。对应卡片 N020。"
+        },
+        {
+          "type": "prose",
+          "text": "计算写成 $P(K>10)=\\sum_{k=11}^{35}\\binom{35}{k}0.1^k0.9^{35-k}\\approx0.0004243$，约为 0.0424%。课件第 29 张写“小于 0.0004”，这个界限略有误差；这里使用复算值。概率小的结论仍成立，但不能把它读成绝不会排队。"
+        },
+        {
+          "type": "prose",
+          "text": "Tutorial 1 第 3 页 Q4 换了另一组数字：3 Mbps 链路，每人活跃时需 150 kbps、活跃时间占 10%。Q4(a) 的固定预留人数是 $3000/150=20$。Q4(c) 给出 120 人，问的是“恰好 $n$ 人同时发送”；在相互独立且活跃概率相同的模型下，答案只有一项：$P(K=n)=\\binom{120}{n}0.1^n0.9^{120-n}$，其中 $n=0,\\ldots,120$。对应卡片 N078；老师的解答在 solution 第 10 张。"
+        },
+        {
+          "type": "prose",
+          "text": "同样看到 120 人，若题目改问“超过容量”，才需要把超过 20 人的项相加。先把自然语言翻成事件，再决定写一项还是求和；这是题型变了仍然能做的关键。不要记选择题字母，记清楚你数的是哪些状态。"
+        }
+      ]
+    },
+    {
+      "id": "beyond-the-cafe",
+      "title": {
+        "zh": "补充：文件离开咖啡店之后，还会遇到什么？",
+        "en": "Optional: what happens beyond the café?"
+      },
+      "optional": true,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "主线到这里已经完整。下面保留与后续卡片有关的几个接口；第一次读可以折起，等刷到相关卡时回来。"
+        },
+        {
+          "type": "prose",
+          "text": "电路交换怎样实现预留？频分复用 FDM 分配不同频段；时分复用 TDM 分配周期性时隙。理想总速率为 $R$、均分给 $k$ 条电路时，每条平均获得 $R/k$。它们分别在频率和时间上划分资源，不能把 TDM 的轮流使用误认为分组交换的按需竞争。对应 N014，课件第 22–23 张。"
+        },
+        {
+          "type": "prose",
+          "text": "分组经过存储转发（store-and-forward）设备时，要先收齐整个包，才能把这个包发上下一条链路。若包长为 $L$ 比特，每条链路速率为 $R$ 比特/秒，把整包发上每条链路各需 $L/R$ 秒。一个包经过两条这样的链路，忽略处理、排队和传播时延，目的端收齐需 $2L/R$ 秒；不能第一比特刚到中间设备，就假定下一跳已经开始发送这个包。不同包可以同时位于不同链路，这会在 NET03 的流水线中展开。对应 N016；课件第 25–26 张和 Tutorial 1 Q1。"
+        },
+        {
+          "type": "prose",
+          "text": "路由器每次决定“这个包从哪个接口出去”，叫转发（forwarding）；决定通向目的地的路径并帮助建立转发表，叫路由（routing）。咖啡店的接入网还要通过 ISP（Internet Service Provider，互联网服务提供商）与其他网络相连：transit 是客户向提供商获得连通服务的安排，peering 是网络直接交换约定流量的互联关系，IXP 是让多个网络互连的设施。互联网因此是“网络的网络”，不是一台超大中央路由器。大型内容提供商还会连接自己的数据中心或更直接地连接接入网络，以控制性能与成本。对应 N017、N022–N024，课件第 28、34–42 张。"
+        },
+        {
+          "type": "prose",
+          "text": "本节的一个瓶颈模型刻意省略了这些完整路径。现实里换了更快的 Wi-Fi，也可能被后面的接入链路限制；不能把串行链路的速率相加。具体瓶颈、时延与分层问题留在后续课程与章末卡里逐步练，不必在这一页一口气背完。"
+        }
+      ]
+    },
+    {
+      "id": "ready-to-recall",
+      "title": {
+        "zh": "带走三个判断，再去刷卡",
+        "en": "Take three decisions into your review"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "看到网络容量题，按这个顺序想：第一，它是在预留份额，还是按需共享？第二，总连接人数和此刻活跃人数分别是多少？第三，题目问恰好几人、超过容量，还是实际排队多久？前两类概率可以用本节的模型计算；排队多久还需要到达、服务和队列随时间变化的信息，不能直接把超额概率当作时延或丢包率。"
+        },
+        {
+          "type": "prose",
+          "text": "先用中文把这三步说顺，再用下面的英文要点练一次。文末首轮卡复习交换方式、统计复用、容量计算和“平均够用为何仍会排队”；N020 的尾概率与 N078 的 Tutorial 题可以在完成五人变式后再刷。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "cs5222_cha1_2026_student.pptx",
+      "locator": "slides 21–31, 34–42",
+      "kind": "course",
+      "note": "当前 Canvas 课件：资源预留、分组/存储转发、统计复用与互联网互联。重点数字直接核对原 PPTX，第 29 张的尾概率界限采用独立复算值。"
+    },
+    {
+      "name": "tutorial-1_semA2026.pdf",
+      "locator": "page 3, Q4(a–c); page 1, Q1",
+      "kind": "course",
+      "note": "当前 Tutorial：Q4 的 3 Mbps、150 kbps、120 人及 0.1 活跃概率；存储转发 Q1 仅作后续主题入口。正文不复制选择题选项。"
+    },
+    {
+      "name": "tutorial-1-solution_semA2026.pptx",
+      "locator": "slide 10, Q4",
+      "kind": "course",
+      "note": "教师解答的 20 个预留用户及独立二项模型；原 PPTX 文本核对。"
+    },
+    {
+      "name": "Café teaching examples / 咖啡店教学例子",
+      "locator": "NET02; activity-probability",
+      "kind": "derived",
+      "note": "咖啡店场景、2 Mbps 变式、三人/五人状态与交互是已有课堂模型的教学改编；数值独立复算，未声称真实 Wi-Fi 模拟或测量。"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "比较电路预留与分组共享，分清接入人数与活跃人数，并计算容量和超额需求。",
+      "sections": [
+        "reserve-or-share",
+        "count-the-capacity"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N013",
+        "CS5222-N015",
+        "CS5222-N019"
+      ]
+    },
+    {
+      "goal": "解释统计复用的收益与条件，说明平均低负载为什么不能保证零排队。",
+      "sections": [
+        "reserve-or-share",
+        "count-the-capacity",
+        "eight-states",
+        "change-the-conditions"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5222-N018",
+        "CS5222-N021"
+      ]
+    },
+    {
+      "goal": "通过小规模枚举建立二项模型，在新人数下分别计算恰好人数与需求超额概率。",
+      "sections": [
+        "eight-states",
+        "change-the-conditions",
+        "back-to-class"
+      ],
+      "practice": "unit:activity-probability:transfer",
+      "cards": [
+        "CS5222-N020"
+      ]
+    }
+  ]
+}

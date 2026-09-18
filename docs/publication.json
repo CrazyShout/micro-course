@@ -41,6 +41,10 @@
   },
   "total_lessons": 50,
   "total_cards": 609,
+  "article_lessons": [
+    "ml07",
+    "net02"
+  ],
   "images": 66,
   "assets": [
     {
@@ -390,13 +394,13 @@
     },
     {
       "path": "guide.html",
-      "bytes": 13247,
-      "sha256": "af25fa24231d48721ce85128812b02c03b160dd8a6d9b481a0efcdd5e827b8a4"
+      "bytes": 13277,
+      "sha256": "70298d9f435bc81670cabaf8a64ce01048d42880ebf27fe9f4d7fd5724ad5691"
     },
     {
       "path": "index.html",
-      "bytes": 2280,
-      "sha256": "38ba92365b08ae6205f1dc9481231b8f5998170a08f22c8a204ea12e621e48ef"
+      "bytes": 2468,
+      "sha256": "c3955a9b82c58abe75e063c2057265367ed111fd4e81629934f13c4008cba6f2"
     },
     {
       "path": "learning/figures/attention-values.svg",
@@ -524,9 +528,24 @@
       "sha256": "7279ae4b5b9d01e5212acc7300e02a66427c4f9f81c37b59b7fa9b6f1050321b"
     },
     {
+      "path": "learning-article-demos.js",
+      "bytes": 9062,
+      "sha256": "2eb0f139e36c80ed06a833983b1585d41bb132f25ba809c1bf3de67904b2dd16"
+    },
+    {
+      "path": "learning-article.css",
+      "bytes": 10882,
+      "sha256": "b8ce1befd6d7939349e480df9bfe14209dab77228361443417297006ee556b8b"
+    },
+    {
+      "path": "learning-article.js",
+      "bytes": 10197,
+      "sha256": "8c30f46c5b175921bec0b1a226b812dc8f3a22590de892f079db6b543eb097d1"
+    },
+    {
       "path": "learning-data.js",
-      "bytes": 2220252,
-      "sha256": "acbdeef2c494fbc9903698d8b89559b5d3c4d130310fbba864f7b8d215f0f5c6"
+      "bytes": 2273392,
+      "sha256": "47cb6cb6a8e2b88db9663d97fd42ae06a9f385d435167bd7ab2675fe2c5df62d"
     },
     {
       "path": "learning-demos.js",
@@ -545,8 +564,8 @@
     },
     {
       "path": "learning.js",
-      "bytes": 21529,
-      "sha256": "577b2769c8e9f5c09926f8c4a826a3c0a701644d3ff0aebd2a0f4a2951c26e17"
+      "bytes": 21763,
+      "sha256": "2a32d3d2fd1ff57fe8f20940e6c9512b6a662821a2d6aaab245259e6c5519f1c"
     },
     {
       "path": "notices-data.js",

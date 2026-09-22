@@ -1,0 +1,210 @@
+{
+  "lesson_id": "ml31",
+  "title": {
+    "zh": "一个估价师容易摇摆，多棵树怎样一起估价格？",
+    "en": "How can several trees estimate a price together?"
+  },
+  "minutes": "15–20",
+  "lede": {
+    "zh": "房子有面积、房龄等记录，老师希望预测售价。一条直线可能太死板，于是先试一套简单规则：面积不超过某个值走左边，否则走右边，每一组报一个价格。这样的小树怎样学规则？几棵树合作又比复制同一个意见多了什么？",
+    "en": "Given house measurements, predict the sale price. A line may be too rigid. Try a rule: send smaller houses left and larger houses right, with one price per group. How does this tree learn, and what can several trees add?"
+  },
+  "sections": [
+    {
+      "id": "one-rule",
+      "title": {
+        "zh": "先让一条规则回答价格问题",
+        "en": "Let one rule predict a numerical value"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "分类树可以投类别票，回归树需要报一个数。在平方误差准则下，一组训练价格用均值作常数预测，能让该组平方误差最小。树沿问题逐层分组，末端叫叶子；预测时只沿输入满足的分支走到一个叶子，不是把全树所有叶子平均。"
+        },
+        {
+          "type": "prose",
+          "text": "为什么用均值？以100和120为例，报110时两次误差都是10；报100则一次错20。平方代价分别是200与400。价格单位在本例是千美元，平方误差单位就是其平方。我们先用四条人为数据学清规则。"
+        },
+        {
+          "type": "figure",
+          "ref": "learning/figures/regression-tree.svg"
+        }
+      ]
+    },
+    {
+      "id": "choose-split",
+      "title": {
+        "zh": "切哪里，要看两边一共还错多少",
+        "en": "Choose a split by the error in both children"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "对每个候选阈值，先把训练样本分成两组，再各自算均值，最后加总叶内平方误差。不能只照顾左边而忘记右边。切分能让训练误差降低，但若一直切到每个叶子只有一个样本，训练零误差也可能只是在记记录。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "worked"
+        },
+        {
+          "type": "prose",
+          "text": "带着同一个步骤换一组价格：规则仍是先分组、再算均值、再检查误差，先别急着叫库函数。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "practice"
+        }
+      ]
+    },
+    {
+      "id": "try-another-cut",
+      "title": {
+        "zh": "换一个候选阈值，自己决定",
+        "en": "Compare another threshold independently"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "现在恢复原价格，换一条切线。分组一变，叶均值必须重算，不能把110和290当作树自带的常量。请完整列出两边，再评价哪个切分更合适。"
+        },
+        {
+          "type": "exercise",
+          "ref": "lesson",
+          "part": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "forest",
+      "title": {
+        "zh": "让不同的树分别提意见，再取平均",
+        "en": "Average trees that make partly different errors"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "单棵树可能因为训练集中少了一条记录就换了切分。Bagging先有放回地抽样，得到多份训练资料，分别训练树，回归时平均它们的预测。比如180、210、240的均值为210。复制同一棵树一百遍，平均后仍是原结果；有用的是差异，不是开会人数。"
+        },
+        {
+          "type": "prose",
+          "text": "随机森林还可在寻找每次切分时只考虑一部分特征，减少树之间的相似性。但要看实际配置：当前RandomForestRegressor默认max_features=1.0，会考虑全部特征；课堂单元78的一维例子本来也只有一个特征。不能把概念图上的每种随机化都当成当前代码已经启用。"
+        },
+        {
+          "type": "prose",
+          "text": "Lecture4b先画四棵树，再画森林平均，最后用交叉验证选深度。增加树数可让平均更稳定，却不能修复错误标签或代表性不足，也不保证验证分数每次提高。普通均值叶子的预测受训练目标范围限制，外推与异常值仍需留意。"
+        }
+      ]
+    },
+    {
+      "id": "boosting",
+      "title": {
+        "zh": "前一轮低估了，这一轮补多少？",
+        "en": "Correct the current prediction sequentially"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Boosting换了一种合作：后一位估价师看前面还错在哪里，再补一小步。对半平方误差，目标减当前预测就是负梯度；若低估，修正倾向向上。学习率决定每次信任新修正多少，树数决定改多少轮，二者应一起验证。"
+        },
+        {
+          "type": "unit",
+          "ref": "boosting-sign",
+          "part": "all",
+          "collapsed": true
+        },
+        {
+          "type": "prose",
+          "text": "课件单元97也用“拟合正梯度再减去”的写法，数学方向可以一致，关键是别把两种符号约定拼在一起。XGBoost还利用二阶信息、树复杂度正则和采样等机制，不能只用“拟合残差”替代它的完整算法。"
+        }
+      ]
+    },
+    {
+      "id": "back-to-code",
+      "title": {
+        "zh": "回到老师的模型比较表",
+        "en": "Return to the instructor’s comparison and validation"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "单元94用neg_mean_squared_error做验证分数：越大越好，例如−400优于−900，对应更小的MSE。单元98的随机搜索一次比较200组配置，每组5折，共约1000次候选拟合，另有最终重拟合；这不是“只训练200次”。先小范围核对流程，再决定计算预算。"
+        },
+        {
+          "type": "prose",
+          "text": "普通平方误差回归可以直接作为预测目标，不必先宣称真实噪声一定高斯；噪声假设是额外概率解释。若把正价格取log，最小化的是log空间误差，逆变换后也不自动得到原尺度条件均值。比较结果时写清目标、单位、变换、验证划分与随机种子。"
+        },
+        {
+          "type": "prose",
+          "text": "先用下面三张卡巩固叶均值、森林平均和一次梯度修正。原课堂房价实验仍需实际运行才能报告成绩，手算示范没有替你完成它。"
+        },
+        {
+          "type": "recap"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lecture4b.ipynb",
+      "locator": "cells 73–103",
+      "note": "当前回归树、随机森林与梯度提升；手算房价为教学数字，不是原数据实测。",
+      "kind": "course"
+    },
+    {
+      "name": "scikit-learn RandomForestRegressor",
+      "locator": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html; max_features",
+      "note": "核对当前默认值与特征子采样条件。",
+      "kind": "reference"
+    }
+  ],
+  "objective_map": [
+    {
+      "goal": "手算平方误差叶预测与切分代价",
+      "sections": [
+        "one-rule",
+        "choose-split",
+        "try-another-cut"
+      ],
+      "practice": "lesson:transfer",
+      "cards": [
+        "CS5489-M339"
+      ]
+    },
+    {
+      "goal": "解释森林平均与多样性",
+      "sections": [
+        "forest"
+      ],
+      "practice": "card:CS5489-M340",
+      "cards": [
+        "CS5489-M340"
+      ]
+    },
+    {
+      "goal": "给定损失，独立核对Boosting修正符号",
+      "sections": [
+        "boosting"
+      ],
+      "practice": "unit:boosting-sign:transfer",
+      "cards": [
+        "CS5489-M341"
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "src": "learning/figures/regression-tree.svg",
+      "alt": "四条教学记录按面积切分，叶子预测均值；Four teaching records split by area, with mean predictions.",
+      "caption_zh": "同一组四条教学记录：先按面积分组，再在叶内求价格均值；不是实际房价预测。",
+      "caption_en": "Four teaching records: split by area, then average target prices in each leaf; not a real property valuation."
+    }
+  ]
+}

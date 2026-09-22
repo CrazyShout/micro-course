@@ -11,7 +11,10 @@
           "ml08",
           "ml10",
           "ml12",
-          "ml13"
+          "ml13",
+          "ml19",
+          "ml20",
+          "ml31"
         ],
         "practical_tasks": [],
         "evidence": "各微课的同能力例题、独立变式和关联卡片。"
@@ -38,12 +41,15 @@
           "ml08",
           "ml09",
           "ml15",
-          "ml16"
+          "ml16",
+          "ml19",
+          "ml20",
+          "ml31"
         ],
         "practical_tasks": [
           "sms-reproducible-baseline"
         ],
-        "evidence": "需交代数据、模型假设和受控对比，尚未替你完成数据实验。"
+        "evidence": "已有 Tutorial 3 表示/验证方法检查和 Lecture 4 房价手算、KRR及树模型练习；需自己运行实验并交代数据、假设和受控对比，未填入未经运行的成绩。"
       },
       {
         "name": "评价优缺点 / Evaluate",
@@ -51,7 +57,9 @@
           "ml11",
           "ml15",
           "ml16",
-          "ml17"
+          "ml17",
+          "ml19",
+          "ml31"
         ],
         "practical_tasks": [
           "sms-reproducible-baseline"
@@ -60,7 +68,7 @@
       }
     ],
     "gaps": [
-      "当前 Canvas 只覆盖已下载 Lecture 1–3、Tutorial 1–2 和 Assignment 1，后续资料仍需核对。",
+      "当前 Canvas 已整理 Lecture 1–4、Tutorial 1–3 和 Assignment 1；Lecture 4 的配套 Tutorial/Assignment 及之后资料尚未下载核对。",
       "历史视觉架构 VGG、Inception、ResNeXt、SE、CLIP 的专门训练链尚缺。",
       "PSNR、SSIM 的完整计算和适用条件尚未分别展开。",
       "参考书全部章节和正式 QE 范围尚未完整映射；实际编程能力须通过自己的运行验证。"
@@ -77,7 +85,8 @@
           "net05",
           "net06",
           "net08",
-          "net09"
+          "net09",
+          "net12"
         ],
         "practical_tasks": [],
         "evidence": "用独立变式解释职责、条件和信息流。"
@@ -90,12 +99,13 @@
           "net07",
           "net10",
           "net16",
-          "net18"
+          "net18",
+          "net12"
         ],
         "practical_tasks": [
           "network-model-check"
         ],
-        "evidence": "检查单位、事件定义、模型条件与分步结果；net16/net18 为历史预习。"
+        "evidence": "当前 Tutorial 3 / Assignment 1 增加HTTP-DNS时延、流水线和POP3原任务；检查单位与事件。net16/net18 仍为历史预习。"
       },
       {
         "name": "实际观察 / Observe",
@@ -123,7 +133,7 @@
       }
     ],
     "gaps": [
-      "当前 Chapter 2 仅指已下载部分；全学期提纲不等于当前已确认考核范围。",
+      "当前已整理 Chapter 1 与 Chapter 2 全文、Tutorial 1–3、Assignment 1 及研究报告；尚未下载当前后续章节/Wireshark 正式任务，不等于全学期或 QE 已覆盖。",
       "历史 Chapter 6 材料止于前 29 张，不能代表完整链路层课程。",
       "历史 Tutorial 8 第 2 页 P4 的原表仍需图像校勘；最长前缀机制和自拟题已提供。",
       "无线与移动主题在现有提纲中有时间条件；正式 QE 范围仍待官方确认。",

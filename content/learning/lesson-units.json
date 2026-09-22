@@ -541,6 +541,66 @@
           "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
         }
       ]
+    },
+    {
+      "id": "omp-refit",
+      "title": {
+        "zh": "OMP：选进来以后，一起重新分工",
+        "en": "OMP: refit the entire selected set"
+      },
+      "goal": {
+        "zh": "区别OMP联合重拟合与只改新系数。",
+        "en": "Distinguish a joint OMP refit from a single-coefficient update."
+      },
+      "explain": {
+        "zh": "候选列先归一化。每轮按$|x_j^Tr|$选一个未选列，把它加入集合A，然后求$\\min_w\\|y-X_Aw\\|^2$，更新$r=y-X_Aw$。这一步使残差垂直于已选列空间。Lecture4a单元83省略了联合重拟合，形似matching pursuit；单元84调用的OrthogonalMatchingPursuit包含该步骤。",
+        "en": "Normalize candidate columns, select an unselected column by $|x_j^Tr|$, jointly solve $\\min_w\\|y-X_Aw\\|^2$, then update $r=y-X_Aw$. This makes the residual orthogonal to the selected span. Cell 83 omits the joint refit; the estimator in cell 84 performs it."
+      },
+      "worked_q": {
+        "zh": "无截距，$x_1=(1,0)^T$、$x_2=(1,1)^T/\\sqrt2$、$y=(2,1)^T$。选两列。先选谁？第二轮联合拟合系数是什么？",
+        "en": "With no intercept, use $x_1=(1,0)^T$, $x_2=(1,1)^T/\\sqrt2$, and $y=(2,1)^T$. Select two columns. Which is first, and what coefficients result after the joint refit?"
+      },
+      "worked_a": {
+        "zh": "相关量为2和$3/\\sqrt2$，先选$x_2$，系数$3/\\sqrt2$，预测(1.5,1.5)，残差(0.5,−0.5)。加入$x_1$后联合解得$w_1=1,w_2=\\sqrt2$，预测恰为y。旧的$w_2$改变了。",
+        "en": "Correlations are 2 and $3/\\sqrt2$, so select $x_2$. Its coefficient is $3/\\sqrt2$, giving residual (0.5,−0.5). After adding $x_1$, jointly refit to obtain $w_1=1,w_2=\\sqrt2$, exactly reproducing y. The earlier coefficient changes."
+      },
+      "practice_q": {
+        "zh": "同样两列、无截距，改y=(1,2)。补第一轮残差和两列联合系数。",
+        "en": "Keep both columns and no intercept, but use y=(1,2). Find the first residual and the joint coefficients."
+      },
+      "practice_a": {
+        "zh": "仍先选$x_2$，预测(1.5,1.5)，残差(−0.5,0.5)；联合系数$w_1=−1,w_2=2\\sqrt2$。",
+        "en": "Select $x_2$ first, giving residual (−0.5,0.5). Joint coefficients are $w_1=−1,w_2=2\\sqrt2$."
+      },
+      "hint": {
+        "zh": "用第二坐标先解w₂，再用第一坐标解w₁。",
+        "en": "Solve for the second coefficient using the second coordinate, then solve for the first."
+      },
+      "transfer_q": {
+        "zh": "改y=(3,1)，第一轮应选x₁。加入x₂后，联合重拟合得到什么？若一直把w₁固定为3会怎样？",
+        "en": "Use y=(3,1), so x₁ is selected first. Find the joint refit after x₂ is added. What fails if w₁ is frozen at 3?"
+      },
+      "transfer_a": {
+        "zh": "联合解为$w_1=2,w_2=\\sqrt2$，残差为0。只拟合新列得到$w_2=1/\\sqrt2$，预测(3.5,0.5)、残差(−0.5,0.5)，与$x_1$内积非零，未完成已选空间上的最小二乘。",
+        "en": "The joint solution is $w_1=2,w_2=\\sqrt2$ with zero residual. Fitting only the new column gives $w_2=1/\\sqrt2$, prediction (3.5,0.5), and residual (−0.5,0.5), not orthogonal to $x_1$."
+      },
+      "card_ids": [
+        "CS5489-M338"
+      ],
+      "sources": [
+        {
+          "name": "Lecture4a.ipynb",
+          "locator": "cells 81–85",
+          "note": "当前稀疏回归；原算法简写与实际估计器的差别。",
+          "kind": "course"
+        },
+        {
+          "name": "scikit-learn Linear Models",
+          "locator": "§1.1.9 OMP; https://scikit-learn.org/stable/modules/linear_model.html#orthogonal-matching-pursuit-omp",
+          "note": "官方说明每轮对已选字典空间作正交投影。",
+          "kind": "reference"
+        }
+      ]
     }
   ],
   "ml20": [
@@ -615,6 +675,60 @@
           "locator": "ml20#loss-comparison",
           "kind": "derived",
           "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+        }
+      ]
+    },
+    {
+      "id": "kernel-ridge-solve",
+      "title": {
+        "zh": "核岭回归：把相似度变成预测",
+        "en": "Kernel ridge: turn similarities into a prediction"
+      },
+      "goal": {
+        "zh": "给定核矩阵，解系数再预测，并区别训练矩阵与新点核向量。",
+        "en": "Solve for coefficients and predict, distinguishing the training kernel matrix from a new-point vector."
+      },
+      "explain": {
+        "zh": "有n条训练记录时，K是n×n训练核矩阵，y是n项目标，λ>0是正则强度。无单独截距的模型先解$(K+\\lambda I)a=y$。新点分别与n条训练记录比较，得到向量k*，预测为$k_*^Ta$。a给训练样本加权，不是原始特征的权重；核值也不是概率。下面的小矩阵是教学数据。",
+        "en": "For n training records, K is the n×n Gram matrix, y contains n targets, and λ>0 is regularization. With no separate intercept, solve $(K+\\lambda I)a=y$, then predict $k_*^Ta$. The n-vector k* compares the new point with each training point. These coefficients weight training samples, not input features; kernel values are not probabilities."
+      },
+      "worked_q": {
+        "zh": "两条训练记录，$K=I_2$、y=(2,4)ᵀ、λ=1，无截距。新点核向量k*=(0.5,0.5)ᵀ。求a和预测。",
+        "en": "Use two training records with $K=I_2$, y=(2,4)ᵀ, λ=1, no intercept, and new-point vector k*=(0.5,0.5)ᵀ. Find a and the prediction."
+      },
+      "worked_a": {
+        "zh": "K+λI=2I，所以2a₁=2、2a₂=4，a=(1,2)ᵀ。预测0.5×1+0.5×2=1.5。先解两个系数，再与新点向量相乘。",
+        "en": "K+λI=2I, so a=(1,2)ᵀ. The prediction is 0.5×1+0.5×2=1.5: solve first, then take the new-point dot product."
+      },
+      "practice_q": {
+        "zh": "保持K、y、k*不变，只把λ改成3。补a和预测。",
+        "en": "Keep K, y and k* but set λ=3. Find a and the prediction."
+      },
+      "practice_a": {
+        "zh": "4Ia=y，a=(0.5,1)ᵀ，预测0.75。在这个特定例子中，增大λ使系数和预测一起缩小；一般数据中不能断言每个预测都单调缩小。",
+        "en": "4Ia=y gives a=(0.5,1)ᵀ and prediction 0.75. Both shrink in this example; every individual prediction need not shrink monotonically in general."
+      },
+      "hint": {
+        "zh": "加λI只改变对角项。",
+        "en": "Adding λI changes only the diagonal."
+      },
+      "transfer_q": {
+        "zh": "另一个核给出K的四项全是1；y=(2,4)ᵀ、λ=1、k*=(1,1)ᵀ，无截距。现在两个方程互相关联，求a和预测。",
+        "en": "Another kernel gives K with all four entries equal to 1. With y=(2,4)ᵀ, λ=1, k*=(1,1)ᵀ and no intercept, solve the coupled equations and predict."
+      },
+      "transfer_a": {
+        "zh": "2a₁+a₂=2，a₁+2a₂=4，解得a₁=0、a₂=2；预测2。这里K的两行相同，λI让系统可逆；不是把每个y除以K对应元素。",
+        "en": "Solve 2a₁+a₂=2 and a₁+2a₂=4 to obtain a=(0,2)ᵀ and prediction 2. Although K has identical rows, λI makes the system invertible; elementwise division is not the solution."
+      },
+      "card_ids": [
+        "CS5489-M208"
+      ],
+      "sources": [
+        {
+          "name": "Lecture4b.ipynb",
+          "locator": "cells 40–52",
+          "note": "当前核岭回归；小矩阵例子为教学改编。",
+          "kind": "course"
         }
       ]
     }
@@ -3039,6 +3153,62 @@
         "zh": "时域结果(1,3,2)；(1+2u)(1+u)=1+3u+2u²，与下标0、1、2一致。u=−1得1−3+2=0；直接变换输出也为0。",
         "en": "The time result is(1,3,2). Product(1+2u)(1+u)=1+3u+2u² matches indices0,1,2. At u=−1 the value is0, both from the product and from the output transform."
       }
+    }
+  ],
+  "ml31": [
+    {
+      "id": "boosting-sign",
+      "title": {
+        "zh": "Boosting：把一次预测往正确方向推",
+        "en": "Boosting: move a prediction in the correct direction"
+      },
+      "goal": {
+        "zh": "从给定损失求修正目标，再检查更新符号。",
+        "en": "Derive a correction target from the loss and check the update sign."
+      },
+      "explain": {
+        "zh": "对$L=\\tfrac12(F-y)^2$，正梯度是F−y，负梯度是y−F。学习器拟合负梯度r时用$F_{new}=F+\\eta h$；若拟合正梯度g，则用减号。先前模型固定后才拟合本轮修正；具体XGBoost还包括树结构正则、二阶信息等，不能把这个小例当完整实现。",
+        "en": "For $L=\\tfrac12(F-y)^2$, the gradient is F−y. Fit its negative and add the learner, or fit the positive gradient and subtract it. XGBoost also uses tree regularization and second-order information; this is a teaching update, not its full implementation."
+      },
+      "worked_q": {
+        "zh": "y=(2,4,6)，当前F=(1,2,3)。学习器恰好拟合负梯度，η=0.5。求新预测与更新前后的SSE。",
+        "en": "Use y=(2,4,6), F=(1,2,3), and an exact negative-gradient learner with η=0.5. Find the new predictions and SSE before/after."
+      },
+      "worked_a": {
+        "zh": "负梯度(1,2,3)，新F=(1.5,3,4.5)。原SSE=14，新SSE=0.25+1+2.25=3.5。",
+        "en": "The negative gradient is (1,2,3), so F becomes (1.5,3,4.5). SSE falls from 14 to 3.5."
+      },
+      "practice_q": {
+        "zh": "同样y与旧F，改η=0.1。补新预测与SSE。",
+        "en": "Keep y and old F but use η=0.1. Find the new predictions and SSE."
+      },
+      "practice_a": {
+        "zh": "新F=(1.1,2.2,3.3)，残差(0.9,1.8,2.7)，SSE=11.34。",
+        "en": "Predictions are (1.1,2.2,3.3), residuals (0.9,1.8,2.7), and SSE=11.34."
+      },
+      "hint": {
+        "zh": "每项只加原残差的十分之一。",
+        "en": "Add one tenth of each original residual."
+      },
+      "transfer_q": {
+        "zh": "一个样本F=2、y=5，学习器改为拟合正梯度h=−3。η=0.2，应加还是减h？若误用加号结果怎样？",
+        "en": "For F=2,y=5, the learner fits the positive gradient h=−3. With η=0.2, add or subtract h? What happens with the wrong sign?"
+      },
+      "transfer_a": {
+        "zh": "应减：2−0.2×(−3)=2.6。误加得到1.4，离目标5更远。正负梯度只是约定，更新方向必须一致。",
+        "en": "Subtract it to obtain 2.6. Adding gives 1.4, farther from target 5. Match the update sign to the fitted gradient convention."
+      },
+      "card_ids": [
+        "CS5489-M341"
+      ],
+      "sources": [
+        {
+          "name": "Lecture4b.ipynb",
+          "locator": "cells 97–99",
+          "note": "当前Boosting正梯度减法约定；数值为教学改编。",
+          "kind": "course"
+        }
+      ]
     }
   ]
 }

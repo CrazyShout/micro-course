@@ -1,5 +1,11 @@
 # CS5222 bilingual card source — editable master text
 
+
+
+
+
+
+
 @@ N001 | 01-foundations | learn | N1:4-7
 Q_EN: What is the Internet, viewed as infrastructure and as a service?
 Q_ZH: 从基础设施和服务两个角度看，互联网是什么？
@@ -484,43 +490,43 @@ Q_ZH: 120 个独立用户每人以 0.1 概率活跃，恰有 $n$ 人活跃的概
 A_EN: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$ for $n=0,\ldots,120$. The combination counts which users are active; the other terms give the probability of one such pattern. Expected active users are $E[K]=120\times0.1=12$. An overload probability requires summing the tail above capacity, not substituting the mean.
 A_ZH: $P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n}$，其中 $n=0,\ldots,120$。组合数统计哪些用户活跃，其余项表示一种具体组合的概率。期望活跃人数为 $E[K]=120\times0.1=12$。过载概率要对超过容量的尾部求和，不能用均值直接代替。
 
-@@ N079 | 07-exercises | classroom | NT2:1;HT2:1
+@@ N079 | 07-exercises | classroom | NT2:1;HT2:1;NT2S:5
 Q_EN: Tutorial 2 (2026A) Q1: voice is encoded at 128 kbps into 64-byte packets, sent at 4 Mbps with 8 ms propagation. Measured from the start of packetization, when can playback of the first encoded bit start if the receiver waits for the complete packet?
 Q_ZH: 本学期 Tutorial 2 Q1：语音以 128 kbps 编码，组成 64 字节分组，以 4 Mbps 发送，传播 8 毫秒。若接收端等完整分组到齐后播放，最早编码的比特从开始组包到可播放需多久？
 A_EN: Collecting 64 bytes requires $512/128000=4$ ms. Only then is the whole packet sent, taking $512/(4\times10^6)=0.128$ ms, followed by 8 ms propagation for its last bit. Total: 12.128 ms. The earliest bit waits for the other bits to be collected; receiver playback waits for the entire packet. This question measures from the start of assembly.
 A_ZH: 收集 64 字节需 $512/128000=4$ 毫秒，随后整包发送需 $512/(4\times10^6)=0.128$ 毫秒，末位传播再需 8 毫秒，总计 12.128 毫秒。最早的比特先等待其余比特组包，接收端再等整包到齐才播放。本题计时起点明确为开始组包。
 
-@@ N080 | 07-exercises | classroom | NT2:1;HT2:2a
+@@ N080 | 07-exercises | classroom | NT2:1;HT2:2a;NT2S:6
 Q_EN: Tutorial 2 (2026A) Q2a: an L-bit packet crosses three links and two store-and-forward routers. Link i has rate R_i bit/s, length d_i m and propagation speed s_i m/s. Each router adds d_proc seconds; queueing and endpoint processing are zero. Find complete-packet delay.
 Q_ZH: 本学期 Tutorial 2 Q2a：L 比特分组经过三条链路和两个存储转发路由器。第 i 条链路速率 R_i 比特/秒，长度 d_i 米，传播速度 s_i 米/秒。每路由器处理 d_proc 秒，排队和端点处理为零。求整个分组到齐的时延。
 A_EN: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$. There are three serialization terms because each link transmits the whole packet, three propagation terms, and two router-processing terms. If the problem adds source or destination processing, include those separately; do not infer them when the stated model excludes them.
 A_ZH: $D=\sum_{i=1}^{3}(L/R_i+d_i/s_i)+2d_{proc}$。三条链路各发完整分组，因此有三个串行化项、三个传播项，以及两个路由处理项。若题目另加源端或目的端处理，应单独计入；模型未要求时不要自行添加。
 
-@@ N081 | 07-exercises | classroom | NT2:1;HT2:2b
+@@ N081 | 07-exercises | classroom | NT2:1;HT2:2b;NT2S:7
 Q_EN: One packet crosses three store-and-forward links and two routers, with no queueing or endpoint processing. Use $L=1500$ bytes, each $R=2$ Mbps, $s=2.5\times10^8$ m/s, distances 5,000/4,000/1,000 km, and 3 ms processing per router. Find complete-packet delay.
 Q_ZH: 一个分组经过三条存储转发链路和两个路由器，无排队与端点处理。分组 1500 字节，各链路 2 Mbps，传播速度 $2.5\times10^8$ 米/秒，距离为 5000/4000/1000 千米，每路由器处理 3 毫秒。求整个分组到齐的时延。
 A_EN: Each serialization takes 6 ms, so three give 18 ms. Total distance is $10^7$ m, giving 40 ms propagation. Two routers add 6 ms. Total: $18+40+6=64$ ms. Keep all three components visible; the result is easy to miscalculate if kilometers, bytes and milliseconds are mixed without conversion.
 A_ZH: 每条链路串行化 6 毫秒，三条共 18 毫秒。总距离 $10^7$ 米，传播共 40 毫秒；两个路由器再加 6 毫秒。总计 $18+40+6=64$ 毫秒。应保留分项，避免把千米、字节和毫秒不经换算直接混用。
 
-@@ N082 | 07-exercises | classroom | NT2:2;HT2:3
+@@ N082 | 07-exercises | classroom | NT2:2;HT2:3;NT2S:8
 Q_EN: A 1,500-byte packet crosses three 2 Mbps links with total propagation 40 ms. If routers forward each bit immediately with zero processing, what is the ideal delay?
 Q_ZH: 1500 字节分组经过三条 2 Mbps 链路，总传播为 40 毫秒，路由器逐比特立即转发且处理为零，理想时延是多少？
 A_EN: With all links at the same rate, serialization overlaps across links: count one $L/R=6$ ms plus total propagation of 40 ms. The result is 46 ms. This is the question's ideal cut-through model; actual forwarding may need enough header bits to choose an output, so do not apply the ideal formula to every real device without checking assumptions.
 A_ZH: 各链路同速时，串行化在各链路间重叠，只计一次 $L/R=6$ 毫秒，再加总传播 40 毫秒，得 46 毫秒。这是题目的理想直通模型；真实转发可能先需要足够的首部比特来决定出口，不能无条件套用到所有设备。
 
-@@ N083 | 07-exercises | classroom | NT2:2;HT2:4
+@@ N083 | 07-exercises | classroom | NT2:2;HT2:4;NT2S:9
 Q_EN: A FIFO 2 Mbps output link has sent half of a 1,500-byte packet; four more 1,500-byte packets are already waiting ahead of a new arrival. With no priority changes, how long until the new packet starts transmission?
 Q_ZH: FIFO（先到先服务）的 2 Mbps 输出链路已发完一个 1500 字节分组的一半，另有四个 1500 字节分组排在新到分组之前。无优先级变化时，新分组还要多久才能开始发送？
 A_EN: One full serialization takes 6 ms. The new packet waits for half the current packet plus four queued packets: $(0.5+4)\times6=27$ ms, assuming FIFO and no priority changes. This is waiting until its own transmission starts; add another 6 ms if asked when its own serialization finishes.
 A_ZH: 一个完整分组发送需 6 毫秒。新分组要等当前剩余半个与已排队的四个，所以 $(0.5+4)\times6=27$ 毫秒，假设先到先服务且无优先级变化。这里算到自身开始发送；若问自身发完，还要再加 6 毫秒。
 
-@@ N084 | 07-exercises | classroom | NT2:2;HT2:4
+@@ N084 | 07-exercises | classroom | NT2:2;HT2:4;NT2S:9
 Q_EN: On a FIFO output link of rate R bit/s, x of the current packet’s L bits have already been sent (0≤x≤L), and n more L-bit packets wait ahead of a new arrival. With constant rate and no priority changes, give its waiting time until transmission starts.
 Q_ZH: FIFO 输出链路速率为 R 比特/秒，当前 L 比特分组已有 x 比特发出（0≤x≤L），新到分组之前另有 n 个 L 比特分组等待。速率不变且无优先级变化，求新分组到开始发送前的等待时间。
 A_EN: Remaining work ahead is $(L-x)+nL$ bits, so $d_{queue}=((L-x)+nL)/R$ under FIFO. Do not include the arriving packet's own $L$ bits in queueing delay. If there is no packet in service, the residual term is zero; if packet lengths differ, sum the actual queued lengths rather than using $nL$.
 A_ZH: 前面剩余工作量为 $(L-x)+nL$ 比特，因此 FIFO 下 $d_{queue}=((L-x)+nL)/R$。排队时延不包含新到分组自身的 $L$ 比特。若没有分组正在发送，残余项为零；若各分组长度不同，应累加实际长度，而不是用 $nL$。
 
-@@ N085 | 07-exercises | classroom | NT2:3;HT2:5;N1:50-51
+@@ N085 | 07-exercises | classroom | NT2:3;HT2:5;N1:50-51;NT2S:11-13
 Q_EN: Why can a later traceroute hop show a smaller RTT than an earlier hop?
 Q_ZH: 为什么 traceroute 中后面一跳的 RTT 可能比前面一跳更小？
 A_EN: The probes are separate measurements, not one packet being timed cumulatively at every hop. Router reply scheduling, queueing, probe timing and return paths can differ. Therefore subtracting adjacent RTTs is not a reliable direct estimate of one link's propagation delay. Examine repeated measurements and the measurement mechanism before drawing a network-performance conclusion.
@@ -809,3 +815,129 @@ Q_EN: A cold DNS lookup takes 62 ms. Then one HTTP object needs RTT 40 ms and 80
 Q_ZH: 冷 DNS 查询需 62 毫秒，随后用新 TCP 连接取一个 HTTP 对象，RTT 40 毫秒、传输 80 毫秒，理想总时延是多少？
 A_EN: Resolve the name first, then fetch the object: $62+2(40)+80=222$ ms. This combines separate application steps. Assume no TLS, processing, loss, extra DNS lookups or TCP startup penalty. With a usable DNS cache or an already established connection, remove only the corresponding cost rather than deleting all RTT terms.
 A_ZH: 先解析名称，再取对象：$62+2(40)+80=222$ 毫秒。这把两个应用步骤组合起来。假设无 TLS、处理、丢失、额外 DNS 查询和 TCP 启动代价。若 DNS 缓存可用或连接已建立，应只去掉对应开销，而不是删掉所有 RTT 项。
+
+@@ N135 | 13-applications-complete | learn | N2FULL:66-67; XN2:66-67; DNSNEG:2.1,3
+Q_EN: What are the question, answer, authority and additional sections in a DNS message?
+Q_ZH: DNS 消息中的 question、answer、authority 和 additional 部分分别做什么？
+A_EN: Question specifies the queried name and record type. Answer contains records answering it. Authority can give NS records for a referral or an SOA record describing the zone in a negative answer; it is not always a list of servers. Additional supplies supporting records, such as an NS server's address. The header carries the transaction ID and flags. Supporting data is not automatically the final answer.
+A_ZH: Question 给出查询名与记录类型；answer 放回答查询的记录。Authority 可在转介中给出 NS 记录，也可在否定回答中放描述该区域的 SOA 记录，并非总是服务器名单。Additional 放辅助记录，如 NS 服务器的地址；首部包含事务 ID 和标志。辅助信息不自动等于最终答案。
+
+@@ N136 | 13-applications-complete | learn | N2FULL:68; XN2:68
+Q_EN: How does registering a domain differ from publishing a host's address record?
+Q_ZH: 注册域名与发布某主机的地址记录有什么区别？
+A_EN: Registration and delegation establish which authoritative name servers serve a domain. Those authoritative servers then publish records such as an A record for a web host and MX records for mail. Ownership/delegation information and a particular service's address are separate layers, so changing one does not automatically update every other record.
+A_ZH: 注册与委派确定由哪些权威名称服务器负责域名，这些服务器再发布网站主机的 A 记录、邮件的 MX 记录等。所有权或委派信息，与某个服务的具体地址属于不同层次，修改其中一项不会自动更新其他全部记录。
+
+@@ N137 | 13-applications-complete | learn | N2FULL:71-74; XN2:71-74
+Q_EN: Why can peer-to-peer distribution scale differently from client-server distribution?
+Q_ZH: 为什么 P2P 文件分发的扩展方式不同于客户端—服务器模式？
+A_EN: In client-server distribution, the server uploads a complete copy to each client. In P2P, peers upload pieces already received, so new peers can add upload capacity. In the stated model the server initially holds the only copy and peers start empty, so the server must introduce every piece at least once. Slow peer downloads can still be bottlenecks; extra upload capacity alone does not guarantee a faster measured transfer.
+A_ZH: 客户端—服务器模式中，服务器向每个客户端上传完整副本。P2P 节点可上传已收到的块，因此新节点也能增加上传能力。这里的模型假设初始只有服务器拥有文件、节点为空，所以服务器必须至少引入每一块一次。下载慢的节点仍可能成为瓶颈；增加上传能力不自动保证实测更快。
+
+@@ N138 | 13-applications-complete | learn | N2FULL:72-74; XN2:72-74
+Q_EN: What ideal lower bounds govern distribution of an F-bit file to N peers?
+Q_ZH: 向 N 个节点分发 F bit 文件，有哪些理想时间下界？
+A_EN: Recall three parts. (1) Symbols: F is file bits; N peers start empty; us is the only initial source's upload rate, ui peer i's upload rate, dmin the slowest download rate; all rates are bit/s. (2) Client-server: $\max(NF/u_s,F/d_{\min})$, because the server sends N copies and every peer downloads one. (3) P2P: $\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$, from initial-copy injection, slowest download and total upload supply. All constraints hold together, so take the largest, not their sum. These are ideal lower bounds, ignoring overhead and scheduling limits.
+A_ZH: 答清三部分。(1) 符号：F 为文件比特数，N 个节点初始为空；us 为唯一初始源上传速率，ui 为节点 i 上传速率，dmin 为最慢下载速率，速率均用 bit/s。(2) 客户端—服务器：$\max(NF/u_s,F/d_{\min})$，服务器发 N 份，每个节点下载一份。(3) P2P：$\max(F/u_s,F/d_{\min},NF/(u_s+\sum_i u_i))$，分别受首份注入、最慢下载、总上传供给限制。约束同时成立，取最大值，不是相加。它们是忽略开销与调度限制的理想下界。
+
+@@ N139 | 13-applications-complete | worked | N2FULL:73-75; XN2:73-75
+Q_EN: Distribute a file F=1 Gbit to N=10 clients. Server upload us=100 Mbps, each client upload is 10 Mbps, and the slowest client download dmin=50 Mbps. Find ideal client–server and P2P distribution-time lower bounds.
+Q_ZH: 把 F=1 Gbit 文件分发给 N=10 个客户端。服务器上传 us=100 Mbps，各客户端上传 10 Mbps，最慢客户端下载 dmin=50 Mbps。求客户端—服务器与 P2P 的理想分发时间下界。
+A_EN: Client-server terms are 100 s and 20 s, giving 100 s. P2P terms are 10 s, 20 s and $10\,\text{Gbit}/200\,\text{Mbps}=50$ s, giving 50 s. All rates use bits per second. This added example illustrates capacity constraints, not an actual BitTorrent measurement.
+A_ZH: 客户端—服务器的两项为 100 s、20 s，取最大值得 100 s。P2P 的三项为 10 s、20 s，以及 $10\,\text{Gbit}/200\,\text{Mbps}=50$ s，得到 50 s。各速率均以 bit/s 计，这是容量约束的补充例子，不是实际 BitTorrent 测量。
+
+@@ N140 | 13-applications-complete | learn | N2FULL:76-80; XN2:76-80
+Q_EN: What purposes do rarest-first selection and peer reciprocation serve in the lecture's BitTorrent model?
+Q_ZH: 课件的 BitTorrent 模型中，最稀有块优先和节点互惠分别有什么作用？
+A_EN: Rarest-first selection helps keep scarce pieces available across the swarm. Reciprocation gives peers an incentive to upload to one another, while optimistic unchoking explores new partners. These mechanisms address piece diversity and incentives, which aggregate upload-capacity formulas alone do not capture.
+A_ZH: 最稀有块优先有助于维持群体中稀缺分块的可用性。互惠机制鼓励节点相互上传，乐观解锁则探索新的交换对象。这些机制分别处理分块多样性与激励问题，单靠总体上传容量公式无法反映它们。
+
+@@ N141 | 13-applications-complete | learn | N2FULL:82-88; XN2:82-88
+Q_EN: How does DASH adapt video quality to changing network conditions?
+Q_ZH: DASH 如何根据网络变化调整视频质量？
+A_EN: The server provides multiple encoded representations divided into segments and described by a manifest. The client estimates conditions and requests an appropriate representation for each next segment. It trades visual quality against rebuffering risk and switching behavior. Adaptation is a client-side decision process, not a guarantee of uninterrupted playback.
+A_ZH: 服务器提供多种编码质量，将视频分段，并用清单描述。客户端估计网络状况，为下一段请求适当版本，在画质、卡顿风险和切换行为之间取舍。自适应是客户端的决策过程，并不保证播放永不中断。
+
+@@ N142 | 13-applications-complete | learn | N2FULL:89-92; XN2:89-92
+Q_EN: What problem does a content distribution network solve?
+Q_ZH: 内容分发网络解决什么问题？
+A_EN: A CDN places or caches content at multiple locations and directs a client to a suitable delivery server. This can reduce long-haul traffic and avoid reliance on one overloaded origin. Selection can depend on network conditions and policy, not just geographic distance. A cache miss may still require fetching from another location.
+A_ZH: CDN 在多个位置放置或缓存内容，并把客户端引导到适当服务器，可减少远距离流量，降低对单一过载源站的依赖。节点选择可取决于网络状况和策略，不仅是地理距离。缓存未命中时，仍可能需要从其他位置获取内容。
+
+@@ N143 | 13-applications-complete | learn | N2FULL:94-101; XN2:94-101
+Q_EN: What is the basic UDP server/client socket workflow?
+Q_ZH: UDP 服务器与客户端的基本 socket 流程是什么？
+A_EN: The server creates a datagram socket, binds its local address/port, then receives a datagram and its sender address. It can send a reply to that address. The client also creates a datagram socket and sends to the server's address/port; the OS can assign a local ephemeral port automatically. It then waits for a response or timeout. UDP needs no TCP-style handshake or accept call, and the application must handle missing or unexpected responses.
+A_ZH: 服务器创建数据报 socket，绑定本地地址/端口，再接收数据报及发送者地址，并可向该地址回复。客户端也先创建数据报 socket，再向服务器地址/端口发送；操作系统可自动分配本地临时端口，然后客户端等待回复或超时。UDP 不需要 TCP 式握手或 accept，应用须处理丢失或非预期的回复。
+
+@@ N144 | 13-applications-complete | learn | N2FULL:102-105; XN2:102-105
+Q_EN: Why does a TCP server have a listening socket and separate connected sockets?
+Q_ZH: TCP 服务器为什么同时需要监听 socket 和独立的连接 socket？
+A_EN: The listening socket waits for incoming connections. Accept returns a connected socket for one peer, while the listening socket remains available for later clients. Data exchange uses the connected socket. Closing one client's connection need not stop the whole server; concurrency and lifetime management are application design choices.
+A_ZH: 监听 socket 等待新连接，accept 为某个对端返回连接 socket，监听 socket 则继续接收后续客户端。数据交换使用连接 socket。关闭一个客户端连接不必停止整个服务器，并发方式与生命周期管理由应用设计决定。
+
+@@ N145 | 13-applications-complete | check | N2FULL:95,102-105; XN2:95,102-105
+Q_EN: Why is one send call not guaranteed to match one recv call on TCP?
+Q_ZH: TCP 中，为什么一次 send 不保证对应一次 recv？
+A_EN: TCP delivers an ordered byte stream, not application message boundaries. A receive can contain part of a message or data from several sends. Applications need framing, such as a length prefix or a delimiter with escaping. A successful send also does not establish that the peer application has processed the message.
+A_ZH: TCP 提供有序字节流，不保留应用消息边界。一次接收可能只有半条消息，也可能包含多次发送的数据。应用需要长度前缀，或带转义规则的分隔符等分帧方式。发送调用成功也不证明对端应用已经处理了消息。
+
+@@ N146 | 13-applications-complete | learn | N2FULL:98-105; XN2:98-105
+Q_EN: Why must socket applications distinguish text from bytes?
+Q_ZH: Socket 应用为什么必须区分文本与字节？
+A_EN: The transport carries bytes. An application encodes text with an agreed encoding before sending and decodes after assembling the required bytes. A multi-byte character can be split across TCP reads, so decoding each arbitrary fragment independently can fail. Protocol lengths must state whether they count bytes or characters.
+A_ZH: 传输层承载的是字节，应用按约定编码发送文本，并在收集到所需字节后解码。一个多字节字符可能跨越两次 TCP 读取，独立解码每个任意片段可能失败。协议长度还必须说明计的是字节数还是字符数。
+
+@@ N147 | 13-applications-complete | check | N2FULL:102-105; XN2:102-105; XPROJ:2-6
+Q_EN: What should a robust stream-message receive loop do?
+Q_ZH: 可靠的字节流消息接收循环应做什么？
+A_EN: Keep a buffer, accumulate incoming bytes, and parse only complete frames according to the protocol. Preserve leftover bytes for the next frame. Treat an empty TCP receive as end-of-stream, and handle timeouts or malformed lengths explicitly. These are application-protocol requirements beyond TCP's byte-delivery service.
+A_ZH: 维护缓冲区，累积收到的字节，并按协议只解析完整消息帧；剩余字节留给下一帧。TCP 接收返回空字节串表示流结束，超时或错误长度应明确处理。这些是应用协议责任，超出了 TCP 的字节交付服务。
+
+@@ N148 | 13-applications-complete | check | N2FULL:69,95-105; XN2:69,95-105
+Q_EN: What is the difference between identifying a network endpoint and authenticating its user?
+Q_ZH: 标识网络端点与认证其用户有什么区别？
+A_EN: IP addresses and ports direct traffic to an endpoint. They do not prove who controls it or whether application data is authentic. Checksums and TCP reliability detect certain transmission problems, not malicious impersonation. An application requiring identity or confidentiality needs an appropriate security protocol in addition to socket communication.
+A_ZH: IP 地址与端口把流量送到端点，但不证明谁控制该端点，也不证明应用数据真实。校验和及 TCP 可靠性用于处理某些传输问题，并不防止恶意冒充。需要身份或机密性的应用，还需适当的安全协议，不能只依赖 socket 通信。
+
+@@ N231 | 14-tutorial3 | classroom | NT3:1; XNT3:1
+Q_EN: A plain-HTTP request contains GET /cs453/index.html HTTP/1.1, Host: gaia.cs.umass.edu, and Connection: keep-alive. What can you infer from these lines, and can you read the client IP from them?
+Q_ZH: 明文 HTTP 请求包含 GET /cs453/index.html HTTP/1.1、Host: gaia.cs.umass.edu 和 Connection: keep-alive。能从这些行推断什么？能读出客户端 IP 吗？
+A_EN: The requested URL is http://gaia.cs.umass.edu/cs453/index.html, the version is HTTP/1.1, and the client asks to keep the connection open. These lines contain the server name, not the client IP. The client address must come from network-layer information or other supplied context.
+A_ZH: 请求的 URL 是 http://gaia.cs.umass.edu/cs453/index.html，版本是 HTTP/1.1，客户端请求保持连接。这几行包含服务器名称，不包含客户端 IP。客户端地址须从网络层信息或其他给定上下文取得。
+
+@@ N232 | 14-tutorial3 | classroom | NT3:2; XNT3:2
+Q_EN: A host-to-local-DNS exchange costs RTTL. An uncached lookup then needs three sequential upstream exchanges of RTTr each. What changes if the local resolver caches the answer?
+Q_ZH: 主机到本地 DNS 的交互耗时 RTTL，未缓存查询还需依次进行三次各耗时 RTTr 的上游交互。本地解析器已有缓存时会怎样？
+A_EN: Uncached delay is RTTL + 3RTTr; cached delay is RTTL, ignoring processing and transmission costs. The three upstream exchanges are sequential in this question, so add them. A DNS cache removes particular lookup steps; it does not remove the later TCP or HTTP exchanges needed to fetch the page.
+A_ZH: 忽略处理与传输耗时，未缓存为 RTTL + 3RTTr，已缓存为 RTTL。本题三次上游交互依次发生，因此相加。DNS 缓存省掉的是特定查询步骤，后续获取网页需要的 TCP 或 HTTP 交互仍存在。
+
+@@ N233 | 14-tutorial3 | classroom | NT3:3; XNT3:3
+Q_EN: After DNS, fetch one tiny HTML page, then its eight tiny objects from one server (RTT R). Start with no connections or caches; ignore transmission time, TLS, losses and processing. Compare serial nonpersistent HTTP, at most five parallel nonpersistent connections, and one nonpipelined persistent connection.
+Q_ZH: DNS完成后，从同一服务器（RTT为R）先取很小的HTML，再取其八个很小的对象。初始无连接或缓存，忽略传输、TLS、丢包及处理耗时。比较串行非持久、最多五条并行非持久，以及一条无流水线持久连接。
+A_EN: Serial nonpersistent: nine connection/request pairs cost 9×2R=18R. Five-way parallel: HTML costs 2R; eight objects need two batches of at most five, each costing 2R, so total 6R. Persistent without pipelining: setup+HTML cost 2R, then eight sequential requests cost 8R, totaling 10R. These times start after DNS; add DNS time only when measuring from before lookup. Pipelining or HTTP/2 changes the model.
+A_ZH: 串行非持久：九组建连与请求，每组2R，共18R。五路并行：HTML先耗2R，八对象分两批，每批至多五个，各耗2R，总计6R。无流水线持久：建连加HTML耗2R，再依次八次请求耗8R，共10R。这里从DNS之后计时；只有从查询之前计时才另加DNS。流水线或HTTP/2会改变模型。
+
+@@ N260 | 15-assignment1 | classroom | NA1:1; XNA1:1; XNA1S:1
+Q_EN: A link has rate R bit/s, length m meters and propagation speed s m/s. Start sending an L-bit packet at t=0. At t=L/R, where are its first and last bits? For L=120 bits, R=56 kbps, s=2.5×10^8 m/s, find m when propagation and transmission delays are equal.
+Q_ZH: 链路速率R bit/s、长度m米、传播速度s m/s；t=0开始发L比特包。t=L/R时首位、末位在哪里？若L=120位、R=56 kbps、s=2.5×10^8 m/s，求传播与发送时延相等时的m。
+A_EN: The last bit is just leaving the sender. If m/s>L/R, the first bit is sL/R meters from the sender, still on the link; if m/s<L/R, it has reached the receiver; at equality it is just arriving there. Equality gives m=sL/R=535714.3 m≈535.7 km. The last bit arrives at L/R+m/s, ignoring processing and queueing. Finishing transmission does not mean the complete packet has arrived.
+A_ZH: 末位刚离开发送端。若m/s>L/R，首位距发送端sL/R米，仍在链路上；若m/s<L/R，首位已到接收端；相等时首位正好到达接收端。由m/s=L/R得m=sL/R=535714.3米，约535.7千米。忽略处理与排队，末位到达时刻为L/R+m/s；完成发送不代表完整包已到达。
+
+@@ N261 | 15-assignment1 | classroom | NA1:2; XNA1:2; XNA1S:3
+Q_EN: Send 8×10^6 bits across three equal 2 Mbps store-and-forward links. Compare one whole message with 800 packets of 10000 bits each, ignoring headers, propagation and queueing.
+Q_ZH: 经三条等速 2 Mbps、存储转发链路发送 8×10^6 位。比较整报文发送与分成 800 个、每个 10000 位的包，忽略首部、传播和排队。
+A_EN: Whole message: 4 s per link, so 12 s. Packet serialization is 5 ms. The first packet arrives after 3×5=15 ms; the last after 15+799×5=4010 ms=4.01 s. The formula is (P+H−1)L/R with P=800 packets, H=3 links and L=10000 bits per packet. Segmentation enables pipelining and smaller retransmissions, but adds headers and reassembly work when those are included.
+A_ZH: 整报文每条链路耗时四秒，共 12 秒。单包串行化五毫秒，首包在 3×5=15 毫秒到达，末包在 15+799×5=4010 毫秒，即 4.01 秒到达。公式 (P+H−1)L/R 中，P=800 个包、H=3 条链路、L=每包 10000 位。分段可实现流水线并减小重传单位，但实际还会增加首部和重组工作。
+
+@@ N262 | 15-assignment1 | classroom | NA1:3; XNA1:3; XNA1S:5
+Q_EN: After POP3 LIST shows messages 1 and 2 and RETR 1 has completed, how do download-and-delete and download-and-keep command sequences differ?
+Q_ZH: POP3 的 LIST 显示邮件 1、2，并已完成 RETR 1 后，下载删除和下载保留模式接下来的命令有何不同？
+A_EN: For delete mode, issue DELE 1, RETR 2, DELE 2, then QUIT after the relevant replies. For keep mode, issue RETR 2 and QUIT without DELE. On the next session with no new messages, keep mode can still list and retrieve both stored messages. DELE requests deletion; the normal session's update phase commits it, so RETR by itself does not delete mail.
+A_ZH: 删除模式在收到相应回复后依次 DELE 1、RETR 2、DELE 2、QUIT；保留模式则 RETR 2、QUIT，不发 DELE。若无新邮件，下次保留模式会话仍可列出和下载原来两封。DELE 请求删除，正常结束会话的更新阶段才提交；RETR 本身不会删除邮件。
+
+@@ N263 | 15-assignment1 | classroom | NA1:4; XNA1:3; XNA1S:6-8; XUDP:Format
+Q_EN: A student claims: “Video conferencing using UDP has no error detection, and media packets must be sent directly to the teacher’s computer.” What is wrong with these claims, and what deployment evidence would be needed?
+Q_ZH: 有人声称：“视频会议用 UDP，所以没有差错检测，而且媒体分组一定直接发往老师的电脑。”这两句话哪里有问题？还需要什么部署证据？
+A_EN: Answer in three parts: (1) Detection: UDP defines a checksum, although IPv4 can disable it; inspect the packet. Detecting damage is not redelivering a lost parcel: UDP has no built-in retransmission or ordering. (2) Destination: a media relay may receive the packets instead of the teacher's host. (3) Evidence: inspect the trace's transport protocol and endpoints, plus dated official documentation for that client and call type. A video-call label alone does not establish P2P.
+A_ZH: 分三点回答：(1) 检错：UDP 定义校验和，IPv4 可禁用，需看实际分组。发现包裹损坏，不等于替你补寄；UDP 没有内建重传或排序。(2) 目的地：包可能先到媒体中继，而非教师主机。(3) 证据：检查抓包中的传输协议和端点，并结合对应客户端、通话模式的有日期官方说明。仅凭“视频会议”不能断定是 P2P。

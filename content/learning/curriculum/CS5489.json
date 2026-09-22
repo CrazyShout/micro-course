@@ -230,7 +230,8 @@
         }
       ],
       "activities": [
-        "cs5489-assignment-1"
+        "cs5489-assignment-1",
+        "cs5489-tutorial-3"
       ],
       "review": {
         "zh": "回到 Lecture3c 的模型比较：方法在目标、假设、损失和复杂度上各有取舍。用相同验证协议比较，而不是寻找永远最好的分类器；Assignment 1 可成为这条判断链的实践场景。",
@@ -260,6 +261,75 @@
         {
           "zh": "当前下载目录未见独立 Tutorial 3；这里不虚构原题。可先做 Lecture3 Notebook 的课堂示例，并在 Assignment 1 中应用相关方法。",
           "en": "No separate Tutorial 3 is present in the current downloads. Use the Lecture3 notebook examples and Assignment 1 without inventing missing tutorial questions."
+        }
+      ]
+    },
+    {
+      "id": "lecture-4",
+      "title": {
+        "zh": "Lecture 4｜从预测价格，到稳健回归与集成",
+        "en": "Lecture 4 | Regression, robustness and ensembles"
+      },
+      "intro": {
+        "zh": "前一讲预测类别，这一讲预测一个数。老师用居住面积与房龄估售价：先拟合直线，观察特征相关和不稳定，再处理异常点、弯曲关系与模型组合。下面复用已做过的回归预习，把它接回当前房价代码。",
+        "en": "After predicting categories, this lecture predicts a number. The housing example connects a linear fit to correlated features, outliers, nonlinear representations and ensembles. Existing regression previews are reused and aligned with current code."
+      },
+      "outcomes": [
+        {
+          "zh": "手算残差、均值叶子与简单更新，核对每个矩阵的尺寸。",
+          "en": "Calculate residuals, leaf means and simple updates while checking dimensions."
+        },
+        {
+          "zh": "区分Ridge、Lasso、OMP、RANSAC、SVR解决的问题，并说明验证条件。",
+          "en": "Distinguish the problems addressed by Ridge, Lasso, OMP, RANSAC and SVR, with validation conditions."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "ml19",
+          "lead": {
+            "zh": "先把直线写成数据矩阵，再限制复杂度并选择特征。",
+            "en": "Build the design matrix, then control complexity and select features."
+          }
+        },
+        {
+          "id": "ml20",
+          "lead": {
+            "zh": "区分坏点、曲线与容忍带，按需要换数据处理、表示或损失。",
+            "en": "Distinguish outliers, curved relations and tolerated errors."
+          }
+        },
+        {
+          "id": "ml31",
+          "lead": {
+            "zh": "沿同一房价问题理解回归树、森林平均与逐轮修正。",
+            "en": "Use the price task to understand trees, forest averaging and sequential corrections."
+          }
+        }
+      ],
+      "activities": [],
+      "review": {
+        "zh": "先问目标是什么数、用了什么单位；再问误差怎样记、模型怎样限制、方案由哪份数据选择。原讲义的输出是其运行记录，你的比较需要自己的可复现结果。",
+        "en": "Identify the numerical target and units, the loss, complexity constraints and selection data. The source notebook outputs are its runs; your comparison needs your own reproducible results."
+      },
+      "sources": [
+        {
+          "name": "Lecture4a.ipynb",
+          "locator": "cells 1–88",
+          "note": "当前Canvas回归与特征选择。",
+          "kind": "course"
+        },
+        {
+          "name": "Lecture4b.ipynb",
+          "locator": "cells 1–104",
+          "note": "当前Canvas稳健、非线性回归与集成。",
+          "kind": "course"
+        }
+      ],
+      "missing": [
+        {
+          "zh": "当前未下载Lecture4的配套Tutorial或新Assignment；不把历史题编号当成本期要求。",
+          "en": "No companion Lecture 4 tutorial or new assignment has been downloaded; historical numbering is not treated as current requirements."
         }
       ]
     }
@@ -939,6 +1009,200 @@
           "locator": "cell 3",
           "kind": "course",
           "note": "最终预测生成可复现 / Reproducible final predictions."
+        }
+      ]
+    },
+    {
+      "id": "cs5489-tutorial-3",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 3｜图像数组、验证与特征表示",
+        "en": "Tutorial 3 | Arrays, validation and representations"
+      },
+      "intro": {
+        "zh": "本次Notebook使用50张45×40图像及文件名已给的二类标签，串起数组、模型对照和裁剪。先读清数据与原代码，再用通用数值小例核对形状、验证和核计算。讨论结果应限定到这个小数据集所给标签；权重图本身不证明现实中的因果或身份。",
+        "en": "The notebook uses 50 images of size 45×40 with two labels supplied by filenames. Use its data layout to study arrays, comparison and cropping, and use general numerical examples to check shapes, validation and kernels. Limit conclusions to the supplied dataset labels; weight maps do not establish real-world identity or causation."
+      },
+      "units": [
+        "lecture-3"
+      ],
+      "lesson_ids": [
+        "ml03",
+        "ml10",
+        "ml11",
+        "ml12",
+        "ml14",
+        "ml15"
+      ],
+      "sources": [
+        {
+          "name": "Tutorial3.ipynb",
+          "locator": "cells 2–67",
+          "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+          "kind": "course"
+        }
+      ],
+      "items": [
+        {
+          "id": "data-shapes",
+          "title": {
+            "zh": "原单元4–16 · 数据、形状与固定变换",
+            "en": "Cells 4–16 | Shapes and fixed transforms"
+          },
+          "task": {
+            "zh": "核对 photos-bw.zip 的50张图像：每张45×40。展平后的矩阵形状和已有标签的长度是什么？按原80%/20%分割，各有多少行？",
+            "en": "There are 50 images in photos-bw.zip, each 45×40. What are the flattened matrix shape and supplied-label length, and how many rows are in each part of the original 80%/20% split?"
+          },
+          "approach": {
+            "zh": "一张图是一个样本，45×40个像素是1800项特征。先核对行对应谁，再跟踪减0.5与切分；标签来自文件名的既有记录。",
+            "en": "One image is a sample with 1800 pixels. Establish row meaning before following subtraction of 0.5 and the split; labels are already supplied by filenames."
+          },
+          "check": {
+            "zh": "形状为(50,1800)、(50,)；训练/留出行数40/10。固定减0.5没有从留出数据估计参数；avgX=mean(X)若只用于描述全体图片要如实标记，不能再拿作训练拟合的中心而声称留出独立。",
+            "en": "Shapes are (50,1800) and (50,), with 40/10 rows. Subtracting fixed 0.5 does not estimate a parameter from held-out data. A whole-dataset mean used only for a descriptive display should be labeled as such; do not reuse it as training-fitted centering."
+          },
+          "pitfall": {
+            "zh": "不要把固定常数平移与学习均值混成同一操作，也不要把50幅图片说成50类。",
+            "en": "Do not confuse a fixed shift with fitting a mean, or 50 images with 50 classes."
+          },
+          "lesson_ids": [
+            "ml03",
+            "ml15"
+          ],
+          "card_ids": [
+            "CS5489-M023",
+            "CS5489-M028",
+            "CS5489-M173"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial3.ipynb",
+              "locator": "cells 4–16",
+              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "comparison",
+          "title": {
+            "zh": "原单元17–40 · 怎样读模型比较",
+            "en": "Cells 17–40 | Read a model comparison"
+          },
+          "task": {
+            "zh": "原任务比较逻辑回归与线性SVM，并画参数图和错分。先在一般二类数值问题中说明：训练、选C和最终报告分别该用哪份数据？",
+            "en": "The source compares logistic regression and linear SVM, with coefficient and error displays. For a general numeric binary problem, identify which data fit parameters, select C and support the final report."
+          },
+          "approach": {
+            "zh": "用相同划分、同一指标与可比搜索预算；每折重新拟合可学习预处理。权重对应输入坐标，符号含义还依赖类别编码、尺度和其他坐标。",
+            "en": "Use identical splits, a common metric and comparable search budgets; refit learned preprocessing inside each fold. Weight signs depend on class coding, scale and other coordinates."
+          },
+          "check": {
+            "zh": "能指出验证分数用于选择，留出分数用于固定方案后的评估；不能从一张权重图推出可靠性或因果。10条留出记录时，一条错分改变10个百分点，结论应保留样本量限制。这里未填写实验准确率。",
+            "en": "Validation selects the procedure; held-out data evaluate the fixed choice. A weight map does not prove reliability or causation. With ten held-out records, one changed prediction shifts accuracy by ten percentage points. No measured accuracy is supplied here."
+          },
+          "pitfall": {
+            "zh": "课堂观察过错分后再设计新方案，原留出集已提供开发反馈；不把反复试出的最好值称作独立测试。",
+            "en": "Once errors inform new designs, the held-out set has given development feedback; the best repeatedly observed score is not an independent test."
+          },
+          "lesson_ids": [
+            "ml10",
+            "ml11",
+            "ml12"
+          ],
+          "card_ids": [
+            "CS5489-M133",
+            "CS5489-M134",
+            "CS5489-M135"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial3.ipynb",
+              "locator": "cells 17–40",
+              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "crop-dimensions",
+          "title": {
+            "zh": "原单元41–63 · 裁剪尺寸究竟是多少",
+            "en": "Cells 41–63 | Check the actual crop"
+          },
+          "task": {
+            "zh": "原代码imgmask[18:40,11:29]=True，原图45×40。单元44却写24×24、576维。按切片规则判断真正大小，并说明一般表示对照应保持什么不变。",
+            "en": "The code sets imgmask[18:40,11:29]=True in a 45×40 image, while cell 44 says 24×24 and 576 features. Determine the actual crop and what a representation comparison should hold fixed."
+          },
+          "approach": {
+            "zh": "Python右端不包含：行40−18，列29−11。用同一索引划分不同表示，避免把数据划分变化误归因于表示。",
+            "en": "Python excludes the stop: subtract starts from stops. Compare representations with the same split indices so a split change is not mistaken for a representation effect."
+          },
+          "check": {
+            "zh": "22×18=396项，Xm为(50,396)，与masksize=(22,18)一致；576维属于注释掉的旧切片[17:41,8:32]。保留原文件，在学习说明中指出这个差异。",
+            "en": "The crop is 22×18=396, so Xm is (50,396), matching masksize=(22,18). The 576-dimensional description matches the commented older crop [17:41,8:32]. Preserve the source file and explain the discrepancy."
+          },
+          "pitfall": {
+            "zh": "先看实际执行的索引与shape，不能只相信紧邻Markdown；减少输入信息未必使泛化更好或更差。",
+            "en": "Check executed indices and shape, not only nearby prose. Reducing input information does not by itself determine generalization."
+          },
+          "lesson_ids": [
+            "ml03",
+            "ml11"
+          ],
+          "card_ids": [
+            "CS5489-M023",
+            "CS5489-M028",
+            "CS5489-M135"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial3.ipynb",
+              "locator": "cells 41–63",
+              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "kernel-check",
+          "title": {
+            "zh": "原单元64–67 · 用小向量读懂L1核",
+            "en": "Cells 64–67 | Understand the L1 kernel numerically"
+          },
+          "task": {
+            "zh": "用不涉及图像的x=(0,0)、z=(1,2)，按k=exp(−α∑|xj−zj|)、α=0.5求核值。再说明它与平方欧氏RBF的差别及候选参数的验证原则。",
+            "en": "For non-image vectors x=(0,0),z=(1,2), evaluate k=exp(−α∑|xj−zj|) at α=0.5. Contrast squared-distance RBF and state how to validate candidate parameters."
+          },
+          "approach": {
+            "zh": "L1距离为3，指数为−1.5。先交代距离、尺度与正参数，再讨论模型选择；核值不是类别概率。",
+            "en": "The L1 distance is 3, giving exponent −1.5. Specify distance, scale and a positive parameter before model selection; the kernel value is not a class probability."
+          },
+          "check": {
+            "zh": "得到e^(−1.5)≈0.22313。同α下平方欧氏距离为5，核值e^(−2.5)≈0.08208；但小于1的一维距离中d²<d，不能说L1核在所有尺度都衰减更慢。调参比较使用验证结果，留出数据不选α或C。",
+            "en": "The result is about 0.22313, versus exp(−2.5)≈0.08208 for squared Euclidean distance 5. For scalar distances below one, d²<d, so no universal slower-decay claim holds at every scale. Select α and C using validation, not held-out outcomes."
+          },
+          "pitfall": {
+            "zh": "两个超参数用相同内层CV选最佳组合，不等于已经获得无偏的外层泛化估计。",
+            "en": "Selecting a parameter pair using the same inner CV is not an unbiased outer generalization estimate."
+          },
+          "lesson_ids": [
+            "ml14",
+            "ml11"
+          ],
+          "card_ids": [
+            "CS5489-M165",
+            "CS5489-M167",
+            "CS5489-M135"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial3.ipynb",
+              "locator": "cells 64–67",
+              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "kind": "course"
+            }
+          ]
         }
       ]
     }

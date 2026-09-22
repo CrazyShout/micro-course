@@ -1,16 +1,26 @@
 # 课程信息与学习指南 / Course information and study guidance
 
-整理日期：2026-09-17。材料快照日期见各条目；不是教师新发布的公告。
+整理日期：2026-09-22。材料快照日期见各条目；不是教师新发布的公告。
 
 ## CS5489
 
+### 9月22日内容更新与Markji位置 / September 22 content and Markji locations
+
+新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。
+
+New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.
+
+材料快照 / Material snapshot: 2026-09-22 · ID: CS5489-UPDATE-20260922
+
+来源 / Source: micro-course · update 2026-09-22
+
 ### 课程范围、学习顺序与考核 / Scope, study sequence, and assessment
 
-先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–3 和 Tutorial 1–2；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。
+先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。
 
-Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–3 and Tutorials 1–2; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.
+Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.
 
-材料快照 / Material snapshot: 2026-09-15 · ID: CS5489-M005
+材料快照 / Material snapshot: 2026-09-22 · ID: CS5489-M005
 
 来源 / Source: Lecture1 Intro.pdf · page 4-5,29
 
@@ -99,24 +109,36 @@ First read a module in order with answers visible. Then hide the answer and expl
 
 ## CS5222
 
+### 9月22日内容更新与Markji位置 / September 22 content and Markji locations
+
+Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。
+
+Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.
+
+材料快照 / Material snapshot: 2026-09-22 · ID: CS5222-UPDATE-20260922
+
+来源 / Source: micro-course · update 2026-09-22
+
 ### Chapter 2：已下载课件的覆盖范围 / Chapter 2: downloaded material coverage
 
-Part 1 有 22 张，新 Part 2 有 43 张且编号重新从 1 开始。合起来覆盖应用架构、传输需求、HTTP 基础与连接、Cookie/缓存、邮件协议，以及 DNS 到资源记录类型。FTP、P2P、套接字编程虽出现在目录中，但本次下载幻灯片尚未展开。引用编号必须同时指明属于哪个 part 文件。
+现已下载 Chapter 2 全文107张和 Part 3 的42张，补齐 DNS 报文、P2P/BitTorrent、视频/CDN 及 UDP/TCP socket。Part 1、2、3 独立编号，引用必须注明具体文件。旧 Python 2 代码需按 Python 3 的输入、bytes 编解码及 TCP 消息边界处理；原件保留。
 
-Part 1 has 22 slides, and the new part 2 has 43 slides with numbering restarted at 1. Together they cover application architecture, transport requirements, HTTP basics and connections, cookies and caching, email protocols, and DNS through resource-record types. FTP, P2P and socket programming appear in an outline but are not developed in the downloaded slides. Match a source number to its specific part file.
+The 107-slide full Chapter 2 and 42-slide part 3 are now available, covering DNS messages, P2P/BitTorrent, video/CDNs and UDP/TCP sockets. Parts have separate numbering, so name the file with each citation. Qualify old Python 2 code for Python 3 input, bytes and TCP message framing; originals are preserved.
 
-材料快照 / Material snapshot: 2026-09-15 · ID: CS5222-N070
+材料快照 / Material snapshot: 2026-09-22 · ID: CS5222-N070
 
 来源 / Source: cs5222_cha2_2026_student_part1.pptx · slide 19-22
 来源 / Source: cs5222_cha2_2026_student_part2.pptx · slide 1-43
+来源 / Source: cs5222_cha2_2026_student.pptx · slide 1-107
+来源 / Source: cs5222_cha2_2026_student_part3.pptx · slide 1-42
 
 ### 考核结构与资料范围 / Assessment structure and material scope
 
-课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 part1–2 与 Tutorial 1–2；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。
+课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。
 
-The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, Chapter 2 parts 1–2 and Tutorials 1–2. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.
+The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.
 
-材料快照 / Material snapshot: 2026-09-15 · ID: CS5222-N089
+材料快照 / Material snapshot: 2026-09-22 · ID: CS5222-N089
 
 来源 / Source: cs5222_overview_semA2026.pdf · page 5,11-13
 

@@ -6,15 +6,15 @@ CS5222 · Bilingual computer networking cards
 
 ## 这套牌组用来做什么 / Purpose
 
-280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。
+280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。
 
-These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front.
+These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front.
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-129 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 已提供的两部分、课堂 Q&A、Tutorial 1–2 及研究报告方法：网络基础、交换、时延、吞吐量、分层、HTTP、邮件和 DNS。151 张 Extra Resources 卡预习 P2P/socket、可靠传输、TCP、IP、路由、链路层及往年题。历史链路课件并不完整，仍以新增 Canvas 资料确定本学期范围。
+150 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 全文、Tutorial 1–3、Assignment 1、课堂 Q&A 和研究报告方法，现含 P2P、视频/CDN 和 socket 编程。130 张 Extra Resources 卡保留可靠传输、TCP、IP、路由、链路层及尚未匹配的往年题；原题合集里已匹配的个别卡按当前资料标注。后续仍以 Canvas 确认范围。
 
-The 129 Canvas/support cards cover Chapter 1, the available two parts of Chapter 2, class Q&A, Tutorials 1–2, and report methodology. Another 151 historical cards preview P2P/sockets, reliability, TCP, IP, routing, the link layer, and historical exercises. Historical link-layer materials are incomplete; new Canvas releases define the current scope.
+The 150 Canvas/support cards cover Chapters 1 and 2, Tutorials 1–3, Assignment 1, Q&A and report methodology, now including P2P, video/CDNs and sockets. Another 130 historical cards retain reliability, TCP, IP, routing, link-layer topics and unmatched historical exercises. Individually matched cards in old problem banks are marked current. Further scope follows Canvas.
 
 ## 怎样使用题目与图示 / How to use problems and diagrams
 

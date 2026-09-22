@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-17",
+  "updated": "2026-09-22",
   "categories": {
     "scope": [
       "课程范围与考核",
@@ -20,18 +20,72 @@
   },
   "entries": [
     {
+      "id": "CS5222-UPDATE-20260922",
+      "course": "CS5222",
+      "category": "study",
+      "title_zh": "9月22日内容更新与Markji位置",
+      "title_en": "September 22 content and Markji locations",
+      "body_zh": "Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。",
+      "body_en": "Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.",
+      "material_snapshot": "2026-09-22",
+      "updated": "2026-09-22",
+      "retired_card": false,
+      "lesson_ids": [
+        "net12",
+        "net10"
+      ],
+      "sources": [
+        {
+          "name": "micro-course",
+          "href": "https://crazyshout.github.io/micro-course/",
+          "unit": "update",
+          "locator": "2026-09-22",
+          "provenance": "Learning library update; not an instructor announcement"
+        }
+      ],
+      "body_zh_html": "<p>Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。</p>",
+      "body_en_html": "<p>Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.</p>"
+    },
+    {
+      "id": "CS5489-UPDATE-20260922",
+      "course": "CS5489",
+      "category": "study",
+      "title_zh": "9月22日内容更新与Markji位置",
+      "title_en": "September 22 content and Markji locations",
+      "body_zh": "新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。",
+      "body_en": "New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.",
+      "material_snapshot": "2026-09-22",
+      "updated": "2026-09-22",
+      "retired_card": false,
+      "lesson_ids": [
+        "ml19",
+        "ml31"
+      ],
+      "sources": [
+        {
+          "name": "micro-course",
+          "href": "https://crazyshout.github.io/micro-course/",
+          "unit": "update",
+          "locator": "2026-09-22",
+          "provenance": "Learning library update; not an instructor announcement"
+        }
+      ],
+      "body_zh_html": "<p>新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。</p>",
+      "body_en_html": "<p>New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.</p>"
+    },
+    {
       "id": "CS5222-N070",
       "course": "CS5222",
       "category": "scope",
       "title_zh": "Chapter 2：已下载课件的覆盖范围",
       "title_en": "Chapter 2: downloaded material coverage",
-      "body_zh": "Part 1 有 22 张，新 Part 2 有 43 张且编号重新从 1 开始。合起来覆盖应用架构、传输需求、HTTP 基础与连接、Cookie/缓存、邮件协议，以及 DNS 到资源记录类型。FTP、P2P、套接字编程虽出现在目录中，但本次下载幻灯片尚未展开。引用编号必须同时指明属于哪个 part 文件。",
-      "body_en": "Part 1 has 22 slides, and the new part 2 has 43 slides with numbering restarted at 1. Together they cover application architecture, transport requirements, HTTP basics and connections, cookies and caching, email protocols, and DNS through resource-record types. FTP, P2P and socket programming appear in an outline but are not developed in the downloaded slides. Match a source number to its specific part file.",
-      "material_snapshot": "2026-09-15",
-      "updated": "2026-09-17",
+      "body_zh": "现已下载 Chapter 2 全文107张和 Part 3 的42张，补齐 DNS 报文、P2P/BitTorrent、视频/CDN 及 UDP/TCP socket。Part 1、2、3 独立编号，引用必须注明具体文件。旧 Python 2 代码需按 Python 3 的输入、bytes 编解码及 TCP 消息边界处理；原件保留。",
+      "body_en": "The 107-slide full Chapter 2 and 42-slide part 3 are now available, covering DNS messages, P2P/BitTorrent, video/CDNs and UDP/TCP sockets. Parts have separate numbering, so name the file with each citation. Qualify old Python 2 code for Python 3 input, bytes and TCP message framing; originals are preserved.",
+      "material_snapshot": "2026-09-22",
+      "updated": "2026-09-22",
       "retired_card": true,
       "lesson_ids": [
-        "net07"
+        "net12"
       ],
       "sources": [
         {
@@ -47,10 +101,24 @@
           "unit": "slide",
           "locator": "1-43",
           "provenance": "Canvas 2026A Chapter 2 part2, slide numbering restarts at 1"
+        },
+        {
+          "name": "cs5222_cha2_2026_student.pptx",
+          "href": null,
+          "unit": "slide",
+          "locator": "1-107",
+          "provenance": "Canvas 2026A"
+        },
+        {
+          "name": "cs5222_cha2_2026_student_part3.pptx",
+          "href": null,
+          "unit": "slide",
+          "locator": "1-42",
+          "provenance": "Canvas 2026A"
         }
       ],
-      "body_zh_html": "<p>Part 1 有 22 张，新 Part 2 有 43 张且编号重新从 1 开始。合起来覆盖应用架构、传输需求、HTTP 基础与连接、Cookie/缓存、邮件协议，以及 DNS 到资源记录类型。FTP、P2P、套接字编程虽出现在目录中，但本次下载幻灯片尚未展开。引用编号必须同时指明属于哪个 part 文件。</p>",
-      "body_en_html": "<p>Part 1 has 22 slides, and the new part 2 has 43 slides with numbering restarted at 1. Together they cover application architecture, transport requirements, HTTP basics and connections, cookies and caching, email protocols, and DNS through resource-record types. FTP, P2P and socket programming appear in an outline but are not developed in the downloaded slides. Match a source number to its specific part file.</p>"
+      "body_zh_html": "<p>现已下载 Chapter 2 全文107张和 Part 3 的42张，补齐 DNS 报文、P2P/BitTorrent、视频/CDN 及 UDP/TCP socket。Part 1、2、3 独立编号，引用必须注明具体文件。旧 Python 2 代码需按 Python 3 的输入、bytes 编解码及 TCP 消息边界处理；原件保留。</p>",
+      "body_en_html": "<p>The 107-slide full Chapter 2 and 42-slide part 3 are now available, covering DNS messages, P2P/BitTorrent, video/CDNs and UDP/TCP sockets. Parts have separate numbering, so name the file with each citation. Qualify old Python 2 code for Python 3 input, bytes and TCP message framing; originals are preserved.</p>"
     },
     {
       "id": "CS5222-N089",
@@ -58,10 +126,10 @@
       "category": "scope",
       "title_zh": "考核结构与资料范围",
       "title_en": "Assessment structure and material scope",
-      "body_zh": "课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 part1–2 与 Tutorial 1–2；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。",
-      "body_en": "The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, Chapter 2 parts 1–2 and Tutorials 1–2. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.",
-      "material_snapshot": "2026-09-15",
-      "updated": "2026-09-17",
+      "body_zh": "课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。",
+      "body_en": "The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.",
+      "material_snapshot": "2026-09-22",
+      "updated": "2026-09-22",
       "retired_card": true,
       "lesson_ids": [
         "net11"
@@ -75,8 +143,8 @@
           "provenance": "Canvas 2026A"
         }
       ],
-      "body_zh_html": "<p>课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 part1–2 与 Tutorial 1–2；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。</p>",
-      "body_en_html": "<p>The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination&#x27;s maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, Chapter 2 parts 1–2 and Tutorials 1–2. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.</p>"
+      "body_zh_html": "<p>课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。</p>",
+      "body_en_html": "<p>The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination&#x27;s maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.</p>"
     },
     {
       "id": "CS5222-N090",
@@ -162,10 +230,10 @@
       "category": "scope",
       "title_zh": "课程范围、学习顺序与考核",
       "title_en": "Scope, study sequence, and assessment",
-      "body_zh": "先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–3 和 Tutorial 1–2；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。",
-      "body_en": "Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–3 and Tutorials 1–2; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.",
-      "material_snapshot": "2026-09-15",
-      "updated": "2026-09-17",
+      "body_zh": "先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。",
+      "body_en": "Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.",
+      "material_snapshot": "2026-09-22",
+      "updated": "2026-09-22",
       "retired_card": true,
       "lesson_ids": [
         "ml01"
@@ -179,8 +247,8 @@
           "provenance": "Canvas 2026A"
         }
       ],
-      "body_zh_html": "<p>先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–3 和 Tutorial 1–2；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。</p>",
-      "body_en_html": "<p>Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–3 and Tutorials 1–2; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.</p>"
+      "body_zh_html": "<p>先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。</p>",
+      "body_en_html": "<p>Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.</p>"
     },
     {
       "id": "CS5489-M090",

@@ -77,7 +77,8 @@
       "activities": [
         "cs5222-tutorial-1",
         "cs5222-tutorial-2",
-        "cs5222-chapter-1-check"
+        "cs5222-chapter-1-check",
+        "cs5222-assignment-1"
       ],
       "review": {
         "zh": "先做与刚学概念相配的Tutorial题，再回到该微课的少量首轮卡主动回忆。原题和图在活动内引用现有卡，不另造一份卡组；复习排程由Markji负责。",
@@ -127,8 +128,8 @@
         "en": "Chapter 2 · Application Layer: how processes use the network"
       },
       "intro": {
-        "zh": "上一章看清了信息经过哪些设备、为什么需要等待。现在往上走一步：浏览器、邮件程序和其他应用究竟要向对方说什么，才能把事情办成？仅仅连通两台机器，还不足以让它们理解彼此。\n\n先看应用之间怎样组织、程序怎样通过 socket 使用传输服务，再看具体的消息约定：HTTP 怎样取网页，邮件怎样发送和读取，DNS 怎样从名字找到记录。这样，每个协议都回到它要完成的任务，而不是一串缩写。",
-        "en": "The previous chapter explained the devices data crosses and why it may wait. Now ask what browsers, email programs and other applications must say to one another to complete a task. Connecting machines alone does not make them understand each other.\n\nStart with application organization and the socket interface to transport services, then examine concrete message rules: HTTP retrieves web resources, mail protocols send and access messages, and DNS looks up records by name. Each protocol answers a task rather than remaining just an acronym."
+        "zh": "先问应用需要什么，再读HTTP、邮件与DNS的消息依赖。新补齐的后半章继续问：很多人取同一文件怎么办，视频为何会卡，以及程序怎样真正收发字节？",
+        "en": "Start with application needs and HTTP, mail and DNS exchanges. The completed chapter then asks how to distribute a file, adapt video delivery and send bytes through sockets."
       },
       "outcomes": [
         {
@@ -138,6 +139,10 @@
         {
           "zh": "能跟踪HTTP对象获取、邮件发送/读取、DNS查找与缓存的不同流程。",
           "en": "Trace distinct workflows for HTTP objects, email sending/retrieval and DNS resolution/caching."
+        },
+        {
+          "zh": "计算理想文件分发下界，区分DASH/CDN职责，识别TCP消息边界与UDP数据报。",
+          "en": "Compute ideal distribution bounds, distinguish DASH/CDN roles and identify TCP framing versus UDP datagrams."
         }
       ],
       "lessons": [
@@ -168,9 +173,19 @@
             "zh": "从主机名到地址，理解DNS层级、查询与缓存。",
             "en": "Follow a hostname to its address through DNS hierarchy, queries and caches."
           }
+        },
+        {
+          "id": "net12",
+          "lead": {
+            "zh": "接着DNS，理解文件分发、视频适应与socket收发。",
+            "en": "Continue from DNS to file distribution, adaptive streaming and sockets."
+          }
         }
       ],
-      "activities": [],
+      "activities": [
+        "cs5222-tutorial-3",
+        "cs5222-assignment-1"
+      ],
       "review": {
         "zh": "使用对应微课已有题答与首轮卡巩固；目前Tutorial 1–2都属于Chapter 1，不把它们挪来充当应用层练习。",
         "en": "Use existing lesson exercises and first-pass cards. Tutorials 1–2 support Chapter 1 and are not relabelled as application-layer practice."
@@ -193,16 +208,18 @@
           "locator": "slides 1–43",
           "kind": "course",
           "note": "HTTP继续、邮件与DNS；页码在本文件重新从1开始。"
+        },
+        {
+          "name": "cs5222_cha2_2026_student.pptx / part3.pptx",
+          "locator": "full slides 1–107; part3 slides 1–42",
+          "note": "当前完整应用层，分册页码独立；历史相同内容复用。",
+          "kind": "course"
         }
       ],
       "missing": [
         {
-          "zh": "尚未下载可确认归属Chapter 2的当前Tutorial/Assignment题单。",
-          "en": "No current tutorial or assignment sheet with confirmed Chapter 2 correspondence has been downloaded."
-        },
-        {
-          "zh": "当前P2P仅有架构简介；FTP、P2P细节、socket编程、视频/CDN在大纲或目标中出现，但后续完整正文未到齐。历史预习仍单列。",
-          "en": "Current P2P content is an architectural introduction. FTP, detailed P2P, socket programming and video/CDN appear in outlines or goals, but their complete subsequent material is not available. Historical previews remain separate."
+          "zh": "完整Chapter2已下载；后续章节是否属于当前教学仍待Canvas材料。",
+          "en": "Full Chapter 2 is available; later chapters still require current Canvas confirmation."
         }
       ]
     }
@@ -481,6 +498,12 @@
               "locator": "page 1, Q1",
               "kind": "course",
               "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            },
+            {
+              "name": "tutorial-2-solution_semA2026.pptx",
+              "locator": "slides 5–13",
+              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "kind": "course"
             }
           ]
         },
@@ -520,6 +543,12 @@
               "locator": "page 1, Q2(a–b)",
               "kind": "course",
               "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            },
+            {
+              "name": "tutorial-2-solution_semA2026.pptx",
+              "locator": "slides 5–13",
+              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "kind": "course"
             }
           ]
         },
@@ -558,6 +587,12 @@
               "locator": "page 2, Q3",
               "kind": "course",
               "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            },
+            {
+              "name": "tutorial-2-solution_semA2026.pptx",
+              "locator": "slides 5–13",
+              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "kind": "course"
             }
           ]
         },
@@ -597,6 +632,12 @@
               "locator": "page 2, Q4",
               "kind": "course",
               "note": "当前 2026–27 Tutorial 2 原题；当前未下载教师解答，核验要点由现有卡片和独立计算提供。"
+            },
+            {
+              "name": "tutorial-2-solution_semA2026.pptx",
+              "locator": "slides 5–13",
+              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "kind": "course"
             }
           ]
         },
@@ -642,6 +683,12 @@
               "locator": "slides 50–51",
               "kind": "course",
               "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+            },
+            {
+              "name": "tutorial-2-solution_semA2026.pptx",
+              "locator": "slides 5–13",
+              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "kind": "course"
             }
           ]
         }
@@ -658,6 +705,12 @@
           "locator": "slides 44–55",
           "kind": "course",
           "note": "当前完整文件页码；拆分 part2 的页码另行重启，不混写。"
+        },
+        {
+          "name": "tutorial-2-solution_semA2026.pptx",
+          "locator": "slides 5–13",
+          "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+          "kind": "course"
         }
       ]
     },
@@ -1031,6 +1084,385 @@
           "locator": "pages 1–3",
           "kind": "course",
           "note": "当前课程级研究报告要求；不是某一章的单独作业。"
+        }
+      ]
+    },
+    {
+      "id": "cs5222-tutorial-3",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 3｜从HTTP报文到DNS与网页时序",
+        "en": "Tutorial 3 | HTTP messages, DNS and page timing"
+      },
+      "intro": {
+        "zh": "按原P1–P4逐题读消息和时间依赖。前三题已有原卡可复用；第四题要在自己的环境执行nslookup，结果随地点与时间改变，不填写历史固定IP。",
+        "en": "Work through P1–P4 using messages and timing dependencies. Existing cards cover the first three; run nslookup locally for P4 because results vary over time and location."
+      },
+      "units": [
+        "chapter-2"
+      ],
+      "lesson_ids": [
+        "net07",
+        "net09",
+        "net12"
+      ],
+      "sources": [
+        {
+          "name": "tutorial-3_semA2026.pdf",
+          "locator": "pages 1–3",
+          "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+          "kind": "course"
+        }
+      ],
+      "items": [
+        {
+          "id": "p1-http-request",
+          "title": {
+            "zh": "P1 · 哪个字段回答哪个问题？",
+            "en": "P1 | Read the relevant HTTP field"
+          },
+          "task": {
+            "zh": "原报文关键行：GET /cs453/index.html HTTP/1.1；Host: gaia.cs.umass.edu；Connection:keepalive。User-Agent含Mozilla/5.0、Windows NT 5.1、Gecko/20040804、Netscape/7.2。回答URL、版本、连接意图、客户端IP是否可读，以及浏览器标识。",
+            "en": "Read these original request fields: GET /cs453/index.html HTTP/1.1; Host: gaia.cs.umass.edu; Connection:keepalive; User-Agent containing Mozilla/5.0, Windows NT 5.1, Gecko/20040804 and Netscape/7.2. Identify the URL, version, connection intent, client-IP evidence and declared browser."
+          },
+          "approach": {
+            "zh": "路径与Host拼URL；版本在请求行；User-Agent描述客户端声明。先找字段证据，缺失字段就明确不能据此得知。",
+            "en": "Combine path and Host, read the request-line version and inspect the declared User-Agent. State when a requested fact is absent."
+          },
+          "check": {
+            "zh": "URL为http://gaia.cs.umass.edu/cs453/index.html；HTTP/1.1，题意为持久连接。IP不在这些首部中。User-Agent宣称Netscape7.2，Mozilla是兼容标识，不能只看最前一词。旧题keepalive拼写应区别标准keep-alive；HTTP/1.1通常持久，仍需看close等条件。",
+            "en": "The URL is http://gaia.cs.umass.edu/cs453/index.html; HTTP/1.1 and the intended persistent connection. The shown fields do not give client IP. User-Agent declares Netscape 7.2; Mozilla is a compatibility token. Distinguish the old spelling keepalive from standard keep-alive and consider close semantics."
+          },
+          "pitfall": {
+            "zh": "User-Agent可被修改，不是可信身份认证；不要用服务器Host推客户端IP。",
+            "en": "User-Agent can be changed and is not identity proof; Host is not the client IP."
+          },
+          "lesson_ids": [
+            "net07"
+          ],
+          "card_ids": [
+            "CS5222-N231"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-3_semA2026.pdf",
+              "locator": "page 1, P1",
+              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "p2-dns",
+          "title": {
+            "zh": "P2 · 沿原图数三个上游往返",
+            "en": "P2 | Count the three upstream exchanges"
+          },
+          "task": {
+            "zh": "原图主机与本地解析器一问一答；解析器依次问根、TLD、权威。主机—解析器RTT为RTTL，各上游为RTTr，无缓存。求时间；再改成本地已有最终记录。",
+            "en": "The figure shows one host–resolver exchange and sequential resolver queries to root, TLD and authoritative servers. Use RTTL locally and RTTr upstream, with no cache; then cache the final answer locally."
+          },
+          "approach": {
+            "zh": "每一对请求/回复是一段RTT。原卡前提重述了图的依赖；缓存最终结果后不再进行三个上游交换。",
+            "en": "Each request/reply pair contributes an RTT. The existing card states the diagram dependencies; a final-answer cache hit removes all three upstream exchanges."
+          },
+          "check": {
+            "zh": "无缓存RTTL+3RTTr，选D；有最终记录RTTL，选A。只省解析，不等于已经完成TCP或HTTP。",
+            "en": "Uncached: RTTL+3RTTr, option D. Cached: RTTL, option A. Resolution does not complete TCP or HTTP."
+          },
+          "pitfall": {
+            "zh": "不能把图的8个箭头当8个RTT，也不能把本地解析器当权威层级最底层。",
+            "en": "Do not count eight arrows as eight RTTs or make the local resolver a level below the authoritative hierarchy."
+          },
+          "lesson_ids": [
+            "net09"
+          ],
+          "card_ids": [
+            "CS5222-N232"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-3_semA2026.pdf",
+              "locator": "page 2, P2 and figure",
+              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "p3-web-time",
+          "title": {
+            "zh": "P3 · 八个对象，先等HTML再分批",
+            "en": "P3 | Fetch HTML before eight objects"
+          },
+          "task": {
+            "zh": "先串行访问n个DNS服务器，各花RTTi；网页含一份HTML及同站八个极小对象，站点RTT0。忽略发送时间、TLS和处理，分别用串行非持久、最多五条并行非持久、一条无流水线持久连接。",
+            "en": "DNS visits cost the sum of RTTi. Fetch one HTML page and eight tiny same-site objects, with RTT0 and negligible transmission/TLS/processing. Compare serial nonpersistent, up to five parallel nonpersistent, and one nonpipelined persistent connection."
+          },
+          "approach": {
+            "zh": "网页对象地址在HTML后才得知。非持久每批需要建连与请求两段RTT；持久复用建好的连接。",
+            "en": "Object URLs are learned after HTML. A nonpersistent batch requires connection setup and request RTTs; persistence reuses the connection."
+          },
+          "check": {
+            "zh": "统一加ΣRTTi：三个网页部分分别18RTT0、6RTT0、10RTT0，对应D/C/B。原题(c)只写persistent，选项隐含无流水线；若允许流水线，网页部分可为3RTT0，必须先明确模型。",
+            "en": "Add ΣRTTi in all cases. Page costs are 18RTT0, 6RTT0 and 10RTT0, options D/C/B. Part (c) omits the pipelining qualifier; its choices imply nonpipelined persistence. A pipelined model can give 3RTT0 instead."
+          },
+          "pitfall": {
+            "zh": "persistent不等于parallel或pipelined；不能省掉基础HTML的先后依赖。",
+            "en": "Persistence, parallelism and pipelining are different; retain the HTML dependency."
+          },
+          "lesson_ids": [
+            "net07",
+            "net09"
+          ],
+          "card_ids": [
+            "CS5222-N233"
+          ],
+          "sources": [
+            {
+              "name": "tutorial-3_semA2026.pdf",
+              "locator": "page 3, P3",
+              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "p4-nslookup",
+          "title": {
+            "zh": "P4 · 记录查询，再解释IP直访",
+            "en": "P4 | Record a lookup and explain direct-IP access"
+          },
+          "task": {
+            "zh": "在自己的环境运行nslookup cityu.edu.hk，记日期、网络、应答解析器、返回记录和TTL（若输出提供）。再说明直接把返回IP填进浏览器是否一定得到同一网页。",
+            "en": "Run nslookup cityu.edu.hk locally and record date, network, responding resolver, records and TTL when available. Explain whether browsing directly to a returned IP must show the same page."
+          },
+          "approach": {
+            "zh": "区分输出里的解析器地址和被查域名的答案。IP负责网络寻址，HTTP Host与HTTPS的服务器名/证书还参与站点选择。",
+            "en": "Distinguish the resolver address from the name’s answer. IP addresses route packets; HTTP Host and HTTPS names/certificates also affect site selection."
+          },
+          "check": {
+            "zh": "记录自己的实际输出，接受随时间/地点变化的多地址或别名。直接IP不保证成功：虚拟主机可能需要域名，HTTPS还要匹配证书与SNI；不要绕过浏览器安全提示作为“成功”。",
+            "en": "Use actual output, allowing multiple addresses or aliases over time and location. Direct IP need not work because virtual hosts and HTTPS SNI/certificates can require the domain; do not bypass browser security warnings to claim success."
+          },
+          "pitfall": {
+            "zh": "本页没有替你运行命令，也没有提供固定的“标准IP”。",
+            "en": "This page has not run the command for you and supplies no fixed expected IP."
+          },
+          "lesson_ids": [
+            "net09",
+            "net07"
+          ],
+          "card_ids": [],
+          "sources": [
+            {
+              "name": "tutorial-3_semA2026.pdf",
+              "locator": "page 3, P4",
+              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "kind": "course"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs5222-assignment-1",
+      "kind": "assignment",
+      "title": {
+        "zh": "Assignment 1｜时间轴、分包、邮件与Zoom证据",
+        "en": "Assignment 1 | Timing, segmentation, mail and evidence"
+      },
+      "intro": {
+        "zh": "本次正式作业覆盖Chapter1与2。四部分分别回到时间轴、流水线、邮件状态和具体产品证据。保留原题数据；技术讲解在这里，提交要求仍以当前Canvas为准。",
+        "en": "The current assignment covers Chapters 1 and 2 through timing, pipelining, mail state and product evidence. Original data are retained; follow Canvas for submission requirements."
+      },
+      "units": [
+        "chapter-1",
+        "chapter-2"
+      ],
+      "lesson_ids": [
+        "net03",
+        "net10",
+        "net08",
+        "net06",
+        "net11"
+      ],
+      "sources": [
+        {
+          "name": "CS5222 Assignment 1.pdf",
+          "locator": "pages 1–4",
+          "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+          "kind": "course"
+        }
+      ],
+      "items": [
+        {
+          "id": "p6-bits",
+          "title": {
+            "zh": "Chapter1 P6 · 在t=L/R时，哪些位走到哪里？",
+            "en": "Chapter 1 P6 | Locate bits at t=L/R"
+          },
+          "task": {
+            "zh": "A经一条长m米、速率R bit/s、传播速度s m/s的链路给B发L比特。忽略处理/排队，t=0开始。回答传播、发送、整包到齐，以及t=L/R时首末位位置。再用s=2.5×10⁸、L=120、R=56kbps求两时延相等的距离。",
+            "en": "A sends L bits to B over a link of length m metres, rate R bit/s and propagation speed s m/s, starting at t=0 without processing or queueing. Find propagation, transmission, complete-arrival time and first/last-bit positions at t=L/R. Then find the equal-delay distance for s=2.5×10⁸ m/s, L=120 bits and R=56 kbps."
+          },
+          "approach": {
+            "zh": "先给首位和末位各画一条时间线。末位要等发送L/R后才出发；首位可能仍在路上，也可能已经到达。",
+            "en": "Draw separate first-bit and last-bit timelines. The last bit leaves after L/R; the first may still be travelling or already have arrived."
+          },
+          "check": {
+            "zh": "dprop=m/s，dtrans=L/R，整包到齐L/R+m/s。t=L/R时末位刚离开发送端；首位在sL/R处，超过链路长度则已到B。相等时m=sL/R≈535714.3米。",
+            "en": "Propagation is m/s, transmission L/R and complete arrival L/R+m/s. At L/R the last bit is just leaving; the first has travelled sL/R or already reached B. Equality gives approximately 535714.3 metres."
+          },
+          "pitfall": {
+            "zh": "发送完与接收齐不是同一事件；kbps按十进制，包长已经是bit无需再乘8。",
+            "en": "End of transmission and complete reception differ; kbps is decimal and L is already in bits."
+          },
+          "lesson_ids": [
+            "net03"
+          ],
+          "card_ids": [
+            "CS5222-N260"
+          ],
+          "sources": [
+            {
+              "name": "CS5222 Assignment 1.pdf",
+              "locator": "page 1, P6(a–g)",
+              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "p31-segments",
+          "title": {
+            "zh": "Chapter1 P31 · 分包为什么能让链路同时忙？",
+            "en": "Chapter 1 P31 | Why packets enable overlap"
+          },
+          "task": {
+            "zh": "按原图，发送端经两台存储转发交换机到接收端，共三条2Mbps链路。文件8×10⁶bit，对比整报文与800个10000bit分组；忽略传播、处理、排队及首部。",
+            "en": "Use the original three-link path with two store-and-forward switches, each link 2Mbps. Compare one 8×10⁶-bit message with 800 packets of 10000 bits, ignoring propagation, processing, queueing and headers."
+          },
+          "approach": {
+            "zh": "先画首包跨三跳，再每隔一个包的发送时长放入下一包。可以复用NET10已有算例，现在它也有当前作业出处。",
+            "en": "Trace the first packet over three hops, then add subsequent packets one serialization time apart. The existing NET10 example now also has a current assignment source."
+          },
+          "check": {
+            "zh": "整报文到第一交换机4秒、到终点12秒。一个包每跳5ms；首包到第一交换机5ms，第二包10ms；全体到终点(800+3−1)×5ms=4.01秒。分包也降低单次重传量，但增加首部、排序/重组工作与调度开销。",
+            "en": "The message reaches the first switch in 4s and the destination in 12s. Packets serialize in 5ms; the first two finish at the first switch at 5ms and 10ms. Completion is 4.01s. Packetization can reduce retransmission units but adds headers and reassembly/scheduling costs."
+          },
+          "pitfall": {
+            "zh": "不要计算成800×三跳时间，也不把简化题忽略的开销说成真实网络没有。",
+            "en": "Do not multiply 800 by the full three-hop time or claim real systems have no omitted overhead."
+          },
+          "lesson_ids": [
+            "net03",
+            "net10"
+          ],
+          "card_ids": [
+            "CS5222-N261"
+          ],
+          "sources": [
+            {
+              "name": "CS5222 Assignment 1.pdf",
+              "locator": "page 2, P31(a–e), Figure 1.27",
+              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "p17-pop3",
+          "title": {
+            "zh": "Chapter2 P17 · 把两封邮件处理到会话结束",
+            "en": "Chapter 2 P17 | Complete the POP3 transaction"
+          },
+          "task": {
+            "zh": "原LIST给消息1大小498字节、消息2大小912字节，RETR 1已完成。分别续写download-and-delete与download-and-keep直到退出；保持模式五分钟后无新邮件，再写第二次会话的交易阶段。",
+            "en": "LIST reports messages 1 and 2 of sizes 498 and 912 octets, and RETR 1 has finished. Complete delete and keep modes through exit; then repeat the transaction phase five minutes later with no new mail in keep mode."
+          },
+          "approach": {
+            "zh": "按每个客户端命令配服务器回复，别只填题面两个问号。RETR是读取，DELE是标记删除，QUIT进入正常更新阶段。",
+            "en": "Pair each client command with its server reply. Do not stop at the two printed question marks. RETR retrieves, DELE marks deletion and normal QUIT enters the update phase."
+          },
+          "check": {
+            "zh": "删除模式：C:DELE 1→S:+OK；C:RETR 2→S:+OK、邮件2各行、单独一行点；C:DELE 2→S:+OK；C:QUIT→S:+OK。保留模式省略DELE，其余RETR2、QUIT仍做。第二次认证后LIST仍有1 498、2 912，再依次RETR1/RETR 2并QUIT；具体+OK文字可不同，下载正文必须按点行结束。",
+            "en": "Delete mode: DELE 1/+OK, RETR 2/+OK plus multiline message ending in a dot line, DELE 2/+OK, QUIT/+OK. Keep mode omits DELE. After authentication in the second keep session, LIST still shows both messages, followed by RETR 1, RETR 2 and QUIT; exact +OK wording may vary."
+          },
+          "pitfall": {
+            "zh": "正常退出才提交删除；只下载不删除。题干未给认证信息，无需编造用户名或密码。",
+            "en": "Deletion commits on normal update, not merely on retrieval. Do not invent unspecified authentication credentials."
+          },
+          "lesson_ids": [
+            "net08"
+          ],
+          "card_ids": [
+            "CS5222-N262"
+          ],
+          "sources": [
+            {
+              "name": "CS5222 Assignment 1.pdf",
+              "locator": "page 3, P17(a–c) plus current completion note",
+              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "kind": "course"
+            }
+          ]
+        },
+        {
+          "id": "zoom-evidence",
+          "title": {
+            "zh": "Zoom · 先说明接入方式，再引用产品证据",
+            "en": "Zoom | State the deployment before citing protocols"
+          },
+          "task": {
+            "zh": "按原题分别讨论三种应用层协议/协议族、主要架构、主要传输协议及是否需要老师电脑IP。先明确讨论的是常规云课堂、网页客户端还是SIP/H.323会议室接入。",
+            "en": "Address three application-layer protocols/families, architecture, transport and the lecturer-IP question. Specify ordinary cloud meetings, web clients or SIP/H.323 room endpoints first."
+          },
+          "approach": {
+            "zh": "可列HTTPS用于会话设置/Web服务，SIP与H.323用于Conference Room Connector的第三方会议室接入，并写清后两者不是每个普通客户端都必用。若限定常规客户端，应按该版本文档确认其媒体/控制协议，不能拿TCP、UDP、IP充当应用层三例。",
+            "en": "Examples across supported access modes are HTTPS for setup/web services and SIP or H.323 for third-party rooms through Conference Room Connector. The latter are not required of every ordinary client. For a narrower native-client claim, verify its media/control protocol from that version’s documentation; TCP, UDP and IP are not application-layer examples."
+          },
+          "check": {
+            "zh": "官方资料支持常规云会议经Zoom服务器/多媒体路由器组织；媒体优先UDP并有其他连接方式，信令与Web流量需分开说明。云课堂学生通常连接Zoom服务端，不必先知道老师设备IP；特定P2P或Zoom Mesh配置可能改变局部路径。提交时附文档日期、产品与适用条件，真实抓包是额外证据，不是此页已经测得。",
+            "en": "Official sources describe cloud routing via Zoom infrastructure, UDP-preferred media with other connectivity modes, and distinct web/signaling flows. A cloud-class participant generally need not know the lecturer-device IP first. Specific P2P or Zoom Mesh configurations can change local paths. State dates, products and conditions; a real trace would be additional evidence, not a result produced here."
+          },
+          "pitfall": {
+            "zh": "不要照抄旧解“UDP没有检错”“所有媒体直连老师电脑”。UDP校验与重传是不同问题，Zoom Phone文档也不能不加说明地替代Zoom Meetings。",
+            "en": "Do not repeat old claims that UDP has no error detection or all media goes directly to the lecturer. Checksum and retransmission differ; Zoom Phone documentation is not automatically evidence about Meetings."
+          },
+          "lesson_ids": [
+            "net06",
+            "net11"
+          ],
+          "card_ids": [
+            "CS5222-N263"
+          ],
+          "sources": [
+            {
+              "name": "CS5222 Assignment 1.pdf",
+              "locator": "page 4, Zoom question",
+              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "kind": "course"
+            },
+            {
+              "name": "Zoom Security White Paper",
+              "locator": "August 2021; https://media.zoom.com/download/assets/Zoom-Security-White-Paper.pdf/86e2a7c69ac411efbc3f6ef18e316a3b",
+              "note": "历史官方架构说明；结合现行文档限定部署。",
+              "kind": "reference"
+            },
+            {
+              "name": "Securing Zoom Meetings Explainer",
+              "locator": "https://library.zoom.com/zoom-workplace/zoom-meetings/securing-zoom-meetings-explainer; checked 2026-09-22",
+              "note": "官方明确SIP/H.323会议室通过Connector加入。",
+              "kind": "reference"
+            },
+            {
+              "name": "Using DSCP Marking with Zoom / Zoom Mesh Explainer",
+              "locator": "https://library.zoom.com/admin-corner/network-management/quality-of-service-and-network-best-practices-explainer/using-dscp-marking-with-zoom; https://library.zoom.com/advanced-enterprise-services/zoom-mesh/zoom-mesh-explainer; checked 2026-09-22",
+              "note": "核对当前UDP流量及企业Mesh例外。",
+              "kind": "reference"
+            }
+          ]
         }
       ]
     }

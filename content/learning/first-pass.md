@@ -349,3 +349,10 @@ STEP1: DHCP 提供本机 IP、掩码、网关和 DNS 配置；DNS 再把网站�
 STEP2: 若网站在远端，ARP 查网关在本 LAN 的 MAC。目的 IP 写网站，当前帧目的 MAC 写网关。 || For a remote site, resolve the gateway's local MAC: the IP destination is the site, while the first frame targets the gateway.
 STEP3: 然后按题设建立 TCP、发送 HTTP 请求；各路由器在每一跳重建链路封装。 || Under the stated model, establish TCP and send HTTP; routers replace link framing at each hop.
 TRAP: 这个场景限定 IPv4 以太网、空缓存和明文 HTTP。HTTPS、IPv6 或已有连接会改变部分步骤。 || This scenario assumes IPv4 Ethernet, empty caches, and plaintext HTTP; other configurations change some steps.
+
+@@ ml31
+START: 房屋面积相近、售价却未必落在一条直线上。能否先把房屋按规则分组，再让几棵树一起估价？ || Similar floor areas need not produce prices on one straight line. Can rules group houses, with several trees estimating together?
+STEP1: 每个叶子先对训练价格求均值。 || Each leaf starts by averaging its training prices.
+STEP2: 比较切分前后的叶内平方误差。 || Compare within-leaf squared error before and after a split.
+STEP3: 分清多树平均与按残差逐轮修正。 || Distinguish averaging multiple trees from sequential residual corrections.
+TRAP: 树多、训练误差小，不等于新样本一定预测更准。 || More trees or lower training error does not guarantee better predictions for new examples.

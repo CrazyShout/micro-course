@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "服务器最初有一份文件，十个客户端都还没有。所有人都要拿到完整副本：是让服务器发十遍，还是让已经拿到部分内容的人接着帮忙？本节按往年应用层资料预习。",
-    "en": "Only one server initially holds a file; ten empty clients all need a copy. Compare server-only distribution with peer uploads using the historical application-layer model."
+    "zh": "服务器最初有一份文件，十个客户端都还没有。所有人都要拿到完整副本：是让服务器发十遍，还是让已拿到部分内容的人接着帮忙？本节现在对应 Chapter 2 的当前完整课件；再从分发接到视频播放与真正收发字节。",
+    "en": "One server initially has a file; ten empty clients need it. Should the server send every copy, or can clients help redistribute pieces? This lesson now aligns with current Chapter 2 and connects distribution to streaming and sockets."
   },
   "sections": [
     {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "往年Chapter 2第72张提出文件分发任务：文件大小F比特，接收者N个，服务器和客户端各有有限上传/下载速率。先假设初始只有服务器有文件、所有客户端为空，网络内部不额外限制，忽略协议开销。这个前提决定“哪些数据至少必须走一次”。\n\n若服务器直接给每个客户端完整一份，它总共要上传NF比特；一个最慢客户端下载自己的F比特也需要时间。这是两个同时成立的约束，不是先做完服务器工作再做客户端工作，所以最后取两者中较大的时间，不相加。"
+          "text": "当前Chapter 2第72张提出文件分发任务：文件大小F比特，接收者N个，服务器和客户端各有有限上传/下载速率。先假设初始只有服务器有文件、所有客户端为空，网络内部不额外限制，忽略协议开销。这个前提决定“哪些数据至少必须走一次”。\n\n若服务器直接给每个客户端完整一份，它总共要上传NF比特；一个最慢客户端下载自己的F比特也需要时间。这是两个同时成立的约束，不是先做完服务器工作再做客户端工作，所以最后取两者中较大的时间，不相加。"
         }
       ]
     },
@@ -81,7 +81,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "往年第76–80张的BitTorrent把文件切块。请求哪个缺块和向哪个伙伴上传是两个决策：rarest-first优先稀缺块；choke/unchoke控制本节点的上传许可，乐观解锁给其他伙伴探索机会。具体名额和周期是课件模型，不能说成所有实现的统一常数。\n\n视频则边下载边播放。DASH选择下一段的编码版本，CDN改变内容从哪里取得；一个管版本，一个管位置。吞吐量、片段大小、缓存与起始播放缓冲一起决定会不会卡顿。相应完整练习放补充，先不要把“服务器更近”当作永不卡顿保证。"
+          "text": "完整课件第76–80张（part3第11–15张）的BitTorrent把文件切块。请求哪个缺块和向哪个伙伴上传是两个决策：rarest-first优先稀缺块；choke/unchoke控制本节点的上传许可，乐观解锁给其他伙伴探索机会。具体名额和周期是课件模型，不能说成所有实现的统一常数。\n\n视频则边下载边播放。DASH选择下一段的编码版本，CDN改变内容从哪里取得；一个管版本，一个管位置。吞吐量、片段大小、缓存与起始播放缓冲一起决定会不会卡顿。相应完整练习放补充，先不要把“服务器更近”当作永不卡顿保证。"
         }
       ]
     },
@@ -95,7 +95,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "历史socket例子让客户端发一行文字，服务器转成大写再回传。实现时TCP给有序字节流，一次send不保证对应一次recv；一次接收可能半条、几条，或几条加半条。应用要约定编码、长度前缀或分隔符、最大长度，并保存未完成尾部。UDP保留数据报边界，但丢失等行为仍需处理。\n\n因此分发下界和可运行消息协议是两项能力：会算理想秒数不等于实现已验证。补充保留消息定界、DNS区段、视频和BitTorrent细节；当前页仍属历史预习，2024编程任务也不冒充本学期要求。首轮先巩固三项容量约束，再按专题推进。"
+          "text": "当前socket例子让客户端发一行文字，服务器转成大写再回传。实现时TCP给有序字节流，一次send不保证对应一次recv；一次接收可能半条、几条，或几条加半条。应用要约定编码、长度前缀或分隔符、最大长度，并保存未完成尾部。UDP保留数据报边界，但丢失等行为仍需处理。\n\n因此分发下界和可运行消息协议是两项能力：会算理想秒数不等于实现已验证。补充保留消息定界、DNS区段、视频和BitTorrent细节；本页主要机制已由当前Canvas确认；附带的2024编程任务仍是历史补充。首轮先巩固三项容量约束，再按专题推进。"
         },
         {
           "type": "unit",
@@ -107,9 +107,37 @@
           "type": "recap"
         }
       ]
+    },
+    {
+      "id": "python3-and-evidence",
+      "title": {
+        "zh": "把教材式代码变成可以核验的通信",
+        "en": "Turn the socket sketch into a verifiable exchange"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "part3第33–40张还是Python 2风格：raw_input、print语句与直接发送文本。Python 3先input取字符串，按约定encode成bytes；接收后先按应用协议拼出完整消息，再decode。若使用“from socket import *”，直接用AF_INET/SOCK_DGRAM；若写socket.AF_INET则应“import socket”。两种导入风格不要混。"
+        },
+        {
+          "type": "prose",
+          "text": "TCP的send可能只接受部分待发字节，sendall负责发送完整缓冲；一次recv也不保证一条消息，遇到b\"\"表示对方已关闭发送方向。UDP用sendto/recvfrom保留数据报边界，缺响应仍需超时处理。已有消息定界专题分别练这些问题，不要求背端口12000这个教学选值。"
+        },
+        {
+          "type": "prose",
+          "text": "part3第10张写P2P最小分发时间“总是更少”，应读成这个理想模型里可以不大于；N=1或同受下载瓶颈约束时可能相等。流量比例、平台用户数与旧实现参数也只当作课件当时的例子。容量公式给下界，真实系统还受调度、离线和开销影响。"
+        }
+      ]
     }
   ],
   "sources": [
+    {
+      "name": "cs5222_cha2_2026_student.pptx / part3.pptx",
+      "locator": "full slides 69–107; part3 slides 1–42",
+      "note": "全文107页与历史版规范化文字及媒体一致，已核对当期Canvas身份；保持Python3与模型边界说明。",
+      "kind": "course"
+    },
     {
       "name": "cs5222_cha2_2025_student.pptx",
       "locator": "slides 71–80, 82–105",

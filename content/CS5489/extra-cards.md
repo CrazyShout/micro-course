@@ -1,5 +1,11 @@
 # Extra Resources · historical preview
 
+
+
+
+
+
+
 @@ M183 | x01-neighbors | learn | XKNN:8-14
 Q_EN: How does k-nearest-neighbor classification produce a prediction?
 Q_ZH: k 近邻分类怎样得到预测结果？
@@ -24,113 +30,17 @@ Q_ZH: 数据越来越多时，固定 k=1 能保证达到贝叶斯最优吗？
 A_EN: No. Suppose features carry no label information and independent labels are A with probability 0.7 and B with 0.3. The Bayes rule always predicts A, with error 0.3. A single neighbor supplies another independent label, giving error 2(0.7)(0.3)=0.42, even with more data. This added counterexample qualifies the historical slide's broad convergence statement.
 A_ZH: 不能。假设特征不含标签信息，各样本标签独立，以 0.7 概率为 A、0.3 概率为 B。贝叶斯规则总预测 A，错误率为 0.3。单个近邻提供另一个独立标签，错误率为 2(0.7)(0.3)=0.42，增加数据也不改变这一点。这个补充反例限定了旧课件较宽泛的收敛表述。
 
-@@ M187 | x02-regression | learn | XR1:10-14
-Q_EN: What does ordinary least squares optimize, and what is a residual?
-Q_ZH: 普通最小二乘优化什么？什么是残差？
-A_EN: For prediction $\hat y_i=w^Tx_i+b$, this course uses residual $r_i=\hat y_i-y_i$ (prediction minus target). OLS minimizes $\sum_i r_i^2$, or its mean. The alternative residual $y_i-\hat y_i$ has the opposite sign but the same squared loss. Squaring prevents positive and negative errors from cancelling and penalizes large errors more strongly.
-A_ZH: 对预测 $\hat y_i=w^Tx_i+b$，本课程统一用残差 $r_i=\hat y_i-y_i$（预测减真实）。OLS最小化 $\sum_i r_i^2$ 或其平均值。若课件用 $y_i-\hat y_i$，只是残差符号相反，平方损失相同。平方避免正负误差抵消，并加重较大误差的惩罚。
-
-@@ M188 | x02-regression | worked | XR1:10
-Q_EN: Predictions are (2,4,5) and targets are (1,4,7). Compute MSE and RMSE.
-Q_ZH: 预测值为 (2,4,5)，真实值为 (1,4,7)，计算 MSE 和 RMSE。
-A_EN: Using prediction minus target, residuals are (1,0,-2), so the squared-error sum is $1+0+4=5$. MSE is $5/3$ and RMSE is $\sqrt{5/3}\approx1.291$. MSE uses squared target units; RMSE uses the target unit. Reversing every residual sign would leave both measures unchanged.
-A_ZH: 按预测减真实，残差为 (1,0,-2)，平方误差和为 $1+0+4=5$。MSE为 $5/3$，RMSE为 $\sqrt{5/3}\approx1.291$。MSE用目标单位的平方，RMSE用原目标单位；全部残差反号不会改变这两个结果。
-
-@@ M189 | x02-regression | learn | XR1:13,18
-Q_EN: How does a design matrix include the intercept?
-Q_ZH: 设计矩阵怎样包含截距项？
-A_EN: Put one example per row and prepend a column of ones. With n examples and d measured features, $X$ is $n\times(d+1)$ and $w=(b,w_1,\ldots,w_d)^T$. Then all predictions are $Xw$. The ones column is a convention, not an extra measured feature. Keep row/column conventions explicit.
-A_ZH: 每行放一个样本，并在前面加一列 1。若有 n 个样本和 d 个测量特征，则 $X$ 为 $n\times(d+1)$，参数为 $w=(b,w_1,\ldots,w_d)^T$，全部预测写成 $Xw$。常数列是一种表示约定，不是额外测得的特征，必须明确行列含义。
-
-@@ M190 | x02-regression | learn | XR1:18-19
-Q_EN: Derive the normal equations for linear least squares.
-Q_ZH: 怎样推导线性最小二乘的正规方程？
-A_EN: Write $J=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$. For coordinate k, the chain rule gives $\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$. Collecting these derivatives yields $X^T(Xw-y)$. Setting them to zero gives $X^TXw=X^Ty$. Its Hessian $X^TX$ is positive semidefinite, so solutions minimize J globally; an inverse formula additionally needs full column rank.
-A_ZH: 先写 $J=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$。对第k个系数用链式法则：$\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$。把各坐标导数排成向量即 $X^T(Xw-y)$，令零得 $X^TXw=X^Ty$。Hessian $X^TX$ 半正定，所以方程解为全局极小点；要写逆矩阵解还需列满秩。
-
-@@ M191 | x02-regression | check | XR1:19; XR2:17
-Q_EN: Is having at least as many samples as coefficients sufficient for a unique OLS fit?
-Q_ZH: 样本数不少于系数个数，就足以保证 OLS 解唯一吗？
-A_EN: No. Full column rank of X is required. Even with many rows, duplicate or linearly dependent columns make $X^TX$ singular. OLS still has least-squares solutions, but coefficients may not be unique. QR, SVD or a pseudoinverse can compute a solution without pretending that a singular inverse exists.
-A_ZH: 不足够，还要求 X 列满秩。即使有很多样本，重复或线性相关的特征列仍会使 $X^TX$ 奇异。最小二乘解仍存在，但系数可能不唯一。可用 QR、SVD 或伪逆求解，不能把不存在的逆矩阵当作有效公式。
-
-@@ M192 | x02-regression | worked | XR1:15-17
-Q_EN: Fit a line through (0,1), (1,3), (2,5). What do slope and intercept mean?
-Q_ZH: 对 (0,1)、(1,3)、(2,5) 拟合直线，斜率和截距各是多少、各表示什么？
-A_EN: The line $\hat y=2x+1$ fits every point, so the slope is 2, intercept is 1 and training MSE is zero. A one-unit increase in x changes this model's prediction by 2. A perfect fit to these three points does not establish accuracy outside the observed range or a causal relationship.
-A_ZH: 直线 $\hat y=2x+1$ 通过全部点，所以斜率为 2、截距为 1、训练 MSE 为零。x 增加一个单位，模型预测增加 2。对这三个点拟合完美，并不能证明范围外预测准确，也不能证明因果关系。
-
 @@ M193 | x02-regression | learn | XR1:22-24
 Q_EN: Under what noise model does OLS coincide with maximum likelihood?
 Q_ZH: 在什么噪声模型下，OLS 等价于最大似然估计？
 A_EN: Assume independent errors $\epsilon_i\sim N(0,\sigma^2)$ with common variance and $y_i=x_i^Tw+\epsilon_i$. The negative log likelihood is a constant plus $\sum_i(y_i-x_i^Tw)^2/(2\sigma^2)$. For fixed positive variance, maximizing likelihood therefore minimizes squared error. Gaussian noise is needed for this probabilistic interpretation, not for defining OLS.
 A_ZH: 假设误差独立，$\epsilon_i\sim N(0,\sigma^2)$ 且方差相同，并有 $y_i=x_i^Tw+\epsilon_i$。负对数似然等于常数加 $\sum_i(y_i-x_i^Tw)^2/(2\sigma^2)$。固定正方差时，最大化似然就等价于最小化平方误差。高斯假设用于概率解释，并非定义 OLS 的必要条件。
 
-@@ M194 | x02-regression | learn | XR2:3-6
-Q_EN: State the ridge objective and derive its solution under the stated scaling.
-Q_ZH: 写出岭回归目标，并在明确系数约定下求解。
-A_EN: For $J=\frac12\|Xw-y\|^2+\frac\lambda2\|w\|^2$, differentiate: $\nabla J=X^T(Xw-y)+\lambda w$. Setting this to zero gives $(X^TX+\lambda I)w=X^Ty$. With $\lambda>0$, all eigenvalues of this matrix are positive, so w is unique. Every coordinate is penalized here; exempting an intercept replaces I with the appropriate diagonal penalty mask.
-A_ZH: 对 $J=\frac12\|Xw-y\|^2+\frac\lambda2\|w\|^2$ 求导：$\nabla J=X^T(Xw-y)+\lambda w$。令零得到 $(X^TX+\lambda I)w=X^Ty$。当 $\lambda>0$ 时该矩阵特征值均正，解唯一。这里惩罚全部坐标；若截距豁免，应将I换成相应对角惩罚矩阵。
-
-@@ M195 | x02-regression | check | XR2:4-7,17
-Q_EN: Why can ridge help with nearly collinear features, and what does it cost?
-Q_ZH: 岭回归为何能改善近共线特征的问题？代价是什么？
-A_EN: Along an eigenvector of $X^TX$ with positive eigenvalue s, OLS divides by s, whereas ridge divides by $s+\lambda$. Small-s directions amplify noise less. This improves conditioning; in the usual fixed-design, equal-variance noise model it reduces coefficient-estimation variance while introducing bias. The selected lambda still needs validation.
-A_ZH: 沿 $X^TX$ 特征值为正数s的方向，OLS除以s，岭回归改为除以 $s+\lambda$，因此小s方向不再强烈放大噪声。这改善条件数；在常见的固定设计、同方差噪声模型中，系数估计方差降低，但引入偏差。lambda仍需通过验证选择。
-
-@@ M196 | x02-regression | learn | XR2:10-16
-Q_EN: What distinguishes lasso regularization from ridge regularization?
-Q_ZH: Lasso 与岭回归的正则化有什么区别？
-A_EN: Lasso uses $\lambda\|w\|_1=\lambda\sum_j|w_j|$ instead of a squared L2 penalty. The kink at zero can produce exactly zero coefficients, giving a form of feature selection. Ridge usually shrinks coefficients continuously without making them exactly zero. Lasso does not guarantee that selected features are causal or that its solution is always unique.
-A_ZH: Lasso 使用 $\lambda\|w\|_1=\lambda\sum_j|w_j|$，而不是平方 L2 惩罚。零点处的折角可使系数精确为零，从而进行一种特征选择。岭回归通常连续缩小系数，而不把它们精确变成零。Lasso 不保证选中特征具有因果意义，也不总保证解唯一。
-
-@@ M197 | x02-regression | worked | XR2:15-16
-Q_EN: With $X^TX=I$, OLS weights (3,-0.4) and $\lambda=1$, compare ridge and lasso weights. Use data loss $\frac12\|Xw-y\|^2$ and penalties $\frac\lambda2\|w\|^2$ and $\lambda\|w\|_1$, respectively.
-Q_ZH: 设 $X^TX=I$、OLS 权重为 (3,-0.4)、$\lambda=1$，比较 Ridge 与 LASSO 权重。数据损失为 $\frac12\|Xw-y\|^2$，两者惩罚分别为 $\frac\lambda2\|w\|^2$ 与 $\lambda\|w\|_1$。
-A_EN: Under these objective scalings, ridge gives $w_{\rm OLS}/(1+\lambda)=(1.5,-0.2)$. Lasso soft-thresholds each coordinate: $\operatorname{sign}(w_j)\max(|w_j|-\lambda,0)$, giving (2,0). These coordinatewise formulas rely on orthonormal design columns; they do not hold for arbitrary correlated columns.
-A_ZH: 在题设目标函数系数下，Ridge 得到 $w_{\rm OLS}/(1+\lambda)=(1.5,-0.2)$。LASSO 对各坐标软阈值化：$\operatorname{sign}(w_j)\max(|w_j|-\lambda,0)$，得到 (2,0)。这些逐坐标公式依赖设计矩阵列正交归一，不能直接用于任意相关列。
-
 @@ M198 | x02-regression | learn | XR2:4
 Q_EN: How can ridge be interpreted as maximum a posteriori estimation?
 Q_ZH: 怎样把岭回归解释为最大后验估计？
 A_EN: Assume independent Gaussian observation errors with known $\sigma^2>0$ and independent priors $w_j\sim N(0,\tau^2)$ with $\tau^2>0$. Multiplying the negative log posterior by $\sigma^2$ and dropping constants gives $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$. Thus $\lambda=\sigma^2/\tau^2$ in this objective convention: a tighter prior produces stronger shrinkage.
 A_ZH: 假设观测误差独立高斯，已知 $\sigma^2>0$，并取独立先验 $w_j\sim N(0,\tau^2)$、$\tau^2>0$。将负对数后验乘 $\sigma^2$、去掉无关常数，得到 $\frac12\|Xw-y\|^2+\frac{\sigma^2}{2\tau^2}\|w\|^2$。因此此目标约定下 $\lambda=\sigma^2/\tau^2$；先验越集中，收缩越强。
-
-@@ M199 | x02-regression | check | XR2:7-8,17; XROB:34
-Q_EN: Why should feature scales and intercept treatment be specified before comparing regression coefficients?
-Q_ZH: 比较回归系数前，为什么必须说明特征尺度和截距处理？
-A_EN: Rescaling a feature changes the coefficient needed for the same prediction. An L1/L2 penalty on that coefficient then changes its effective cost. Standardization makes comparisons more interpretable, but fit it only on training data. Also state whether b is penalized. Coefficient magnitude alone is not a scale-free measure of importance or evidence of causation.
-A_ZH: 改变特征单位后，同一预测所需的系数也会变化，施加在系数上的 L1/L2 惩罚成本随之改变。标准化可改善可比性，但只能在训练数据上拟合；还要说明是否惩罚截距 b。单看系数大小既不是与尺度无关的重要性指标，也不是因果证据。
-
-@@ M200 | x02-regression | check | XR2:7,12,17
-Q_EN: How should I choose regularization strength for a regression model?
-Q_ZH: 回归模型的正则化强度应怎样选择？
-A_EN: Fix a metric and compare candidate strengths on a validation split or cross-validation, fitting preprocessing separately inside each training fold. After choosing, refit using the intended training data and evaluate once on held-out test data. Training error alone favors weaker regularization and cannot settle the generalization tradeoff.
-A_ZH: 固定评价指标，在验证集或交叉验证中比较候选强度，每折的预处理都仅使用该折训练数据。选定后在计划使用的训练数据上重新拟合，最后在独立测试集评价一次。训练误差通常偏好较弱正则化，无法单独决定泛化上的取舍。
-
-@@ M201 | x02-regression | check | XR1:19; XR2:6
-Q_EN: Why should code usually solve a linear system instead of explicitly forming an inverse?
-Q_ZH: 为什么代码通常应解线性方程组，而不显式计算逆矩阵？
-A_EN: To obtain w from $Aw=b$, a solver performs a factorization and solves for the requested right-hand side. Forming $A^{-1}$ computes more than needed and can add numerical error and cost. For least squares, QR/SVD also avoids explicitly squaring the condition number through $X^TX$. The inverse formula explains the mathematics; it need not dictate the implementation.
-A_ZH: 从 $Aw=b$ 求 w 时，求解器通过矩阵分解处理所需的右端向量。显式计算 $A^{-1}$ 往往做了额外工作，并可能增加误差与成本。最小二乘中的 QR/SVD 还可避免显式形成 $X^TX$ 所带来的条件数平方效应。逆矩阵公式用于解释数学，不必照搬为实现步骤。
-
-@@ M202 | x02-regression | check | XR1:21-24; XR2:8
-Q_EN: What can a fitted regression coefficient tell me, and what can it not establish?
-Q_ZH: 拟合得到的回归系数能说明什么，又不能证明什么？
-A_EN: Within the fitted model, $w_j$ is the prediction change for a one-unit increase in feature j while other features are held fixed. It describes a conditional association under that model and representation. Confounding, correlated features, extrapolation and misspecification can break a causal reading. A small training error does not remove those issues.
-A_ZH: 在拟合模型内部，保持其他特征不变时，第 j 个特征增加一个单位，预测值改变 $w_j$。它描述特定模型和表示下的条件关联。混杂、特征相关、外推和模型设定错误都会妨碍因果解释；较小训练误差不会自动消除这些问题。
-
-@@ M203 | x03-robust | learn | XROB:5-7
-Q_EN: Why are squared-error models sensitive to outliers?
-Q_ZH: 平方误差模型为什么容易受离群点影响？
-A_EN: A residual of 10 contributes 100 to squared loss, while a residual of 1 contributes only 1. A few extreme points can therefore move the fitted line substantially. Weight regularization controls coefficients, but does not replace a robust treatment of contaminated observations. First ask whether an unusual point is an error or a genuine part of the target population.
-A_ZH: 残差 10 对平方损失贡献 100，而残差 1 只贡献 1，少量极端点就可能显著拉动拟合直线。参数正则化约束的是系数，不能代替对受污染观测的鲁棒处理。首先要判断异常点是错误数据，还是目标总体中真实存在的情况。
-
-@@ M204 | x03-robust | learn | XROB:6-8
-Q_EN: What are the main steps of RANSAC?
-Q_ZH: RANSAC 的主要步骤是什么？
-A_EN: Repeatedly sample a small subset, fit a candidate model, and count points whose residual is below a chosen inlier threshold. Keep a strong consensus model, then refit using its inliers. The method assumes that a sufficiently large coherent inlier set exists. The minimal sample size depends on the base model and on nondegenerate geometry.
-A_ZH: 反复抽取小样本集，拟合候选模型，再统计残差低于阈值的内点。保留共识较强的模型，并用其内点重新拟合。它假设数据中存在足够大的、一致的内点集合。最小采样数取决于基础模型，还要求样本几何关系不退化。
 
 @@ M205 | x03-robust | learn | XROB:8-9
 Q_EN: How is the ideal RANSAC trial count related to inlier probability?
@@ -143,30 +53,6 @@ Q_EN: With inlier fraction 0.5, sample size 2 and target success 0.99, how many 
 Q_ZH: 内点比例 0.5、每次采样 2 点、目标成功率 0.99，理想 RANSAC 至少需要几次？
 A_EN: A clean sample has probability $0.5^2=0.25$. Thus $T\ge\log(0.01)/\log(0.75)\approx16.01$, so use 17 trials. Sixteen trials give about 0.98998, slightly below 0.99. This assumes independent trials, the stated inlier rate and no geometric degeneracy.
 A_ZH: 全内点样本概率为 $0.5^2=0.25$。因此 $T\ge\log(0.01)/\log(0.75)\approx16.01$，需要 17 次。16 次的成功率约为 0.98998，略低于 0.99。这里假设各轮独立、内点比例正确且不存在几何退化。
-
-@@ M207 | x03-robust | learn | XROB:12-17
-Q_EN: How can a model be nonlinear in its input yet linear in its parameters?
-Q_ZH: 模型怎样做到对输入非线性，却对参数线性？
-A_EN: Use fixed features $\phi(x)=(1,x,x^2)$ and predict $w^T\phi(x)$. The curve can be quadratic in x, but coefficients still enter linearly, so least squares can fit them. Higher degree expands the hypothesis class; training error need not rise, but validation error can. Choose degree together with regularization using validation.
-A_ZH: 使用固定特征 $\phi(x)=(1,x,x^2)$，再预测 $w^T\phi(x)$。曲线对 x 可以是二次的，但各系数仍线性进入模型，因此可以用最小二乘拟合。提高次数扩展了模型集合，训练误差不必增加，验证误差却可能变差，应联合验证次数与正则化。
-
-@@ M208 | x03-robust | learn | XROB:19-22
-Q_EN: What is kernel ridge regression, and what is its main computational tradeoff?
-Q_ZH: 什么是核岭回归？它的主要计算取舍是什么？
-A_EN: For a positive-semidefinite kernel Gram matrix $K_{ij}=k(x_i,x_j)$ and $\lambda>0$, solve $(K+\lambda I)\alpha=y$ uniquely and predict $\hat y(x)=\sum_i\alpha_i k(x_i,x)$. This formula has no separately fitted intercept; centering or an intercept needs consistent extra treatment. The kernel avoids an explicit feature map, but storing a dense exact K takes n² entries.
-A_ZH: 对半正定核的 Gram 矩阵 $K_{ij}=k(x_i,x_j)$ 及 $\lambda>0$，方程 $(K+\lambda I)\alpha=y$ 有唯一解，用 $\hat y(x)=\sum_i\alpha_i k(x_i,x)$ 预测。此式没有单独拟合截距；如需中心化或截距，应另作一致处理。核方法避免显式特征映射，但存储稠密精确 K 仍需 n² 个元素。
-
-@@ M209 | x03-robust | learn | XROB:23-26
-Q_EN: What does the epsilon-insensitive loss in support vector regression mean?
-Q_ZH: 支持向量回归中的 epsilon 不敏感损失是什么意思？
-A_EN: For residual r, the loss is $\max(0,|r|-\epsilon)$. Errors inside a tube of half-width epsilon cost zero; larger errors pay only the excess. SVR trades this loss against weight norm. Epsilon sets the tolerated error band, while C controls the penalty relative to regularization. They are different hyperparameters.
-A_ZH: 对残差 r，损失为 $\max(0,|r|-\epsilon)$。半宽为 epsilon 的管道内部不计损失，超出后只惩罚超出部分。SVR 在该损失与权重范数之间取舍。Epsilon 决定容忍误差带，C 决定损失相对正则化的权重，两者作用不同。
-
-@@ M210 | x03-robust | worked | XROB:24
-Q_EN: For $\epsilon=0.2$, find epsilon-insensitive losses for residuals 0.1, -0.5 and 1.0.
-Q_ZH: 当 $\epsilon=0.2$ 时，残差 0.1、-0.5、1.0 的不敏感损失分别是多少？
-A_EN: Apply $\max(0,|r|-0.2)$ to get 0, 0.3 and 0.8. The sign does not matter, but the absolute magnitude does. These are data-loss terms, not the full SVR objective: the weight penalty and C still have to be included.
-A_ZH: 逐项代入 $\max(0,|r|-0.2)$，得到 0、0.3 和 0.8。符号不影响结果，绝对值大小才影响。这些只是数据损失项，不是完整 SVR 目标，还必须包含权重惩罚和系数 C。
 
 @@ M211 | x04-clustering | learn | XCL:3-9
 Q_EN: How does clustering differ from classification?

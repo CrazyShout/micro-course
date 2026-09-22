@@ -408,7 +408,8 @@ TRANSFER_A: 原平方距离 A=0.01+4=4.01，B=1，选 B。改单位后 A=(1,2)�
 BRIDGE: k-NN 直接查例子；回归则用参数概括输入与连续输出的关系。
 
 @@ ml19 | 最小二乘：从每个误差推到正规方程 | Least squares without skipping the derivative
-CARDS: M187,M188,M189,M190,M191,M192,M193,M194,M195,M196,M197,M198,M199,M200,M201,M202
+CHAPTER: lecture-4
+CARDS: M187,M188,M189,M190,M191,M192,M193,M194,M195,M196,M197,M198,M199,M200,M201,M202,M338
 PREREQ: ml03,ml04,ml10
 GOAL: 能逐项求导得到正规方程，说明何时唯一以及正则化改了什么。
 EXPLAIN: 约定 X 的每行是一条样本，包含常数列时也可学习截距。令 $J(w)=\frac12\sum_i(\sum_jX_{ij}w_j-y_i)^2$。先只对第 k 个系数求导：第 i 个残差的导数为 X_ik，所以 $\partial J/\partial w_k=\sum_iX_{ik}(X_iw-y_i)$。把所有 k 的结果排列起来，恰好就是 $X^T(Xw-y)$。
@@ -428,6 +429,7 @@ TRANSFER_A: 不唯一；两列的权重可一增一减而不改变预测。列�
 BRIDGE: 平方残差惩罚大错误特别重，因此下一节讨论异常点和不同损失。
 
 @@ ml20 | 鲁棒回归：一个异常点为什么能拉走直线 | Outliers and robust fitting
+CHAPTER: lecture-4
 CARDS: M203,M204,M205,M206,M207,M208,M209,M210
 PREREQ: ml19
 GOAL: 能计算 RANSAC 的成功概率和尝试次数，并区分独立近似与有限无放回抽样；损失比较见补充单元。
@@ -638,3 +640,18 @@ PRACTICE_A: q=0，q_u=1，q_v=−2；因为 2q=0，L 的梯度为 (0,0)。内部
 TRANSFER_Q: 同一 L 在 u=1、v=0 时，独立求 L、L_u、L_v。给精确形式并用 exp(−1)≈0.367879 检查。 || For the same L at u=1,v=0, independently compute L,L_u,L_v, giving exact forms and a check using exp(−1)≈0.367879.
 TRANSFER_A: q=1，L=1；q_u=1，q_v=1−2/e；故 L_u=2，L_v=2−4/e≈0.52848。先求内部量再求外部量，可避免漏乘 2q。 || q=1 and L=1. q_u=1 and q_v=1−2/e, giving L_u=2 and L_v=2−4/e≈0.52848. Evaluate inner quantities before the outer derivative to avoid omitting 2q.
 BRIDGE: 复习顺序是先讲通一条推导，再拆成几张检索卡，最后用未见变式检查能否迁移。
+
+@@ ml31 | 回归树与集成：几位估价师怎样一起工作 | Regression trees and ensembles
+CARDS: M339-M341
+PREREQ: ml19,ml20
+GOAL: 能手算平方误差树的叶预测与切分代价，解释森林平均和梯度提升的不同，并核对一次残差更新。
+EXPLAIN: 平方误差回归树在每个叶子用训练目标均值预测，切分比较子节点的平方误差总和。单棵树容易随样本变化而变；森林平均多棵树，通过bootstrap及配置的特征随机化降低相关性。Boosting则顺序拟合当前目标的下降方向；平方误差的负梯度为y−F，不要把其他损失也一律叫普通残差。深度、树数与步长通过验证选择，不能因训练误差下降就声称泛化改善。
+RECAP_EN: A squared-error regression tree predicts the target mean in each leaf. Splits reduce within-leaf squared error. A forest averages diverse trees; gradient boosting sequentially adds fitted negative-gradient corrections. State the loss and sign convention, and choose complexity by validation rather than training fit.
+WORKED_Q: 四条训练记录面积x=(1,2,3,4)，单位千平方英尺，价格y=(100,120,280,300)，价格单位千美元。平方误差树按x≤2.5切分。求两叶预测、总SSE，并预测x=3.2；与不切分比较。 || Four training records have areas x=(1,2,3,4) in thousands of square feet and prices y=(100,120,280,300) in thousands of dollars. A squared-error tree splits at x≤2.5. Find both leaf predictions, total SSE, the prediction at x=3.2, and the unsplit SSE.
+WORKED_A: 两叶均值为110、290；SSE=10²+10²+10²+10²=400，x=3.2进入右叶预测290。不切分时均值200，SSE=100²+80²+80²+100²=32800。所有误差均在训练记录上计算。 || Leaf means are 110 and 290; SSE is 400. The point x=3.2 enters the right leaf and predicts 290. Without a split, the mean is 200 and SSE is 32800. These are training errors.
+PRACTICE_Q: 保持x与切分x≤2.5，改y=(80,100,200,220)。补出两叶均值、SSE和x=1.5的预测。 || Keep the same x values and split x≤2.5, but use y=(80,100,200,220). Find the leaf means, SSE and prediction at x=1.5.
+HINT: 先按条件把记录分组，再分别求均值；误差用该组的均值。 || Group records using the split, then compute each mean and its squared residuals.
+PRACTICE_A: 两叶为90、210；SSE仍为4×100=400。x=1.5进入左叶，预测90。 || The means are 90 and 210, total SSE is 400, and x=1.5 predicts 90 from the left leaf.
+TRANSFER_Q: 恢复y=(100,120,280,300)，比较切分x≤1.5与x≤2.5的训练SSE。哪种更小？这是否足以证明它在新样本上更好？ || Restore y=(100,120,280,300). Compare the training SSE of splits x≤1.5 and x≤2.5. Which is smaller, and does this prove better performance on new samples?
+TRANSFER_A: x≤1.5时左叶100，右叶均值700/3，SSE=58400/3≈19466.67；x≤2.5时SSE=400，后者较小。只证明本数据的训练拟合，仍需用未参与拟合的验证数据比较。 || The first split gives means 100 and 700/3, with SSE=58400/3≈19466.67. The second gives SSE=400 and is smaller. This establishes only training fit; compare on data not used for fitting before claiming better generalization.
+BRIDGE: 回到Lecture4b的四棵树与随机搜索代码，区分单棵树的预测、森林均值、验证误差和Boosting的逐轮修正，再用原牌组的少量卡回忆。

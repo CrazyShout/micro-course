@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "source_snapshot": "2026-09-15",
-  "beginner_revision": "2026-09-18",
-  "beginner_entries": 50,
+  "source_snapshot": "2026-09-22",
+  "beginner_revision": "2026-09-22",
+  "beginner_entries": 51,
   "beginner_figures": 22,
-  "self_study_revision": "2026-09-18",
+  "self_study_revision": "2026-09-22",
   "optional_foundations": 9,
-  "focused_units": 41,
+  "focused_units": 44,
   "practical_tasks": 5,
   "practice_assets": 3,
-  "first_pass_cards": 220,
+  "first_pass_cards": 223,
   "reading_revision": "2026-09-17",
   "reading_supplements": 26,
   "reading_figures": 14,
-  "notices": 14,
+  "notices": 16,
   "moved_card_ids": [
     "CS5222-N070",
     "CS5222-N089",
@@ -31,16 +31,16 @@
   ],
   "courses": {
     "CS5489": {
-      "lessons": 30,
-      "cards": 329
+      "lessons": 31,
+      "cards": 333
     },
     "CS5222": {
       "lessons": 20,
       "cards": 280
     }
   },
-  "total_lessons": 50,
-  "total_cards": 609,
+  "total_lessons": 51,
+  "total_cards": 613,
   "article_lessons": [
     "ml01",
     "ml02",
@@ -72,6 +72,7 @@
     "ml28",
     "ml29",
     "ml30",
+    "ml31",
     "net01",
     "net02",
     "net03",
@@ -93,10 +94,10 @@
     "net19",
     "net20"
   ],
-  "article_figures": 1,
-  "teaching_units": 5,
-  "teaching_activities": 7,
-  "activity_items": 31,
+  "article_figures": 2,
+  "teaching_units": 6,
+  "teaching_activities": 10,
+  "activity_items": 43,
   "images": 66,
   "assets": [
     {
@@ -437,22 +438,22 @@
     {
       "path": "cards.html",
       "bytes": 18677,
-      "sha256": "e0061e2a3e2dafa15a76db4cdac5a5141d11557db37c5d3f2bec859be98bca8d"
+      "sha256": "39079808188488db987a1448ff0a2b98459045ca91d67905c746ea334de3b837"
     },
     {
       "path": "deck-introductions.json",
-      "bytes": 10253,
-      "sha256": "521191203dcb26f60935fa8ef422fe843b0ff1c12ff1b1a0ea5254d68a7d5d33"
+      "bytes": 10469,
+      "sha256": "0f66b335eb6a1659a5d84caf91f676b781a0b5804d5b21c66164aa72fee5c51a"
     },
     {
       "path": "guide.html",
-      "bytes": 13437,
-      "sha256": "f7572934da00f19c88393b882d41f156ad395f6dfb51e55ce0f2b0d0a947ab9a"
+      "bytes": 13701,
+      "sha256": "25bfe9d9c48e2f8df8b1d78211eafa94864522549ea0c58eadda63116165d22f"
     },
     {
       "path": "index.html",
       "bytes": 2598,
-      "sha256": "ae6923c455e3564e1ae27a22f72fba869299444318540de9894c654bca17e355"
+      "sha256": "fe239f0a08953c977f9f9c61612faab80100d454de065260881a5b91cf2ed263"
     },
     {
       "path": "learning/figures/attention-values.svg",
@@ -530,6 +531,11 @@
       "sha256": "21989c2e4b1160f86da22e298034423ffa3451dd2c9f7c14cfaf528c3bf32d67"
     },
     {
+      "path": "learning/figures/regression-tree.svg",
+      "bytes": 1499,
+      "sha256": "5a736aa61335799a67e2260f84f067e7df557cfbb03c687d14d11ff7e19ab591"
+    },
+    {
       "path": "learning/figures/rows-to-points.svg",
       "bytes": 13244,
       "sha256": "9edc1938c2f631443147072723cba8fe39e5fe58d95bd63812c39f097b597970"
@@ -596,8 +602,8 @@
     },
     {
       "path": "learning-article.js",
-      "bytes": 14447,
-      "sha256": "fc4c33e4f953dbdba04543f61b55a5da1fb438a99064ee5ea28e2f522c8b7d75"
+      "bytes": 14716,
+      "sha256": "fa38ad9cb7362c2647720666e5f6013d5c32f0d3444e99fb57faae42258e6739"
     },
     {
       "path": "learning-curriculum.css",
@@ -611,8 +617,8 @@
     },
     {
       "path": "learning-data.js",
-      "bytes": 3031269,
-      "sha256": "4a052a71720d0aa6352310cf037567f9f2a3dcc03369945ba35c39b2df8c15f7"
+      "bytes": 3177004,
+      "sha256": "ff473063ba24523408e478ffbead3e9a96560a288ef6a589de891b23fe82f3e3"
     },
     {
       "path": "learning-demos.js",
@@ -621,8 +627,8 @@
     },
     {
       "path": "learning-index.js",
-      "bytes": 73915,
-      "sha256": "2ae9dd398814835c999a7d6c645a80be301b5c1a720ec401103bc98c4cc10a37"
+      "bytes": 74489,
+      "sha256": "91c951ff8a20174466ec96aac10ffa5875a2f7336a1fcfc2171770a874c94146"
     },
     {
       "path": "learning.css",
@@ -636,13 +642,13 @@
     },
     {
       "path": "notices-data.js",
-      "bytes": 28764,
-      "sha256": "85ae38d8958771b25b2b99af67044e9600a17a9e99f121e8709428df6b0aca07"
+      "bytes": 32009,
+      "sha256": "8883e697ccf6ca39e49f5d4279f63d73077d52733c8ed61c4025f1016e9075fa"
     },
     {
       "path": "notices.html",
       "bytes": 3111,
-      "sha256": "4fa335ce64206f6ea2e3de4d8517efcbfdcd3197b69e317c3aea7fd59fd7db2c"
+      "sha256": "52e7f0f75feead0d15cb9ba1af172fb390ef462d5918a5e10ba14559e63e0e21"
     },
     {
       "path": "notices.js",
@@ -651,8 +657,8 @@
     },
     {
       "path": "reader-data.js",
-      "bytes": 1795463,
-      "sha256": "670e00f48e42691c843c0d1fc2086e5f38821f867f40194c9316549fc4d8a2f4"
+      "bytes": 1819116,
+      "sha256": "452b445944ab45c26850d31ce07d394583ab6cd6362330f8f7ba8cbd170cfbfd"
     },
     {
       "path": "reading/figures/ml-margin.svg",

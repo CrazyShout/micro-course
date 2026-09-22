@@ -385,29 +385,30 @@
       "CS5489-M199",
       "CS5489-M200",
       "CS5489-M201",
-      "CS5489-M202"
+      "CS5489-M202",
+      "CS5489-M338"
     ],
     "note": {
-      "zh": "先看残差、写带截距的设计矩阵，再推正规方程并检查是否唯一。Ridge/Lasso、MAP 与系数解释留到对应正则化和建模讲解后。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Start with residuals and an intercept-augmented design matrix, derive the normal equations and check uniqueness. Defer Ridge/Lasso, MAP and coefficient interpretation to the relevant regularization and modeling explanations. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "先把最小二乘的维度与正规方程走通，再学本讲的Ridge/Lasso/OMP。M193和M198保留历史概率扩展，不当作本次原课直接要求。",
+      "en": "Start with OLS dimensions and normal equations, then study current Ridge/Lasso/OMP. M193 and M198 remain historical probabilistic extensions."
     }
   },
   "ml20": {
     "first_pass": [
       "CS5489-M203",
       "CS5489-M204",
-      "CS5489-M205",
-      "CS5489-M206"
+      "CS5489-M207",
+      "CS5489-M209"
     ],
     "after_practice": [
-      "CS5489-M207",
+      "CS5489-M205",
+      "CS5489-M206",
       "CS5489-M208",
-      "CS5489-M209",
       "CS5489-M210"
     ],
     "note": {
-      "zh": "第一遍只让 RANSAC 从“抽几次碰到好样本”变成可算的概率。非线性特征、核岭回归和 SVR 属于另一组损失/模型问题，读对应补充再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "First turn RANSAC's repeated sampling into a probability calculation. Nonlinear features, kernel ridge and SVR form a separate group to study after the relevant supplements. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "当前Lecture4b先看异常点、RANSAC、非线性表示和SVR。抽样次数概率M205/M206是保留的历史深化，可以第二遍再做。",
+      "en": "Study the current outlier, RANSAC, nonlinear-feature and SVR material first; keep M205/M206 as optional historical probability depth."
     }
   },
   "ml21": {
@@ -885,8 +886,8 @@
       "CS5222-N148"
     ],
     "note": {
-      "zh": "第一圈只做文件分发：三个瓶颈谁最慢，谁限制下界。其余按专题分次进入：DNS 区段、BitTorrent、DASH/CDN、TCP 消息边界；socket 编程卡等实际收发字节后再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "First study file distribution and identify which bottleneck sets the lower bound. Enter DNS sections, BitTorrent, DASH/CDN and TCP framing in separate units; do socket implementation cards after sending and receiving actual bytes. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "已对齐当前Chapter2完整课件。先做分发瓶颈，再按专题学BitTorrent、DASH/CDN与socket；实现仍需实际收发字节。",
+      "en": "Aligned with the current full Chapter 2. Start with distribution bounds, then study BitTorrent, DASH/CDN and sockets; implementation still needs real byte exchanges."
     }
   },
   "net13": {
@@ -1070,8 +1071,8 @@
       "CS5222-N257"
     ],
     "note": {
-      "zh": "先做 A 发给 G、G 再回复 A 的两张交换机卡，每次只更新实际见过的源地址。其余 27 张是分散在不同章节的往年题，按回链一次选一个主题，别当成本节一次作业。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Start with A sending to G and G replying, updating only source addresses actually observed. The other 27 cards are a cross-chapter historical bank: follow recovery links and take one topic per session. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "首轮仍做交换机两题。N231–N233已与本期Tutorial3核对并移入当前Chapter2，其余历史题按回链分主题学习。",
+      "en": "Start with the two switch questions. N231–N233 now match current Tutorial 3 in Chapter 2; study the remaining historical topics separately."
     }
   },
   "net20": {
@@ -1102,8 +1103,20 @@
       "CS5222-N281"
     ],
     "note": {
-      "zh": "第一圈只串起 DHCP、DNS、ARP、TCP 和 HTTP，再核对每一跳的 IP/MAC。邮件、CRC、TLS、抓包及 socket 题按各自回链进入；长 GBN 窗口推理放第二遍。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "First connect DHCP, DNS, ARP, TCP and HTTP, checking IP/MAC addresses at each hop. Use recovery links for mail, CRC, TLS, trace and socket tasks; defer the longer GBN-window argument. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "首轮仍串起地址配置与逐跳IP/MAC。N260–N263已对齐本期Assignment1；其余历史作业和实验仍按各自来源与回链学习。",
+      "en": "Start with configuration and per-hop IP/MAC. N260–N263 now match current Assignment 1; other historical tasks retain their own scope and recovery links."
+    }
+  },
+  "ml31": {
+    "first_pass": [
+      "CS5489-M339",
+      "CS5489-M340",
+      "CS5489-M341"
+    ],
+    "after_practice": [],
+    "note": {
+      "zh": "先算一个树叶与一次切分，再区别森林平均和Boosting顺序修正。",
+      "en": "First calculate leaf means and a split, then distinguish forest averaging from sequential boosting."
     }
   }
 }

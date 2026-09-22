@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-18",
+  "updated": "2026-09-22",
   "courses": {
     "CS5489": {
       "title_zh": "CS5489 · 机器学习双语学习卡",
@@ -11,14 +11,14 @@
         {
           "title_zh": "这套牌组用来做什么",
           "title_en": "Purpose",
-          "body_zh": "面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。329 张卡与 30 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
-          "body_en": "These 329 cards connect to 30 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front."
+          "body_zh": "面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。333 张卡与 31 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
+          "body_en": "These 333 cards connect to 31 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front."
         },
         {
           "title_zh": "当前内容与往年预习",
           "title_en": "Current scope and historical preview",
-          "body_zh": "185 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。",
-          "body_en": "The 185 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope."
+          "body_zh": "209 张 Canvas/配套卡覆盖 Lecture 1–4、Tutorial 1–3、Assignment 1 和方法补充：程序、数组、概率与分类，以及回归、正则、OMP、树与集成。124 张 Extra Resources 卡保留近邻、部分概率深化、聚类、EM、PCA、神经网络、视觉、生成模型及 Transformer 等预习。匹配的新资料复用原卡；历史范围与 QE 尚待确认。",
+          "body_en": "The 209 Canvas/support cards cover Lectures 1–4, Tutorials 1–3, Assignment 1 and methodological support, now including regression, regularization, OMP and tree ensembles. Another 124 historical cards retain neighbors, selected probabilistic extensions, clustering, EM, PCA, neural networks, vision, generative models and transformers. Matching releases reuse existing cards; historical and QE scope remains unconfirmed."
         },
         {
           "title_zh": "怎样学才不会割裂",
@@ -40,10 +40,10 @@
         }
       ],
       "counts": {
-        "total": 329,
-        "current_support": 185,
-        "historical_preview": 144,
-        "lessons": 30
+        "total": 333,
+        "current_support": 209,
+        "historical_preview": 124,
+        "lessons": 31
       }
     },
     "CS5222": {
@@ -56,14 +56,14 @@
         {
           "title_zh": "这套牌组用来做什么",
           "title_en": "Purpose",
-          "body_zh": "280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
-          "body_en": "These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front."
+          "body_zh": "280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
+          "body_en": "These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front."
         },
         {
           "title_zh": "当前内容与往年预习",
           "title_en": "Current scope and historical preview",
-          "body_zh": "129 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 已提供的两部分、课堂 Q&A、Tutorial 1–2 及研究报告方法：网络基础、交换、时延、吞吐量、分层、HTTP、邮件和 DNS。151 张 Extra Resources 卡预习 P2P/socket、可靠传输、TCP、IP、路由、链路层及往年题。历史链路课件并不完整，仍以新增 Canvas 资料确定本学期范围。",
-          "body_en": "The 129 Canvas/support cards cover Chapter 1, the available two parts of Chapter 2, class Q&A, Tutorials 1–2, and report methodology. Another 151 historical cards preview P2P/sockets, reliability, TCP, IP, routing, the link layer, and historical exercises. Historical link-layer materials are incomplete; new Canvas releases define the current scope."
+          "body_zh": "150 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 全文、Tutorial 1–3、Assignment 1、课堂 Q&A 和研究报告方法，现含 P2P、视频/CDN 和 socket 编程。130 张 Extra Resources 卡保留可靠传输、TCP、IP、路由、链路层及尚未匹配的往年题；原题合集里已匹配的个别卡按当前资料标注。后续仍以 Canvas 确认范围。",
+          "body_en": "The 150 Canvas/support cards cover Chapters 1 and 2, Tutorials 1–3, Assignment 1, Q&A and report methodology, now including P2P, video/CDNs and sockets. Another 130 historical cards retain reliability, TCP, IP, routing, link-layer topics and unmatched historical exercises. Individually matched cards in old problem banks are marked current. Further scope follows Canvas."
         },
         {
           "title_zh": "怎样使用题目与图示",
@@ -86,8 +86,8 @@
       ],
       "counts": {
         "total": 280,
-        "current_support": 129,
-        "historical_preview": 151,
+        "current_support": 150,
+        "historical_preview": 130,
         "lessons": 20
       }
     }

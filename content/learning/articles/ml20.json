@@ -1,13 +1,13 @@
 {
   "lesson_id": "ml20",
   "title": {
-    "zh": "少数坏点把直线拉歪了，怎么办？",
-    "en": "When a few bad points pull the fitted line away"
+    "zh": "房价直线不够用：异常点、曲线与误差容忍带",
+    "en": "When the regression line is not enough"
   },
-  "minutes": "15–20",
+  "minutes": "18–25",
   "lede": {
-    "zh": "你正在从一批测量点拟合直线，大多数点围着同一条趋势，少数点远远偏离。先别急着删掉“不听话”的点：它们可能是传感器故障，也可能是真实的少数情况。历史 Lecture6.1 讨论平方误差的弱点与 RANSAC；本篇要分清改变损失和寻找一致子集各在解决什么。",
-    "en": "Most measured points follow one line, but a few lie far away. Before deleting them, ask whether they are measurement faults or genuine uncommon cases. Historical Lecture6.1 discusses squared error and RANSAC. We will distinguish changing the error penalty from finding a consistent subset."
+    "zh": "你已经用面积和房龄拟合了价格。有几个点离直线很远，另一些点却整齐地弯成一条曲线。两种“不贴线”不能用同一种补丁：先判断异常点是否可信，再考虑换表示或换损失。Lecture 4b 沿这三个问题继续。",
+    "en": "Some observations lie far from the fitted price line, while others follow a curved trend. These are different failures. Lecture 4b asks about outliers, nonlinear representations and tolerated error."
   },
   "sections": [
     {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "平方损失下，残差从 1 变成 10，代价从 1 变成 100，对预测值的导数幅度也从 2 变成 20。拟合器为了安抚一个极端点，可能牺牲许多普通点。历史 Lecture6.1 第 5 页强调的正是这个取舍，而不是宣判所有偏远点都必须删除。\n\n先核实单位、录入、测量过程和问题目标。若异常是总体中真实的重要现象，简单去掉会改变你想预测的人群。Ridge 限制的是系数大小；它与“这条观测是否受污染”不是同一道判断题。正则化不能自动成为异常数据的橡皮擦。"
+          "text": "平方损失下，残差从 1 变成 10，代价从 1 变成 100，对预测值的导数幅度也从 2 变成 20。拟合器为了安抚一个极端点，可能牺牲许多普通点。Lecture4b 单元 4强调的正是这个取舍，而不是宣判所有偏远点都必须删除。\n\n先核实单位、录入、测量过程和问题目标。若异常是总体中真实的重要现象，简单去掉会改变你想预测的人群。Ridge 限制的是系数大小；它与“这条观测是否受污染”不是同一道判断题。正则化不能自动成为异常数据的橡皮擦。"
         }
       ]
     },
@@ -39,13 +39,63 @@
       ]
     },
     {
+      "id": "other-tools",
+      "title": {
+        "zh": "不要把所有不准都归咎于坏点",
+        "en": "Different errors need different remedies"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "Lecture4b 单元 16–29还讨论特征映射与多项式：$b+a_1x+a_2x^2$ 对输入有曲线形状，但对未知系数仍是线性的；可以继续构造设计矩阵求解。若真实趋势是弯的，仅换一个鲁棒估计器并不保证直线变合适。核岭回归则以核计算映射后特征的内积，扩展函数表达；它不会因此自动挑出 RANSAC 的内点集合。\n\n单元 53–58 的 SVR 则定义容差带：$\\max(0,|r|-\\epsilon)$ 在带内不罚、带外线性增加。它改的是误差代价，不等同于 RANSAC 的内点搜索。下面用同一个残差比较损失。先辨认方法在改哪一部分，再做一小题；后面的抽样轮数推导可留到第二遍。"
+        },
+        {
+          "type": "unit",
+          "ref": "loss-comparison",
+          "part": "all"
+        }
+      ]
+    },
+    {
+      "id": "nonlinear-and-kernel",
+      "title": {
+        "zh": "曲线长得弯，系数仍可以线性地进入",
+        "en": "Nonlinear inputs, linear coefficients"
+      },
+      "optional": false,
+      "blocks": [
+        {
+          "type": "prose",
+          "text": "设面积x的关系不是直线，加入$x^2$后，$b+w_1x+w_2x^2$虽对x弯曲，对待学系数仍是线性的。PolynomialFeatures默认包含从低到高的项；课件单元34列的只是固定次数项，三次二维式最后应是$x_2^3$而非不存在的$x_3^3$。次数越高，嵌套的无约束最小二乘训练误差可以不增，并不保证每次严格下降或测试更好。"
+        },
+        {
+          "type": "prose",
+          "text": "Kernel Ridge把工作改成比较训练样本之间的核值。对n个训练样本，令$K_{ij}=k(x_i,x_j)$；求$(K+\\lambda I)a=y$，再用新点的n个核值算$k_*^Ta$。这里没有单独拟合截距，若要居中需一致处理训练与新点。它节省显式高维特征，却仍要存n×n的核矩阵；不是免费把所有问题变简单。"
+        },
+        {
+          "type": "unit",
+          "ref": "kernel-ridge-solve",
+          "part": "all"
+        },
+        {
+          "type": "prose",
+          "text": "选择多项式次数、核参数与正则强度，用同一验证协议比较。RBF的gamma控制特征距离的衰减，SVR的epsilon控制不计损失的半带宽，C控制超带误差相对惩罚，它们不是同一旋钮。课件总结表把SVR写成平方误差过于简化，应以前面单元57明确的epsilon不敏感损失为准。"
+        }
+      ]
+    },
+    {
       "id": "how-many",
       "title": {
         "zh": "要抽多少次，才能比较有把握？",
         "en": "How many attempts give a useful chance of success?"
       },
-      "optional": false,
+      "optional": true,
       "blocks": [
+        {
+          "type": "prose",
+          "text": "这三段抽样次数推导是保留的历史深化。当前Lecture4b讲了随机取子集和共识集流程；第一遍可先学完下面的非线性回归，再回来计算“抽多少轮比较有把握”。"
+        },
         {
           "type": "prose",
           "text": "令 w 是一次取点属于内点的概率，s 是每组点数。理想模型假设组内独立取点，则全组都是内点的概率为 $w^s$。一次没抽好的概率是 $1-w^s$；再假设各轮独立，K 轮全失败为 $(1-w^s)^K$。我们想要的是“至少一次成功”，所以用 1 减全失败概率，比枚举哪一轮成功简单。\n\n若目标成功概率至少为 p，就求 $(1-w^s)^K\\le1-p$，取对数再向上取整。注意两边对数通常都为负，不要凭直觉乱翻不等号；也不要四舍五入，差一点达不到仍然是达不到。这个公式只计算抽到全内点组的概率。若把它称为“得到有效候选”的概率，还要假设所有全内点最小集都不退化；否则成功率还受退化概率影响。它更不保证最终模型或阈值绝对正确。"
@@ -63,11 +113,11 @@
         "zh": "内点更多，需要的耐心就少一点",
         "en": "More inliers can mean fewer attempts"
       },
-      "optional": false,
+      "optional": true,
       "blocks": [
         {
           "type": "prose",
-          "text": "下一题只把内点比例与目标把握程度改变。先算单次成功、单次失败，再检查相邻整数轮数，比只在计算器上输入一串 log 更容易发现错误。Lecture6.1 第 8 页用的是离群比例 e，因此课件里的 $1-e$ 就是这里的 w，符号不同但事件相同。\n\n边界也要用人话处理：w=0 时反复抽也没有全内点组；w=1 且不会退化，一次就够，不应把这两端硬塞进包含 log(0) 的通式。"
+          "text": "下一题只把内点比例与目标把握程度改变。先算单次成功、单次失败，再检查相邻整数轮数，比只在计算器上输入一串 log 更容易发现错误。历史 Lecture6.1 第 8 页用的是离群比例 e，因此课件里的 $1-e$ 就是这里的 w，符号不同但事件相同。\n\n边界也要用人话处理：w=0 时反复抽也没有全内点组；w=1 且不会退化，一次就够，不应把这两端硬塞进包含 log(0) 的通式。"
         },
         {
           "type": "exercise",
@@ -82,7 +132,7 @@
         "zh": "小样本无放回，不能假装彼此独立",
         "en": "Sampling without replacement changes the probability"
       },
-      "optional": false,
+      "optional": true,
       "blocks": [
         {
           "type": "prose",
@@ -96,22 +146,16 @@
       ]
     },
     {
-      "id": "other-tools",
+      "id": "return-to-class",
       "title": {
-        "zh": "不要把所有不准都归咎于坏点",
-        "en": "Different errors need different remedies"
+        "zh": "把工具放回课堂问题",
+        "en": "Return each tool to its purpose"
       },
       "optional": false,
       "blocks": [
         {
           "type": "prose",
-          "text": "历史 Lecture6.1 第 12、15 页还讨论特征映射与多项式：$b+a_1x+a_2x^2$ 对输入有曲线形状，但对未知系数仍是线性的；可以继续构造设计矩阵求解。若真实趋势是弯的，仅换一个鲁棒估计器并不保证直线变合适。核岭回归则以核计算映射后特征的内积，扩展函数表达；它不会因此自动挑出 RANSAC 的内点集合。\n\n第 23–24 页的 SVR 则定义容差带：$\\max(0,|r|-\\epsilon)$ 在带内不罚、带外线性增加。它改的是误差代价，不等同于 RANSAC 的内点搜索。下面用同一个残差比较损失，供第二遍阅读；第一遍重点是解释平方损失、RANSAC步骤、概率事件与抽样假设，再去复习四张原卡。"
-        },
-        {
-          "type": "unit",
-          "ref": "loss-comparison",
-          "part": "all",
-          "collapsed": true
+          "text": "异常点先核查，曲线关系可换特征，误差容忍由损失表达。选择参数时用验证集比较；这些工具各自解决一个问题，没有一个按钮叫“自动泛化”。第一遍复习M203、M204、M207、M209，能说明选择理由后，再做核岭回归和历史抽样次数的深化。"
         },
         {
           "type": "recap"
@@ -144,9 +188,48 @@
         "CS5489-M205",
         "CS5489-M206"
       ]
+    },
+    {
+      "goal": "区分输入非线性与参数线性并说明模型选择",
+      "sections": [
+        "other-tools",
+        "nonlinear-and-kernel"
+      ],
+      "practice": "card:CS5489-M207",
+      "cards": [
+        "CS5489-M207"
+      ]
+    },
+    {
+      "goal": "按给定误差带独立计算SVR损失",
+      "sections": [
+        "other-tools",
+        "nonlinear-and-kernel"
+      ],
+      "practice": "unit:loss-comparison:transfer",
+      "cards": [
+        "CS5489-M209",
+        "CS5489-M210"
+      ]
+    },
+    {
+      "goal": "解核岭回归线性系统并计算新点预测",
+      "sections": [
+        "nonlinear-and-kernel"
+      ],
+      "practice": "unit:kernel-ridge-solve:transfer",
+      "cards": [
+        "CS5489-M208"
+      ]
     }
   ],
   "sources": [
+    {
+      "name": "Lecture4b.ipynb",
+      "locator": "cells 4–69",
+      "note": "当前Canvas异常点、非线性特征、KRR与SVR；抽样轮数概率保持历史深化。",
+      "kind": "course"
+    },
     {
       "name": "Lecture6.1.pdf",
       "locator": "PDF pp. 5, 8, 12, 15, 23–24",
@@ -157,7 +240,7 @@
       "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
       "locator": "ml20 · worked / practice / transfer",
       "kind": "derived",
-      "note": "串讲、说明性反例和数值练习用于理解历史材料，不冒充教师原题或用户实际实验。"
+      "note": "串讲与数值练习用于解释当前课件及明确标注的历史深化，不冒充教师原题或用户实际实验。"
     }
   ]
 }

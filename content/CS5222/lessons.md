@@ -349,6 +349,7 @@ TRANSFER_A: 101000 XOR 101100=000100，余数100，码字101100。末位翻转�
 BRIDGE: 历史教程把这些机制组合起来，下一节练习先辨认事件和状态，再读数字。
 
 @@ net19 | 往年教程：把状态画出来再答题 | Historical protocol and calculation clinic
+CHAPTER: extra-resources
 CARDS: N231,N232,N233,N234,N235,N236,N237,N238,N239,N240,N241,N242,N243,N244,N245,N246,N247,N248,N249,N250,N251,N252,N253,N254,N255,N256,N257,N258,N259
 PREREQ: net07,net09,net13,net15,net16,net17,net18
 GOAL: 能按帧到达事件更新交换机MAC表，并区分已知单播、未知泛洪和同端口过滤。
@@ -368,6 +369,7 @@ TRANSFER_A: 第一帧把A更新为3，查B→2并只发端口2。第二帧确认
 BRIDGE: 最后用完整网页访问串起 DHCP、ARP、DNS、TCP 与 HTTP，并保留实验取证习惯。
 
 @@ net20 | 端到端串联：从空缓存到拿到网页 | From empty caches to a fetched page
+CHAPTER: extra-resources
 CARDS: N260,N261,N262,N263,N264,N265,N266,N267,N268,N269,N270,N271,N272,N273,N274,N275,N276,N277,N278,N279,N280,N281
 PREREQ: net09,net14,net16,net18
 RELATED: net19

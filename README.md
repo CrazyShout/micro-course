@@ -4,9 +4,9 @@
 
 课程按老师的 Lecture / Chapter 组织：本讲导读、知识微课、配套 Tutorial、关联 Assignment 和回顾。先从 [CS5489 Lecture 2](https://crazyshout.github.io/micro-course/?course=CS5489&chapter=lecture-2) 或 [CS5222 Chapter 1](https://crazyshout.github.io/micro-course/?course=CS5222&chapter=chapter-1) 开始。
 
-ML07 从课堂鸢尾花辨认任务逐步引出高斯分类；NET02 从多人上传文件解释共享链路。现有 50 节均采用连续文章；各篇围绕自己的任务展开，不套同一个故事。题目与实验按真实编号和任务讲解，图与双语答案就近展开。活动里的原卡预览不是新卡。
+ML07 从课堂鸢尾花辨认任务逐步引出高斯分类；NET02 从多人上传文件解释共享链路。现有微课均采用连续文章；各篇围绕自己的任务展开，不套同一个故事。题目与实验按真实编号和任务讲解，图与双语答案就近展开。活动里的原卡预览不是新卡。
 
-材料快照为 2026-09-15，教学整理更新于 2026-09-18：CS5489 30 节微课 / 329 张卡，CS5222 20 节微课 / 280 张卡。当前材料组织成 5 个 Lecture/Chapter、7 个配套活动、31 组原题或任务。历史 Extra Resources 单列，尚未确认的材料不冒充本学期或 QE 范围。
+材料更新于2026-09-22：CS5489新增Lecture 4及Tutorial 3，CS5222补齐Chapter 2并增加Tutorial 3、Assignment 1。优先复用41张旧卡，仅新增4张核心卡。当前数量见[发布清单](docs/publication.json)，Markji章节/新卡同步进度见[课程信息](https://crazyshout.github.io/micro-course/notices.html)。历史Extra Resources仍单列，不冒充本学期或QE范围。
 
 ## 使用
 

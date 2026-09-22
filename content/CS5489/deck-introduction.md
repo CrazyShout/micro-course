@@ -6,15 +6,15 @@ CS5489 · Bilingual machine learning cards
 
 ## 这套牌组用来做什么 / Purpose
 
-面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。329 张卡与 30 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 每节微课先用具体场景与三个小步骤讲清直觉，再进入公式和练习；卡片题干须独立给出条件，依赖图形的题把图放在正面。
+面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。333 张卡与 31 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。
 
-These 329 cards connect to 30 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Each lesson starts with a concrete scene and three small steps before formal concepts and practice. Card prompts supply their own conditions, with required figures on the front.
+These 333 cards connect to 31 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front.
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-185 张 Canvas/配套卡覆盖 Lecture 1–3、Tutorial 1–2、Assignment 1 和方法补充：Python、NumPy、概率、贝叶斯、文本分类、逻辑回归、SVM、核与特征处理。144 张 Extra Resources 卡预习近邻、回归、聚类、EM、PCA、神经网络、CNN、训练、视觉、生成模型和 Transformer。历史资料不等于本学期已讲或 QE 已确认范围。
+209 张 Canvas/配套卡覆盖 Lecture 1–4、Tutorial 1–3、Assignment 1 和方法补充：程序、数组、概率与分类，以及回归、正则、OMP、树与集成。124 张 Extra Resources 卡保留近邻、部分概率深化、聚类、EM、PCA、神经网络、视觉、生成模型及 Transformer 等预习。匹配的新资料复用原卡；历史范围与 QE 尚待确认。
 
-The 185 Canvas/support cards cover Lectures 1–3, Tutorials 1–2, Assignment 1, and methodological support. Another 144 historical cards preview neighbors, regression, clustering, EM, PCA, neural networks, CNNs, optimization, vision, generative models, and transformers. Historical coverage is not confirmation of current teaching or QE scope.
+The 209 Canvas/support cards cover Lectures 1–4, Tutorials 1–3, Assignment 1 and methodological support, now including regression, regularization, OMP and tree ensembles. Another 124 historical cards retain neighbors, selected probabilistic extensions, clustering, EM, PCA, neural networks, vision, generative models and transformers. Matching releases reuse existing cards; historical and QE scope remains unconfirmed.
 
 ## 怎样学才不会割裂 / How to learn coherently
 

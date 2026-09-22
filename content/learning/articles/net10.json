@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "一份8 Mbit（8×10⁶比特）的文件要依次经过三条2 Mbps链路，中间设备收齐一个分组后才能向下一跳发送。忽略传播、处理、排队和首部开销：整份作为一个报文转发，或拆成800个10000比特的包连续发送，最后一比特分别何时到齐？这是教学变式，算清后再回到Tutorial原题。",
-    "en": "An 8 Mbit file (8×10⁶ bits) crosses three 2 Mbps links. Each intermediate device receives a complete packet before forwarding it. Ignore propagation, processing, queueing and header overhead. When does the final bit arrive if the file is one whole message, versus 800 back-to-back packets of 10000 bits? This is a teaching variation; then return to the original tutorial tasks."
+    "zh": "一份8 Mbit（8×10⁶比特）的文件要依次经过三条2 Mbps链路，中间设备收齐一个分组后才能向下一跳发送。忽略传播、处理、排队和首部开销：整份作为一个报文转发，或拆成800个10000比特的包连续发送，最后一比特分别何时到齐？这也正是新下载 Assignment 1 的 P31；算清后再迁移到 Tutorial 的相邻题型。",
+    "en": "An 8 Mbit file (8×10⁶ bits) crosses three 2 Mbps links. Each intermediate device receives a complete packet before forwarding it. Ignore propagation, processing, queueing and header overhead. When does the final bit arrive if the file is one whole message, versus 800 back-to-back packets of 10000 bits? This also matches P31 in the newly downloaded Assignment 1; then transfer the method to related tutorial tasks."
   },
   "sections": [
     {
@@ -48,7 +48,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "下面的800包例子是本微课的教学变式，不是Tutorial 1或2原题。它把老师Q1的流水线思想放大，让你看见“每个包更早开始下一跳”怎样改变整份文件的完成时刻。先比较两种切分方式，别只记最终秒数。"
+          "text": "下面的800包例子与当前 Assignment 1 P31 的条件一致。它把 Tutorial 1 Q1 的流水线思想放大，让你看见“每个包更早开始下一跳”怎样改变整份文件的完成时刻。先比较两种切分方式，别只记最终秒数。后面的加首部题仍是教学变式。"
         },
         {
           "type": "exercise",
@@ -108,6 +108,12 @@
     }
   ],
   "sources": [
+    {
+      "name": "CS5222 Assignment 1.pdf",
+      "locator": "page 2, P31",
+      "kind": "course",
+      "note": "当前三条2Mbps链路、8Mbit文件与800分组；加首部变式是额外教学题。"
+    },
     {
       "name": "tutorial-1_semA2026.pdf; tutorial-1-solution_semA2026.pptx",
       "locator": "question pages 1–3; solution slides 3–4, 9–10",

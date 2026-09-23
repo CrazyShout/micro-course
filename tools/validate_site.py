@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import re
+from validate_public_notes import validate as validate_notes
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote,urlsplit
@@ -35,6 +36,10 @@ def main():
         for value in parsed.links:local_link(value,file.parent)
     for file in site.rglob('*.css'):
         for value in re.findall(r'url\([\'"]?([^\)\'" ]+)',file.read_text()):local_link(value,file.parent)
+    notes=validate_notes(site)
+    assert notes['major_documents']==manifest['course_notes']['major_documents']
+    assert notes['reading_documents']==manifest['course_notes']['reading_documents']
+    assert notes['pdf_pages']==manifest['course_notes']['pdf_pages']
     reader=load_js(site/'reader-data.js');learning=load_js(site/'learning-data.js');index=load_js(site/'learning-index.js')
     cards={c['id']:c for c in reader['cards']};lessons={l['id']:l for l in learning['lessons']}
     notices=load_js(site/'notices-data.js');notice_ids={n['id'] for n in notices['entries']}
@@ -228,6 +233,6 @@ def main():
         if file.is_file() and file.suffix in ['.html','.js','.css','.json','.md','.py','.txt']:
             assert not forbidden.search(file.read_text()),('Local path or credential-like data',str(file.relative_to(site)))
         assert not any(part in ['materials','checks','.git','markji-ready'] for part in file.relative_to(site).parts),file
-    print(json.dumps({'status':'passed','files':len(actual),'lessons':len(lessons),'article_lessons':article_ids,'teaching_units':unit_count,'activities':activity_count,'activity_items':item_count,'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
+    print(json.dumps({'status':'passed','course_notes':notes,'files':len(actual),'lessons':len(lessons),'article_lessons':article_ids,'teaching_units':unit_count,'activities':activity_count,'activity_items':item_count,'cards':len(cards),'images':len(images),'reading_supplements':reading_count,'reading_figures':len(reading_figures),'all_local_links_resolve':True,'manifest_matches':True,'private_sync_metadata_excluded':True},ensure_ascii=False))
 
 if __name__=='__main__':main()

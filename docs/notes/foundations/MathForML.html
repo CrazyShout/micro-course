@@ -1,0 +1,763 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Math for Machine Learning｜看懂公式，再回到课堂 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a></nav><h1 id="math-for-machine-learning">Math for Machine Learning｜看懂公式，再回到课堂</h1><p class="document-tools"><a href="../pdf/Foundations-A4.pdf#page=2">A4 打印版 · 第 2–34 页</a>　图可点击放大。</p>
+<p><strong>可选基础补课 · 从四则运算和简单方程开始 · 扩展于2026-09-23</strong></p>
+<p><a href="../CS5489/Lecture02.html#intro">回到 Lecture 2 开头</a> · <a href="../CS5489/index.html">使用与运行说明</a></p>
+<p>看到一长串公式时，困难有时并不是“机器学习太难”，而是同时遇到了五个不认识的符号。这份补课把这些台阶拆开：先知道符号在说什么，再用小数字算一次，最后回到老师的公式。水箱、邮件计数和小矩阵都是<strong>教学补充例子</strong>，不是老师布置的新任务或实验成绩。</p>
+<p>只默认你会加减乘除、分数和简单方程。不必一次读完：可以从下面选择卡住的专题；小节末尾有返回具体课程的入口。原五个专题及 Lecture 2 链接保留，后四节按当前新增课程需要补充。正文中的英文术语帮助对照课堂，English takeaway 是整理后的表达，练习题答中英对齐。</p>
+<p><a id="foundation-nav"></a></p>
+<h2 id="_1">先找到自己缺的那一级台阶</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>如果你卡在这里</th>
+<th>从哪里补</th>
+<th>本讲用在哪里</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一看到下标、函数图像、Σ、Π就读不下去</td>
+<td><a href="#symbols-functions">1. 符号、函数与图像</a></td>
+<td>数据记录、似然乘积、均值求和</td>
+</tr>
+<tr>
+<td>分不清“给定谁”，或把密度高度当概率</td>
+<td><a href="#probability-density">2. 概率、条件与密度</a></td>
+<td>生成模型、高斯观察模型</td>
+</tr>
+<tr>
+<td>不懂为什么乘法变加法，或负对数怎样比较</td>
+<td><a href="#powers-logs">3. 指数与自然对数</a></td>
+<td>log-likelihood、log分数</td>
+</tr>
+<tr>
+<td>求导像背口诀，链式法则或偏导跟不上</td>
+<td><a href="#derivatives">4. 导数与极值</a></td>
+<td>先验与高斯参数的MLE</td>
+</tr>
+<tr>
+<td>看不懂向量、转置、协方差与逆矩阵</td>
+<td><a href="#vectors-covariance">5. 向量、矩阵与协方差</a></td>
+<td>两维输入、完整高斯</td>
+</tr>
+<tr>
+<td>多人同时活跃的概率不知道怎么数</td>
+<td><a href="#combinations">6. 组合与二项概率</a></td>
+<td>CS5222 Chapter1、Tutorial1</td>
+</tr>
+<tr>
+<td>不知道投影、正交和张成空间是什么意思</td>
+<td><a href="#projection">7. 长度与投影</a></td>
+<td>CS5489 Tutorial1、Lecture3</td>
+</tr>
+<tr>
+<td>逆不存在却还要拟合，不知怎么办</td>
+<td><a href="#rank-pseudoinverse">8. 秩与伪逆</a></td>
+<td>CS5489 Lecture4最小二乘</td>
+</tr>
+<tr>
+<td>梯度、约束、乘子突然冒出来</td>
+<td><a href="#optimization">9. 梯度与约束</a></td>
+<td>CS5489 Lecture3 LR/SVM</td>
+</tr>
+</tbody>
+</table></div>
+<p>不确定从哪开始，可以先看这五道自查。<strong>会解释理由就可以跳过相应入门段；卡住时再点专题。</strong> 它们只帮助选阅读入口，不是考试、评分或新的刷卡任务。</p>
+<p><strong>自查1 / Check 1</strong></p>
+<p><strong>中文题：</strong> 水箱原有1 L，以2 L/min匀速注水且不漏水、不溢出。3分钟后有多少水？图像的斜率是什么？<br/>
+<strong>English question:</strong> A tank starts with 1 L and receives 2 L/min, with no leakage or overflow. What is its volume after 3 minutes, and what is the graph's slope?</p>
+<details>
+<summary>自查1答案 / Answer 1</summary>
+<p>7 L；斜率是每分钟增加2 L，即2 L/min。需要先认识坐标和函数时，读<a href="#symbols-functions">专题1</a>。<br/>
+<strong>English answer:</strong> 7 L; the slope is 2 L/min, the increase in volume per minute.</p>
+</details>
+<p><strong>自查2 / Check 2</strong></p>
+<p><strong>中文题：</strong> 100封邮件中40封带附件，其中10封是垃圾邮件。已知随机选中的邮件带附件，它是垃圾邮件的比例是多少？<br/>
+<strong>English question:</strong> Of 100 messages, 40 have attachments, and 10 of those 40 are spam. Given that a uniformly selected message has an attachment, what proportion is spam?</p>
+<details>
+<summary>自查2答案 / Answer 2</summary>
+<p>10/40=0.25；条件把范围缩到40封，分母不是100。见<a href="#conditional-probability">条件概率</a>。<br/>
+<strong>English answer:</strong> 10/40=0.25. Conditioning restricts the reference group to the 40 messages with attachments.</p>
+</details>
+<p><strong>自查3 / Check 3</strong></p>
+<p><strong>中文题：</strong> ln(0.1)为什么是负数？对正数a、b，ln(ab)如何展开？<br/>
+<strong>English question:</strong> Why is ln(0.1) negative, and how does ln(ab) expand for positive a and b?</p>
+<details>
+<summary>自查3答案 / Answer 3</summary>
+<p>e的负次幂才会得到0和1之间的数；ln(ab)=ln(a)+ln(b)。见<a href="#powers-logs">专题3</a>。<br/>
+<strong>English answer:</strong> A negative power of e lies between zero and one; ln(ab)=ln(a)+ln(b).</p>
+</details>
+<p><strong>自查4 / Check 4</strong></p>
+<p><strong>中文题：</strong> f(x)=x²在x=2处的导数是多少？为什么“导数为0”不能单独证明最大值？<br/>
+<strong>English question:</strong> What is the derivative of f(x)=x² at x=2? Why does a zero derivative alone not prove a maximum?</p>
+<details>
+<summary>自查4答案 / Answer 4</summary>
+<p>导数是4；零导数点可能是最小值或既非最大也非最小的点，还要检查变化方向或其他条件。见<a href="#derivatives">专题4</a>。<br/>
+<strong>English answer:</strong> The derivative is 4. A stationary point may be a minimum or neither; additional checks are needed.</p>
+</details>
+<p><strong>自查5 / Check 5</strong></p>
+<p><strong>中文题：</strong> 4条记录各有2个特征，按行保存时X的形状是什么？协方差矩阵的非对角线记录什么？<br/>
+<strong>English question:</strong> Four records each have two features. What is the shape of the row-wise data matrix X, and what do off-diagonal covariance entries describe?</p>
+<details>
+<summary>自查5答案 / Answer 5</summary>
+<p>X是4×2；非对角线描述两个特征相对于各自均值一起变化的情况。见<a href="#vectors-covariance">专题5</a>。<br/>
+<strong>English answer:</strong> X is 4×2. Off-diagonal covariance entries describe joint deviations of two features from their respective means.</p>
+</details>
+<p><a id="symbols-functions"></a></p>
+<h2 id="1-symbols-functions-and-graphs">1. Symbols, functions and graphs｜先让公式开口说人话</h2>
+<h3 id="11">1.1 水箱的账本：谁变了，谁跟着变？</h3>
+<p>假设水箱起初有1升水，水龙头每分钟注入2升。暂时不考虑漏水、流速变化和装满后的溢出。我们想回答：“开了t分钟，现在有多少水？”</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th style="text-align: right;">经过时间t（分钟）</th>
+<th style="text-align: right;">原有的水（升）</th>
+<th style="text-align: right;">新加入的水（升）</th>
+<th style="text-align: right;">总水量V（升）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2×0=0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2×1=2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2×2=4</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2×3=6</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table></div>
+<p>把每一行相同的计算压缩成一句话，就是</p>
+<div class="arithmatex">\[V(t)=2t+1.\]</div>
+<p>这里t是 <strong>variable（变量）</strong>，V(t)读作“时间t对应的水量”。括号表示把t送入规则，<strong>V(t)不是V乘以t</strong>。2t才表示2×t；2的单位是L/min，乘以分钟后得到L，才能与原有1 L相加。</p>
+<p>这样的输入—输出规则叫 <strong>function（函数）</strong>。在我们规定的条件下，同一个t对应一个确定的V。模型适用的输入范围叫 <strong>domain（定义域）</strong>；这里t≥0，而且必须在水箱尚未溢出的阶段。“公式写得很漂亮”不能阻止真实水箱溢出。</p>
+<p><a id="coordinates"></a></p>
+<h3 id="12">1.2 图像就是把账本放到坐标上</h3>
+<p>横轴记t，纵轴记V。点(2,5)表示“过了2分钟，共有5升水”；先读横坐标，再读纵坐标。允许半分钟之类的连续时间，所以这里可以连接成线；如果横轴是班级名称，就不能照搬这种连续解释。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/9ed4441ab6b76ede.png" rel="noopener" target="_blank"><img alt="水箱时间与水量图，标出每增加1分钟水量增加2升" decoding="async" loading="lazy" src="../assets/9ed4441ab6b76ede.png"/></a></p>
+<p><em>看蓝线与金色虚线：从(1,3)走到(2,5)，向右1分钟，向上2升。起点的1升决定纵轴截距，注水速率决定斜率。图的适用条件仍是匀速、不漏、不溢出。</em></p>
+<p><strong>Slope（斜率）</strong>是“输出变化量÷输入变化量”。大写希腊字母Δ读作delta，在这里表示“后一个值减前一个值”：</p>
+<div class="arithmatex">\[\text{slope}=\frac{\Delta V}{\Delta t}=\frac{5-3}{2-1}=2\ \text{L/min}.\]</div>
+<p>这条直线到处斜率相同；曲线则可能一会儿陡、一会儿平，专题4会从这里引出导数。</p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：保持水箱条件，求2.5分钟后的水量；如果想达到8 L，需要多久？<br/>
+English question: Under the same tank assumptions, find the volume after 2.5 minutes and the time needed to reach 8 L.</p>
+<p>先代入：V(2.5)=2×2.5+1=6 L。反过来求时间，解2t+1=8，先减1再除以2，得到t=3.5 min。<br/>
+<strong>English answer:</strong> V(2.5)=6 L. Solving 2t+1=8 gives t=3.5 minutes.</p>
+<h3 id="13">1.3 下标是编号，Σ和Π是压缩过的算术</h3>
+<p>有三个读数1、2、4，写成x₁=1、x₂=2、x₃=4。<strong>Subscript（下标）</strong>i告诉你“第几个”；x₂是第二个读数，不是x乘2，也不是平方。</p>
+<div class="arithmatex">\[\sum_{i=1}^{3}x_i=x_1+x_2+x_3=1+2+4=7,\]</div>
+<div class="arithmatex">\[\prod_{i=1}^{3}x_i=x_1x_2x_3=1\times2\times4=8.\]</div>
+<p>Σ（summation）说“逐项相加”，Π（product）说“逐项相乘”。下方i=1是起始编号，上方3是结束编号；i只是计数用的名字，换成j不会改变计算。省略上下限时，需要从上下文知道加了哪些项。</p>
+<p>平方也要看括号：</p>
+<div class="arithmatex">\[\sum_{i=1}^{3}x_i^2=1^2+2^2+4^2=21,
+\qquad\left(\sum_{i=1}^{3}x_i\right)^2=7^2=49.\]</div>
+<p>前者“各自平方再相加”，后者“先合计再平方”。括号不是装饰，它决定先做哪一步。在实数范围内，a≥0时，符号√a表示平方后得到a的非负数，例如√9=3；它稍后用于从方差回到标准差。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>常见写法</th>
+<th>此处怎样读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x∈ℝ</td>
+<td>x是实数，可以是整数、小数、正数、负数或零</td>
+</tr>
+<tr>
+<td>{xᵢ}ᵢ₌₁ᴺ</td>
+<td>从第1到第N个观测组成的一组记录</td>
+</tr>
+<tr>
+<td>μ、σ、θ</td>
+<td>希腊字母mu、sigma、theta；含义须看当前定义</td>
+</tr>
+<tr>
+<td>μ̂</td>
+<td>mu上戴“帽子”，通常表示用数据估出的值</td>
+</tr>
+<tr>
+<td>argmaxₜ f(t)</td>
+<td>找让f最大的输入t，不是返回最大高度本身</td>
+</tr>
+</tbody>
+</table></div>
+<p>Lecture 2中，高斯公式的2π使用圆周率；先验参数π则是老师给参数起的名字。一样的字形可能承担不同角色，读公式时先对照变量表。</p>
+<p><strong>独立变式 / Try</strong><br/>
+中文题：另一个水箱初始2 L，流速3 L/min，仍不漏、不溢出。写出函数并求4分钟水量。另给x=(2,3,5)，计算Σxᵢ、Πxᵢ和Σxᵢ²。<br/>
+English question: A second tank starts with 2 L and receives 3 L/min, without leakage or overflow. Write its volume function and evaluate it at 4 minutes. For x=(2,3,5), also compute the sum, product and sum of squares.</p>
+<details>
+<summary>展开答案 / Show answer</summary>
+<p>V(t)=3t+2，V(4)=14 L；和为10，积为30，平方和为4+9+25=38。平方和不是10²。<br/>
+<strong>English answer:</strong> V(t)=3t+2 and V(4)=14 L. The sum is 10, the product is 30, and the sum of squares is 38, not 100.</p>
+</details>
+<p><strong>English takeaway:</strong> A function maps an allowed input to an output. A slope compares changes with units. Subscripts identify entries; sums, products and parentheses specify the calculation order.</p>
+<p><strong>回到课堂：</strong> <a href="../CS5489/Lecture01.html#variables">Lecture1：变量</a> · <a href="../CS5489/Lecture02.html#classification">数据记录与特征</a> · <a href="../CS5489/Lecture02.html#prior-mle">似然中的连乘</a> · <a href="../CS5489/Lecture02.html#gaussian-mle">均值中的求和</a> · <a href="#foundation-nav">补课导航</a></p>
+<p><a id="probability-density"></a></p>
+<h2 id="2-probability-and-density">2. Probability and density｜先说清楚在谁里面数</h2>
+<h3 id="21">2.1 事件是条件，概率是满足它的机会</h3>
+<p>把100封邮件放进一个盒子，<strong>等可能地随机抽取一封</strong>。如果其中30封是垃圾邮件，抽到垃圾邮件的概率就是30/100=0.3。这里“是垃圾邮件”叫 <strong>event（事件）</strong>，用S表示，P(S)=0.3。写成百分数就是30%，三种写法表示同一个比例。</p>
+<p>“不是垃圾邮件”是S的补事件，记作Sᶜ。两种结果不重叠、合起来又覆盖全部邮件，所以P(Sᶜ)=1−P(S)=0.7。概率必须在0到1之间。很多概率能不能直接相加，要先问事件是否重叠；同一封邮件既含free又含meeting时，把两个计数直接相加会把它数两次。</p>
+<p><a id="conditional-probability"></a></p>
+<h3 id="22">2.2 竖线后面的条件，会换掉分母</h3>
+<p>现在再记录邮件是否含单词free，用F表示“含free”。这是人为设计的教学计数：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>教学邮件计数 / Message counts</th>
+<th style="text-align: right;">含free / F</th>
+<th style="text-align: right;">不含free / Fᶜ</th>
+<th style="text-align: right;">合计 / Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>垃圾邮件 / S</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr>
+<td>正常邮件 / Sᶜ</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">70</td>
+</tr>
+<tr>
+<td>合计 / Total</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">100</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：仍等可能抽一封。已知它是垃圾邮件，含free的概率是多少？已知它含free，是垃圾邮件的概率又是多少？<br/>
+English question: Select one message uniformly from the table. What is the probability of containing free given spam, and the probability of spam given containing free?</p>
+<p>第一问先把目光缩到“垃圾邮件”那一行：30封里18封含free，得到</p>
+<div class="arithmatex">\[P(F\mid S)=\frac{18}{30}=0.6.\]</div>
+<p>第二问先缩到“含free”那一列：25封里18封是垃圾邮件，得到</p>
+<div class="arithmatex">\[P(S\mid F)=\frac{18}{25}=0.72.\]</div>
+<p>竖线“|”读作 <strong>given（已知、给定）</strong>。两问用了同一个18，却有不同分母；“已知是猫，有胡子的比例”和“已知有胡子，是猫的比例”也有这个区别。胡子并不会主动把分母告诉你。</p>
+<p><strong>English answer:</strong> P(F|S)=18/30=0.6; P(S|F)=18/25=0.72. The conditioning event changes the reference group, so reversing the condition changes the question.</p>
+<p>两个条件同时满足叫交集，写成F∩S；本例概率是18/100=0.18。由计数关系可归纳出</p>
+<div class="arithmatex">\[P(F\mid S)=\frac{P(F\cap S)}{P(S)},\qquad
+P(F\cap S)=P(F\mid S)P(S),\quad P(S)&gt;0.\]</div>
+<p>不必先背：30/100的人被留下，在留下的人中取18/30，乘起来正好18/100。条件事件概率为0时，这个分式不能直接计算；不能把0/0随意写成0或1。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#generative">继续理解先验与类条件</a> · <a href="../CS5489/Lecture02.html#bayes-rule">继续Bayes决策</a>。</p>
+<p><a id="independence"></a></p>
+<h3 id="23">2.3 相乘也需要条件</h3>
+<p><strong>Independence（独立）</strong>表示知道一个事件发生，不改变另一个的概率。上述邮件中P(F)=25/100=0.25，而P(F|S)=0.6，因此F和S不独立。</p>
+<p>一般乘法规则是P(F∩S)=P(F|S)P(S)。只有独立时才能进一步改为P(F)P(S)。比如假设两次公平抛硬币独立，两个正面的概率才是1/2×1/2=1/4。</p>
+<p>独立不等于 <strong>mutually exclusive（互斥）</strong>。一次抛硬币的正面与反面不能同时发生，它们互斥；知道正面出现，就确定反面没出现，显然改变了反面的概率。</p>
+<p>课堂的“给定类别后独立”还固定了类别这个条件；这不等于所有特征在所有数据里都独立。具体怎样组成Naive Bayes模型，回Lecture正文继续学。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#gaussian-nb">继续Gaussian NB的条件独立假设</a>。</p>
+<p><a id="density-area"></a></p>
+<h3 id="24">2.4 连续读数：高度是密度，面积才是概率</h3>
+<p>邮件类别可以逐个数。等待时间、花瓣长度则可以有越来越细的小数位。假设等待时间X在0到0.5分钟之间均匀分布，“均匀”表示相同长度的区间有相同概率。</p>
+<p>总区间长0.5分钟、总概率为1，所以每单位长度上的密度是1/0.5=2，单位为1/分钟。在区间内画高度2的长方形，面积正好0.5×2=1。</p>
+<p>这条曲线叫 <strong>probability density function，PDF（概率密度函数）</strong>，写作f(x)。这里PDF是函数的缩写，不是文件格式。对于这个均匀模型：</p>
+<div class="arithmatex">\[f(x)=\begin{cases}2,&amp;0\le x\le0.5,\\0,&amp;\text{otherwise}.\end{cases}\]</div>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/4fc208c10f493e17.png" rel="noopener" target="_blank"><img alt="均匀与标准正态密度图，分别标出区间概率0.4和约0.6827" decoding="async" loading="lazy" src="../assets/4fc208c10f493e17.png"/></a></p>
+<p><em>上图看金色区域：宽0.3−0.1=0.2分钟，高2/分钟，面积0.4就是落在该区间的概率。下图的曲线是标准正态，−1到1之间的面积约0.6827；曲线下的面积仍是概率，但不能用一根柱子的高度代替整个面积。上下图的横轴、纵轴含义各自标明。</em></p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：在上述均匀等待模型中，求0.1到0.3分钟之间的概率。密度为2是否违反“概率不超过1”？<br/>
+English question: In the uniform waiting-time model on [0,0.5] minutes, find the probability of [0.1,0.3]. Does density 2 violate the probability bound of 1?</p>
+<p>答案：区间面积(0.3−0.1)×2=0.4。密度2的单位为1/分钟，不是概率；概率是无单位的面积0.4，仍在0到1之间。<br/>
+<strong>English answer:</strong> The probability is (0.3−0.1)×2=0.4. Density has units of inverse minutes; its height need not be at most one. The dimensionless probability remains within [0,1].</p>
+<p>对曲线，可以把区间切成很多窄长方形，将“宽×高”相加，越切越细。这种累计面积记为 <strong>integral（积分）</strong>：</p>
+<div class="arithmatex">\[P(a\le X\le b)=\int_a^b f(x)\,dx.\]</div>
+<p>∫表示累计，a、b是左右端点，dx提示沿x方向累计很小的宽度。这里先会读“区间下的面积”即可，不需要先学一整套积分技巧。对有密度的连续模型，单个精确点没有宽度，概率为0；实际仪器显示“2.3 cm”通常代表经过舍入的一小段区间。混合了离散点质量的模型不属于这句说明的范围。</p>
+<p><strong>独立变式 / Try</strong><br/>
+中文题：用上面的100封邮件表，已知邮件不含free，它是垃圾邮件的概率是多少？另用同一个均匀等待模型，求0到0.25分钟的概率，以及恰好0.25分钟这个点的概率。<br/>
+English question: Using the 100-message table, find P(spam | no free). In the same uniform waiting-time model, find the probability of [0,0.25] and the probability of the exact point 0.25.</p>
+<details>
+<summary>展开答案 / Show answer</summary>
+<p>不含free的75封中有12封垃圾邮件，所以12/75=0.16。等待区间概率0.25×2=0.5；在该连续模型中，精确单点概率为0。<br/>
+<strong>English answer:</strong> P(spam | no free)=12/75=0.16. The interval probability is 0.5, while the exact point has probability zero under this continuous model.</p>
+</details>
+<p><strong>English takeaway:</strong> Conditioning changes the reference group. Independence is an extra assumption for multiplying marginal probabilities. For a continuous density, probabilities are interval areas rather than curve heights.</p>
+<p><strong>回到课堂：</strong> <a href="../CS5489/Lecture01.html#plots-probability">Lecture1：概率图</a> · <a href="../CS5489/Lecture02.html#generative">先验与类条件的方向</a> · <a href="../CS5489/Lecture02.html#observation">高斯密度</a> · <a href="../CS5489/Lecture02.html#bayes-rule">Bayes决策</a> · <a href="../CS5489/Lecture02.html#gaussian-nb">条件独立</a> · <a href="#foundation-nav">补课导航</a></p>
+<p><a id="powers-logs"></a></p>
+<h2 id="3-powers-and-logarithms">3. Powers and logarithms｜正着问乘多少，反着问几次方</h2>
+<h3 id="31">3.1 从整数次幂到“反向提问”</h3>
+<p>假设一个理想化过程每轮把数量翻倍，从1开始，三轮后是2×2×2=8。把重复乘法缩写成 <strong>power（幂）</strong>：2³=8。这里2是底数，3是指数。整数指数可以先理解为乘了几次。</p>
+<p>往回走一轮，就除以2，因此2⁰=1、2⁻¹=1/2、2⁻³=1/8。分数指数也能定义：<span class="arithmatex">\(2^{1/2}=\sqrt{2}\)</span>，因为两个√2相乘等于2。推广到实数指数时，不再把“次数”局限成整数；可以用越来越精细的小数指数逼近。这就形成连续的指数函数。</p>
+<p><strong>Logarithm（对数）</strong>把问题倒过来：“底数2的几次方等于8？”答案是3，记成log₂8=3。一般定义为</p>
+<div class="arithmatex">\[\log_b x=y\quad\Longleftrightarrow\quad b^y=x,
+\qquad b&gt;0,\ b\ne1,\ x&gt;0.\]</div>
+<p>双向箭头表示两句话等价。底数1不行，因为1的任何次幂仍是1，无法唯一反推出指数。实数对数这里要求正输入；log₂(−8)不是这个定义里的实数结果。</p>
+<h3 id="32-eln">3.2 e和ln：认识名字，再认识图像</h3>
+<p><strong>Natural logarithm（自然对数）</strong>以特殊常数e≈2.71828为底，写成ln(x)。对应的指数函数eˣ也写成exp(x)。它们互相反解：</p>
+<div class="arithmatex">\[\ln(e^u)=u,\qquad e^{\ln x}=x\quad(x&gt;0).\]</div>
+<p>e不是机器学习新发明的参数。它的方便之处是：eˣ的局部变化率恰好等于当前高度，而ln(x)的变化率恰好为1/x。专题4会解释“变化率”怎样变成导数；此处先会读函数即可。Lecture 2中的log默认按自然对数理解。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/3339c929c2df6ba7.png" rel="noopener" target="_blank"><img alt="上下两幅图分别显示指数函数和自然对数，标出互换的输入输出点" decoding="async" loading="lazy" src="../assets/3339c929c2df6ba7.png"/></a></p>
+<p><em>上图的(0,1)与(1,e)，在下图变成(1,0)与(e,1)。ln(x)只接收正数；当0&lt;x&lt;1时，它位于横轴下方，因为e的负次幂才得到这样的数。两幅图的输入输出角色不同，纵轴范围也不同。</em></p>
+<p>例如e⁰=1，所以ln1=0；0.1小于1，所以ln0.1是负数，约−2.3026。负数并不代表“负概率”：对数已经把概率换到了另一条数轴。</p>
+<p><a id="log-products"></a></p>
+<h3 id="33">3.3 为什么乘法会变成加法？</h3>
+<p>设a=eᵘ、b=eᵛ，两个数都为正。指数的相乘规则给出ab=eᵘeᵛ=eᵘ⁺ᵛ。对它反问“这是e的几次方”，答案就是u+v。因此</p>
+<div class="arithmatex">\[\ln(ab)=\ln a+\ln b.\]</div>
+<p>同样，正数a有ln(aᵏ)=k ln(a)。例如ln(0.2×0.5)=ln0.2+ln0.5；多个因子时，把这个规则重复使用：</p>
+<div class="arithmatex">\[\ln\left(\prod_{i=1}^{N}p_i\right)=\sum_{i=1}^{N}\ln p_i,
+\qquad p_i&gt;0.\]</div>
+<p>这不是任意“把括号拆开”。<strong>加法没有同样的规则</strong>：ln(2+4)=ln6，而ln2+ln4=ln8，两者不同。看到加号时，不能把乘法的通行证借过去用。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#prior-mle">继续先验MLE中的对数之和</a> · <a href="../CS5489/Lecture02.html#log-scores">继续比较log分数</a>。</p>
+<h3 id="34">3.4 为什么最大值的位置没有变？</h3>
+<p>从图上看，ln(x)对正输入一直递增：a&gt;b&gt;0时，ln(a)&gt;ln(b)。我们只改变了分数的刻度，没有交换谁大谁小。所以最大化正似然L(θ)，与最大化ln L(θ)，会选到同样的参数θ。</p>
+<p>这里的 <strong>argmax</strong> 返回获胜的输入参数；<strong>max</strong> 返回最高的函数值。刻度换了，最高的数值会变，获胜参数可以不变。底数大于1的对数都保留这种排序；如果使用0到1之间的底数，对数会递减，不能照搬这个结论。</p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：两项独立证据在模型A下的概率为0.2、0.5，在模型B下为0.1、0.8。比较证据联合概率，和比较它的自然对数，哪一个模型的值较大？<br/>
+English question: Two independent pieces of evidence have probabilities 0.2 and 0.5 under model A, and 0.1 and 0.8 under model B. Which model has the larger joint probability, and does taking natural logs change the ordering?</p>
+<p>先按独立假设相乘：A为0.10，B为0.08，A更大。取对数后A≈−2.3026，B≈−2.5257；数轴上−2.3026仍更靠右，所以A仍较大。这里比较的是对已观察证据的似然，没有计算模型本身的后验。<br/>
+<strong>English answer:</strong> A gives 0.10 versus B's 0.08. Their natural logs are approximately −2.3026 and −2.5257, so A remains larger. These are likelihood comparisons, not model posterior probabilities.</p>
+<p>电脑只能保存有限精度的数字，许多很小的数直接连乘可能被舍成0。取对数后改为加法，能减轻这种 <strong>underflow（下溢）</strong>。但这不能把真正的零概率变成合理的正概率；ln0没有有限实数值，程序有时用−∞表示其极限。不要把ln0擅自换成0，因为ln1才是0。</p>
+<p><strong>独立变式 / Try</strong><br/>
+中文题：计算log₂(1/8)与log₂(2×4)。ln0.3和ln0.2哪个更大？能把ln(2+4)写成ln2+ln4吗？<br/>
+English question: Compute log₂(1/8) and log₂(2×4). Which is larger, ln0.3 or ln0.2? Can ln(2+4) be written as ln2+ln4?</p>
+<details>
+<summary>展开答案 / Show answer</summary>
+<p>前两项为−3和3；ln0.3更大，因为0.3&gt;0.2&gt;0；不能拆开加法，左边ln6、右边ln8。<br/>
+<strong>English answer:</strong> The first two values are −3 and 3. ln0.3 is larger because ln is increasing on positive inputs. The proposed sum identity is false: it compares ln6 with ln8.</p>
+</details>
+<p><strong>English takeaway:</strong> A logarithm reverses exponentiation. Natural logs convert positive products into sums and preserve their ordering. Logarithms of sums do not split, and zero inputs require explicit treatment.</p>
+<p><strong>回到课堂：</strong> <a href="../CS5489/Lecture02.html#prior-mle">先验MLE中的对数似然</a> · <a href="../CS5489/Lecture02.html#gaussian-mle">高斯MLE</a> · <a href="../CS5489/Lecture02.html#log-scores">log分数与稳定归一化</a> · <a href="../CS5489/Lecture02.html#tfidf">TF-IDF中的对数</a> · <a href="#foundation-nav">补课导航</a></p>
+<p><a id="derivatives"></a></p>
+<h2 id="4-derivatives-and-maxima">4. Derivatives and maxima｜输入动一点，输出怎样动？</h2>
+<h3 id="41">4.1 曲线上的斜率，不只一个</h3>
+<p>水箱的V(t)=2t+1处处同样陡。换成f(x)=x²：从x=1到2，输出从1到4，平均斜率是3；从2到3，输出从4到9，平均斜率是5。曲线越走越陡，不能用一根直线的斜率概括全部位置。</p>
+<p>我们先盯住x=2，问它附近的变化率。从x走到x+h，h表示这一步的长度，可以为正，也可以为负，但不能是0。两点间 <strong>secant（割线）</strong>的斜率为</p>
+<div class="arithmatex">\[\frac{f(x+h)-f(x)}{h}
+=\frac{(x+h)^2-x^2}{h}
+=\frac{x^2+2xh+h^2-x^2}{h}=2x+h.\]</div>
+<p>中间只用了展开括号、约掉x²，再约掉非零h。把x=2放进去：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th style="text-align: right;">步长h</th>
+<th style="text-align: right;">平均斜率4+h</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">4.25</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">4.01</td>
+</tr>
+<tr>
+<td style="text-align: right;">−0.01</td>
+<td style="text-align: right;">3.99</td>
+</tr>
+</tbody>
+</table></div>
+<p>让h从两侧越来越接近0，斜率趋近4。这个 <strong>limit（极限）</strong>不是先把分母h替换成0；它问非零h靠近0时整个比值趋向哪里。这个局部变化率叫 <strong>derivative（导数）</strong>，可以写成f′(x)或df/dx：</p>
+<div class="arithmatex">\[f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}h=2x.\]</div>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/45f583e994fe397e.png" rel="noopener" target="_blank"><img alt="平方曲线在x等于2处的切线，以及不同步长的割线" decoding="async" loading="lazy" src="../assets/45f583e994fe397e.png"/></a></p>
+<p><em>蓝线是x²，虚线连接两个实际曲线点，深色实线是x=2处的切线。h从1缩到0.25，割线斜率从5变成4.25，向切线斜率4靠近。切线只在附近贴合曲线，并不是整条曲线的替身。</em></p>
+<p>因此在x=2附近，Δf≈4Δx。比如Δx=0.01，近似增加0.04；实际2.01²−2²=0.0401。步子小时两者很接近；步子为1时近似是4，实际是5，就不能再把近似写成精确等式。</p>
+<p><a id="derivative-rules"></a></p>
+<h3 id="42">4.2 本讲需要的规则，从变化率理解</h3>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>导数</th>
+<th>为什么或条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常数c</td>
+<td>0</td>
+<td>输入改变，输出不变</td>
+</tr>
+<tr>
+<td>ax+b</td>
+<td>a</td>
+<td>输出变化a倍于输入变化</td>
+</tr>
+<tr>
+<td>x²</td>
+<td>2x</td>
+<td>刚才用差商展开得到</td>
+</tr>
+<tr>
+<td>1/x</td>
+<td>−1/x²</td>
+<td>x≠0，见下方展开</td>
+</tr>
+<tr>
+<td>ln x</td>
+<td>1/x</td>
+<td>x&gt;0，见下方面积解释</td>
+</tr>
+<tr>
+<td>eˣ</td>
+<td>eˣ</td>
+<td>与ln互逆，结合链式法则可得</td>
+</tr>
+</tbody>
+</table></div>
+<p>对1/x也可以直接检查差商：</p>
+<div class="arithmatex">\[\frac{1/(x+h)-1/x}{h}
+=\frac{-h}{x(x+h)h}
+=-\frac1{x(x+h)}\ \longrightarrow\ -\frac1{x^2}.\]</div>
+<p>为什么ln x的导数是1/x？自然对数也可以由曲线1/t从1到x累计的<strong>有向面积</strong>定义，它与以e为底的对数一致。x往右增加很小的Δx，多出的窄条面积约为(1/x)Δx；除以宽度Δx，再让宽度趋近0，就得到1/x。x&lt;1时方向反过来，累计面积取负，这也呼应了上一专题的负对数。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/9c930e07053c6e84.png" rel="noopener" target="_blank"><img alt="曲线1除以t下方的面积表示自然对数，标出x等于2附近的新窄条" decoding="async" loading="lazy" src="../assets/9c930e07053c6e84.png"/></a></p>
+<p><em>从1到2的蓝色面积是ln2。金色窄条是从2到2.2新增的面积；起点高度为1/2，因此用小矩形估计是0.2×0.5=0.1，实际面积约0.09531。继续缩小宽度，单位宽度对应的面积变化就趋近1/2。</em></p>
+<p>对多个项相加，可以逐项求导；固定常数倍也可以提到外面。例如f(x)=3x²+5，f′(x)=3×2x+0=6x。常数不变，不表示含它的整项都不变。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#gaussian-mle">继续高斯MLE：求导规则</a>。</p>
+<p><a id="chain-rule"></a></p>
+<h3 id="43">4.3 链式法则：变化经过了几道工序？</h3>
+<p>令z=3x+1，再令y=z²。先把x变成z，再把z平方得到y。x动一点，第一道工序先把变化放大3倍；第二道工序在当前z附近再放大约2z倍。总变化率就是两段相乘：</p>
+<div class="arithmatex">\[\frac{dy}{dx}=\frac{dy}{dz}\frac{dz}{dx}=2z\times3=6(3x+1).\]</div>
+<p>这叫 <strong>chain rule（链式法则）</strong>。dy/dz等写法在这里是变化率记号，不是任意情况下都能当普通分数约掉的字母。</p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：z=3x+1，y=z²。当x=1时求dy/dx，并说明只写2z漏掉了什么。<br/>
+English question: Let z=3x+1 and y=z². At x=1, find dy/dx and explain what is missing if one writes only 2z.</p>
+<p>先求当前位置z=4，外层变化率dy/dz=2×4=8；内层dz/dx=3。相乘得到24。只写2z等于把第一道工序当成没有放大。<br/>
+<strong>English answer:</strong> z=4, dy/dz=8 and dz/dx=3, so dy/dx=24. The expression 2z alone omits the inner rate dz/dx.</p>
+<p>这也解释了ln(1−p)为什么求导为−1/(1−p)：外层ln的导数是1/(1−p)，内层1−p的导数是−1，必须相乘。对平方残差(xᵢ−μ)²关于μ求导也是同一个套路：2(xᵢ−μ)再乘−1。此时xᵢ是固定的数据，变化的是μ。</p>
+<p>现在也能验证eˣ那条规则：对恒等式ln(eˣ)=x两边求导，左侧由链式法则得到(1/eˣ)·(eˣ)′，右侧为1，所以(eˣ)′=eˣ。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#gaussian-mle">继续高斯MLE：链式求导</a>。</p>
+<p><a id="partial-derivatives"></a></p>
+<h3 id="44">4.4 偏导：这次只动一个旋钮</h3>
+<p>如果函数有两个输入，比如E(u,v)=(u−1)²+(v−2)²，想知道u单独改变的影响，就先把v固定。这样的导数叫 <strong>partial derivative（偏导）</strong>，用弯曲的∂写成∂E/∂u：</p>
+<div class="arithmatex">\[\frac{\partial E}{\partial u}=2(u-1),\qquad
+\frac{\partial E}{\partial v}=2(v-2).\]</div>
+<p>对u求导时，(v−2)²是常数，导数为0；对v求导时反过来。把这些偏导按顺序排成向量，叫 <strong>gradient（梯度）</strong>，本讲先认识这个词，不需要先学梯度下降算法。</p>
+<p>Lecture 2的高斯似然有μ与σ²两个参数。对μ求偏导时，方差固定；对方差求偏导时，μ固定。把v=σ²当作一个完整变量，可避免误把“对标准差求导”当成“对方差求导”。例如固定常数C有d(C/v)/dv=−C/v²。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#gaussian-mle">继续高斯MLE：固定另一个参数</a>。</p>
+<p><a id="maxima-mle"></a></p>
+<h3 id="45">4.5 找山顶：导数为零只是候选条件</h3>
+<p>导数为正，函数局部上升；为负，局部下降。光滑曲线的内部山顶通常会从上升变成下降，在山顶处变平。但只找到“平”还不够：x²在0处也平，却是谷底；x³在0处也平，却仍从负值一路升到正值，既不是峰也不是谷。</p>
+<p>边界上的最大值也未必导数为0。比如f(p)=p在[0,1]上，最大值在p=1，而导数始终是1。求导法需要检查定义域、端点和不能求导的位置。</p>
+<p>用本讲即将看到的一个教学例子连接起来：固定10个独立标签，其中4个为类1、6个为类2。令p为候选的类1概率；改变的是p，不是重新抽标签。该固定标签序列的似然为</p>
+<div class="arithmatex">\[L(p)=p^4(1-p)^6,\qquad 0\le p\le1.\]</div>
+<p>这里没有乘二项式组合系数，因为我们写的是一个固定序列的概率；若只统计总数，组合系数不依赖p，也不改变获胜的p。L(p)不是“p本身的概率密度”，不要求它沿p的面积为1。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/d17514b2d55294db.png" rel="noopener" target="_blank"><img alt="固定标签序列的似然和自然对数似然，最大值位置都在p等于0.4" decoding="async" loading="lazy" src="../assets/d17514b2d55294db.png"/></a></p>
+<p><em>上下图纵轴刻度不同，但金色线都穿过最高处p=0.4。上图纵轴的×10⁻³表示刻度还要乘0.001；图下半部的负数是对数值。没有把两条曲线的高度当成同一单位下的大小比较。</em></p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：对上述4个类1、6个类2的固定序列，求最大化似然的p，并说明它为什么是最大值。<br/>
+English question: For the fixed independent label sequence with four class-1 and six class-2 outcomes, find the likelihood-maximizing p and justify that it is a maximum.</p>
+<p>对0&lt;p&lt;1先取对数，再应用刚才的规则：</p>
+<div class="arithmatex">\[\ell(p)=4\ln p+6\ln(1-p),\qquad
+\ell'(p)=\frac4p-\frac6{1-p}.\]</div>
+<p>令导数为0，得到4(1−p)=6p，所以p=0.4。为了判断是不是山顶，把导数合成一个分式：</p>
+<div class="arithmatex">\[\ell'(p)=\frac{4-10p}{p(1-p)}.\]</div>
+<p>区间内分母为正，p&lt;0.4时分子为正，p&gt;0.4时分子为负，因此函数先升后降；两个端点的L都为0。由此确认0.4是最大值。<strong>English answer:</strong> The log-likelihood derivative is 4/p−6/(1−p), which vanishes at p=0.4. It is positive before 0.4 and negative after it, while the endpoint likelihoods are zero, so p=0.4 is the maximizer.</p>
+<p>老师还会使用 <strong>second derivative（二阶导数）</strong>：再对导数求一次导。负的二阶导数表示斜率持续减小，正的表示斜率持续增大；在可用的条件下可辅助判断峰谷。对本例，ℓ″(p)=−4/p²−6/(1−p)²&lt;0，和我们刚才的判断一致。</p>
+<p><strong>独立变式 / Try</strong><br/>
+中文题：① y=(2x−1)²，在x=3处的导数是多少？② E(u,v)=(u−1)²+(v−2)²，在(0,0)处两个偏导分别是多少？③ 一个新的固定独立标签序列有3个类1、2个类2，求最大似然p并说明为什么不能只报“导数为0”。<br/>
+English question: (1) Find the derivative of y=(2x−1)² at x=3. (2) Find both partial derivatives of E(u,v)=(u−1)²+(v−2)² at (0,0). (3) For a new fixed independent sequence with three class-1 and two class-2 outcomes, find the MLE of p and justify the maximum beyond stating that its derivative is zero.</p>
+<details>
+<summary>展开答案 / Show answer</summary>
+<p>① 外层2(2x−1)乘内层2，在x=3时为20。② 两个偏导为−2、−4。③ 对数似然导数3/p−2/(1−p)=(3−5p)/[p(1−p)]，在p=0.6变号，由正变负，端点似然为0，故最大值在0.6。<br/>
+<strong>English answer:</strong> (1) The derivative is 4(2x−1), giving 20. (2) The partial derivatives are −2 and −4. (3) The log-likelihood derivative is (3−5p)/[p(1−p)]. It changes from positive to negative at 0.6 and the endpoint likelihoods are zero, establishing the maximum.</p>
+</details>
+<p><strong>English takeaway:</strong> A derivative is a limiting local rate, not a finite-step identity. Apply the chain rule through every intermediate variable; partial derivatives hold other inputs fixed. Finding a maximum also requires domain and shape checks.</p>
+<p><strong>回到课堂：</strong> <a href="../CS5489/Lecture02.html#prior-mle">先验MLE推导</a> · <a href="../CS5489/Lecture02.html#gaussian-mle">高斯均值与方差求导</a> · <a href="#foundation-nav">补课导航</a></p>
+<p><a id="vectors-covariance"></a></p>
+<h2 id="5-vectors-matrices-and-covariance">5. Vectors, matrices and covariance｜先数格子，再看一起怎样变化</h2>
+<h3 id="51">5.1 一条记录是向量，很多条记录排成矩阵</h3>
+<p>假设每条记录有两个测量。把同一个类别里的四条人为教学记录写成(1,1)、(2,3)、(3,2)、(4,4)，数值均无量纲。一个 <strong>vector（向量）</strong>保存一条记录的有序特征；<strong>matrix（矩阵）</strong>则把很多数字按行列组织起来。</p>
+<div class="arithmatex">\[X=\begin{pmatrix}1&amp;1\\2&amp;3\\3&amp;2\\4&amp;4\end{pmatrix}\in\mathbb R^{4\times2},
+\qquad \mathbf{x}_2=\begin{pmatrix}2\\3\end{pmatrix}\in\mathbb R^2.\]</div>
+<p>X有4行、2列，写成4×2，顺序是“行数×列数”。第2行是一条记录；数学里把它单独拿出时，常写成竖着的 <strong>column vector（列向量）</strong>。ℝ²表示两个实数构成的向量空间，此处只需理解“有两个实数坐标”。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/003d8c59f07f557d.png" rel="noopener" target="_blank"><img alt="四行两列的数据表与第二条记录对应的列向量" decoding="async" loading="lazy" src="../assets/003d8c59f07f557d.png"/></a></p>
+<p><em>金色行是第2条记录。按行存样本和把单条样本写成列向量是两种展示约定，不是不同的数据。别把“第2行”和“第2个特征列”交换。</em></p>
+<p>上标T表示 <strong>transpose（转置）</strong>，把行列互换。例如x₂ᵀ=(2,3)是1×2，Xᵀ是2×4。它不是平方，也不是把数值倒过来。写Xᵢⱼ时，下标i标第几行、j标第几列，因此X₂₁=2、X₂₂=3。</p>
+<p><a id="matrix-products"></a></p>
+<h3 id="52">5.2 乘法的每一格，都有明确算法</h3>
+<p>两个长度相同的向量可以做 <strong>dot product（点积、内积）</strong>：对应位置相乘，再求和。令u=(2,3)ᵀ、v=(4,1)ᵀ：</p>
+<div class="arithmatex">\[\mathbf{u}^T\mathbf{v}=2\times4+3\times1=11.\]</div>
+<p>这是1×2乘2×1，结果为1×1，即一个数。反过来u uᵀ是2×1乘1×2，得到2×2的 <strong>outer product（外积）</strong>：</p>
+<div class="arithmatex">\[\mathbf{u}\mathbf{u}^T=
+\begin{pmatrix}2\times2&amp;2\times3\\3\times2&amp;3\times3\end{pmatrix}
+=\begin{pmatrix}4&amp;6\\6&amp;9\end{pmatrix}.\]</div>
+<p>顺序变了，结果类型都变了。不要把转置当成可以随手擦掉的装饰。</p>
+<p>对一般矩阵，(m×n)乘(n×k)得到(m×k)；中间的n必须相同。输出第i行第j列，是左矩阵第i行与右矩阵第j列的点积。</p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：A=[[2,1],[0,1]]，x=(2,3)ᵀ。求Ax，说明每个输出来自哪里。<br/>
+English question: Let A=[[2,1],[0,1]] and x=(2,3)ᵀ. Compute Ax and explain the two output entries.</p>
+<p>第一行[2,1]与x相乘，得到2×2+1×3=7；第二行[0,1]与x相乘，得到0×2+1×3=3：</p>
+<div class="arithmatex">\[A\mathbf{x}=\begin{pmatrix}7\\3\end{pmatrix}.\]</div>
+<p><strong>English answer:</strong> The result is (7,3)ᵀ. Each output is a row of A dotted with the input vector.</p>
+<p>如果要对X的4条按行记录都应用同一个A，写XAᵀ，得到仍为4×2的结果；不能把按列写的Ax原样套成AX，因为A的2列对不上X的4行。代码里NumPy的<code>@</code>表示矩阵乘法，<code>*</code>通常表示逐元素乘法，读教师代码时必须区别。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#gaussian-code">继续读协方差估计代码</a>。</p>
+<p><a id="mean-variance"></a></p>
+<h3 id="53">5.3 平均数告诉你中心，方差告诉你散开多少</h3>
+<p>先回到一维。三个教学长度为2、4、6 cm，<strong>mean（均值）</strong>为(2+4+6)/3=4 cm。相对均值的偏差是−2、0、2 cm；直接相加正负抵消，无法表达“散得有多开”。</p>
+<p>先把偏差平方，再取平均，就得到这里采用的经验 <strong>variance（方差）</strong>：</p>
+<div class="arithmatex">\[\bar x=\frac1N\sum_{i=1}^N x_i,\qquad
+v=\frac1N\sum_{i=1}^N(x_i-\bar x)^2.\]</div>
+<p>N是观测数，x̄表示样本均值。代入得到v=(4+0+4)/3=8/3 cm²。<strong>Standard deviation（标准差）</strong>是方差的平方根，s=√(8/3)≈1.633 cm，单位回到原长度单位。平方根取非负值。</p>
+<p>这里分母是N，方便衔接本讲高斯MLE。另一种常见样本方差使用N−1，本例会得到4 cm²；它针对无偏估计的性质，不是可以不加说明地随意互换的写法。基础部分先固定N约定，原课代码的差异已在Lecture注明。</p>
+<p>如果所有值都一样，方差为0；如果全部读数一起加100，均值加100而每个偏差不变，方差不变；如果全部读数乘3，偏差乘3，方差乘9、标准差乘3。这些检查比只看公式更容易发现单位或平方写错。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#observation">继续理解高斯分布的宽度</a> · <a href="../CS5489/Lecture02.html#gaussian-mle">继续估计均值与方差</a>。</p>
+<p><a id="covariance"></a></p>
+<h3 id="54">5.4 两个特征一起动，怎样记账？</h3>
+<p>回到四条二维记录。两列均值都为2.5，先减去各列自己的均值：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>记录</th>
+<th style="text-align: right;">第一维偏差</th>
+<th style="text-align: right;">第二维偏差</th>
+<th style="text-align: right;">偏差乘积</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(1,1)</td>
+<td style="text-align: right;">−1.5</td>
+<td style="text-align: right;">−1.5</td>
+<td style="text-align: right;">2.25</td>
+</tr>
+<tr>
+<td>(2,3)</td>
+<td style="text-align: right;">−0.5</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">−0.25</td>
+</tr>
+<tr>
+<td>(3,2)</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">−0.5</td>
+<td style="text-align: right;">−0.25</td>
+</tr>
+<tr>
+<td>(4,4)</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">2.25</td>
+</tr>
+</tbody>
+</table></div>
+<p>两个特征都高于各自均值、或都低于各自均值，乘积为正；一个高一个低，乘积为负。把这些乘积平均，得到 <strong>covariance（协方差）</strong>：</p>
+<div class="arithmatex">\[s_{12}=\frac14(2.25-0.25-0.25+2.25)=1.\]</div>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/56646d7447dc56d6.png" rel="noopener" target="_blank"><img alt="四个教学数据点与均值交叉线，展示同向和反向偏差" decoding="async" loading="lazy" src="../assets/56646d7447dc56d6.png"/></a></p>
+<p><em>看均值交叉线把平面分成的四块：(1,1)、(4,4)贡献正乘积；(2,3)、(3,2)贡献负乘积。最后是所有偏差乘积的平均，不是只挑最像直线的两个点。这里四点是同一类别内部的教学记录。</em></p>
+<p>每列自身的方差都为(2.25+0.25+0.25+2.25)/4=1.25。把它们与协方差排进矩阵：</p>
+<div class="arithmatex">\[\hat\Sigma=\begin{pmatrix}1.25&amp;1\\1&amp;1.25\end{pmatrix}.\]</div>
+<p>对角线比较一个特征与它自己，所以是方差；非对角线比较不同特征，所以是协方差。它是对称的：先乘第一维再乘第二维，与反过来相同。这里Σ是矩阵名称，和带上下限的求和符号∑须按上下文区分。</p>
+<p>刚学过的外积能一次记下全部偏差乘积。把第i条记录减均值得到列向量dᵢ=xᵢ−μ̂，则</p>
+<div class="arithmatex">\[\hat\Sigma=\frac1N\sum_{i=1}^N\mathbf{d}_i\mathbf{d}_i^T.\]</div>
+<p>例如第一条的d₁=(−1.5,−1.5)ᵀ，外积四格都是2.25；第二条d₂=(−0.5,0.5)ᵀ，外积对角线为0.25、非对角线为−0.25。四个矩阵逐格相加再除以4，就得到上面的结果。这正是原课协方差估计式的含义。</p>
+<p>协方差的单位是两个特征单位的乘积，改单位会改变数值。<strong>Correlation（相关系数）</strong>用两个标准差作归一化：当两者都非零时，r=s₁₂/(s₁s₂)。本例r=1/1.25=0.8。正相关描述一起变化的趋势，不能证明“第一项导致第二项”。</p>
+<p>零协方差通常也不足以推出独立。比如一个变量X在−1、0、1上等可能取值，令Y=X²，二者协方差为0，但知道X就完全知道Y。它们显然不独立。联合高斯模型下，零协方差可以推出相应独立；这是带模型条件的结论。有限样本算到一个接近0的数，也不能单独证明真实分布就是这个模型。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#full-gaussian">继续理解完整协方差</a>。</p>
+<h3 id="55">5.5 从共同变化到椭圆</h3>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/414e4e8415f5302b.png" rel="noopener" target="_blank"><img alt="复用老师四个协方差矩阵的等密度轮廓图" decoding="async" loading="lazy" src="../assets/414e4e8415f5302b.png"/></a></p>
+<p><em>复用已核查的Lecture2b cell36矩阵图：均值零、两维方差都为1，非对角元分别0、0.5、0.9、−0.9。正值让椭圆朝一起增大的方向倾斜，负值让它朝一增一减的方向倾斜。轮廓对应马氏距离平方4，不标成“包含95%概率”。</em></p>
+<p>这张图不要求你先会计算椭圆。先看同样的横纵波动范围，如何因为“是否一起变化”而形成不同形状。课堂中需要在每个类别内部估计这个形状，不能把所有类别混起来算一次，就当作每个类别的关系。</p>
+<p><a id="inverse-determinant"></a></p>
+<h3 id="56">5.6 逆矩阵与行列式：能否倒回去，面积怎样变？</h3>
+<p>之前A把x=(2,3)ᵀ变成了(7,3)ᵀ。若能从结果唯一恢复原输入，这个反向操作可用 <strong>inverse matrix（逆矩阵）</strong>A⁻¹表示。单位矩阵I只保留原向量，A⁻¹A=I：</p>
+<div class="arithmatex">\[I=\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix},\qquad
+A^{-1}=\begin{pmatrix}1/2&amp;-1/2\\0&amp;1\end{pmatrix}.\]</div>
+<p>用它恢复：(7/2−3/2,3)ᵀ=(2,3)ᵀ。矩阵的逆不是把每个元素分别倒数；那样还会在0的位置遇到除以0。</p>
+<p>对一个2×2矩阵A=[[a,b],[c,d]]，<strong>determinant（行列式）</strong>为det(A)=ad−bc。若它非零，可以用</p>
+<div class="arithmatex">\[A^{-1}=\frac1{ad-bc}\begin{pmatrix}d&amp;-b\\-c&amp;a\end{pmatrix}.\]</div>
+<p>本例det(A)=2。若det(A)=0，就没有这种通常的逆；例如[[1,1],[2,2]]把输出第二项永远变成第一项的两倍，许多不同输入被压到同一条线上，信息无法唯一恢复。不能把“逆不存在”处理成“逆矩阵是零”。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/c619d834a7ab68be.png" rel="noopener" target="_blank"><img alt="单位正方形经过矩阵A变换后成为面积为2的平行四边形" decoding="async" loading="lazy" src="../assets/c619d834a7ab68be.png"/></a></p>
+<p><em>上图单位正方形面积1，下图变换后的平行四边形面积2。两图坐标范围和纵横比例相同。|det(A)|给出面积缩放倍数；负行列式还表示方向翻转，但面积倍数取绝对值。</em></p>
+<p>把方形四个顶点分别乘A，就得到(0,0)、(2,0)、(3,1)、(1,1)。底长2、高1，面积为2，和行列式计算相互核对。这里坐标无量纲。</p>
+<p>回到Lecture 2：<a href="../CS5489/Lecture02.html#full-gaussian">继续完整高斯的逆矩阵与行列式</a>。</p>
+<p><a id="gaussian-bridge"></a></p>
+<h3 id="57">5.7 回到高斯公式：先看形状，再算一项</h3>
+<p>原课的普通满维高斯密度要求协方差矩阵 <strong>symmetric positive definite（对称正定）</strong>。直观地说，每个非零方向都有正方差，没有把整片分布压扁成一条线。仅仅“某个矩阵可逆”不保证它是合法的协方差矩阵。重复特征或样本不足可能产生奇异协方差，原课会讨论正则化。</p>
+<p><strong>完整例题 / Worked example</strong><br/>
+中文题：无量纲偏差向量d=(1,1)ᵀ，Σ=[[1,0.5],[0.5,1]]。分步求dᵀΣ⁻¹d，并与Σ=I比较。<br/>
+English question: For the dimensionless deviation d=(1,1)ᵀ and Σ=[[1,0.5],[0.5,1]], compute dᵀΣ⁻¹d step by step and compare it with the identity-covariance case.</p>
+<ol>
+<li>先求行列式：1×1−0.5×0.5=0.75，非零。</li>
+<li>用2×2逆公式，Σ⁻¹=(1/0.75)[[1,−0.5],[−0.5,1]]。</li>
+<li>先算Σ⁻¹d=(2/3,2/3)ᵀ，结果仍是2×1。</li>
+<li>再用dᵀ点乘，得到1×2/3+1×2/3=4/3；若Σ=I，则为1²+1²=2。</li>
+</ol>
+<p><strong>English answer:</strong> det(Σ)=0.75, Σ⁻¹d=(2/3,2/3)ᵀ, and dᵀΣ⁻¹d=4/3. Identity covariance gives 2. The positive-correlation model penalizes this joint deviation less.</p>
+<p>这叫 <strong>squared Mahalanobis distance（马氏距离的平方）</strong>。偏差在共同增大的方向时，正相关模型觉得它不那么意外；但分类还要考虑分布宽度与先验，完整决策继续回Lecture学习。</p>
+<p>最后注意面积缩放的平方根：上面|det(A)|是坐标变换x=Az的面积倍数；高斯协方差记录的是平方后的变化量。若两个方向的标准差分别2、1，协方差是diag(4,1)，行列式为4，但等标准距离椭圆的面积相对单位圆只扩大2倍，即√det(Σ)。一般写成Σ=AAᵀ时，也有|det(A)|=√det(Σ)。因此高斯密度的归一化项包含√det(Σ)，不能直接把det(Σ)当成椭圆面积。</p>
+<p><strong>独立变式 / Try</strong><br/>
+中文题：① u=(1,2)ᵀ、v=(3,4)ᵀ，求uᵀv。② B=diag(3,2)，求B的行列式、逆矩阵，以及把(1,2)ᵀ变换后再恢复的结果。③ 四条同类教学记录为(0,0)、(0,2)、(2,0)、(2,2)，按分母N求均值与协方差；能否仅凭经验协方差为0就断言真实生成过程独立？<br/>
+English question: (1) Find uᵀv for u=(1,2)ᵀ and v=(3,4)ᵀ. (2) For B=diag(3,2), find its determinant and inverse, transform (1,2)ᵀ and recover the original vector. (3) For four same-class teaching records (0,0), (0,2), (2,0), (2,2), compute the mean and covariance using denominator N. Does zero empirical covariance alone establish independence of the true generating process?</p>
+<details>
+<summary>展开答案 / Show answer</summary>
+<p>① 点积3+8=11。② det(B)=6，B⁻¹=diag(1/3,1/2)；变换为(3,4)ᵀ，再恢复为(1,2)ᵀ。③ 均值(1,1)ᵀ，两列偏差平方均值都为1，交叉乘积1−1−1+1=0，所以协方差为I。仅凭有限样本的零协方差不足以证明真实过程独立，还需要分布与抽样方面的依据。<br/>
+<strong>English answer:</strong> (1) The dot product is 11. (2) det(B)=6, B⁻¹=diag(1/3,1/2), the transformed vector is (3,4)ᵀ and the recovered vector is (1,2)ᵀ. (3) The mean is (1,1)ᵀ and the covariance is I. Zero empirical covariance alone does not establish independence of the true process.</p>
+</details>
+<p><strong>English takeaway:</strong> Track matrix shapes before calculating. Covariance averages products of centered features, and its diagonal contains variances. Inverses require appropriate conditions; determinants describe scaling. Gaussian density uses a positive-definite covariance and a square-root determinant normalization.</p>
+<p><strong>回到课堂：</strong> <a href="../CS5489/Lecture01.html#arrays">Lecture1：数组</a> · <a href="../CS5489/Tutorial03.html#data-input">Tutorial3：图像矩阵</a> · <a href="../CS5489/Lecture02.html#gaussian-nb">两项测量与Gaussian NB</a> · <a href="../CS5489/Lecture02.html#gaussian-mle">高斯均值与方差</a> · <a href="../CS5489/Lecture02.html#full-gaussian">完整高斯的距离与宽度</a> · <a href="../CS5489/Lecture02.html#gaussian-code">协方差估计与代码</a> · <a href="#foundation-nav">补课导航</a></p>
+<p><a id="combinations"></a></p>
+<h2 id="6-combinations-and-binomial-probability">6. Combinations and binomial probability｜先列小名单，再写大公式</h2>
+<p>咖啡店里有甲、乙、丙三个人，每人可能正在上传，也可能暂时安静。“恰好两个人上传”包括甲乙、甲丙、乙丙三种。甲乙和乙甲是同一批人，没有先后次序，这就是组合（combination）。它与“谁先谁后”的排列不同。</p>
+<p>从n个人中选k个人：先按顺序选有 <span class="arithmatex">\(n(n-1)\cdots(n-k+1)\)</span> 种，但同一组k个人的顺序有 <span class="arithmatex">\(k!=k(k-1)\cdots1\)</span> 种，除掉重复：</p>
+<div class="arithmatex">\[\binom nk=\frac{n!}{k!(n-k)!},\qquad 0!=1,\quad0\le k\le n.\]</div>
+<p>例如 <span class="arithmatex">\(\binom32=3\times2/(2\times1)=3\)</span>。<span class="arithmatex">\(\binom n0=1\)</span>：谁也不选，是一种空集合，不是没有可能情况。阶乘只是一种连乘记号，不需要先学一套新的运算。</p>
+<p>若每人<strong>独立</strong>以概率p活跃，特定状态“甲乙活跃、丙安静”的概率为 <span class="arithmatex">\(p\times p\times(1-p)\)</span>。恰两人活跃要把三个互不重叠的状态相加，得到 <span class="arithmatex">\(3p^2(1-p)\)</span>。一般地，活跃人数 <span class="arithmatex">\(K\sim\operatorname{Binomial}(n,p)\)</span>：</p>
+<div class="arithmatex">\[P(K=k)=\binom nk p^k(1-p)^{n-k}.\]</div>
+<p>前项数“有几种人选”，后项算“每种人选有多可能”。独立且相同p是这个公式的条件。如果大家同时下课一起上传，独立假设可能失效，不能只因为有n个人就套二项分布。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/e232c5ee751886a2.png" rel="noopener" target="_blank"><img alt="Three-user probabilities for different activity rates" decoding="async" loading="lazy" src="../assets/e232c5ee751886a2.png"/></a></p>
+<p>看图：总人数相同，p变大时概率移向右侧；每组柱的总和仍是1。不是八种状态必然等概率，只有p=0.5时每个具体开关状态才都等概率。</p>
+<p><strong>完整算例（补充）</strong>：三人、p=0.2，一条链路最多同时容纳两人的即时需求。超额恰在三人全活跃，概率 <span class="arithmatex">\(0.2^3=0.008\)</span>。恰两人概率 <span class="arithmatex">\(3(0.2)^2(0.8)=0.096\)</span>。两人用满容量不等于超额，题目若问“至少两人”则需相加得0.104。</p>
+<p><strong>自查/变式 / Check and transfer:</strong> 四个独立用户各以0.5概率活跃，容量只容纳两人，超额概率？ / Four independent users are active with probability 0.5 each. Capacity supports two users. What is the probability of excess demand?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>恰3人有4种，恰4人有1种，每种状态概率1/16。超额概率 <span class="arithmatex">\((4+1)/16=5/16=0.3125\)</span>。 / Excess demand means 3 or 4 active users, giving (4+1)/16=0.3125. 不要把正好2人算进去。</p>
+</details>
+<p><strong>English takeaway:</strong> Count the possible subsets, then multiply by the probability of each independent state. Capacity exceeded means strictly more than capacity.</p>
+<p>返回：<a href="../CS5222/Chapter01.html#switching">CS5222 Chapter1：共享链路</a> · <a href="../CS5222/Tutorial01.html#q4">Tutorial1 Q4</a> · <a href="#foundation-nav">导航</a></p>
+<p><a id="projection"></a></p>
+<h2 id="7-length-orthogonality-and-projection">7. Length, orthogonality and projection｜沿一个方向走，剩下多少走不到</h2>
+<p>在坐标平面走到(3,4)：横着走3、竖着走4，直线距离是5。向量 <span class="arithmatex">\(v=(v_1,v_2)\)</span> 的欧氏长度（Euclidean norm）由勾股定理得到 <span class="arithmatex">\(\|v\|=\sqrt{v_1^2+v_2^2}\)</span>；更多维时把所有分量平方相加再开方。不能把长度误写成分量简单相加，例如(3,−3)不是零长度。</p>
+<p>想只保留方向，就把非零v除以长度：<span class="arithmatex">\(q=v/\|v\|\)</span>，于是 <span class="arithmatex">\(\|q\|=1\)</span>。q叫单位向量。零向量没有这种归一化方向，代码必须处理这个情况。</p>
+<p>点积 <span class="arithmatex">\(u^Tv=\sum_j u_jv_j\)</span> 衡量两个方向的配合。非零u、v垂直时点积0，称正交（orthogonal）；正交归一（orthonormal）还要求每个长度1。各自长度1不保证互相垂直，两个相同的单位向量显然仍挤在同一条路上。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/f47bc0698f3613f0.png" rel="noopener" target="_blank"><img alt="Projection and the remaining perpendicular component" decoding="async" loading="lazy" src="../assets/f47bc0698f3613f0.png"/></a></p>
+<p>图中 <span class="arithmatex">\(u=(1,0),v=(2,1)\)</span>。沿u方向只能走到横轴；离v最近的横轴点是p=(2,0)，剩下r=(0,1)垂直u。p叫v在u方向的投影（projection）。类比手电筒投影时要注意：这里是垂直投影，不是任意灯光角度的影子。</p>
+<p>怎么计算？沿u方向的点可写成 <span class="arithmatex">\(p=au\)</span>。要求余下 <span class="arithmatex">\(r=v-au\)</span> 与u垂直：</p>
+<div class="arithmatex">\[u^T(v-au)=0\ \Rightarrow\ u^Tv-a(u^Tu)=0\ \Rightarrow\ a=\frac{u^Tv}{u^Tu}.\]</div>
+<p>所以 <span class="arithmatex">\(p=(u^Tv)/(u^Tu)\,u\)</span>。如果u已经归一化为q，分母=1，写成 <span class="arithmatex">\((q^Tv)q\)</span>。向量维度必须相同，u必须非零。这个分母是长度平方，不是长度。</p>
+<p><strong>完整算例（补充）</strong>：u=(1,1)、v=(3,1)。点积4，u长度平方2；a=2，p=(2,2)，r=(1,−1)。检查：p+r=v，uᵀr=0，<span class="arithmatex">\(\|v\|^2=10=8+2=\|p\|^2+\|r\|^2\)</span>。我们同时得到“方向成分”和“不在这个方向里的信息”。</p>
+<p>一组向量所有线性组合形成的集合叫张成空间（span）。一条非零向量张成过原点的一条线，两条不共线向量能张成整个二维平面。Gram–Schmidt每次减去已有正交方向的投影，再将余下方向归一化；若余量为0，说明新向量没带来新方向。算法正文在Tutorial1，这里先把“减掉的是什么”讲明白。</p>
+<p><strong>自查/变式 / Check and transfer:</strong> 将v=(4,2)投影到u=(1,−1)，求p、r并检查垂直。 / Project v=(4,2) onto u=(1,−1), compute p and r, and verify orthogonality.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p><span class="arithmatex">\(u^Tv=2,u^Tu=2\)</span>，a=1，p=(1,−1)，r=(3,3)，uᵀr=3−3=0。 / The projection is (1,−1), the residual is (3,3), and their direction check gives zero. r长度不是0，v不在u张成的直线上。</p>
+</details>
+<p><strong>English takeaway:</strong> Projection extracts the component along an existing direction. Subtracting it leaves a perpendicular residual; normalization alone does not create orthogonality.</p>
+<p>返回：<a href="../CS5489/Tutorial01.html#gram-schmidt">Tutorial1：Gram–Schmidt</a> · <a href="../CS5489/Lecture03.html#svm">Lecture3：间隔</a> · <a href="#foundation-nav">导航</a></p>
+<p><a id="rank-pseudoinverse"></a></p>
+<h2 id="8-rank-and-pseudoinverse">8. Rank and pseudoinverse｜两条重复信息，不会变成两条独立线索</h2>
+<p>假设表格记录“面积（平方米）”和“面积（平方厘米）”。第二列永远是第一列的10000倍，没有提供第二种独立信息。矩阵的秩（rank）数的是独立方向，不是看起来有多少列。</p>
+<p>先用更小的矩阵 <span class="arithmatex">\(A=\begin{bmatrix}1&amp;1\\2&amp;2\end{bmatrix}\)</span>。它的两列相同，秩=1。求 <span class="arithmatex">\(Aw=y\)</span>，若y=(3,6)，条件只有 <span class="arithmatex">\(w_1+w_2=3\)</span>；(3,0)、(1,2)、(1.5,1.5)都能解。没有唯一逆能告诉我们“这3究竟分给谁”。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/507e6c8c38239103.png" rel="noopener" target="_blank"><img alt="Rank and least squares geometry" decoding="async" loading="lazy" src="../assets/507e6c8c38239103.png"/></a></p>
+<p>图左把两个重复列画在同一方向，图右将无法精确拟合的y投影到列空间。看不懂“列空间”时，可把它读成“把A各列加权相加所能到达的全部地方”。</p>
+<p>再把y改为(3,5)，现在第一行希望和为3，第二行希望和为2.5，两者不能都满足。最小二乘不再问“有没有精确解”，而问“哪一个可达向量离y最近”。设s=w₁+w₂，误差</p>
+<div class="arithmatex">\[E(s)=(3-s)^2+(5-2s)^2=5s^2-26s+34.\]</div>
+<p>求导 <span class="arithmatex">\(10s-26=0\)</span>，得s=2.6，预测(2.6,5.2)，残差(0.4,−0.2)。残差与列(1,2)点积0，正好与前面的投影衔接。最优系数仍不唯一；伪逆（pseudoinverse）选其中长度最小的解w=(1.3,1.3)。</p>
+<p>为什么平均分最短？固定 <span class="arithmatex">\(w_1+w_2=s\)</span>，令 <span class="arithmatex">\(w_1=s/2+t,w_2=s/2-t\)</span>，长度平方为 <span class="arithmatex">\(s^2/2+2t^2\)</span>，在t=0最小。伪逆不是“给不存在的普通逆编一个值”，而是约定一个满足最小二乘/最小范数条件的解，记为 <span class="arithmatex">\(A^+\)</span>。</p>
+<pre><code class="language-python">import numpy as np
+A = np.array([[1.,1.],[2.,2.]])
+y = np.array([3.,5.])
+w, residuals, rank, singular_values = np.linalg.lstsq(A, y, rcond=None)
+# w=[1.3,1.3], rank=1; compute y-A@w directly to inspect residuals.
+</code></pre>
+<p>接近重复而非完全重复时，矩阵可能可逆却病态（ill-conditioned）：很小数据变化造成很大系数变化。可逆不是“数值稳定”的同义词。Ridge在被惩罚方向加正数，限制不稳定权重；具体目标在Lecture4讲。</p>
+<p><strong>自查/变式 / Check and transfer:</strong> 同一个A，y=(4,8)。最小范数解、预测和残差？ / For the same A and y=(4,8), find the minimum-norm solution, prediction and residual.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>w=(2,2)，预测(4,8)，残差0；仍有其他精确解，但其长度更大。 / w=(2,2), prediction=(4,8), zero residual; other exact solutions have larger norm.</p>
+</details>
+<p><strong>English takeaway:</strong> Rank counts independent directions. A pseudoinverse provides the minimum-norm least-squares solution even when an ordinary inverse does not exist.</p>
+<p>返回：<a href="../CS5489/Lecture04.html#ols">Lecture4：OLS矩阵解</a> · <a href="../CS5489/Lecture01.html#linear-algebra">Lecture1：线性代数</a> · <a href="#foundation-nav">导航</a></p>
+<p><a id="optimization"></a></p>
+<h2 id="9-gradients-and-constraints">9. Gradients and constraints｜下山之前，先看哪里允许走</h2>
+<p>前面一元导数回答“x多一点，函数怎么变”。现在同时有两个参数，代价 <span class="arithmatex">\(E(w_1,w_2)=w_1^2+2w_2^2\)</span>。固定w₂，对w₁求导得2w₁；固定w₁，对w₂求导得4w₂。把两个偏导按变量顺序装成向量：</p>
+<div class="arithmatex">\[\nabla E=(2w_1,4w_2)^T.\]</div>
+<p>这个向量叫梯度（gradient）。在(1,1)，梯度(2,4)：往w₂方向多走一点，局部增加代价更快。负梯度是局部最陡下降方向（欧氏度量），梯度下降一次 <span class="arithmatex">\(w\leftarrow w-\eta\nabla E\)</span>。eta=0.1时(1,1)变(0.8,0.6)，代价从3降为1.36。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/876ac2164fa31767.png" rel="noopener" target="_blank"><img alt="Gradient step and a constrained minimum" decoding="async" loading="lazy" src="../assets/876ac2164fa31767.png"/></a></p>
+<p>图左沿椭圆等高线观察一次下降，箭头不是保证“无论走多远都下坡”。eta=1时更新到(−1,−3)，代价37，反而冲过了谷底。学习率决定步长，需要检查目标是否合理下降。</p>
+<p>有约束时，还要看允许去哪里。想最小化 <span class="arithmatex">\(f(x)=x^2\)</span>，但规定 <span class="arithmatex">\(x\ge1\)</span>。无约束最低点0去不了，可行集合（feasible set）是[1,∞)，最小值在边界x=1。这里 f′(1)=2，不是0；这解释了为什么不能对每个受限问题只背“令导数为0”。</p>
+<p>把限制写成 <span class="arithmatex">\(g(x)=x-1\ge0\)</span>，引入非负乘子lambda，写拉格朗日函数 <span class="arithmatex">\(L(x,\lambda)=f(x)-\lambda g(x)\)</span>。在解处检查四件事：</p>
+<ol>
+<li>可行：g(x)≥0；</li>
+<li>乘子：lambda≥0；</li>
+<li>对原变量的驻点：f′(x)−lambda g′(x)=0；</li>
+<li>互补松弛：lambda g(x)=0。</li>
+</ol>
+<p>本例x=1使g=0，驻点式2−lambda=0给lambda=2，四件事都满足。若限制改成 <span class="arithmatex">\(x\ge-1\)</span>，无约束最小点0已可行，g(0)=1&gt;0，lambda=0，约束没挡路。</p>
+<p>这些是适当条件下的KKT条件，不是任意非凸问题的全局最优证明。互补松弛只要求乘积0：lambda&gt;0推出g=0，g&gt;0推出lambda=0；g=0不保证lambda&gt;0。比如最小化x²且x≥0，解x=0恰在边界，但lambda=0。这正是SVM“在margin上却可能零乘子”的入门反例。</p>
+<p><strong>自查/变式 / Check and transfer:</strong> 最小化 <span class="arithmatex">\((x-3)^2\)</span> 且x≤2，求解与乘子。先统一写g≥0。 / Minimize (x−3)² subject to x≤2. Write g≥0 and find the solution and multiplier.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>g=2−x≥0，L=(x−3)²−lambda(2−x)。可行范围内最接近3的是x=2，驻点式 <span class="arithmatex">\(2(x-3)+\lambda=0\)</span> 给lambda=2。 / x=2, lambda=2, with g=2−x and L=(x−3)²−lambda(2−x). 注意g′=−1，所以lambda在导数里带加号。</p>
+</details>
+<p><strong>English takeaway:</strong> A gradient collects partial derivatives. Under constraints, the best feasible point may lie on a boundary with a nonzero objective gradient; KKT conditions track this interaction.</p>
+<p>返回：<a href="../CS5489/Lecture03.html#logistic">Lecture3：Logistic Regression</a> · <a href="../CS5489/Lecture03.html#dual">Lecture3：SVM对偶</a> · <a href="../CS5489/Lecture04.html#ols">Lecture4：OLS</a> · <a href="#foundation-nav">导航</a></p>
+<p><a id="sources"></a></p>
+<h2 id="_2">这些补课从哪里来，学到哪里为止？</h2>
+<p>这是本地基础讲义的作者源，HTML为生成阅读版。原五个专题服务Lecture 2，新增四节服务当前其余Lecture/Tutorial；例子和推导属于整理后的补充，不是教师额外公布的考核范围。没有新增记忆卡。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>专题</th>
+<th>当前课程需要它的位置</th>
+<th>复用与补充</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>符号、函数、数组</td>
+<td>Lecture2a cells4–17；Lecture2b cells6–15</td>
+<td>复用既有vectors-matrices基础的形状解释；水箱和符号展开为教学补充</td>
+</tr>
+<tr>
+<td>概率与密度</td>
+<td>Lecture2a cells9–25、32–40</td>
+<td>展开既有probability基础；人数表、等待时间与标准正态面积是教学补充</td>
+</tr>
+<tr>
+<td>指数与对数</td>
+<td>Lecture2a cells13–15、41–47；Lecture2b cells89–92</td>
+<td>复用powers-logs的两模型概率比较与定义域说明，新增曲线和推理步骤</td>
+</tr>
+<tr>
+<td>导数与极值</td>
+<td>Lecture2a cells15、26–28</td>
+<td>复用derivatives的差商、链式法则、偏导示例；新增规则解释与似然图</td>
+</tr>
+<tr>
+<td>矩阵与协方差</td>
+<td>Lecture2b cells33–44</td>
+<td>复用vectors-matrices/linear-algebra的约定及原cell36矩阵图；四条记录、矩阵操作和变式为教学补充</td>
+</tr>
+<tr>
+<td>组合与二项概率</td>
+<td>CS5222 Chapter1统计复用、Tutorial1 Q4</td>
+<td>从3用户列举到n用户；教学补充，条件明确</td>
+</tr>
+<tr>
+<td>长度与投影</td>
+<td>CS5489 Tutorial1 cells35–45、Lecture3b cells27–36</td>
+<td>衔接原Gram–Schmidt和margin，算法留在课程正文</td>
+</tr>
+<tr>
+<td>秩与伪逆</td>
+<td>Lecture4a cells19–21、43–49</td>
+<td>展开逆不存在与最小范数的具体例子</td>
+</tr>
+<tr>
+<td>梯度与约束</td>
+<td>Lecture3a cell52、Lecture3b cells37–44、SVM.pdf pp2–4</td>
+<td>展开原课求导与KKT前提，不代替SVM推导</td>
+</tr>
+</tbody>
+</table></div>
+<p>原件：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2a</span>、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2b</span>。复用来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">既有基础主稿</span>。所有单元号从原Notebook第1个单元起算，不是In[n]执行编号。</p>
+<p>绘图的输入、参数与来源在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">figure-data.json</span>，可复现脚本为<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">build_figures.py</span>。本轮数学复核与显示证据见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">检查记录</span>。图中英文坐标保持与课堂术语一致，中文读图说明在图旁。</p>
+<p>新增四节的图与独立复算见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extend_figures.py</span> 和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extra-figure-data.json</span>，旧图与上一轮证据保留。学习网络单位和报文读法请用<a href="NetworkBasics.html">Network Basics</a>。</p>
+<p>掌握需要的基础后，回到相应课程完成老师的模型、推导和任务。更完整的微积分、线性代数证明与优化方法，等后续课程真正用到时再补。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

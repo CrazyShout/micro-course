@@ -1,0 +1,95 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 2 · Delay and traceroute｜先定义计时事件，再按顺序相加 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="tutorial-2-delay-and-traceroute">Tutorial 2 · Delay and traceroute｜先定义计时事件，再按顺序相加</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=26">A4 打印版 · 第 26–32 页</a>　图可点击放大。</p>
+<p><a href="Chapter01.html#delay">Chapter 1</a> · <a href="index.html">课程目录</a> · <a href="Tutorial01.html">Tutorial 1</a> · <a href="Assignment01.html">Assignment 1</a></p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原题PDF（3页）</span> 与 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">教师解答PPT（13页）</span>，按Q1–5讲解。难点是计时边界与转发模型；优先级均为核心必会，Q1/Q3中等偏难，Q2/Q4中等，Q5需实际观察与解释。依据是本次正式Tutorial，不代表考试频率。</p>
+<p><strong>基础复习（可跳过）：</strong> <a href="../foundations/NetworkBasics.html#units">单位</a>、<a href="../foundations/NetworkBasics.html#timeline">首位与末位时间轴</a>。所有计算约定Mbps=10⁶bit/s、kbps=10³bit/s。</p>
+<p><a id="q1"></a></p>
+<h2 id="q1-voip">Q1. VoIP｜语音先攒成一包，还要算这段等待</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/f62341ad046792d8.png" rel="noopener" target="_blank"><img alt="Original Tutorial2 page1" decoding="async" loading="lazy" src="../assets/f62341ad046792d8.png"/></a></p>
+<p><strong>完整条件 / Conditions:</strong> A以128kbps实时生成语音比特，每64byte成一包，收集完成立即发送；链路4Mbps、传播8ms，B收完整包后还原模拟语音。问生成一个bit到它被解码的时延。 / A generates voice at 128 kbps, groups it into 64-byte packets and immediately transmits each completed packet over a 4-Mbps link with 8-ms propagation. B decodes after receiving the complete packet. Find generation-to-decoding delay.</p>
+<p>先按包首位及连续流体近似计算：包长512bit；收集一包 <span class="arithmatex">\(512/128000=4\)</span>ms；把包送上链路 <span class="arithmatex">\(512/4000000=0.128\)</span>ms；传播8ms。首位从生成到可开始播放的延迟为 <strong>12.128ms，选D</strong>，与教师第5页结论一致。</p>
+<p>这里“任意一位”需要补清语义。一个包内越晚产生的bit等待成包越短；若问“该bit到达整包缓冲、可被读取”的延迟，数值随位次变化，约从12.128ms降到8.128ms。若接收端在包到齐后，<strong>按与源相同128kbps的节奏顺序恢复/播放语音</strong>，后面的bit在接收端也会多等相同位次时间，因此每个bit的生成到播放时延相同，都是12.128ms。教师“all bits”的说法应连着这个播放约定读。</p>
+<p>设第j位相对首位晚产生 <span class="arithmatex">\(\tau_j\)</span>，包到达时刻T=12.128ms；可读取延迟为T−τⱼ，顺序播放时刻为T+τⱼ，播放延迟则(T+τⱼ)−τⱼ=T。不用把两个不同问题硬合成一条无条件公式。</p>
+<p><strong>English answer:</strong> Under the instructor's packetization and source-rate sequential playout model, the delay is 4+0.128+8=12.128 ms for every bit. Complete-packet availability alone gives a position-dependent delay.</p>
+<p><strong>变式 / Transfer:</strong> 包改128byte，其他条件不变，首位/同速播放时延？ / Double packet size to 128 bytes, keeping all rates and propagation unchanged.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>8+0.256+8=16.256ms。 / 16.256 ms. 较大包减少每份数据的头部比例，但收集等待变长；本题没有给头长，不计算额外百分比。</p>
+</details>
+<p><a id="q2"></a></p>
+<h2 id="q2-three-store-and-forward-links">Q2. Three store-and-forward links｜每一跳的发送与传播都要数</h2>
+<p><strong>条件 / Conditions:</strong> 长L的包经三条链路，两台存储转发交换机；第i链路长dᵢ m、传播速度sᵢ m/s、发送速率Rᵢ bit/s，每台交换机处理时延dproc，无排队。 / A length-L packet crosses three store-and-forward links and two switches. Link i has length dᵢ, propagation speed sᵢ and rate Rᵢ; each switch adds dproc and there is no queueing.</p>
+<p>a 把事件从左到右排：链路1发送/传播 → 交换机1处理 → 链路2发送/传播 → 交换机2处理 → 链路3发送/传播。</p>
+<div class="arithmatex">\[d_{end}=\sum_{i=1}^3\frac L{R_i}+\sum_{i=1}^3\frac{d_i}{s_i}+2d_{proc}\quad\text{（选B）}.\]</div>
+<p>b 给定L=1500byte=12000bit，各R=2Mbps，各s=2.5×10⁸m/s，距离5000/4000/1000km，每交换机3ms：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>计算</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>三段发送</td>
+<td>每段12000/(2×10⁶)</td>
+<td>6+6+6ms</td>
+</tr>
+<tr>
+<td>三段传播</td>
+<td>每段先km→m再除s</td>
+<td>20+16+4ms</td>
+</tr>
+<tr>
+<td>两次处理</td>
+<td>2×3ms</td>
+<td>6ms</td>
+</tr>
+<tr>
+<td>总计</td>
+<td>18+40+6</td>
+<td><strong>64ms，选B</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>English answer:</strong> Sum the three serialization times, three propagation times and two processing times. The numerical total is 64 ms.</p>
+<p>这里包长L在公式中必须是bit；若直接使用1500需在分子明确乘8。处理是两台交换机，不是三条链路所以乘3。</p>
+<p><a id="q3"></a></p>
+<h2 id="q3-immediate-bit-forwarding">Q3. Immediate bit forwarding｜不用每个中间节点再等整包</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/e8fbc2de6d8cfbcc.png" rel="noopener" target="_blank"><img alt="Original Tutorial2 page2" decoding="async" loading="lazy" src="../assets/e8fbc2de6d8cfbcc.png"/></a></p>
+<p><strong>条件 / Conditions:</strong> 沿用Q2，R₁=R₂=R₃=R、dproc=0，无排队，中间节点每收到一bit立即转发，不等整包。 / Use the Q2 path, equal rates and zero processing; each bit is forwarded immediately with no whole-packet waiting or queueing.</p>
+<p>首位经过各传播段，末位相对首位只落后源端一次L/R。故总为 <span class="arithmatex">\(L/R+\sum_i d_i/s_i\)</span>。带Q2数字为6+20+16+4=<strong>46ms，选D</strong>，教师第8页相同。</p>
+<p>这不表示物理链路“传输时间消失”，而是各段的发送过程可以流水重叠，末位到达总时间只额外保留一次包序列长度。不同速率、实际cut-through启动/头部检查有其他限制；不要把这个理想模型直接当所有交换机行为。</p>
+<p><strong>English answer:</strong> Equal-rate immediate bit forwarding gives L/R plus all propagation delays, hence 46 ms. Serialization on successive links overlaps.</p>
+<p><strong>变式 / Transfer:</strong> 四条相同速率链路，每条传播2ms，源包发送3ms，即时转发和整包存储转发分别多久？ / Four equal-rate links each propagate for 2 ms; serialization takes 3 ms. Compare immediate bit forwarding with store-and-forward for one packet.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>即时3+4×2=11ms；存储转发4×3+4×2=20ms，忽略排队/处理。 / 11 ms versus 20 ms, with no queueing or processing.</p>
+</details>
+<p><a id="q4"></a></p>
+<h2 id="q4-queueing">Q4. Queueing｜只算轮到你之前的等待</h2>
+<p><strong>条件 / Conditions:</strong> 新包到达时，出口上一个1500byte包已发一半，还有4包等待，均1500byte，FIFO，R=2Mbps。求新包排队时延，再推广为包长L bit、当前包已发送x bit、另有n包排队。 / A new packet finds one equal packet half transmitted and four equal packets queued, FIFO, L=1500 bytes and R=2 Mbps. Find queueing delay, then generalize to x bits already transmitted and n waiting packets.</p>
+<p>前面剩4.5包，<span class="arithmatex">\(4.5\times12000/(2\times10^6)=0.027\)</span>s=<strong>27ms，选A</strong>。一般式为</p>
+<div class="arithmatex">\[d_{queue}=\frac{(L-x)+nL}R.\]</div>
+<p><strong>English answer:</strong> Queueing delay is 27 ms, or ((L−x)+nL)/R. It excludes transmission of the arriving packet itself.</p>
+<p>若问它<strong>完成发送</strong>的时间，则另加L/R；若問到目的地还要加传播及后续节点条件。若出口本来空闲，就不是这条“有一个正在发送包”的场景，等待为0。</p>
+<p><strong>变式 / Transfer:</strong> 同速同包长，当前包已发75%，队列前面还有2包，新包排队多久？ / The current packet is 75% transmitted and two packets are queued ahead. Find the new packet's queueing delay.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>2.25×6=13.5ms。 / 13.5 ms. 不是加上新包自己的6ms变成19.5ms。</p>
+</details>
+<p><a id="q5"></a></p>
+<h2 id="q5-traceroute">Q5. Traceroute｜把真实测量和推断分开写</h2>
+<p><strong>原任务 / Task:</strong> 对cityu.edu.hk运行traceroute，解释每列、星号和后跳RTT较小的原因。 / Run traceroute to cityu.edu.hk and explain its columns, asterisks, and non-monotonic RTTs.</p>
+<p>macOS可运行原命令 <code>traceroute cityu.edu.hk</code>。本轮为控制测量长度，实际用：</p>
+<pre><code class="language-sh">traceroute -n -m 12 -q 3 -w 1 cityu.edu.hk
+</code></pre>
+<p><code>-n</code>保留数值IP，<code>-m 12</code>最多12跳，<code>-q 3</code>每跳3次探测，<code>-w 1</code>每次最多等1秒。这些是本轮观察设置，不是系统默认或题目要求的固定数。真实输出与时间保存在 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">2026-09-23观察</span>，由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">observe_network.py</span> 获取，没有手写一条看起来漂亮的路由。</p>
+<p>每行第一项为TTL/hop编号，随后为响应地址和三次RTT（ms）；某次无及时响应显示<code>*</code>。地址识别的是响应接口，复杂网络里不保证完整暴露每一台中间设备。macOS常用UDP探测和ICMP响应；Windows <code>tracert</code>的实现细节不同，不应机械照搬命令选项。</p>
+<p>星号可以来自过滤、应答限速、探测/响应丢失、超时等。教师第12页强调防火墙是常见原因，但仅凭星号不能确定具体根因。后跳RTT小于前跳，可能因为不同时刻队列变化、回程路由不同、路由器处理探测优先级不同；RTT也不是沿途正向传播的逐段累加测量。</p>
+<p><strong>English answer:</strong> Columns identify probe hop, responding address and round-trip times. An asterisk means no response within the timeout. Different probes and return paths can produce non-monotonic RTTs.</p>
+<p><strong>本轮实际观察（2026-09-23 01:19，UTC+8）：</strong> 域名解析有两个地址，traceroute选用45.60.199.218；第1跳三个RTT约4.352/3.957/4.301ms，第7跳有星号，第11跳第三次升到192.365ms。在最多12跳内没有看到目的地址响应，故这不是完整路径。进程正常结束也不表示探测已到终点。同一跳有不同地址响应，不足以断言一条固定唯一线路。</p>
+<p>以上只记录本次次数/时间限制内的现象，不能把原课gaia→eurecom截图写成本机输出。更长观测需另记时间和参数；不将当前网络状态冒充永久事实。</p>
+<h2 id="_1">回查与巩固</h2>
+<p>原题p1=Q1/Q2，p2=Q3/Q4，p3=Q5。教师解答1–4为四类时延/车队背景（见Chapter1），5=Q1，6–7=Q2，8=Q3，9=Q4，10–11=traceroute课堂示例，12–13=Q5解释。全部已对应，原教师结论与本文补充条件分开。</p>
+<p>计算复核：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network-example-results.json</span>。复习可用<a href="../../cards.html#CS5222-N025">现有时延卡N025</a>与<a href="../../cards.html#CS5222-N071">原题卡N080</a>，根据本题错误位置挑“单位、时序、转发或排队”对应目标，而不把整道题机械再拆成一批新卡。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

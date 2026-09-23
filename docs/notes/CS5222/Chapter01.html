@@ -1,0 +1,348 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Chapter 1 · Introduction｜一条消息怎样穿过互联网 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="chapter-1-introduction">Chapter 1 · Introduction｜一条消息怎样穿过互联网</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=2">A4 打印版 · 第 2–18 页</a>　图可点击放大。</p>
+<p><a href="index.html">课程目录</a> · <a href="Tutorial01.html">Tutorial 1</a> · <a href="Tutorial02.html">Tutorial 2</a> · <a href="Assignment01.html">Assignment 1</a> · <a href="Chapter02.html">下一章</a></p>
+<p>你在宿舍点开课程网页，屏幕很快显示内容。中间不是一条从电脑直达学校服务器的专属电线，而是许多设备、链路和网络共同协作。本章先建立这幅全景：谁负责收发、数据怎样共享道路、为什么会等待或丢失、复杂系统如何分工。后面每章会放大其中一部分。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整PPT（78页）</span>及<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">课堂Q&amp;A（6页）</span>。保留老师Chapter命名与顺序。原PPT说明其改编自 Kurose/Ross 教材课件、由 Man Hon Cheung 修改；原图版权属于原作者。本地学习解释与补充算例不冒充教师逐字讲稿。</p>
+<p><strong>基础复习（可跳过）：</strong> 先自查1500 B÷2 Mbps会不会算；若卡住读<a href="../foundations/NetworkBasics.html">单位与时间轴</a>。多人同时活跃的概率看<a href="../foundations/MathForML.html#combinations">组合概率</a>。</p>
+<div class="toc">
+<ul>
+<li><a href="#chapter-1-introduction">Chapter 1 · Introduction｜一条消息怎样穿过互联网</a><ul>
+<li><a href="#1-what-is-the-internet">1. What is the Internet?｜先分清“设备视角”和“服务视角”</a></li>
+<li><a href="#2-what-is-a-protocol">2. What is a protocol?｜格式、顺序、动作缺一不可</a></li>
+<li><a href="#3-network-edge-and-access">3. Network edge and access｜接入网把你带到第一个入口</a></li>
+<li><a href="#4-circuit-versus-packet-switching">4. Circuit versus packet switching｜预留座位，还是来了再排队</a><ul>
+<li><a href="#_1">共享带来的容量收益，有什么条件？</a></li>
+</ul>
+</li>
+<li><a href="#5-forwarding-routing-and-a-network-of-networks">5. Forwarding, routing and a network of networks｜路口动作与整条路线</a></li>
+<li><a href="#6-delay-and-loss">6. Delay and loss｜慢在哪一段，公式才选得对</a></li>
+<li><a href="#7-real-delays-and-throughputrtt">7. Real delays and throughput｜测得的RTT不是某一条线的长度</a></li>
+<li><a href="#8-layers-and-encapsulation">8. Layers and encapsulation｜把一件复杂的事拆成清楚的职责</a></li>
+<li><a href="#9-security-and-history">9. Security and history｜知道威胁，也知道哪些数字属于当年</a></li>
+<li><a href="#10-chapter-1-qa">10. Chapter 1 Q&amp;A｜直接对照老师的五道课堂题</a></li>
+<li><a href="#11">11. 回顾、任务与来源索引</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求；依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internet、protocol、edge/core</td>
+<td>核心必会</td>
+<td>低至中；设备和功能</td>
+<td>用英文解释与举例；P4–12、Q&amp;A</td>
+</tr>
+<tr>
+<td>交换、复用、流水线</td>
+<td>核心必会</td>
+<td>中；容量与时序</td>
+<td>画图、手算、说明假设；P20–32、T1、A1</td>
+</tr>
+<tr>
+<td>delay/loss/throughput</td>
+<td>核心必会</td>
+<td>中；四类时延和瓶颈</td>
+<td>带单位计算与解释观察；P43–55、T2、A1</td>
+</tr>
+<tr>
+<td>协议分层与封装</td>
+<td>核心必会</td>
+<td>中；服务方向/数据路径</td>
+<td>跟踪消息跨层变化；P56–65、Q&amp;A</td>
+</tr>
+<tr>
+<td>接入、介质、ISP结构</td>
+<td>常规掌握</td>
+<td>中；共享与独占</td>
+<td>比较基本机制；P11–19、33–42</td>
+</tr>
+<tr>
+<td>安全概念与历史</td>
+<td>常规掌握</td>
+<td>低；定义/时代背景</td>
+<td>识别威胁、解释演进；P66–78；未找到可据此判断“不考”的证据</td>
+</tr>
+</tbody>
+</table></div>
+<p>优先级与难度独立。当前Tutorial、Assignment和课堂题是直接依据；历史复习笔记只作辅助，不按单次出现宣称香港本学期高频或QE范围。</p>
+<h2 id="1-what-is-the-internet">1. What is the Internet?｜先分清“设备视角”和“服务视角”</h2>
+<p>P4的硬件视角（nuts and bolts）包含端系统hosts/end systems、链路links、分组交换设备packet switches，以及互联的ISP。主机运行网络应用，链路用铜缆、光纤或无线传播信号，交换设备把数据送到下一段。网络不是一个中心机器在替所有人转发。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/58c9e311eaa2e2b2.png" rel="noopener" target="_blank"><img alt="Original Internet structure overview" decoding="async" loading="lazy" src="../assets/58c9e311eaa2e2b2.png"/></a></p>
+<p>看图从home network沿连接走到regional/global ISP，再到别的网络。手机、PC、服务器属于应用所在端系统；交换机和路由器服务中间转发。原P5的联网相框、冰箱等例子说明“host不等于台式电脑”。</p>
+<p>服务视角（P7）则问应用能获得什么：程序通过接口请求把数据送到远端程序，好比寄件时按规则写地址、交给邮政系统。应用不必亲自安排沿途每一个路口；但选用的传输服务决定它获得哪些保证。RFC是互联网技术文档系列，IETF是重要标准组织（P6）；并非每一份RFC都是正式标准。</p>
+<p><strong>English takeaway:</strong> The Internet connects networks of hosts and packet switches, and provides communication services to applications through interfaces.</p>
+<h2 id="2-what-is-a-protocol">2. What is a protocol?｜格式、顺序、动作缺一不可</h2>
+<p>老师P8–9从问时间的对话引出协议（protocol）：约定交换消息的<strong>格式、顺序，以及发送/收到消息时的动作</strong>。只有“说英文”不够，还要知道先问还是先答、没收到怎么办。网络协议把这类约定变成机器可执行规则。</p>
+<p>课堂图先TCP连接请求/响应，再HTTP请求/文件。它是教学时序，不意味着所有互联网应用都先用TCP；下一章会比较TCP与UDP。发送方与接收方遵守同一套约定，才能把字节解释成相同的内容。</p>
+<p><strong>自查 / Check:</strong> 协议是否只规定报文长什么样？ / Does a protocol specify only the format of a message?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>不，还规定消息顺序和在发送/接收等事件发生时执行的动作。 / No; it also specifies message ordering and actions taken on relevant events.</p>
+</details>
+<h2 id="3-network-edge-and-access">3. Network edge and access｜接入网把你带到第一个入口</h2>
+<p>P11–19从端系统走向接入网：家庭接入、学校/公司接入、移动接入。每次比较都问两件事：速率多少（bit/s）？资源是共享还是专用？仅看到“带宽很大”还不能推断每个用户都能持续独占它。</p>
+<p>DSL复用已有电话线，用频分让语音与数据占不同频段，经DSLAM汇聚到ISP；家庭用户到局端这一段专线不代表整个端到端路径都专用。家中的modem、路由/NAT、防火墙、Wi-Fi AP可以装在同一盒子里，但逻辑功能不同。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5c5b41f5bcfa6f82.png" rel="noopener" target="_blank"><img alt="Original DSL architecture" decoding="async" loading="lazy" src="../assets/5c5b41f5bcfa6f82.png"/></a></p>
+<p>企业以太网把主机连到交换机，再由机构路由器连ISP。无线LAN经AP共享无线介质，蜂窝接入经运营商基站。课件列出的54Mbps、3G/4G等速率是原版本的示例，不作为2026年的产品上限或购买指标；标称速率也不同于应用可得吞吐。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>介质（P17–19）</th>
+<th>信号怎样走</th>
+<th>要理解的差别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Twisted pair 双绞线</td>
+<td>铜导线中的电信号</td>
+<td>成本、距离、布线与干扰</td>
+</tr>
+<tr>
+<td>Coaxial cable 同轴</td>
+<td>同轴导体</td>
+<td>可承载多个频带；HFC结合光纤与同轴</td>
+</tr>
+<tr>
+<td>Fiber 光纤</td>
+<td>光信号</td>
+<td>高容量、抗电磁干扰；“每个光脉冲一个bit”是入门简化</td>
+</tr>
+<tr>
+<td>Radio 无线</td>
+<td>电磁波传播</td>
+<td>反射、遮挡、干扰，共享频谱</td>
+</tr>
+<tr>
+<td>Satellite 卫星链路</td>
+<td>经卫星中继</td>
+<td>传播距离与轨道决定时延；不能将一个示例时延套到所有轨道</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>English:</strong> Access capacity, sharing, and physical propagation are separate considerations. A dedicated access segment does not imply an end-to-end dedicated path.</p>
+<p><a id="core"></a>
+<a id="switching"></a></p>
+<h2 id="4-circuit-versus-packet-switching">4. Circuit versus packet switching｜预留座位，还是来了再排队</h2>
+<p>Circuit switching（电路交换）先预留路径上的资源，即使使用者暂时不发送，别人通常也不能借用这份预留。P22原图每条边有4条电路，一次连接在经过的每段占一份。FDM按频带分，TDM按重复时隙分；同一用户在不同链路使用哪一个编号电路不必相同。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/138e08c7845ebdae.png" rel="noopener" target="_blank"><img alt="Original circuit resource reservation" decoding="async" loading="lazy" src="../assets/138e08c7845ebdae.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b6227878f29440ed.png" rel="noopener" target="_blank"><img alt="Original FDM versus TDM" decoding="async" loading="lazy" src="../assets/b6227878f29440ed.png"/></a></p>
+<p>Packet switching（分组交换）把应用消息拆成包，按需使用链路。一包发送时可用链路发送速率R，竞争者可能排队；这不表示每个并发用户都永久获得R。像食堂公共座位提高利用率，但午饭同时来的人多了还是要等，不能只记“共享比较好”。</p>
+<p><strong>Store-and-forward（存储转发）</strong>要求收完整个包再向下一跳发送。包长L bit、速率R bit/s，一跳发送耗时L/R。在忽略传播、排队、处理的P26模型中，一个包过两条链路耗时2L/R。注意“一跳”不自动包含整条路径。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/4a673307070013ac.png" rel="noopener" target="_blank"><img alt="Original store-and-forward diagram" decoding="async" loading="lazy" src="../assets/4a673307070013ac.png"/></a></p>
+<p>三个包过两跳不是6L/R，因为后一包可在前一包进入第二链路时占用第一链路。完整时序见<a href="../foundations/NetworkBasics.html#timeline">基础时间轴</a>与<a href="Tutorial01.html#q1">Tutorial1 Q1</a>。等长包、等速率、连续发送且没有额外时延时，P个包、N条链路总耗时 <span class="arithmatex">\((P+N-1)L/R\)</span>。</p>
+<h3 id="_1">共享带来的容量收益，有什么条件？</h3>
+<p>P29原例：1Mbps链路，每用户活跃时100kbps、活跃概率0.1。电路交换最多固定支持10人；35人做分组共享时，假设用户独立，活跃人数K服从Binomial(35,0.1)。</p>
+<div class="arithmatex">\[P(K&gt;10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243.\]</div>
+<p><strong>原页写“less than .0004”不够精确</strong>；独立模型重算约0.0004243，约0.04243%，是略大于0.0004。不能为了吻合课件四舍五入成一个方向错误的不等式。P30只有Binomial标题，补课给出从列举到公式的台阶。</p>
+<p>这说明超额需求较少，不是保证零排队、零丢包或人人始终满速；短时到达突发、包调度和缓冲也影响等待。用户相关性改变时需要重新建模。分组交换适合突发需求，电路预留则提供更可预测资源，选择取决于服务需求。</p>
+<h2 id="5-forwarding-routing-and-a-network-of-networks">5. Forwarding, routing and a network of networks｜路口动作与整条路线</h2>
+<p>P28的forwarding是当前设备查表，把到来的包从合适出口送走；routing是确定路径并形成所需转发信息的过程。导航规划与开到路口选出口的类比有帮助，但真实路由可能分布式更新，不必有一个中央导航员。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b704cfe7ac42a7de.png" rel="noopener" target="_blank"><img alt="Original forwarding table and routing diagram" decoding="async" loading="lazy" src="../assets/b704cfe7ac42a7de.png"/></a></p>
+<p>P33–42一步步构造互联网：若N个接入ISP两两直连，需N(N−1)/2条连接，扩展困难；可购买上游transit，也可用peering直接互联，经IXP交换流量，再加regional networks与content-provider networks。内容提供商将服务放近用户、建立自有网络，会减少对某些上游路径的依赖，并不是“绕过物理互联网瞬间送达”。原公司的例名保留为图中时代背景。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/71720687f11aae45.png" rel="noopener" target="_blank"><img alt="Original network-of-networks diagram" decoding="async" loading="lazy" src="../assets/71720687f11aae45.png"/></a></p>
+<p><strong>English:</strong> Forwarding is a local per-packet action; routing determines paths. The Internet consists of interconnected networks with both technical and economic relationships.</p>
+<p><a id="delay"></a></p>
+<h2 id="6-delay-and-loss">6. Delay and loss｜慢在哪一段，公式才选得对</h2>
+<p>P44–49区分四类时延：</p>
+<div class="arithmatex">\[d_{nodal}=d_{proc}+d_{queue}+d_{trans}+d_{prop}.\]</div>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>发生什么</th>
+<th>计算/影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processing</td>
+<td>检错、读头、决定出口</td>
+<td>题中给定或忽略</td>
+</tr>
+<tr>
+<td>Queueing</td>
+<td>等前面的包使用出口</td>
+<td>取决于到达与队列状态</td>
+</tr>
+<tr>
+<td>Transmission</td>
+<td>将整包推入链路</td>
+<td><span class="arithmatex">\(L/R\)</span>；L bit、R bit/s</td>
+</tr>
+<tr>
+<td>Propagation</td>
+<td>已进入介质的信号往前走</td>
+<td><span class="arithmatex">\(d/s\)</span>；d m、s m/s</td>
+</tr>
+</tbody>
+</table></div>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/be40dae68d44de71.png" rel="noopener" target="_blank"><img alt="Original four-delay diagram" decoding="async" loading="lazy" src="../assets/be40dae68d44de71.png"/></a></p>
+<p>不要把发送和传播都叫“上网速度”。把水管出口加粗让整桶水更快倒完，不会按相同比例改变每个水分子沿长管移动的时间；类比到此为止，真实介质传播不是受排队的汽车行驶。</p>
+<p>P47的车队原例：10辆车，每辆收费12秒，最后一辆过第一个收费亭需120秒；100km以100km/h行驶需1小时，全部在第二亭前到齐需62分钟。P48改为每车1分钟、车速1000km/h；首车1分钟后出发，再走6分钟，t=7分钟到第二亭，早于第10辆t=10分钟离开第一亭。两题都从第一辆开始服务计时，没让第二亭再处理一遍。</p>
+<p>队列的traffic intensity为 <span class="arithmatex">\(\rho=La/R\)</span>，a为平均包到达率（packets/s），L为本模型固定包长。rho接近1时在常见随机排队模型中等待显著增长；rho&gt;1长期输入超过服务能力，无限缓冲理想模型不稳定，现实有限缓冲会丢包。仅平均rho&lt;1不能保证任意流量下没有大突发或所有等待性质都良好，课件曲线是模型直觉。</p>
+<p><strong>独立变式 / Transfer:</strong> 一个包1000B，R=4Mbps，d=3000km，s=2×10⁸m/s，处理1ms、排队3ms，整包单跳耗时？ / Find the one-hop complete-packet delay under these conditions.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>发送2ms、传播15ms，合计1+3+2+15=21ms。 / Transmission is 2 ms, propagation is 15 ms; total delay is 21 ms.</p>
+</details>
+<h2 id="7-real-delays-and-throughputrtt">7. Real delays and throughput｜测得的RTT不是某一条线的长度</h2>
+<p>P50–51用traceroute逐渐增加TTL探查沿途响应，每行列出应答地址与往返时间RTT。后跳比前跳小并不矛盾：探测发生时间、排队、回程路径和应答处理可能不同；不能简单逐行相减当作单条链路时延。星号表示规定时间内未收到响应，不足以单独证明那台路由器坏了或一定被防火墙挡住。带日期的本机观察放在<a href="Tutorial02.html#q5">Tutorial2 Q5</a>。</p>
+<p>P52的丢包来自缓冲满等机制；包是否重传、由谁重传取决于协议，不是所有丢包都被网络自动恢复。吞吐throughput是单位时间实际交付多少bit，容量capacity是链路能力；应用有效载荷的goodput还会扣去协议与重传等开销。</p>
+<p>简单持续流、无竞争时，多链路瓶颈近似 <span class="arithmatex">\(\min(R_s,R_c)\)</span>；10条连接公平分享骨干R且其他条件简化时，每连接为 <span class="arithmatex">\(\min(R_s,R_c,R/10)\)</span>。公平分享是题设，不是每个真实网络自动保证的定理。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/052c937796e9ddd5.png" rel="noopener" target="_blank"><img alt="Original shared-backbone throughput model" decoding="async" loading="lazy" src="../assets/052c937796e9ddd5.png"/></a></p>
+<p><strong>自测 / Check:</strong> 接入10Mbps、服务器20Mbps、5条流公平共享30Mbps骨干，每流瓶颈吞吐？ / With these capacities and five fairly sharing flows, find the per-flow bottleneck throughput.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>min(10,20,30/5)=6Mbps。 / 6 Mbps under the stated sharing model. 容量不要相加成60Mbps。</p>
+</details>
+<h2 id="8-layers-and-encapsulation">8. Layers and encapsulation｜把一件复杂的事拆成清楚的职责</h2>
+<p>老师P58–60用航空旅行：买票、托运行李、登机、起飞、航线各有职责。某一层使用下层服务，同时向上层提供服务；合理接口让内部变化不必牵动所有部分。网络分层的目的不是强行多造几个名词，而是明确责任与接口。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Internet五层（从上向下）</th>
+<th>核心职责</th>
+<th>课堂例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td>应用间协议与内容含义</td>
+<td>HTTP、SMTP、FTP</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>进程到进程传输</td>
+<td>TCP、UDP；保证不同</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>主机间数据报与路由</td>
+<td>IP</td>
+</tr>
+<tr>
+<td>Link</td>
+<td>相邻节点间传输</td>
+<td>Ethernet、Wi-Fi</td>
+</tr>
+<tr>
+<td>Physical</td>
+<td>介质上的比特信号</td>
+<td>铜线/光/无线信号</td>
+</tr>
+</tbody>
+</table></div>
+<p>从底向上编号时transport是第4层。OSI另列presentation/session，Internet应用仍可能需要编码、加密、会话等功能，只是不独立命名为这两层；“没有这一层”不等于“不需要这个功能”。</p>
+<p>封装（encapsulation）将上一层信息作为本层payload，加上本层头部，某些链路协议还加尾部。应用message → 传输segment（TCP语境；UDP常叫datagram）→ IP datagram → link frame → bit。解封装按相反方向解释对应头部。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/3c422e122dddec02.png" rel="noopener" target="_blank"><img alt="Original encapsulation across source, switch, router and destination" decoding="async" loading="lazy" src="../assets/3c422e122dddec02.png"/></a></p>
+<p>沿原图看：端系统走完整协议栈；典型转发路由器处理到网络层，以太交换机主要处理链路层。不要由这个教学模型推断所有现实设备绝不检查更高层。每跳链路帧可更换，应用消息不因此被每个路由器当成网页程序执行。</p>
+<p><strong>English:</strong> Each layer offers services to the layer above and uses services below. Encapsulation adds the information needed by the current layer.</p>
+<h2 id="9-security-and-history">9. Security and history｜知道威胁，也知道哪些数字属于当年</h2>
+<p>P67–71介绍恶意软件、DoS、嗅探与地址伪造。病毒常依附宿主内容并需执行，蠕虫可自动传播；并非“被动收到任意包就必然感染”，通常还需漏洞或执行机制。Botnet由受控设备组成，DDoS是分布式资源耗尽；packet sniffing能看到可访问的流量，但加密与网络结构限制能读到的明文。伪造源IP不等于已经能接收发回那个源地址的响应。这里学习机制与防护意识，不做攻击实验。</p>
+<p>P73–77按时间讲分组交换研究、ARPANET、互联思想、TCP/IP与DNS、Web商业化、移动与云。应记住问题如何推动结构演变：让不同网络自治互联、尽力而为、分散控制；“stateless routers”在这里指不为每个端到端连接预留电路状态，不是路由器没有路由表或任何状态。</p>
+<p>保留原页历史顺序，同时澄清两处可核查的简写：P74将ALOHAnet标为1970卫星网络；夏威夷大学记录其岛际packet-radio服务于1971年6月开始，卫星连接属于后续发展。<a href="https://manoa.hawaii.edu/engineering/about-us/history/alohanet.php">UH项目史</a> P76的Mosaic年份应注意版本语境，NCSA记录其最早普及阶段在1993年。<a href="https://www.ncsa.illinois.edu/about/history/">NCSA历史</a> 两处查阅于2026-09-23。</p>
+<p>P77的2016设备数量、早期社交网络用户数只作为课件当时背景，不称当前规模；“instantaneous”是宣传式简写，跨网络通信仍有非零时延。</p>
+<p><a id="qa"></a></p>
+<h2 id="10-chapter-1-qa">10. Chapter 1 Q&amp;A｜直接对照老师的五道课堂题</h2>
+<p>以下为原题条件的双语整理，答案为依据本章的推导，原Q&amp;A文件没有附独立教师答案页。原图可在末尾展开。</p>
+<ol>
+<li><strong>Which is not an edge device: PC, smartphone, server, router? / 哪个不属于本章端系统意义的网络边缘设备？</strong> 答D，router；这里edge按运行应用的end systems定义，不否认现实术语也有“edge router”。 / D, a router, using the chapter's end-system definition of edge.</li>
+<li><strong>Three L-bit packets cross two R-bit/s store-and-forward links. Ignore propagation, queueing and processing. Find completion time. / 3个等长包过2条等速存储转发链路，忽略其他时延，多久？</strong> 答B，4L/R；流水线时间表见§4。 / B, 4L/R, because the links can work on different packets concurrently.</li>
+<li><strong>Which delay is affected by congestion in the chapter's model? / 四项时延中哪项随拥塞变化？</strong> 答B，queueing；其他给定包长/速率/距离条件不变。真实设备处理负载也可能变化，但原题考四类简化模型。 / B, queueing delay in the stated model.</li>
+<li><strong>A 100Mbps modem connects a phone through a 54Mbps router, upgraded to 1Gbps. What is ideal throughput after upgrading? / 100Mbps外网口，54Mbps路由器换1Gbps后理想瓶颈？</strong> 答A，min(100,1000)=100Mbps；还假设手机及其他段无更低瓶颈。 / A, 100 Mbps under the simplified bottleneck assumptions.</li>
+<li><strong>Which transport-layer statements are true? / 传输层哪项正确？</strong> A总可靠：错，UDP不保证；B是第4层：对（底层起数）；C为下方网络层提供服务：错，服务向上；D给segment加头再上送application：错，发送方向给应用消息加传输头后向下。 / Only B is correct under bottom-up layer numbering.</li>
+</ol>
+<details>
+<summary>原Q&amp;A页图 / Original question slides</summary>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/46cca772f3ab811c.png" rel="noopener" target="_blank"><img alt="Q&amp;A1" decoding="async" loading="lazy" src="../assets/46cca772f3ab811c.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5d0dac848b20a34a.png" rel="noopener" target="_blank"><img alt="Q&amp;A2" decoding="async" loading="lazy" src="../assets/5d0dac848b20a34a.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/175c1ca2ab435b00.png" rel="noopener" target="_blank"><img alt="Q&amp;A3" decoding="async" loading="lazy" src="../assets/175c1ca2ab435b00.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8fdf9b9f57045f8f.png" rel="noopener" target="_blank"><img alt="Q&amp;A4" decoding="async" loading="lazy" src="../assets/8fdf9b9f57045f8f.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8e28a5164704fb28.png" rel="noopener" target="_blank"><img alt="Q&amp;A5" decoding="async" loading="lazy" src="../assets/8e28a5164704fb28.png"/></a></p>
+</details>
+<h2 id="11">11. 回顾、任务与来源索引</h2>
+<p>顺着主线复述：端系统产生消息 → 接入网进入互联网 → 分组在链路与交换设备间前进 → 共享导致排队/丢失，路径容量决定瓶颈 → 分层协议规定每一部分的格式与动作。接着做<a href="Tutorial01.html">Tutorial1</a>的交换与容量题、<a href="Tutorial02.html">Tutorial2</a>的时延与测量，再做<a href="Assignment01.html">Assignment1 P6/P31</a>。</p>
+<p>英文独立表达：<strong>Explain why increasing a link's rate does not reduce its propagation delay. / 解释为什么增加速率不减少传播时延。</strong> 要点：<span class="arithmatex">\(L/R\)</span>改变，<span class="arithmatex">\(d/s\)</span>由距离与传播速度决定。 / Link rate changes transmission time; propagation depends on distance and signal speed.</p>
+<p>首轮可选 <strong><a href="../../cards.html#CS5222-N013">N015（分组交换）</a>、<a href="../../cards.html#CS5222-N025">N025（四类时延）、N033（流量强度）</a>、<a href="../../cards.html#CS5222-N071">N072（流水线）</a></strong>，再在Markji按卡号复习。微课入口：<a href="https://crazyshout.github.io/micro-course/?lesson=net02">NET02</a>。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原完整PPT页码</th>
+<th>本文位置</th>
+<th>覆盖内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1–3</td>
+<td>开篇</td>
+<td>来源、目标、路线；目录页不重复计主题</td>
+</tr>
+<tr>
+<td>4–9</td>
+<td>§1–2</td>
+<td>设备/服务/API/RFC、协议与原对话</td>
+</tr>
+<tr>
+<td>10–19</td>
+<td>§3</td>
+<td>接入、DSL、家庭/企业/无线、物理介质</td>
+</tr>
+<tr>
+<td>20–28</td>
+<td>§4–5</td>
+<td>电路、FDM/TDM、分组、存储转发、转发/路由</td>
+</tr>
+<tr>
+<td>29–32</td>
+<td>§4</td>
+<td>原35用户例、二项补足、交换比较</td>
+</tr>
+<tr>
+<td>33–42</td>
+<td>§5</td>
+<td>ISP逐步构造、peering/IXP/内容网络</td>
+</tr>
+<tr>
+<td>43–49</td>
+<td>§6</td>
+<td>四类时延、两道车队题、rho</td>
+</tr>
+<tr>
+<td>50–55</td>
+<td>§7</td>
+<td>traceroute、丢包、吞吐、共享瓶颈</td>
+</tr>
+<tr>
+<td>56–65</td>
+<td>§8</td>
+<td>航空类比、五层/OSI、封装与名称</td>
+</tr>
+<tr>
+<td>66–71</td>
+<td>§9</td>
+<td>安全目标与四类威胁</td>
+</tr>
+<tr>
+<td>72–78</td>
+<td>§9、§11</td>
+<td>演进、时代数字、总结</td>
+</tr>
+<tr>
+<td>Q&amp;A 1–6</td>
+<td>§10</td>
+<td>标题及全部5道题</td>
+</tr>
+</tbody>
+</table></div>
+<p>part1的49页对应完整1–49；part2的29页对应完整50–78，页码重编不算新增教学内容。逐页文本与内嵌图内容核对记录见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">本轮材料清单</span>。源图与数字复算分别保留，不以截图代替解释。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

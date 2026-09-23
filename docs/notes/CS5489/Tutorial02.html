@@ -1,0 +1,1787 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 2 · Text Document Classification with Naive Bayes · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
+<h1 id="tutorial-2-text-document-classification-with-naive-bayes">Tutorial 2 · Text Document Classification with Naive Bayes</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=47">A4 打印版 · 第 47–73 页</a>　图可点击放大。</p>
+<h2 id="_1">按老师原任务，跑通新闻分类并解释结果</h2>
+<p><a href="Lecture02.html">先读 Lecture 2</a> · <a href="Assignment01.html">Assignment 1 指南</a> · <a href="index.html">运行说明</a></p>
+<p>本地学习样板，2026-09-22。主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial2v2.ipynb</span>（下文T，cell从1开始，不是In[n]）；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">dataAG.json</span>。这是我们按原任务编写的可运行参考讲解，不是教师发布的标准答案。</p>
+<p>老师的顺序是：认识AGNews → 建词向量 → Bernoulli NB → Multinomial NB → 看错分 → 改平滑/词表 → 实现Poisson NB。每步先解释要解决什么，再看代码与输出。默认从头运行全部代码，独立尝试题写在Markdown中，不影响运行。</p>
+<p><strong>结果口径 / Result scope：</strong> 本教程遵循课堂任务，多次查看同一份给定test的表现，用于练习与探索。它已参与模型/参数比较，不能被称为最终独立泛化估计。所有数值由下方代码计算，固定种子42；这里不报告短信作业的成绩。</p>
+</section>
+<section id="cell-2">
+<h2 id="goal">学习地图 / Goal</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原任务</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>学到什么程度</th>
+<th>对应讲义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据与词向量 T4–12</td>
+<td>核心必会</td>
+<td>中：文档、词、矩阵轴</td>
+<td>能建立固定词表并避免泄漏</td>
+<td>Lecture §12–13</td>
+</tr>
+<tr>
+<td>Bernoulli NB T13–16</td>
+<td>核心必会</td>
+<td>中：出现/未出现</td>
+<td>会训练、计算指标、解释词概率</td>
+<td>§14–16</td>
+</tr>
+<tr>
+<td>Multinomial NB T17–20</td>
+<td>核心必会</td>
+<td>中：计数与TF-IDF</td>
+<td>会比较表示，解释参数含义</td>
+<td>§17–18</td>
+</tr>
+<tr>
+<td>错分 T21–24</td>
+<td>核心必会</td>
+<td>中：观察不等于原因</td>
+<td>会提出可核验解释</td>
+<td>§9、19</td>
+</tr>
+<tr>
+<td>两种参数实验 T25–28</td>
+<td>核心必会</td>
+<td>中：受控比较</td>
+<td>会画曲线、说明比较条件</td>
+<td>§13、15、17</td>
+</tr>
+<tr>
+<td>Poisson NB T29–35</td>
+<td>核心必会</td>
+<td>高：换CCD仍保留Bayes外框</td>
+<td>会估计、算log分数并归一化</td>
+<td>§7；本文件§8</td>
+</tr>
+<tr>
+<td>严格验证方案</td>
+<td>常规掌握</td>
+<td>中：开发与最终评估分开</td>
+<td>能重画实验流程</td>
+<td>方法补充，非改写原题</td>
+</tr>
+</tbody>
+</table></div>
+<p>优先级是基于当前任务的学习建议；没有把历史样题当成本学期考试频率。英文题意为忠实整理，中文解释补足必要条件；代码、类别名称和原文件名不翻译。</p>
+</section>
+<section id="cell-3">
+<h2 id="0-setup">0. Setup｜只在这里改实验设置</h2>
+<p>在README所述独立环境中运行。AGNEWS_PATH默认指向项目保留的Canvas数据副本，可在下一格改成自己的文件路径。缺文件会报告准确路径，不会悄悄换成网上另一份AGNews。</p>
+<p><strong>English:</strong> Configure parameters and the data path here. All following experiments use the provided local data and explicit settings.</p>
+</section>
+<section id="cell-4">
+<div class="code-input"><div class="cell-label">In [1]</div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">hashlib</span><span class="o">,</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="o">,</span><span class="w"> </span><span class="nn">textwrap</span><span class="o">,</span><span class="w"> </span><span class="nn">html</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">PercentFormatter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">gammaln</span><span class="p">,</span> <span class="n">logsumexp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">poisson</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountVectorizer</span><span class="p">,</span> <span class="n">TfidfTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">BernoulliNB</span><span class="p">,</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">HTML</span>
+
+<span class="c1"># Accept execution from the notes folder or the Course workspace.</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"codexing/CS5489/course-notes"</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">])]</span>
+<span class="n">NOTE_DIR</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"Lecture02.md"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">NOTE_DIR</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"Run from Course or codexing/CS5489/course-notes; Lecture02.md was not found."</span><span class="p">)</span>
+<span class="n">NOTE_DIR</span> <span class="o">=</span> <span class="n">NOTE_DIR</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">AGNEWS_PATH</span> <span class="o">=</span> <span class="n">NOTE_DIR</span> <span class="o">/</span> <span class="s2">"../materials/canvas/Lecture2/Tutorial2/dataAG.json"</span>
+<span class="n">AGNEWS_PATH</span> <span class="o">=</span> <span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>  <span class="c1"># Change this path if your data lives elsewhere.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Required course dataset not found: </span><span class="si">{</span><span class="n">AGNEWS_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">DEFAULT_MAX_FEATURES</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">DEFAULT_ALPHA</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">ALPHAS</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]</span>
+<span class="n">VOCAB_LIMITS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">]</span>
+<span class="n">CATS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"World"</span><span class="p">,</span> <span class="s2">"Sports"</span><span class="p">,</span> <span class="s2">"Business"</span><span class="p">,</span> <span class="s2">"Sci/Tech"</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">ASSET_DIR</span> <span class="o">=</span> <span class="n">NOTE_DIR</span> <span class="o">/</span> <span class="s2">"assets"</span>
+<span class="n">ASSET_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">COLORS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"#2870a2"</span><span class="p">,</span> <span class="s2">"#b57319"</span><span class="p">,</span> <span class="s2">"#698244"</span><span class="p">,</span> <span class="s2">"#a74f72"</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"figure.figsize"</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span> <span class="s2">"figure.dpi"</span><span class="p">:</span> <span class="mi">130</span><span class="p">,</span> <span class="s2">"font.size"</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+                     <span class="s2">"font.family"</span><span class="p">:</span> <span class="s2">"DejaVu Sans"</span><span class="p">,</span> <span class="s2">"axes.spines.top"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"axes.spines.right"</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSET_DIR</span> <span class="o">/</span> <span class="n">name</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">versions</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span>
+            <span class="p">[</span><span class="s2">"numpy"</span><span class="p">,</span> <span class="s2">"scipy"</span><span class="p">,</span> <span class="s2">"scikit-learn"</span><span class="p">,</span> <span class="s2">"matplotlib"</span><span class="p">,</span> <span class="s2">"pandas"</span><span class="p">,</span> <span class="s2">"nbformat"</span><span class="p">]}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Python:"</span><span class="p">,</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span> <span class="s2">"| seed:"</span><span class="p">,</span> <span class="n">SEED</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Package versions:"</span><span class="p">,</span> <span class="n">versions</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data:"</span><span class="p">,</span> <span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"| SHA256:"</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="output"><pre>Python: 3.12.14 | seed: 42
+Package versions: {'numpy': '2.5.3', 'scipy': '1.18.1', 'scikit-learn': '1.9.1', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'nbformat': '5.11.1'}
+Data: dataAG.json | SHA256: 6fc06494ec6a66501f4db2e0c9710e32db6c88a6a0ca8ff59db3620011fe378b
+</pre></div>
+</section>
+<section id="cell-5">
+<h2 id="1-load-and-inspect-data">1. Load and inspect data｜先数清楚，再训练</h2>
+<p><strong>原任务 / Task（T4–9）：</strong> 载入dataAG.json，检查训练/测试规模和四类标签，查看文本。<br/>
+<strong>English:</strong> Load dataAG.json, inspect split sizes and class counts, and examine the text records.</p>
+<p>一条字典是一篇新闻，text是字符串、label是0到3的已有标签。下面仅显示各类计数和一条截短样本，完整数据留在原文件。T6写2034/1353，但本次给定文件实际为2000/1000；以读到的文件为准，差异明确保留。</p>
+</section>
+<section id="cell-6">
+<div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s2">"train"</span><span class="p">,</span> <span class="s2">"test"</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">split</span><span class="p">,</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">rows</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"text"</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"label"</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">]))</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="s2">"Dataset differs from the reviewed snapshot."</span>
+
+<span class="n">train_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">]]</span>
+<span class="n">test_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">]]</span>
+<span class="n">train_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">]])</span>
+<span class="n">test_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">]])</span>
+<span class="n">class_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Class"</span><span class="p">:</span> <span class="n">CATS</span><span class="p">,</span>
+    <span class="s2">"Train documents"</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">train_y</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
+    <span class="s2">"Test documents"</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">test_y</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
+<span class="p">})</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">train_y</span><span class="p">))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">test_y</span><span class="p">))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">class_counts</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"One training example:"</span><span class="p">,</span> <span class="n">CATS</span><span class="p">[</span><span class="n">train_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">train_text</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">280</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">88</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Blank text rows:"</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="ow">not</span> <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">train_text</span> <span class="o">+</span> <span class="n">test_text</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Class</th>
+<th>Train documents</th>
+<th>Test documents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>World</td>
+<td>511</td>
+<td>262</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Sports</td>
+<td>493</td>
+<td>261</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Business</td>
+<td>512</td>
+<td>249</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Sci/Tech</td>
+<td>484</td>
+<td>228</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>One training example: World
+Three UK soldiers killed in central Iraq Three British troops have been killed and
+others injured in an attack in central Iraq, British Armed Forces Minister Adam Ingram
+confirmed on Thursday.
+Blank text rows: 0
+</pre></div>
+</section>
+<section id="cell-7">
+<p><strong>怎样检查 / Check：</strong> 两个计数列分别加到2000和1000；标签与四个英文名称按原顺序对应。训练集与测试集分开，不能在载入后合并再重新“方便地”切分。</p>
+<p><strong>独立检查题：</strong> 2000篇新闻、实际词表1000词，特征矩阵和标签数组各是什么形状？<br/>
+<strong>English question:</strong> For 2000 documents and an actual vocabulary of 1000 terms, what are the shapes of the feature matrix and label array?<br/>
+<strong>答案：</strong> X为(2000,1000)，y为(2000,)；每篇文档一行，每个词一列。若1000只是词表上限，实际列数仍应读取vectorizer。<br/>
+<strong>English answer:</strong> X has shape (2000,1000) and y has shape (2000,). Documents are rows and vocabulary terms are columns. If 1000 is only a requested cap, inspect the fitted vocabulary for the actual column count.</p>
+</section>
+<section id="cell-8">
+<h2 id="2-build-document-vectors">2. Build document vectors｜把词表当成一把固定的尺子</h2>
+<p><strong>原任务 / Task（T10–12）：</strong> 从训练文本建词表，再转换两份数据，自己选择词表大小。<br/>
+<strong>English:</strong> Build a vocabulary from training documents and transform both splits using that vocabulary.</p>
+<p>默认最多1000词，沿课堂例子使用英文停用词、默认小写化。fit_transform只作用于train；test只transform。test中独有的词不会偷偷加入词表。下面先保留原始整数计数：Bernoulli会二值化，Poisson也需要这些计数；不要稍后用TF-IDF覆盖count_train这个变量。</p>
+</section>
+<section id="cell-9">
+<div class="code-input"><div class="cell-label">In [3]</div><div class="highlight"><pre><span></span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">"english"</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">DEFAULT_MAX_FEATURES</span><span class="p">)</span>
+<span class="n">count_train</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_text</span><span class="p">)</span>
+<span class="n">count_test</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_text</span><span class="p">)</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">count_train</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_text</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">count_test</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_text</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">count_train</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">count_train</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Train / test shapes:"</span><span class="p">,</span> <span class="n">count_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">count_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Requested / actual vocabulary:"</span><span class="p">,</span> <span class="n">DEFAULT_MAX_FEATURES</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">))</span>
+<span class="n">zero_train</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">count_train</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">zero_test</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">count_test</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"All-zero feature rows, train / test:"</span><span class="p">,</span> <span class="n">zero_train</span><span class="p">,</span> <span class="n">zero_test</span><span class="p">)</span>
+<span class="n">row</span> <span class="o">=</span> <span class="n">count_train</span><span class="o">.</span><span class="n">getrow</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"Word"</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">indices</span><span class="p">],</span> <span class="s2">"Count"</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"Count"</span><span class="p">,</span> <span class="s2">"Word"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># Tiny independent check: do not learn the held-out-only term.</span>
+<span class="n">probe</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">([</span><span class="s2">"trainword common"</span><span class="p">,</span> <span class="s2">"another common"</span><span class="p">])</span>
+<span class="n">before</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">probe</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">)</span>
+<span class="n">probe</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s2">"heldoutonly common"</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">probe</span><span class="o">.</span><span class="n">vocabulary_</span> <span class="o">==</span> <span class="n">before</span> <span class="ow">and</span> <span class="s2">"heldoutonly"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">probe</span><span class="o">.</span><span class="n">vocabulary_</span>
+</pre></div>
+</div>
+<div class="output"><pre>Train / test shapes: (2000, 1000) (1000, 1000)
+Requested / actual vocabulary: 1000 1000
+All-zero feature rows, train / test: 2 2
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Word</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>5</th>
+<td>british</td>
+<td>2</td>
+</tr>
+<tr>
+<th>3</th>
+<td>central</td>
+<td>2</td>
+</tr>
+<tr>
+<th>4</th>
+<td>iraq</td>
+<td>2</td>
+</tr>
+<tr>
+<th>2</th>
+<td>killed</td>
+<td>2</td>
+</tr>
+<tr>
+<th>9</th>
+<td>armed</td>
+<td>1</td>
+</tr>
+<tr>
+<th>8</th>
+<td>attack</td>
+<td>1</td>
+</tr>
+<tr>
+<th>12</th>
+<td>confirmed</td>
+<td>1</td>
+</tr>
+<tr>
+<th>10</th>
+<td>forces</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-10">
+<p><strong>怎样读 / Interpretation：</strong> 稀疏表示省略存储零元素，未出现这个事实仍由模型处理。停用词和词表截断之后，原文非空也可能得到全零行；这不等于读取失败。</p>
+<p><strong>常见错误 / Pitfall：</strong> 对test重新fit会使坐标改变并引入泄漏。把训练列名贴到一个独立拟合的test矩阵上，不会修复这个问题。<br/>
+<strong>English takeaway:</strong> The vocabulary is learned from training text and then held fixed. A zero vector after preprocessing can be a legitimate representation outcome.</p>
+</section>
+<section id="cell-11">
+<h2 id="3-bernoulli-naive-bayes">3. Bernoulli Naive Bayes｜先问有没有，不问重复几次</h2>
+<p><strong>原任务 / Task（T13–16）：</strong> 训练Bernoulli NB、报告测试accuracy，并查看每类高概率词。<br/>
+<strong>English:</strong> Train Bernoulli NB, report test accuracy and inspect high-probability words for each class.</p>
+<p>用alpha=1作本次默认值；这不是老师规定的最优参数。BernoulliNB的binarize=0.0把正计数变成1。其文档得分同时考虑出现与未出现；先回看<a href="Lecture02.html#bernoulli">Lecture §14–15</a>中的手算，理解为什么分母是<span class="arithmatex">\(N_c+2\alpha\)</span>。</p>
+</section>
+<section id="cell-12">
+<div class="code-input"><div class="cell-label">In [4]</div><div class="highlight"><pre><span></span><span class="n">bnb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">count_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">pred_bnb</span> <span class="o">=</span> <span class="n">bnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_test</span><span class="p">)</span>
+<span class="n">prob_bnb</span> <span class="o">=</span> <span class="n">bnb</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">count_test</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">prob_bnb</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">bnb_acc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_bnb</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bernoulli NB: </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">pred_bnb</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">test_y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_y</span><span class="p">)</span><span class="si">}</span><span class="s2"> correct; accuracy=</span><span class="si">{</span><span class="n">bnb_acc</span><span class="si">:</span><span class="s2">.3%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model class order:"</span><span class="p">,</span> <span class="n">bnb</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"One posterior vector:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">prob_bnb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show_top_words</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">model</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"stable"</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Class"</span><span class="p">:</span> <span class="n">CATS</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">label</span><span class="p">)],</span> <span class="s2">"Rank"</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
+                         <span class="s2">"Word"</span><span class="p">:</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="s2">"Log parameter"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span> <span class="mi">4</span><span class="p">)})</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">"&lt;details&gt;&lt;summary&gt;"</span> <span class="o">+</span> <span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span>
+                 <span class="s2">"&lt;/summary&gt;"</span> <span class="o">+</span> <span class="n">table</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/details&gt;"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">table</span>
+
+<span class="n">bnb_words</span> <span class="o">=</span> <span class="n">show_top_words</span><span class="p">(</span><span class="n">bnb</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="s2">"Top 10 per class / 展开各类前10词（Bernoulli）"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><pre>Bernoulli NB: 821/1000 correct; accuracy=82.100%
+Model class order: [0 1 2 3]
+One posterior vector: [4.800e-03 9.817e-01 1.000e-04 1.340e-02]
+</pre></div>
+<div class="output"><details><summary>Top 10 per class / 展开各类前10词（Bernoulli）</summary><div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>Class</th>
+<th>Rank</th>
+<th>Word</th>
+<th>Log parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>World</td>
+<td>1</td>
+<td>said</td>
+<td>-1.3882</td>
+</tr>
+<tr>
+<td>World</td>
+<td>2</td>
+<td>39</td>
+<td>-1.6452</td>
+</tr>
+<tr>
+<td>World</td>
+<td>3</td>
+<td>reuters</td>
+<td>-1.8836</td>
+</tr>
+<tr>
+<td>World</td>
+<td>4</td>
+<td>iraq</td>
+<td>-2.1131</td>
+</tr>
+<tr>
+<td>World</td>
+<td>5</td>
+<td>killed</td>
+<td>-2.2149</td>
+</tr>
+<tr>
+<td>World</td>
+<td>6</td>
+<td>minister</td>
+<td>-2.2149</td>
+</tr>
+<tr>
+<td>World</td>
+<td>7</td>
+<td>president</td>
+<td>-2.2149</td>
+</tr>
+<tr>
+<td>World</td>
+<td>8</td>
+<td>ap</td>
+<td>-2.3485</td>
+</tr>
+<tr>
+<td>World</td>
+<td>9</td>
+<td>wednesday</td>
+<td>-2.4116</td>
+</tr>
+<tr>
+<td>World</td>
+<td>10</td>
+<td>people</td>
+<td>-2.4336</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>1</td>
+<td>39</td>
+<td>-1.0513</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>2</td>
+<td>new</td>
+<td>-2.2156</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>3</td>
+<td>game</td>
+<td>-2.2343</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>4</td>
+<td>night</td>
+<td>-2.2533</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>5</td>
+<td>season</td>
+<td>-2.2533</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>6</td>
+<td>win</td>
+<td>-2.3127</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>7</td>
+<td>team</td>
+<td>-2.3334</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>8</td>
+<td>year</td>
+<td>-2.3759</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>9</td>
+<td>ap</td>
+<td>-2.3979</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>10</td>
+<td>saturday</td>
+<td>-2.3979</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>1</td>
+<td>39</td>
+<td>-1.2655</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>2</td>
+<td>said</td>
+<td>-1.3902</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>3</td>
+<td>reuters</td>
+<td>-1.5509</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>4</td>
+<td>new</td>
+<td>-1.6075</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>5</td>
+<td>company</td>
+<td>-1.8355</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>6</td>
+<td>prices</td>
+<td>-2.0227</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>7</td>
+<td>oil</td>
+<td>-2.0678</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>8</td>
+<td>york</td>
+<td>-2.0833</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>9</td>
+<td>corp</td>
+<td>-2.1479</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>10</td>
+<td>percent</td>
+<td>-2.1818</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>1</td>
+<td>new</td>
+<td>-1.5228</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>2</td>
+<td>39</td>
+<td>-1.7089</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>3</td>
+<td>software</td>
+<td>-2.0431</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>4</td>
+<td>microsoft</td>
+<td>-2.0919</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>5</td>
+<td>said</td>
+<td>-2.1432</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>6</td>
+<td>company</td>
+<td>-2.1789</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>7</td>
+<td>internet</td>
+<td>-2.4485</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>8</td>
+<td>computer</td>
+<td>-2.5486</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>9</td>
+<td>corp</td>
+<td>-2.5486</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>10</td>
+<td>reuters</td>
+<td>-2.5486</td>
+</tr>
+</tbody>
+</table></div></details></div>
+</section>
+<section id="cell-13">
+<p><strong>解释 / Interpretation：</strong> 每行的概率参数是“该类文档含这个词”的概率，排序不是因果重要性，也不是整份文档的后验。几类都常见的词可能排得很前，却不擅长区分类别。</p>
+<p><strong>自查：</strong> 同一文档中market从1次变10次，保持已训练模型、词表和其他词不变，这个Bernoulli预测会改变吗？<br/>
+<strong>English question:</strong> In one document, change the count of market from 1 to 10 while keeping the fitted model, vocabulary and other word counts fixed. Does this Bernoulli prediction change?<br/>
+<strong>答案：</strong> 不会，二值化后输入相同。<br/>
+<strong>English answer:</strong> No. The binary presence vector stays the same.</p>
+</section>
+<section id="cell-14">
+<h3 id="31-bernoulli-parameter-comparisont13">3.1 Bernoulli parameter comparison｜补齐原T13的参数尝试</h3>
+<p>原T13不只要求报告一次accuracy，也要求尝试alpha、max_features等参数。下面保留同一数据划分：先固定词表1000，只改alpha；再固定alpha=1，只改词表上限。两个小表分别回答一个问题，不把它们称为联合搜索。这里沿用课堂要求比较给定test，属于探索，不能把最高值当成独立最终成绩。</p>
+<p><strong>English:</strong> Original task T13 also asks you to try parameter settings. Compare one factor at a time: alpha with the fixed 1000-word cap, then vocabulary size with alpha=1. These classroom test comparisons are exploratory, not an unbiased final evaluation. The vocabulary is fitted only on training text in every run.</p>
+</section>
+<section id="cell-15">
+<div class="code-input"><div class="cell-label">In [5]</div><div class="highlight"><pre><span></span><span class="n">bnb_parameter_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">ALPHAS</span><span class="p">:</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">count_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">bnb_parameter_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Vary"</span><span class="p">:</span> <span class="s2">"alpha"</span><span class="p">,</span> <span class="s2">"Alpha"</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span>
+        <span class="s2">"Requested vocabulary"</span><span class="p">:</span> <span class="n">DEFAULT_MAX_FEATURES</span><span class="p">,</span> <span class="s2">"Actual vocabulary"</span><span class="p">:</span> <span class="n">count_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"Classroom test accuracy"</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_test</span><span class="p">))})</span>
+<span class="k">for</span> <span class="n">limit</span> <span class="ow">in</span> <span class="n">VOCAB_LIMITS</span><span class="p">:</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">"english"</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">fit_counts</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_text</span><span class="p">)</span>
+    <span class="n">eval_counts</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_text</span><span class="p">)</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">fit_counts</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">bnb_parameter_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Vary"</span><span class="p">:</span> <span class="s2">"vocabulary"</span><span class="p">,</span> <span class="s2">"Alpha"</span><span class="p">:</span> <span class="n">DEFAULT_ALPHA</span><span class="p">,</span>
+        <span class="s2">"Requested vocabulary"</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span> <span class="s2">"Actual vocabulary"</span><span class="p">:</span> <span class="n">fit_counts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"Classroom test accuracy"</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">eval_counts</span><span class="p">))})</span>
+<span class="n">bnb_parameter_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">bnb_parameter_rows</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">bnb_parameter_table</span><span class="p">)</span>
+<span class="n">base_rows</span> <span class="o">=</span> <span class="n">bnb_parameter_table</span><span class="p">[(</span><span class="n">bnb_parameter_table</span><span class="p">[</span><span class="s2">"Alpha"</span><span class="p">]</span> <span class="o">==</span> <span class="n">DEFAULT_ALPHA</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">(</span><span class="n">bnb_parameter_table</span><span class="p">[</span><span class="s2">"Requested vocabulary"</span><span class="p">]</span> <span class="o">==</span> <span class="n">DEFAULT_MAX_FEATURES</span><span class="p">)]</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">base_rows</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">bnb_acc</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best tested settings within each one-factor sweep (classroom exploration):"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">varied</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">bnb_parameter_table</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Vary"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())])</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Vary</th>
+<th>Alpha</th>
+<th>Requested vocabulary</th>
+<th>Actual vocabulary</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>alpha</td>
+<td>0.1</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.822</td>
+</tr>
+<tr>
+<th>1</th>
+<td>alpha</td>
+<td>0.3</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.825</td>
+</tr>
+<tr>
+<th>2</th>
+<td>alpha</td>
+<td>1.0</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>3</th>
+<td>alpha</td>
+<td>3.0</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.808</td>
+</tr>
+<tr>
+<th>4</th>
+<td>alpha</td>
+<td>10.0</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.776</td>
+</tr>
+<tr>
+<th>5</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>100</td>
+<td>100</td>
+<td>0.684</td>
+</tr>
+<tr>
+<th>6</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>500</td>
+<td>500</td>
+<td>0.780</td>
+</tr>
+<tr>
+<th>7</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>8</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>2000</td>
+<td>2000</td>
+<td>0.842</td>
+</tr>
+<tr>
+<th>9</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>5000</td>
+<td>5000</td>
+<td>0.856</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Best tested settings within each one-factor sweep (classroom exploration):
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Vary</th>
+<th>Alpha</th>
+<th>Requested vocabulary</th>
+<th>Actual vocabulary</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+<td>alpha</td>
+<td>0.3</td>
+<td>1000</td>
+<td>1000</td>
+<td>0.825</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Vary</th>
+<th>Alpha</th>
+<th>Requested vocabulary</th>
+<th>Actual vocabulary</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>9</th>
+<td>vocabulary</td>
+<td>1.0</td>
+<td>5000</td>
+<td>5000</td>
+<td>0.856</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-16">
+<p><strong>如何解释 / Interpretation：</strong> 先在Vary=alpha的行内比较，再在Vary=vocabulary的行内比较；实际词表列也要核对。相同默认设置出现两次，是核验两条流程一致，而不是两次独立实验。即使某个配置更高，也只能说明本次表示、划分和网格中的比较结果。</p>
+<p><strong>English:</strong> Compare within each one-factor sweep and report the actual vocabulary size. The duplicated default setting checks consistency; it is not an independent replication. A higher value applies to this dataset, split and tested grid, not to every document-classification problem.</p>
+</section>
+<section id="cell-17">
+<h2 id="4-multinomial-naive-bayes-model">4. Multinomial Naive Bayes model｜让非负权重进入另一个模型</h2>
+<p><strong>原任务 / Task（T17–20）：</strong> 使用TF-IDF表示训练Multinomial NB，比较表现，并查看各类高权重词。<br/>
+<strong>English:</strong> Train Multinomial NB on TF-IDF features, compare accuracy, and inspect the learned word parameters.</p>
+<p>沿Lecture2b cell91设置norm="l1"，并显式保留默认smooth_idf=True。IDF只从train拟合。非零文档变换后各项和为1；全零文档仍为0。TF-IDF是非负分数权重，不是Poisson整数计数，也不应硬套阶乘形式的整数多项式PMF。</p>
+<p>此处从Bernoulli/count换到Multinomial/TF-IDF，<strong>同时改变了模型与表示</strong>。可以比较两条完整流程，但不能把差异全归因于“分类器更好”。相关数学见<a href="Lecture02.html#tfidf">Lecture §17–18</a>。</p>
+</section>
+<section id="cell-18">
+<div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfTransformer</span><span class="p">(</span><span class="n">use_idf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s2">"l1"</span><span class="p">,</span> <span class="n">smooth_idf</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tf_train</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">count_train</span><span class="p">)</span>
+<span class="n">idf_before_test</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">idf_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">tf_test</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">count_test</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">tfidf</span><span class="o">.</span><span class="n">idf_</span><span class="p">,</span> <span class="n">idf_before_test</span><span class="p">)</span>
+<span class="n">sums</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tf_train</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">mnb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">pred_mnb</span> <span class="o">=</span> <span class="n">mnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tf_test</span><span class="p">)</span>
+<span class="n">mnb_acc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_mnb</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">mnb</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">tf_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Multinomial NB + TF-IDF: </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">pred_mnb</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">test_y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_y</span><span class="p">)</span><span class="si">}</span><span class="s2"> correct; accuracy=</span><span class="si">{</span><span class="n">mnb_acc</span><span class="si">:</span><span class="s2">.3%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Bernoulli difference (percentage points):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">((</span><span class="n">mnb_acc</span><span class="o">-</span><span class="n">bnb_acc</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">mnb_words</span> <span class="o">=</span> <span class="n">show_top_words</span><span class="p">(</span><span class="n">mnb</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="s2">"Top 10 per class / 展开各类前10词（Multinomial / TF-IDF）"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><pre>Multinomial NB + TF-IDF: 821/1000 correct; accuracy=82.100%
+Bernoulli difference (percentage points): 0.0
+</pre></div>
+<div class="output"><details><summary>Top 10 per class / 展开各类前10词（Multinomial / TF-IDF）</summary><div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>Class</th>
+<th>Rank</th>
+<th>Word</th>
+<th>Log parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>World</td>
+<td>1</td>
+<td>iraq</td>
+<td>-5.3403</td>
+</tr>
+<tr>
+<td>World</td>
+<td>2</td>
+<td>39</td>
+<td>-5.4974</td>
+</tr>
+<tr>
+<td>World</td>
+<td>3</td>
+<td>ap</td>
+<td>-5.5248</td>
+</tr>
+<tr>
+<td>World</td>
+<td>4</td>
+<td>said</td>
+<td>-5.5487</td>
+</tr>
+<tr>
+<td>World</td>
+<td>5</td>
+<td>reuters</td>
+<td>-5.6197</td>
+</tr>
+<tr>
+<td>World</td>
+<td>6</td>
+<td>killed</td>
+<td>-5.6701</td>
+</tr>
+<tr>
+<td>World</td>
+<td>7</td>
+<td>president</td>
+<td>-5.6862</td>
+</tr>
+<tr>
+<td>World</td>
+<td>8</td>
+<td>minister</td>
+<td>-5.7645</td>
+</tr>
+<tr>
+<td>World</td>
+<td>9</td>
+<td>troops</td>
+<td>-5.8280</td>
+</tr>
+<tr>
+<td>World</td>
+<td>10</td>
+<td>baghdad</td>
+<td>-5.8374</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>1</td>
+<td>39</td>
+<td>-4.7330</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>2</td>
+<td>ap</td>
+<td>-5.4817</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>3</td>
+<td>game</td>
+<td>-5.5382</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>4</td>
+<td>season</td>
+<td>-5.5569</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>5</td>
+<td>night</td>
+<td>-5.6753</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>6</td>
+<td>win</td>
+<td>-5.6988</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>7</td>
+<td>lead</td>
+<td>-5.7416</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>8</td>
+<td>team</td>
+<td>-5.7765</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>9</td>
+<td>victory</td>
+<td>-5.7888</td>
+</tr>
+<tr>
+<td>Sports</td>
+<td>10</td>
+<td>saturday</td>
+<td>-5.8053</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>1</td>
+<td>39</td>
+<td>-5.2057</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>2</td>
+<td>oil</td>
+<td>-5.4047</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>3</td>
+<td>reuters</td>
+<td>-5.5045</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>4</td>
+<td>company</td>
+<td>-5.5722</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>5</td>
+<td>said</td>
+<td>-5.5815</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>6</td>
+<td>prices</td>
+<td>-5.5903</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>7</td>
+<td>new</td>
+<td>-5.6260</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>8</td>
+<td>percent</td>
+<td>-5.8355</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>9</td>
+<td>corp</td>
+<td>-5.8759</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>10</td>
+<td>sales</td>
+<td>-5.9463</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>1</td>
+<td>new</td>
+<td>-5.2765</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>2</td>
+<td>microsoft</td>
+<td>-5.2780</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>3</td>
+<td>software</td>
+<td>-5.4491</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>4</td>
+<td>39</td>
+<td>-5.5661</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>5</td>
+<td>quot</td>
+<td>-5.6646</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>6</td>
+<td>space</td>
+<td>-5.8120</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>7</td>
+<td>company</td>
+<td>-5.8179</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>8</td>
+<td>computer</td>
+<td>-5.8648</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>9</td>
+<td>internet</td>
+<td>-5.8964</td>
+</tr>
+<tr>
+<td>Sci/Tech</td>
+<td>10</td>
+<td>reuters</td>
+<td>-5.8989</td>
+</tr>
+</tbody>
+</table></div></details></div>
+</section>
+<section id="cell-19">
+<p><strong>检查 / Check：</strong> Multinomial各词参数在每个类别内和为1；Bernoulli每词是一个独立二元试验，其出现率无需跨词相加为1。这里高参数值对应累计特征质量，输入为TF-IDF时不应称为原始词次数。</p>
+<p><strong>English takeaway:</strong> The comparison is between complete representation–model pipelines. TF-IDF must reuse training IDF, and fractional weights are a practical model input rather than literal integer counts.</p>
+</section>
+<section id="cell-20">
+<div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mnb</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Multinomial parameter row sums:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mnb</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Bernoulli presence-probability sums (not constrained to one):"</span><span class="p">,</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">bnb</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><pre>Multinomial parameter row sums: [1. 1. 1. 1.]
+Bernoulli presence-probability sums (not constrained to one): [13.29 11.79 15.05 12.74]
+</pre></div>
+</section>
+<section id="cell-21">
+<h2 id="5-misclassified-documents">5. Misclassified documents｜分错了什么？哪些解释只是猜想？</h2>
+<p><strong>原任务 / Task（T21–24）：</strong> 查看错分新闻，并给出可能的原因。<br/>
+<strong>English:</strong> Inspect misclassified documents and suggest plausible reasons.</p>
+<p>先看混淆矩阵：行是真实类别，列是预测类别，每行总数应等于该类test文档数。再看MNB流程前3条错分，记录索引、真值、预测、短文本和模型后验。错误类别可能语义接近、文本包含多类词、关键词被截断、表示丢失关系，或者标签本身值得核查；这些都要由具体证据支持。</p>
+</section>
+<section id="cell-22">
+<div class="code-input"><div class="cell-label">In [8]</div><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_mnb</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">cm</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_y</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"Blues"</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]),</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">"white"</span> <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cm</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="k">else</span> <span class="s2">"#243343"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">yticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">CATS</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">CATS</span><span class="p">,</span>
+       <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Predicted class"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"True class"</span><span class="p">,</span>
+       <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"MNB + TF-IDF: classroom test counts (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_y</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Documents"</span><span class="p">)</span>
+<span class="n">show_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"tutorial-confusion.png"</span><span class="p">)</span>
+
+<span class="n">error_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">pred_mnb</span> <span class="o">!=</span> <span class="n">test_y</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">error_indices</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Index=</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> | true=</span><span class="si">{</span><span class="n">CATS</span><span class="p">[</span><span class="n">test_y</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span><span class="si">}</span><span class="s2"> | predicted=</span><span class="si">{</span><span class="n">CATS</span><span class="p">[</span><span class="n">pred_mnb</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">test_text</span><span class="p">[</span><span class="n">idx</span><span class="p">][:</span><span class="mi">350</span><span class="p">],</span> <span class="mi">90</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Class posteriors:"</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">CATS</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mnb</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">tf_test</span><span class="p">[</span><span class="n">idx</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">)])))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Retained nonzero features:"</span><span class="p">,</span> <span class="n">count_test</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">nnz</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Retained words:"</span><span class="p">,</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">count_test</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span><span class="p">]))</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">error_indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No misclassifications in this run; do not manufacture error examples."</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/fec760464747e392.png" rel="noopener" target="_blank"><img alt="Executed Tutorial02 figure, cell 22" decoding="async" loading="lazy" src="../assets/fec760464747e392.png"/></a></div>
+<div class="output"><pre>
+Index=1 | true=Business | predicted=World
+Hurricane loss 'less than feared' Hurricane Frances could cause \$3-6bn in insured losses
+in the US, less than experts first predicted.
+Class posteriors: {'World': 0.2879, 'Sports': 0.2345, 'Business': 0.2716, 'Sci/Tech': 0.2061}
+Retained nonzero features: 4
+Retained words: experts, hurricane, loss, losses
+
+Index=3 | true=World | predicted=Business
+Consumer Confidence Dips in September NEW YORK - Job worries helped push consumer
+confidence down in September for the second consecutive month, a New York-based private
+research group said Tuesday.    The Consumer Confidence Index fell 1.9 points to 96.8 from
+a revised reading of 98.7 in August, according to The Conference Board...
+Class posteriors: {'World': 0.2177, 'Sports': 0.2179, 'Business': 0.312, 'Sci/Tech': 0.2524}
+Retained nonzero features: 22
+Retained words: according, august, based, board, conference, consumer, fell, group, helped, job, month, new, points, private, push, research, said, second, september, tuesday, worries, york
+
+Index=14 | true=Sci/Tech | predicted=Business
+Solar spacecraft set to launch next year The \$4 million Cosmos 1 project is backed by The
+Planetary Society, co-founded by Carl Sagan. By The Associated Press. A solar sail
+spacecraft designed to be propelled by the pressure of sunlight will be launched
+Class posteriors: {'World': 0.2436, 'Sports': 0.2321, 'Business': 0.2652, 'Sci/Tech': 0.2591}
+Retained nonzero features: 8
+Retained words: designed, launch, launched, million, press, pressure, set, year
+</pre></div>
+</section>
+<section id="cell-23">
+<p><strong>怎样写答案 / How to explain:</strong> “这条新闻被预测为Business，我在原文看到商业词汇”是观察；“如果保留某个短语就一定能修正”是待验证假设。先查词表是否保留该词，再设计一次只改变表示的验证，不凭一条故事证明因果。</p>
+<p>改变预处理若使用了这些test错分作为灵感，这份test已提供开发反馈。还可以查看准确率分母和类间错误分布，避免只背一个总分。</p>
+<p><strong>English takeaway:</strong> Describe the observed error first, then separate plausible explanations from verified causes. Inspecting held-out errors to redesign a model makes those data part of development.</p>
+<p><strong>本次固定样本的读法 / Reading the current examples：</strong>
+- Index 1描述飓风造成的保险损失，原标签Business、预测World，仅保留4个词。灾害事件与经济损失共用同一短文，可以提出“主题边界与词表截断影响判断”的假设；尚未用受控实验验证。
+- Index 3讨论消费者信心和就业，原标签World、预测Business。经济主题词使这个预测值得理解，但不能只凭主题印象把原标签改掉。
+- Index 14讨论太阳帆航天器及项目资助，原标签Sci/Tech、预测Business；两个模型后验接近。先查看保留词，再考虑是表示损失、主题重叠还是模型限制，不把某个金额直接宣判为错误原因。</p>
+<p>English: Index 1 combines disaster and insurance-loss language; index 3 discusses economic confidence despite its World label; index 14 combines a spacecraft project and funding. These observations motivate hypotheses, not proven causes or permission to relabel evaluation data. The retained-word output lets you inspect the representation.</p>
+</section>
+<section id="cell-24">
+<h2 id="6-effect-of-smoothingalpha">6. Effect of smoothing｜只改alpha，画一条能解释的曲线</h2>
+<p><strong>原任务 / Task（T25–26）：</strong> 用Multinomial TF-IDF模型画accuracy随alpha变化，并找本次网格中的最好值。<br/>
+<strong>English:</strong> Plot Multinomial TF-IDF accuracy against alpha and identify the best tested setting.</p>
+<p>固定划分、词表和TF-IDF变换，仅改变alpha。横轴使用对数刻度，因为候选跨了两个数量级；纵轴为accuracy。表里同时保留训练表现，帮助检查拟合与测试不一定同步。这里的“最好”严格限于给定网格和这份课堂test。</p>
+</section>
+<section id="cell-25">
+<div class="code-input"><div class="cell-label">In [9]</div><div class="highlight"><pre><span></span><span class="n">alpha_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">ALPHAS</span><span class="p">:</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">alpha_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"alpha"</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span>
+                       <span class="s2">"Train accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tf_train</span><span class="p">))),</span>
+                       <span class="s2">"Classroom test accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tf_test</span><span class="p">)))})</span>
+<span class="n">alpha_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">alpha_rows</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">alpha_table</span><span class="p">)</span>
+<span class="n">best_alpha_row</span> <span class="o">=</span> <span class="n">alpha_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">alpha_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+<span class="n">best_alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_alpha_row</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_table</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">],</span> <span class="n">alpha_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Classroom test"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_table</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">],</span> <span class="n">alpha_table</span><span class="p">[</span><span class="s2">"Train accuracy"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"s"</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">"#707780"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Train"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xscale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Smoothing alpha (log scale)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Accuracy"</span><span class="p">,</span>
+       <span class="n">title</span><span class="o">=</span><span class="s2">"Only alpha changes; vocabulary and TF-IDF stay fixed"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">PercentFormatter</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.15</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">show_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"tutorial-alpha.png"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best tested alpha (first/smallest on ties):"</span><span class="p">,</span> <span class="n">best_alpha</span><span class="p">,</span>
+      <span class="s2">"| classroom test:"</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">best_alpha_row</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="si">:</span><span class="s1">.3%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>alpha</th>
+<th>Train accuracy</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0.1</td>
+<td>0.9120</td>
+<td>0.817</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0.3</td>
+<td>0.9035</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1.0</td>
+<td>0.8930</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>3</th>
+<td>3.0</td>
+<td>0.8720</td>
+<td>0.807</td>
+</tr>
+<tr>
+<th>4</th>
+<td>10.0</td>
+<td>0.7845</td>
+<td>0.729</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/63a2cc0b5fcc7a61.png" rel="noopener" target="_blank"><img alt="Executed Tutorial02 figure, cell 25" decoding="async" loading="lazy" src="../assets/63a2cc0b5fcc7a61.png"/></a></div>
+<div class="output"><pre>Best tested alpha (first/smallest on ties): 0.3 | classroom test: 82.100%
+</pre></div>
+</section>
+<section id="cell-26">
+<p><strong>自查：</strong> 在其他设置固定时，alpha越大，测试accuracy是否一定越高？<br/>
+<strong>English question:</strong> With other settings fixed, must a larger alpha produce higher test accuracy?<br/>
+<strong>答案：</strong> 不一定。平滑缓解稀疏估计，但过强时可能抹平类别差异；本次曲线的形状要由实际输出回答。<br/>
+<strong>English answer:</strong> No. Smoothing stabilizes sparse estimates, but excessive smoothing can suppress useful class differences. Describe the measured curve rather than assuming a monotonic improvement.</p>
+</section>
+<section id="cell-27">
+<h2 id="7-effect-of-vocabulary-size">7. Effect of vocabulary size｜更多词，真的提供更多有效证据吗？</h2>
+<p><strong>原任务 / Task（T27–28）：</strong> 画accuracy随词表上限变化，并找当前网格中的最好值。<br/>
+<strong>English:</strong> Plot accuracy against vocabulary limit and identify the best tested limit.</p>
+<p>为单独观察词表，这一组将alpha固定为默认1，<strong>不继承上一组用test挑出的best_alpha</strong>。每个上限都仅从train重建词表与IDF，再应用到test。请求上限和实际大小一起报告；各词表坐标不同，因此每次都要重新拟合模型。</p>
+</section>
+<section id="cell-28">
+<div class="code-input"><div class="cell-label">In [10]</div><div class="highlight"><pre><span></span><span class="n">vocab_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">limit</span> <span class="ow">in</span> <span class="n">VOCAB_LIMITS</span><span class="p">:</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">"english"</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">counts_fit</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_text</span><span class="p">)</span>
+    <span class="n">counts_eval</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_text</span><span class="p">)</span>
+    <span class="n">transformer</span> <span class="o">=</span> <span class="n">TfidfTransformer</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="s2">"l1"</span><span class="p">,</span> <span class="n">use_idf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">smooth_idf</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">z_fit</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">counts_fit</span><span class="p">)</span>
+    <span class="n">z_eval</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">counts_eval</span><span class="p">)</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">z_fit</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">vocab_rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Requested limit"</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span> <span class="s2">"Actual vocabulary"</span><span class="p">:</span> <span class="n">counts_fit</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                       <span class="s2">"Train accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">z_fit</span><span class="p">))),</span>
+                       <span class="s2">"Classroom test accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">z_eval</span><span class="p">)))})</span>
+<span class="n">vocab_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">vocab_rows</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">vocab_table</span><span class="p">)</span>
+<span class="n">best_vocab_row</span> <span class="o">=</span> <span class="n">vocab_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vocab_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vocab_table</span><span class="p">[</span><span class="s2">"Actual vocabulary"</span><span class="p">],</span> <span class="n">vocab_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Classroom test"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vocab_table</span><span class="p">[</span><span class="s2">"Actual vocabulary"</span><span class="p">],</span> <span class="n">vocab_table</span><span class="p">[</span><span class="s2">"Train accuracy"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"s"</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">"#707780"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Train"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Actual vocabulary size (terms)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Accuracy"</span><span class="p">,</span>
+       <span class="n">title</span><span class="o">=</span><span class="s2">"Only vocabulary limit changes; alpha stays 1"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">PercentFormatter</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.15</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">show_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"tutorial-vocabulary.png"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best tested limit:"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_vocab_row</span><span class="p">[</span><span class="s2">"Requested limit"</span><span class="p">]),</span>
+      <span class="s2">"| actual size:"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_vocab_row</span><span class="p">[</span><span class="s2">"Actual vocabulary"</span><span class="p">]),</span>
+      <span class="s2">"| classroom test:"</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">best_vocab_row</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="si">:</span><span class="s1">.3%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Requested limit</th>
+<th>Actual vocabulary</th>
+<th>Train accuracy</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>100</td>
+<td>100</td>
+<td>0.6995</td>
+<td>0.686</td>
+</tr>
+<tr>
+<th>1</th>
+<td>500</td>
+<td>500</td>
+<td>0.8575</td>
+<td>0.796</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1000</td>
+<td>1000</td>
+<td>0.8930</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2000</td>
+<td>2000</td>
+<td>0.9165</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5000</td>
+<td>5000</td>
+<td>0.9305</td>
+<td>0.823</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/fdff07de4f99546f.png" rel="noopener" target="_blank"><img alt="Executed Tutorial02 figure, cell 28" decoding="async" loading="lazy" src="../assets/fdff07de4f99546f.png"/></a></div>
+<div class="output"><pre>Best tested limit: 5000 | actual size: 5000 | classroom test: 82.300%
+</pre></div>
+</section>
+<section id="cell-29">
+<p><strong>结果边界 / Interpretation boundary:</strong> 新词可能增加有用线索，也可能增加稀疏、噪声或估计不稳。一次网格中最高的点不是所有词表的全局最优，更不是独立测试成绩。两条单变量曲线也不是alpha与词表规模的联合搜索。</p>
+<p><strong>English takeaway:</strong> Report the actual vocabulary size and fixed settings. Separate one-factor experiments from joint tuning, and avoid treating the selected test score as unbiased final performance.</p>
+</section>
+<section id="cell-30">
+<h2 id="8-poisson-naive-bayes">8. Poisson Naive Bayes｜外框不变，换掉词计数的分布</h2>
+<p><strong>原任务 / Task（T29–35）：</strong> 用Poisson分布建模每类、每词的计数，按老师给的接口实现分类器，再与前两种流程比较。<br/>
+<strong>English:</strong> Implement Poisson NB for raw word counts using the provided class interface, then compare it with the previous pipelines.</p>
+<h3 id="81-log">8.1 参数估计与log分数</h3>
+<p>给定类别c，特征<span class="arithmatex">\(x_j\)</span>是每篇文档中词j的<strong>非负整数计数</strong>。原模型把每篇文档当一次相同暴露量的观察：</p>
+<div class="arithmatex">\[p(x_j\mid c)=e^{-\mu_{j,c}}\frac{\mu_{j,c}^{x_j}}{x_j!},
+\qquad
+\hat\mu^{MLE}_{j,c}=\frac{T_{j,c}}{N_c}.\]</div>
+<p><span class="arithmatex">\(T_{j,c}\)</span>是该类所有文档的词j计数之和；<span class="arithmatex">\(N_c\)</span>是该类文档数。这里<span class="arithmatex">\(\mu\)</span>不要求跨词和为1，分母不是全类的总词数。原模型没有给每篇文档单独的长度曝光量；长度变化较大时这会成为需要讨论的假设。</p>
+<p>对正率求导可得到MLE：与<span class="arithmatex">\(\mu\)</span>有关的log似然是<span class="arithmatex">\(T\log\mu-N_c\mu\)</span>，导数<span class="arithmatex">\(T/\mu-N_c=0\)</span>。T=0时最大值在边界<span class="arithmatex">\(\mu=0\)</span>，不是除以零得到的内点解。</p>
+<p>文档的log CCD为：</p>
+<div class="arithmatex">\[\log p(\mathbf{x}\mid c)=
+\sum_j[x_j\log\mu_{j,c}-\mu_{j,c}-\log(x_j!)].
+\]</div>
+<p>加上<span class="arithmatex">\(\log p(c)\)</span>得到log joint，再用<a href="Lecture02.html#log-scores">Lecture §7</a>的logsumexp归一化。阶乘项对同一文档的所有类相同，选类别时可消去；参考实现保留它，以便与scipy的logpmf逐项校验。</p>
+<h3 id="82-alpha">8.2 模板未定义的alpha：明确采用一个补充约定</h3>
+<p>T32的构造器有alpha，却没有给出平滑公式。这里对alpha&gt;0明确选用：</p>
+<div class="arithmatex">\[\hat\mu_{j,c}=\frac{T_{j,c}+\alpha}{N_c+\alpha}.\]</div>
+<p>这是对每个率加Gamma(shape=alpha, rate=alpha)先验后取<strong>后验均值</strong>的额外约定。分子增加伪事件，分母增加伪曝光量；它不是MAP公式，也不是从模板中“读出来”的唯一答案。alpha=0在本实现中特别定义为无平滑MLE，不称为一个合法Gamma(0,0)先验。</p>
+<p><strong>教学手算 / Worked:</strong> 某词在同类4篇文档计数[0,0,0,0]。MLE=0；alpha=1时，按上述约定，后验均值=(0+1)/(4+1)=0.2。<br/>
+<strong>English worked example:</strong> A word has counts [0,0,0,0] in four same-class documents. Its MLE rate is 0; with alpha=1, the specified posterior-mean rate is (0+1)/(4+1)=0.2. The zero MLE would assign zero probability to every positive future count.</p>
+<p><strong>你来试：</strong> 同类4篇计数[0,1,0,3]，alpha=1，按上述约定求MLE与平滑率。<br/>
+<strong>English question:</strong> A word has counts [0,1,0,3] in four same-class documents. With alpha=1 and the convention above, find its MLE rate and smoothed rate.<br/>
+<strong>答案：</strong> MLE=4/4=1；平滑率=5/5=1。两个值恰好相同，不代表平滑不起作用于其他数据；先验均值在此也是1。<br/>
+<strong>English answer:</strong> The MLE rate is 4/4=1 and the smoothed rate is 5/5=1. They coincide because the observed mean equals the prior mean; smoothing can still change estimates for other data.</p>
+</section>
+<section id="cell-31">
+<div class="code-input"><div class="cell-label">In [11]</div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PoissonNB</span><span class="p">:</span>
+    <span class="c1"># Poisson counts with explicit Gamma(alpha, alpha) posterior-mean smoothing.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="ow">or</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"alpha must be finite and nonnegative"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fitting</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"X must have sample rows and at least one feature"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Poisson features must be finite nonnegative counts"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Poisson requires integer counts, not TF-IDF"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fitting</span> <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Feature count differs from fitted vocabulary"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counts</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fitting</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"y must have one label per nonempty training row"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="n">class_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_prior_</span> <span class="o">=</span> <span class="n">class_counts</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="n">class_counts</span><span class="p">)</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_logccd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="c1"># c is a class-column index; actual labels are stored in classes_.</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counts</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">positive</span> <span class="o">=</span> <span class="n">rate</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">safe_log_rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+        <span class="n">safe_log_rate</span><span class="p">[</span><span class="n">positive</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rate</span><span class="p">[</span><span class="n">positive</span><span class="p">])</span>
+        <span class="n">factorial</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">factorial</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">gammaln</span><span class="p">(</span><span class="n">factorial</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">safe_log_rate</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+                  <span class="o">-</span> <span class="n">rate</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">factorial</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="c1"># Handle Poisson(0) exactly: P(0)=1, P(positive count)=0.</span>
+        <span class="n">impossible</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="o">~</span><span class="n">positive</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">scores</span><span class="p">[</span><span class="n">impossible</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">return</span> <span class="n">scores</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_logjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_logccd</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_prior_</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span>
+        <span class="p">])</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_require_possible</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bad</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"All classes give zero likelihood for rows </span><span class="si">{</span><span class="n">bad</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">; "</span>
+                             <span class="s2">"use an explicitly justified positive smoothing or revise the model."</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_logproba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_logjoint</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_require_possible</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scores</span> <span class="o">-</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_logproba</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_logjoint</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_require_possible</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">scores</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</section>
+<section id="cell-32">
+<h3 id="83">8.3 先用四条小数据检查，再跑整份新闻</h3>
+<p>训练计数为[[1,0],[3,2],[0,2],[0,4]]，前两条是类10、后两条是类20。alpha=1时，两类率应为[5/3,1]和[1/3,7/3]，先验各0.5。本实现用classes_保存真实标签，避免原骨架“标签必须从0连续编号”的隐含限制；AGNews的0–3标签不因此改变。</p>
+<p><strong>English:</strong> Check the fitted rates, likelihoods and normalization on a tiny known example before trusting dataset-level accuracy. Nonconsecutive labels test the label mapping separately.</p>
+</section>
+<section id="cell-33">
+<div class="code-input"><div class="cell-label">In [12]</div><div class="highlight"><pre><span></span><span class="n">toy_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="n">toy_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">])</span>
+<span class="n">toy</span> <span class="o">=</span> <span class="n">PoissonNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">toy_X</span><span class="p">,</span> <span class="n">toy_y</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">toy</span><span class="o">.</span><span class="n">rate_</span><span class="p">,</span> <span class="p">[[</span><span class="mi">5</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">/</span><span class="mi">3</span><span class="p">]])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">toy</span><span class="o">.</span><span class="n">class_prior_</span><span class="p">,</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span><span class="mf">.5</span><span class="p">])</span>
+<span class="n">queries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">expected_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span>
+    <span class="n">poisson</span><span class="o">.</span><span class="n">logpmf</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">toy</span><span class="o">.</span><span class="n">rate_</span><span class="p">[</span><span class="n">c</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">toy</span><span class="o">.</span><span class="n">compute_logjoint</span><span class="p">(</span><span class="n">queries</span><span class="p">),</span> <span class="n">expected_joint</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">toy</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">toy</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">queries</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">}</span>
+
+<span class="n">mle</span> <span class="o">=</span> <span class="n">PoissonNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">toy_X</span><span class="p">,</span> <span class="n">toy_y</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isneginf</span><span class="p">(</span><span class="n">mle</span><span class="o">.</span><span class="n">compute_logccd</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">mle</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]]),</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">expect_value_error</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">action</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Expected a ValueError, but invalid input was accepted."</span><span class="p">)</span>
+
+<span class="n">zero_model</span> <span class="o">=</span> <span class="n">PoissonNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">zero_message</span> <span class="o">=</span> <span class="n">expect_value_error</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">zero_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]))</span>
+<span class="n">fractional_message</span> <span class="o">=</span> <span class="n">expect_value_error</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">toy</span><span class="o">.</span><span class="n">predict</span><span class="p">([[</span><span class="mf">.5</span><span class="p">,</span><span class="mi">0</span><span class="p">]]))</span>
+<span class="n">negative_message</span> <span class="o">=</span> <span class="n">expect_value_error</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">toy</span><span class="o">.</span><span class="n">predict</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Rates:"</span><span class="p">,</span> <span class="n">toy</span><span class="o">.</span><span class="n">rate_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Zero-rate guard:"</span><span class="p">,</span> <span class="n">zero_message</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Fractional input guard:"</span><span class="p">,</span> <span class="n">fractional_message</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"All tiny numerical, normalization and label checks passed."</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><pre>Rates: [[1.66666667 1.        ]
+ [0.33333333 2.33333333]]
+Zero-rate guard: All classes give zero likelihood for rows [0]; use an explicitly justified positive smoothing or revise the model.
+Fractional input guard: Poisson requires integer counts, not TF-IDF
+All tiny numerical, normalization and label checks passed.
+</pre></div>
+</section>
+<section id="cell-34">
+<h3 id="84-test-the-count-model">8.4 在原始新闻计数上运行 / Test the count model</h3>
+<p><strong>原任务 / Task（T33–35）：</strong> 在数据集上测试Poisson NB，比较它是否适合文档。<br/>
+<strong>English:</strong> Test Poisson NB on the dataset, compare the pipelines and discuss its suitability for documents.</p>
+<p>仍使用默认1000词的原始count_train/count_test，alpha=1；不拿TF-IDF冒充Poisson计数。各类词率无需和为1，因为它们是每文档的计数均值。</p>
+</section>
+<section id="cell-35">
+<div class="code-input"><div class="cell-label">In [13]</div><div class="highlight"><pre><span></span><span class="n">pnb</span> <span class="o">=</span> <span class="n">PoissonNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">count_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">pred_pnb</span> <span class="o">=</span> <span class="n">pnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_test</span><span class="p">)</span>
+<span class="n">pnb_acc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_pnb</span><span class="p">))</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">pnb</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">count_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Pipeline"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Bernoulli / presence"</span><span class="p">,</span> <span class="s2">"Multinomial / L1 TF-IDF"</span><span class="p">,</span> <span class="s2">"Poisson / counts"</span><span class="p">],</span>
+    <span class="s2">"Vocabulary"</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"Alpha"</span><span class="p">:</span> <span class="p">[</span><span class="n">DEFAULT_ALPHA</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"Correct / 1000"</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">p</span> <span class="o">==</span> <span class="n">test_y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">pred_bnb</span><span class="p">,</span> <span class="n">pred_mnb</span><span class="p">,</span> <span class="n">pred_pnb</span><span class="p">]],</span>
+    <span class="s2">"Classroom test accuracy"</span><span class="p">:</span> <span class="p">[</span><span class="n">bnb_acc</span><span class="p">,</span><span class="n">mnb_acc</span><span class="p">,</span><span class="n">pnb_acc</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">bars</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">"Pipeline"</span><span class="p">],</span> <span class="n">summary</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="mf">.55</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Accuracy on the same classroom test set"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Three fixed default pipelines"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">PercentFormatter</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span><span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">bar</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span><span class="n">summary</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">value</span><span class="o">-</span><span class="mf">.02</span><span class="p">,</span><span class="n">bar</span><span class="o">.</span><span class="n">get_y</span><span class="p">()</span><span class="o">+</span><span class="n">bar</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span><span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">"white"</span><span class="p">)</span>
+<span class="n">show_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"tutorial-models.png"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Pipeline</th>
+<th>Vocabulary</th>
+<th>Alpha</th>
+<th>Correct / 1000</th>
+<th>Classroom test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Bernoulli / presence</td>
+<td>1000</td>
+<td>1.0</td>
+<td>821</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Multinomial / L1 TF-IDF</td>
+<td>1000</td>
+<td>1.0</td>
+<td>821</td>
+<td>0.821</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Poisson / counts</td>
+<td>1000</td>
+<td>1.0</td>
+<td>812</td>
+<td>0.812</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/ea38eb79c7e07ae2.png" rel="noopener" target="_blank"><img alt="Executed Tutorial02 figure, cell 35" decoding="async" loading="lazy" src="../assets/ea38eb79c7e07ae2.png"/></a></div>
+</section>
+<section id="cell-36">
+<p><strong>怎样回答“适不适合”？</strong> 先引用这次表里的表现，再回到假设：等曝光量Poisson把每篇文档的同一词计数当同一种试验，且要求给定类别后词计数独立；文档长短、词的共现与实际计数波动可能挑战这些假设。某次accuracy高或低都不能证明所有文档服从或不服从Poisson。</p>
+<p><strong>English answer framework:</strong> “Under the stated preprocessing, vocabulary and smoothing, the measured accuracy is … . This supports a comparison of these pipelines on this dataset. Equal document exposure and conditional count independence remain modeling assumptions; the score alone does not validate them.”</p>
+<p>NB的高后验也不自动代表经过校准的真实可信度。对错误样本和每类表现的检查与总accuracy互补。</p>
+</section>
+<section id="cell-37">
+<div class="code-input"><div class="cell-label">In [14]</div><div class="highlight"><pre><span></span><span class="c1"># Derived outputs only: no assignment submission files are generated.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"purpose"</span><span class="p">:</span> <span class="s2">"classroom exploration; the given test split is reused for comparison/tuning"</span><span class="p">,</span>
+    <span class="s2">"seed"</span><span class="p">:</span> <span class="n">SEED</span><span class="p">,</span> <span class="s2">"data_sha256"</span><span class="p">:</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+    <span class="s2">"train_n"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_y</span><span class="p">),</span> <span class="s2">"test_n"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_y</span><span class="p">),</span> <span class="s2">"actual_vocabulary"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">),</span>
+    <span class="s2">"versions"</span><span class="p">:</span> <span class="n">versions</span><span class="p">,</span>
+    <span class="s2">"default_accuracy"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"bernoulli"</span><span class="p">:</span> <span class="n">bnb_acc</span><span class="p">,</span> <span class="s2">"multinomial_tfidf"</span><span class="p">:</span> <span class="n">mnb_acc</span><span class="p">,</span> <span class="s2">"poisson_counts"</span><span class="p">:</span> <span class="n">pnb_acc</span><span class="p">},</span>
+    <span class="s2">"bernoulli_parameter_experiments"</span><span class="p">:</span> <span class="n">bnb_parameter_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
+    <span class="s2">"alpha_experiment"</span><span class="p">:</span> <span class="n">alpha_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
+    <span class="s2">"vocabulary_experiment"</span><span class="p">:</span> <span class="n">vocab_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
+    <span class="s2">"confusion_mnb"</span><span class="p">:</span> <span class="n">cm</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">"reviewed_error_indices"</span><span class="p">:</span> <span class="n">error_indices</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="s2">"class_counts"</span><span class="p">:</span> <span class="n">class_counts</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
+    <span class="s2">"checks"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"posterior_rows_sum_to_one"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"poisson_matches_scipy"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">"zero_rate_guard"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"non_integer_guard"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"nonconsecutive_label_mapping"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">(</span><span class="n">NOTE_DIR</span> <span class="o">/</span> <span class="s2">"tutorial-results.json"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">max_accuracy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">winners</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span> <span class="n">max_accuracy</span><span class="p">),</span> <span class="s2">"Pipeline"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">alpha_ties</span> <span class="o">=</span> <span class="n">alpha_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">alpha_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">],</span>
+                                       <span class="n">alpha_table</span><span class="p">[</span><span class="s2">"Classroom test accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="s2">"alpha"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">disagreements</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">pred_bnb</span> <span class="o">!=</span> <span class="n">pred_mnb</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span>
+    <span class="s2">"### 本次运行小结 / Executed result</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="sa">f</span><span class="s2">"默认设置下最高accuracy为 **</span><span class="si">{</span><span class="n">max_accuracy</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">**，达到这一值的流程是 **</span><span class="si">{</span><span class="s1">' / '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">winners</span><span class="p">)</span><span class="si">}</span><span class="s2">**。"</span>
+    <span class="sa">f</span><span class="s2">"MNB/TF-IDF平滑网格中达到最高分的alpha为 **</span><span class="si">{</span><span class="n">alpha_ties</span><span class="si">}</span><span class="s2">**；"</span>
+    <span class="sa">f</span><span class="s2">"MNB/TF-IDF独立词表实验的首个最好上限是 **</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">best_vocab_row</span><span class="p">[</span><span class="s1">'Requested limit'</span><span class="p">])</span><span class="si">}</span><span class="s2">**。"</span>
+    <span class="sa">f</span><span class="s2">"Bernoulli与MNB在 **</span><span class="si">{</span><span class="n">disagreements</span><span class="si">}</span><span class="s2">** 条记录上给出不同标签，总分相同也不代表预测相同。"</span>
+    <span class="s2">"两组单变量实验没有联合优化；这份test已参与选择，不能当作最终独立成绩。</span><span class="se">\n\n</span><span class="s2">"</span>
+    <span class="sa">f</span><span class="s2">"The highest fixed-default accuracy is **</span><span class="si">{</span><span class="n">max_accuracy</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">**, achieved by "</span>
+    <span class="sa">f</span><span class="s2">"**</span><span class="si">{</span><span class="s1">' / '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">winners</span><span class="p">)</span><span class="si">}</span><span class="s2">**. Bernoulli and MNB disagree on </span><span class="si">{</span><span class="n">disagreements</span><span class="si">}</span><span class="s2"> records. "</span>
+    <span class="s2">"These classroom comparisons do not establish universal superiority or an unbiased final score."</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><h3 id="executed-result">本次运行小结 / Executed result</h3>
+<p>默认设置下最高accuracy为 <strong>82.10%</strong>，达到这一值的流程是 <strong>Bernoulli / presence / Multinomial / L1 TF-IDF</strong>。MNB/TF-IDF平滑网格中达到最高分的alpha为 <strong>[0.3, 1.0]</strong>；MNB/TF-IDF独立词表实验的首个最好上限是 <strong>5000</strong>。Bernoulli与MNB在 <strong>83</strong> 条记录上给出不同标签，总分相同也不代表预测相同。两组单变量实验没有联合优化；这份test已参与选择，不能当作最终独立成绩。</p>
+<p>The highest fixed-default accuracy is <strong>82.10%</strong>, achieved by <strong>Bernoulli / presence / Multinomial / L1 TF-IDF</strong>. Bernoulli and MNB disagree on 83 records. These classroom comparisons do not establish universal superiority or an unbiased final score.</p></div>
+</section>
+<section id="cell-38">
+<h2 id="9-a-separate-evaluation-protocol">9. 如果要严格评价泛化，流程怎样改？ / A separate evaluation protocol</h2>
+<p>这是<strong>方法补充</strong>，不是假装原题已经要求了另一个数据划分：</p>
+<ol>
+<li>从给定train内部再划训练/验证，或做内层CV。</li>
+<li>每折分别拟合词表、IDF和模型；把这些步骤放在同一Pipeline中。</li>
+<li>在验证上选择表示、alpha和词表规模，固定方案后重拟合。</li>
+<li>最后才评估此前未参与开发的test。若本文件已经用test反复探索，不能事后把同一次分数改名为“独立测试”；需要新的未触碰数据或另一个预先明确的评估设计。</li>
+</ol>
+<p><strong>English:</strong> Tune on training-internal validation, refitting preprocessing inside each fold. Evaluate the fixed choice on untouched test data. Renaming an already explored test set does not restore its independence.</p>
+<p>独立迁移题：某人在所有3000条新闻上先建词表，再只用2000条训练分类器。他说“模型没见过test标签，所以没泄漏”。哪里不对？<br/>
+English question: Someone fits a vocabulary on all 3000 documents but trains the classifier on only 2000. They claim there is no leakage because test labels were unused. What is wrong?<br/>
+答案：测试文本已经参与特征选择；无标签信息也会影响表示。验证目标若是对新数据泛化，预处理也必须只从对应训练部分学习。<br/>
+English answer: Test text influenced the representation. Leakage can involve unlabeled inputs; vocabulary learning must stay within the corresponding training split.</p>
+</section>
+<section id="cell-39">
+<h2 id="10-return-and-recall">10. 回原课、练英文、再刷少量卡 / Return and recall</h2>
+<p>用英文解释三个问题，再去Markji按卡号巩固：
+- Why must the vocabulary and IDF be fitted on training data?
+- Why do Bernoulli, multinomial and Poisson smoothing have different denominators?
+- Why is the highest score in these test-set sweeps not an unbiased final result?</p>
+<p>对应中文：为何词表/IDF只从训练数据拟合？三个模型的平滑分母为何不同？为何这次扫test得到的最高分不是独立最终成绩？</p>
+<p>最低合格要点 / Minimum answer points：
+1. 中文：词表和IDF会学习输入分布，因此也必须留在训练部分。English: Vocabulary and IDF learn from input data and must be fitted within the training split.
+2. 中文：Bernoulli对每词的两种结果平滑；Multinomial对词表中的V种结果平滑；这里Poisson的额外约定向事件数和曝光量分别加alpha。English: Bernoulli smooths two feature outcomes; multinomial smooths V token outcomes; the stated Poisson convention adds alpha to the event count and exposure.
+3. 中文：test表现参与了模型和参数选择，已提供开发反馈。English: The test scores influenced model and parameter selection, so they are development feedback rather than an untouched final evaluation.</p>
+<p>关联微课：<a href="https://crazyshout.github.io/micro-course/?lesson=ml08">文本NB</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml09">Poisson NB</a>。
+现有卡：<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M078">M078稀疏表示</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M110">M110调参比较</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M112">M112 Poisson率</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M115">M115平滑解释</a>。长实现仍需完整重做，不只背卡片输出。</p>
+<h3 id="source-coverage">原文件覆盖索引 / Source coverage</h3>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原cell</th>
+<th>本文件位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1–4</td>
+<td>开头、§0；T1为空白/导言，设置与路径</td>
+</tr>
+<tr>
+<td>T5–9</td>
+<td>§1 数据、规模、类别和文本</td>
+</tr>
+<tr>
+<td>T10–12</td>
+<td>§2 固定词表与矩阵</td>
+</tr>
+<tr>
+<td>T13–16</td>
+<td>§3 Bernoulli、前10词及alpha/词表的单因素比较</td>
+</tr>
+<tr>
+<td>T17–20</td>
+<td>§4 Multinomial TF-IDF与前10词</td>
+</tr>
+<tr>
+<td>T21–24</td>
+<td>§5 错分检查；填空题由解释框架和实测样本承接</td>
+</tr>
+<tr>
+<td>T25–26</td>
+<td>§6 alpha曲线</td>
+</tr>
+<tr>
+<td>T27–28</td>
+<td>§7 词表曲线</td>
+</tr>
+<tr>
+<td>T29–32</td>
+<td>§8.1–8.3 公式、约定、实现和手算检查</td>
+</tr>
+<tr>
+<td>T33–35</td>
+<td>§8.4 数据测试与模型讨论</td>
+</tr>
+<tr>
+<td>T36</td>
+<td>空单元，无独立教学内容</td>
+</tr>
+</tbody>
+</table></div>
+<p>参考原理以老师材料和<a href="Lecture02.html">Lecture02</a>为主。库行为另核对<a href="https://scikit-learn.org/stable/modules/naive_bayes.html">scikit-learn NB</a>、<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html">TF-IDF参数</a>。Poisson补充的Gamma后验均值沿用已核对的M115说明，不是模板定义的公式。</p>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

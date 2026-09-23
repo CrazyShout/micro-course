@@ -1,0 +1,1050 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-24",
+  "major_documents": 15,
+  "documents": [
+    {
+      "path": "CS5489/Lecture01.html",
+      "source": "CS5489/course-notes/Lecture01.md",
+      "sha256": "4e2c4bb08d330ff83608a2397ef13c09d645e478276fd066982638f1e8c570b6",
+      "title": "Lecture 1 · Introduction / Python / NumPy / Probability",
+      "major": true,
+      "images": 4,
+      "answers": 0
+    },
+    {
+      "path": "CS5489/Lecture02.html",
+      "source": "CS5489/course-notes/Lecture02.md",
+      "sha256": "b2fdae21e7174e009438d515979c884961041fe428dd3a1f9cba0bba6873970d",
+      "title": "Lecture 2 · Bayes Classifier & Naive Bayes Classifier",
+      "major": true,
+      "images": 8,
+      "answers": 0
+    },
+    {
+      "path": "CS5489/Lecture03.html",
+      "source": "CS5489/course-notes/Lecture03.md",
+      "sha256": "298cfdbe14f3d69b9e15954be3ec0c9d1aecc175c7f60b734535338aabb1a431",
+      "title": "Lecture 3 · Discriminative Classifiers｜从概率分布走向分类边界",
+      "major": true,
+      "images": 5,
+      "answers": 5
+    },
+    {
+      "path": "CS5489/Lecture04.html",
+      "source": "CS5489/course-notes/Lecture04.md",
+      "sha256": "6e2b47901f5810f433253d42c337ac077c9604dc2b82d7ce378adc36eb3ed896",
+      "title": "Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”",
+      "major": true,
+      "images": 6,
+      "answers": 2
+    },
+    {
+      "path": "CS5489/Tutorial01.html",
+      "source": "CS5489/course-notes/Tutorial01.ipynb",
+      "sha256": "7dc8eefed9e5f96445793625da5d606a26ae6098448c24d520d3591aec90127a",
+      "title": "Tutorial 1 · From Python loops to orthonormal vectors",
+      "major": true,
+      "images": 4,
+      "answers": 0
+    },
+    {
+      "path": "CS5489/Tutorial02.html",
+      "source": "CS5489/course-notes/Tutorial02.ipynb",
+      "sha256": "0bd5a61e373a333ec32edde49e24ddbd55eddc18a8d374fe026596ac0ff0a5a6",
+      "title": "Tutorial 2 · Text Document Classification with Naive Bayes",
+      "major": true,
+      "images": 4,
+      "answers": 2
+    },
+    {
+      "path": "CS5489/Tutorial03.html",
+      "source": "CS5489/course-notes/Tutorial03.ipynb",
+      "sha256": "534c0560feab6e1b90aa4e1041d057fb015239bfa6c2548df50ab64a1045ab05",
+      "title": "Tutorial 3 · Linear classifiers, cropping and an L1 kernel",
+      "major": true,
+      "images": 10,
+      "answers": 0
+    },
+    {
+      "path": "CS5489/Assignment01.html",
+      "source": "CS5489/course-notes/Assignment01.md",
+      "sha256": "f1844d36f2f4debffaf97d6cf6ee3d4d2e29ed4bfd871782a33f10ae26309e57",
+      "title": "Assignment 1 · SMS Classification",
+      "major": true,
+      "images": 0,
+      "answers": 0
+    },
+    {
+      "path": "CS5222/Chapter01.html",
+      "source": "CS5222/course-notes/Chapter01.md",
+      "sha256": "75d77d00342c16c9aa876eff89e5bea1615eac874f3d543e6e74063356776d90",
+      "title": "Chapter 1 · Introduction｜一条消息怎样穿过互联网",
+      "major": true,
+      "images": 15,
+      "answers": 4
+    },
+    {
+      "path": "CS5222/Chapter02.html",
+      "source": "CS5222/course-notes/Chapter02.md",
+      "sha256": "e7d9f045717c30dc9e25d088d16823fa5dcb64534286aa53511d69ca6df6991b",
+      "title": "Chapter 2 · Application Layer｜让两端的程序真正说上话",
+      "major": true,
+      "images": 5,
+      "answers": 4
+    },
+    {
+      "path": "CS5222/Tutorial01.html",
+      "source": "CS5222/course-notes/Tutorial01.md",
+      "sha256": "9b60c78e63bd2f41a3974a1c76a2d3e700a0793e694d63ed7a41f47b8799932f",
+      "title": "Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚",
+      "major": true,
+      "images": 3,
+      "answers": 4
+    },
+    {
+      "path": "CS5222/Tutorial02.html",
+      "source": "CS5222/course-notes/Tutorial02.md",
+      "sha256": "f58380a79c1456a86f77b94f6e1832099a4cd7d28361394e1ed30fa6659ae794",
+      "title": "Tutorial 2 · Delay and traceroute｜先定义计时事件，再按顺序相加",
+      "major": true,
+      "images": 2,
+      "answers": 3
+    },
+    {
+      "path": "CS5222/Tutorial03.html",
+      "source": "CS5222/course-notes/Tutorial03.md",
+      "sha256": "8336ee2f6df5a7b017d3995181000654155aedc3e6caf7a9aa4ea2f44fddff07",
+      "title": "Tutorial 3 · HTTP and DNS｜从报文证据走到时间计算",
+      "major": true,
+      "images": 4,
+      "answers": 3
+    },
+    {
+      "path": "CS5222/Assignment01.html",
+      "source": "CS5222/course-notes/Assignment01.md",
+      "sha256": "3beadd39441e1398e9805373c75406e8a8c6ec38905cbcaf064a5d1f2458a1ca",
+      "title": "Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据",
+      "major": true,
+      "images": 6,
+      "answers": 3
+    },
+    {
+      "path": "CS5222/ResearchReportGuide.html",
+      "source": "CS5222/course-notes/ResearchReportGuide.md",
+      "sha256": "761f4fa8ea7b01c28b0148a58ebf902285c8f336ffe1ae1884c8a8b3c3e4ebd4",
+      "title": "Research Report Guide｜把一个真实问题解释清楚",
+      "major": true,
+      "images": 0,
+      "answers": 1
+    },
+    {
+      "path": "foundations/MathForML.html",
+      "source": "learning/foundation-notes/MathForML.md",
+      "sha256": "517cd5bc99359830f482cb5b925300e096aea5f3c92e2cccc903dfb78c736cf8",
+      "title": "Math for Machine Learning｜看懂公式，再回到课堂",
+      "major": false,
+      "images": 14,
+      "answers": 14
+    },
+    {
+      "path": "foundations/NetworkBasics.html",
+      "source": "learning/foundation-notes/NetworkBasics.md",
+      "sha256": "a0005a566081d6f8b20a0a4cf516daff87a8cdb2178c6beffec8c208b5b9ad3b",
+      "title": "Network Basics｜把单位、字节和时间轴读明白",
+      "major": false,
+      "images": 2,
+      "answers": 4
+    },
+    {
+      "path": "foundations/SourceEvidence.html",
+      "source": "learning/foundation-notes/SourceEvidence.md",
+      "sha256": "4780632a149bdacc05c0d9fdd76791e87b8e536aea4982fb98cb05386f835d59",
+      "title": "Sources and priorities｜重难点判断凭什么",
+      "major": false,
+      "images": 0,
+      "answers": 0
+    }
+  ],
+  "assets": [
+    {
+      "path": "CS5222/Assignment01.html",
+      "bytes": 21013,
+      "sha256": "3075183f7072528edff54b5066867a11ec353316bb6b33b3998e645dca98cade"
+    },
+    {
+      "path": "CS5222/Chapter01.html",
+      "bytes": 30355,
+      "sha256": "2198a202359d416e2a8746464f7e25894e569a1ece869a7768cf94803dd08771"
+    },
+    {
+      "path": "CS5222/Chapter02.html",
+      "bytes": 33079,
+      "sha256": "ef110722c3db10c67c7f87cb04b6d783c9a628423b57df20d0e749bb8773d124"
+    },
+    {
+      "path": "CS5222/ResearchReportGuide.html",
+      "bytes": 13495,
+      "sha256": "a3ff72302ef9d280da1d9d3bf33c3f67ee7403fb9477859bbc3745a4e628a8d8"
+    },
+    {
+      "path": "CS5222/Tutorial01.html",
+      "bytes": 12838,
+      "sha256": "0e0353d6197072d622bfa10ca048275dda887ae5d86450c36b0c5b7abed601a3"
+    },
+    {
+      "path": "CS5222/Tutorial02.html",
+      "bytes": 13660,
+      "sha256": "a9659280ae37841d418c3e505483cf94c797a3bfe6e69769f8c3b5e4d2e2adaf"
+    },
+    {
+      "path": "CS5222/Tutorial03.html",
+      "bytes": 12954,
+      "sha256": "629883619ccd1ea4625400de61fc89eb07b3e4e5df360b56fb7b7d196db69b4a"
+    },
+    {
+      "path": "CS5222/index.html",
+      "bytes": 3857,
+      "sha256": "1bd11fa7804bd97b409b6dc920a84679a5149c6057debe5cb3d6baeab9129828"
+    },
+    {
+      "path": "CS5489/Assignment01.html",
+      "bytes": 29640,
+      "sha256": "ae5679f2afd8daadf64dafe36f59783b6f556d8e9bbf5931d29ec9b1ebd0d331"
+    },
+    {
+      "path": "CS5489/Lecture01.html",
+      "bytes": 33646,
+      "sha256": "0e767e32c699143fb63111b8d5e560611554e3add0a3eea0c2a652d26469d66a"
+    },
+    {
+      "path": "CS5489/Lecture02.html",
+      "bytes": 66917,
+      "sha256": "89cab3720f306a4893c69e930fdd5c8ab9acd8f18dfd2210754d2684ccecc31d"
+    },
+    {
+      "path": "CS5489/Lecture03.html",
+      "bytes": 41180,
+      "sha256": "9d9426a7780baf35d728ec7451456fe2f3e4eb6ef55e240f241d52a9d2b8b562"
+    },
+    {
+      "path": "CS5489/Lecture04.html",
+      "bytes": 32749,
+      "sha256": "b237c7c33c984ba238297d93c3b43186a4c5cd1562db01bc6a9b9f7f58305c86"
+    },
+    {
+      "path": "CS5489/Tutorial01.html",
+      "bytes": 60538,
+      "sha256": "da4992cfb6b3decf34ba60084d528b6027c2e978ca62cb2c58d599a41747f7c4"
+    },
+    {
+      "path": "CS5489/Tutorial02.html",
+      "bytes": 169253,
+      "sha256": "b522cf0b7bcc19bc7d215bc27f9762f0d796c1282bb83817935d3456dc9a9c66"
+    },
+    {
+      "path": "CS5489/Tutorial03.html",
+      "bytes": 98426,
+      "sha256": "54b9dc978bb1fe1ab2faadfc62bf1a45c21459aac437f30c8b2b89de55257aea"
+    },
+    {
+      "path": "CS5489/index.html",
+      "bytes": 4041,
+      "sha256": "c56a53d5957ad78159f5a07e7ad292539900336e330e47ac6babbf1ab2fe0614"
+    },
+    {
+      "path": "assets/003d8c59f07f557d.png",
+      "bytes": 35249,
+      "sha256": "003d8c59f07f557d38d79ee01c6f2872ef454fbabd5616df5ff693683e0674ee"
+    },
+    {
+      "path": "assets/04c2ac662500e314.png",
+      "bytes": 84495,
+      "sha256": "04c2ac662500e3145dca0a739bd47732332bcd0f1eaf35982c0dcc1acf03b787"
+    },
+    {
+      "path": "assets/052c937796e9ddd5.png",
+      "bytes": 152277,
+      "sha256": "052c937796e9ddd5eeb3c1c5cfb129aad122e2bceacd54975e9bf8cb5ecb3f99"
+    },
+    {
+      "path": "assets/06198b9a7d286981.png",
+      "bytes": 206915,
+      "sha256": "06198b9a7d28698137200790c5bce5648dfeae7c6ea8448f78c6538d9d35862a"
+    },
+    {
+      "path": "assets/0be69faab67f207c.jpg",
+      "bytes": 46393,
+      "sha256": "0be69faab67f207c6b506119df65b541f1df77ba55ae9ac114e6775c02dbfe16"
+    },
+    {
+      "path": "assets/1156763d5105516b.png",
+      "bytes": 95341,
+      "sha256": "1156763d5105516b7d34b9f67f1e9435b28cf14fd4037ad4b84d6b060185544d"
+    },
+    {
+      "path": "assets/138e08c7845ebdae.png",
+      "bytes": 164265,
+      "sha256": "138e08c7845ebdaeafecb624e6bb701399631cb201b38d528b05450b33f1ce5f"
+    },
+    {
+      "path": "assets/13b6126ee1ec192e.png",
+      "bytes": 111393,
+      "sha256": "13b6126ee1ec192ee65ee3417d11359bf5fb703345c583f5a2642415bc8e6165"
+    },
+    {
+      "path": "assets/175c1ca2ab435b00.png",
+      "bytes": 491522,
+      "sha256": "175c1ca2ab435b003fd062a6e84cb4ba97c49a98fc498d42c55ed885203cd1de"
+    },
+    {
+      "path": "assets/181dd2c9446d1880.png",
+      "bytes": 101546,
+      "sha256": "181dd2c9446d18806a619d719d20b24fbdf4e891ef48cd0b6d0ae934a36d520f"
+    },
+    {
+      "path": "assets/190e5812e6c619e8.png",
+      "bytes": 54083,
+      "sha256": "190e5812e6c619e8d38a6b269d25de4fe1114cb65bd5b91a05108bc0d64de9d4"
+    },
+    {
+      "path": "assets/1bfe3d486e4ea4d0.png",
+      "bytes": 70731,
+      "sha256": "1bfe3d486e4ea4d0f45b19763b81814ce2b1b80142b85d00e9b192f34ff64b38"
+    },
+    {
+      "path": "assets/1d0bce7667ddba7d.png",
+      "bytes": 128772,
+      "sha256": "1d0bce7667ddba7dd83924a722a6cd93de416d0c9fc2cfdbbe9697b34126e388"
+    },
+    {
+      "path": "assets/1e2d72fcd697a65c.png",
+      "bytes": 125220,
+      "sha256": "1e2d72fcd697a65c0f38a1fd1bd0c20ced8fc0388696ea3418392f1eb13d10ac"
+    },
+    {
+      "path": "assets/216de13d54fbaccd.png",
+      "bytes": 534545,
+      "sha256": "216de13d54fbaccdd6b8b84d4af9d33afa4c3257d605af1550d999e3d9972f78"
+    },
+    {
+      "path": "assets/24410314606648fa.png",
+      "bytes": 29059,
+      "sha256": "24410314606648faaabac54b1f0e652f89bb575d38d61baf809a407f8404fdb4"
+    },
+    {
+      "path": "assets/24bcffdf7d07f853.png",
+      "bytes": 86063,
+      "sha256": "24bcffdf7d07f853d8c7061ce061b45ea7582bdeb8b38bb6ffdb0235587abbbd"
+    },
+    {
+      "path": "assets/259c9744039578e6.png",
+      "bytes": 97238,
+      "sha256": "259c9744039578e6d2d37b98ce2333d367346c649ceba194a8b198f0eaf076c4"
+    },
+    {
+      "path": "assets/2b5e9f7fe3e1e319.png",
+      "bytes": 65972,
+      "sha256": "2b5e9f7fe3e1e319e43dec18bb0da61cccd62d212af5246f47011becd0aed2c8"
+    },
+    {
+      "path": "assets/2ecc896ff776d50c.png",
+      "bytes": 69044,
+      "sha256": "2ecc896ff776d50c81ca3323d4c2f2991535f377361e2211eb27fd4a77acb6a5"
+    },
+    {
+      "path": "assets/30fa6223fd316493.jpg",
+      "bytes": 155614,
+      "sha256": "30fa6223fd316493355835cf716bfe89d9bcf1b7650131f567a357534cedf9b7"
+    },
+    {
+      "path": "assets/3339c929c2df6ba7.png",
+      "bytes": 95646,
+      "sha256": "3339c929c2df6ba75b1387b98ed834adc6a72df66881a95e31b2056fffd8c867"
+    },
+    {
+      "path": "assets/345a9ac58655efb9.png",
+      "bytes": 172105,
+      "sha256": "345a9ac58655efb924d98a52562b175298474d166c1baa9aa5bca13d7d70e892"
+    },
+    {
+      "path": "assets/34afab8a3fc01baa.png",
+      "bytes": 36993,
+      "sha256": "34afab8a3fc01baa2bec4d71c1ddc04a3e20c8f42077ef6746cfead662335261"
+    },
+    {
+      "path": "assets/362a908017ad4524.png",
+      "bytes": 150271,
+      "sha256": "362a908017ad4524f049ebe55e46f05770cb2d8ab7fd60e21573f8e82390ded9"
+    },
+    {
+      "path": "assets/3691cb146272b175.png",
+      "bytes": 266556,
+      "sha256": "3691cb146272b1752b8206432e7f0994d82171bb877a1bb371e9b535ae00474f"
+    },
+    {
+      "path": "assets/394e7ac53f4f96f2.png",
+      "bytes": 161699,
+      "sha256": "394e7ac53f4f96f2a0c1bc503f524587cef569a66de4364a254098b926ec2fcf"
+    },
+    {
+      "path": "assets/3c422e122dddec02.png",
+      "bytes": 160005,
+      "sha256": "3c422e122dddec02dc1d3aadfbb9b4c9283995826663a6843810b4185691e309"
+    },
+    {
+      "path": "assets/414e4e8415f5302b.png",
+      "bytes": 101289,
+      "sha256": "414e4e8415f5302b5bfc0b1591fe0589dce17b0dd05cceb3578399e0005c00cf"
+    },
+    {
+      "path": "assets/45566e7f188dc8c5.png",
+      "bytes": 81090,
+      "sha256": "45566e7f188dc8c5b3726e494b100ef1d8fcb3e083cc43740556e58757156ffb"
+    },
+    {
+      "path": "assets/45f583e994fe397e.png",
+      "bytes": 108156,
+      "sha256": "45f583e994fe397ebdbcf1d46e3f45bd00f0283989302c3c836701ba3cd334e2"
+    },
+    {
+      "path": "assets/46cca772f3ab811c.png",
+      "bytes": 457964,
+      "sha256": "46cca772f3ab811c5dfae1275606b68127a327ecd4898e18b87d4955ebf31040"
+    },
+    {
+      "path": "assets/4a673307070013ac.png",
+      "bytes": 226205,
+      "sha256": "4a673307070013ac0c98356629ae24a1e2cdf724b4359a97e80faee49e6b2937"
+    },
+    {
+      "path": "assets/4ddfa314d0d27128.png",
+      "bytes": 27331,
+      "sha256": "4ddfa314d0d27128c999deaae14fef8d429250ef23dbc8abfda94a11d0c2f6a1"
+    },
+    {
+      "path": "assets/4f0f38f1036cf3c0.png",
+      "bytes": 24817,
+      "sha256": "4f0f38f1036cf3c037978156ac7df84249b1dbd25168a281135c9185531d3830"
+    },
+    {
+      "path": "assets/4fc208c10f493e17.png",
+      "bytes": 108119,
+      "sha256": "4fc208c10f493e1786ea8923508b9d20dea7da504625f00271f7fe6ddf1626dd"
+    },
+    {
+      "path": "assets/507e6c8c38239103.png",
+      "bytes": 81446,
+      "sha256": "507e6c8c382391036c562260c4b97d1552ced6e7c9137932d1a2a02354a57d3c"
+    },
+    {
+      "path": "assets/539ac5bf04a08385.png",
+      "bytes": 334108,
+      "sha256": "539ac5bf04a083852de5ca458cb0bd7b557fd35114aeb7b3e2290640bc8aedf5"
+    },
+    {
+      "path": "assets/55781a74c6f7dc8f.png",
+      "bytes": 162918,
+      "sha256": "55781a74c6f7dc8f2f9f156a75ec22008e175412166e2963d6ab0c6f47874556"
+    },
+    {
+      "path": "assets/56646d7447dc56d6.png",
+      "bytes": 54637,
+      "sha256": "56646d7447dc56d6e387054b723eed239354641794a73492078dfe493d5bb2ef"
+    },
+    {
+      "path": "assets/58c9e311eaa2e2b2.png",
+      "bytes": 313066,
+      "sha256": "58c9e311eaa2e2b2d5b7085e16b789f7c20e09d6ca5374ea7fe7d6567a9cf36a"
+    },
+    {
+      "path": "assets/5c5b41f5bcfa6f82.png",
+      "bytes": 231176,
+      "sha256": "5c5b41f5bcfa6f820dbf0c903af55a303dea34b11be5f1e943a083e580c9f594"
+    },
+    {
+      "path": "assets/5d0dac848b20a34a.png",
+      "bytes": 592161,
+      "sha256": "5d0dac848b20a34a766c50c0891de890dd5693e09c0686ca0f029d45cd05677a"
+    },
+    {
+      "path": "assets/5df8836810b56eab.jpg",
+      "bytes": 9891,
+      "sha256": "5df8836810b56eab44e09f21f7a9b074103e09fb45da0bc6de4ab31e6e59adac"
+    },
+    {
+      "path": "assets/5f9999d2c9f3653c.png",
+      "bytes": 54009,
+      "sha256": "5f9999d2c9f3653cf5b3bccf50e5e0af9900de35f2f0b19a59a7632e98ed7eaf"
+    },
+    {
+      "path": "assets/60d99ff0d0d36551.png",
+      "bytes": 25404,
+      "sha256": "60d99ff0d0d36551c3d27b5df06303ea42a3668178c3921e2fcb0878a757ab1f"
+    },
+    {
+      "path": "assets/63a2cc0b5fcc7a61.png",
+      "bytes": 40079,
+      "sha256": "63a2cc0b5fcc7a61927df5434b1e66c6d594adc5dccef3e60fe270875deee646"
+    },
+    {
+      "path": "assets/64bf6201e3d4501d.png",
+      "bytes": 46015,
+      "sha256": "64bf6201e3d4501da171d4b1c46bc097080eb56548edf883262b42097f0d37cd"
+    },
+    {
+      "path": "assets/654c74fc068e1f92.png",
+      "bytes": 80880,
+      "sha256": "654c74fc068e1f927e1f8efa741f6d33393d4ccb6d75b4c4d86ee11b4ebdd1d6"
+    },
+    {
+      "path": "assets/71720687f11aae45.png",
+      "bytes": 186153,
+      "sha256": "71720687f11aae45d92c44cd087b716990681f3186b632d4489fd30aa66b138e"
+    },
+    {
+      "path": "assets/8209c68645ef7971.png",
+      "bytes": 29736,
+      "sha256": "8209c68645ef7971efff703222172506e55c45d4907fd1b91ce32bca4ccef48e"
+    },
+    {
+      "path": "assets/876ac2164fa31767.png",
+      "bytes": 134509,
+      "sha256": "876ac2164fa31767365b9a4abcb9d4830358de58f675f34169749df9222c1f79"
+    },
+    {
+      "path": "assets/8dce74637beb8fd4.png",
+      "bytes": 374497,
+      "sha256": "8dce74637beb8fd4ed81043fa711aa33603db77949b552cad3fb43dd6454e831"
+    },
+    {
+      "path": "assets/8e28a5164704fb28.png",
+      "bytes": 541955,
+      "sha256": "8e28a5164704fb287bc035afad2f4734ae9afad5262c2288408eed5acaf13384"
+    },
+    {
+      "path": "assets/8f1c813df208266b.png",
+      "bytes": 394577,
+      "sha256": "8f1c813df208266bbc69e8e51e43d093337ae215ee8720f068776c61c90b6061"
+    },
+    {
+      "path": "assets/8fdf9b9f57045f8f.png",
+      "bytes": 614732,
+      "sha256": "8fdf9b9f57045f8fbab8be75098e2537379c24cab2d2027396f9545397f659dc"
+    },
+    {
+      "path": "assets/92eb7ac5aa740623.jpg",
+      "bytes": 43554,
+      "sha256": "92eb7ac5aa7406239ead93d270b04295965528d7b49914ebb77e04ff435941c5"
+    },
+    {
+      "path": "assets/95180ed0d57c2de2.png",
+      "bytes": 248781,
+      "sha256": "95180ed0d57c2de2d13c01275918d76a8948222b3b6704134df3b1b6d9a97eb8"
+    },
+    {
+      "path": "assets/975487a708ea4511.png",
+      "bytes": 177648,
+      "sha256": "975487a708ea45113c834c261909e2e940a96b23aa084b266d8cf9e67de38e56"
+    },
+    {
+      "path": "assets/97aeaf6d091363b8.png",
+      "bytes": 194856,
+      "sha256": "97aeaf6d091363b8f07d862d52e9278720ec69e64d38edd6a485485699c1a34b"
+    },
+    {
+      "path": "assets/9c930e07053c6e84.png",
+      "bytes": 79620,
+      "sha256": "9c930e07053c6e84a74ae2ef75ac22509c13e48a4c18e0e34dca015c78982159"
+    },
+    {
+      "path": "assets/9ed4441ab6b76ede.png",
+      "bytes": 56042,
+      "sha256": "9ed4441ab6b76ede3594174b7c46f993fdc73af7cdc321d02dc7af62aa84bee7"
+    },
+    {
+      "path": "assets/9f62560a8dab8a4a.png",
+      "bytes": 139119,
+      "sha256": "9f62560a8dab8a4ab7a47b91dcfefca1c208b46dd396786f8226c18dcc9efb5d"
+    },
+    {
+      "path": "assets/a3a4082bfff5a462.png",
+      "bytes": 20449,
+      "sha256": "a3a4082bfff5a4623f8be21b416fc52e03dc2627b44e411b1809a3e9ec91912f"
+    },
+    {
+      "path": "assets/b2da8c9479a4e1b6.png",
+      "bytes": 239722,
+      "sha256": "b2da8c9479a4e1b65eb34ebabf6f42d0c9c9e056e07d2c0793fa97b4b7211797"
+    },
+    {
+      "path": "assets/b4ded7df5583062c.png",
+      "bytes": 155038,
+      "sha256": "b4ded7df5583062cacf60c74adc4648f8ad412e3292eb2c04453352aa0c1e4cd"
+    },
+    {
+      "path": "assets/b6227878f29440ed.png",
+      "bytes": 67457,
+      "sha256": "b6227878f29440ed134d24c7b3da9abe46baf6f17c8e442b7971621f187f7e03"
+    },
+    {
+      "path": "assets/b6cc77c4beb783b8.png",
+      "bytes": 61258,
+      "sha256": "b6cc77c4beb783b8011b352605e05d3a86d9dd5703b8f394567ebac96055bf36"
+    },
+    {
+      "path": "assets/b704cfe7ac42a7de.png",
+      "bytes": 178870,
+      "sha256": "b704cfe7ac42a7de1363f7f73486489d5bb857411e009d720e25c69b2a736784"
+    },
+    {
+      "path": "assets/b9ef3e181752d182.png",
+      "bytes": 33758,
+      "sha256": "b9ef3e181752d182fb010c9929c8987adecaf5d05e961d6777f6510e00ac8f3a"
+    },
+    {
+      "path": "assets/bb5d7848a34fc82f.png",
+      "bytes": 205460,
+      "sha256": "bb5d7848a34fc82f1676e7378e34d82fcff1a5b8f3db1c27e5185601df3dc6a9"
+    },
+    {
+      "path": "assets/be40dae68d44de71.png",
+      "bytes": 145556,
+      "sha256": "be40dae68d44de71620f27758b0a2e6b5472ed09769e786deb7588c81c055bfc"
+    },
+    {
+      "path": "assets/c01c3b5505e2a75d.png",
+      "bytes": 737530,
+      "sha256": "c01c3b5505e2a75d1b40fbc036ab28adf1af7b6b3969939da34c5493df191789"
+    },
+    {
+      "path": "assets/c619d834a7ab68be.png",
+      "bytes": 59476,
+      "sha256": "c619d834a7ab68be201ac00b0cb3d59995a10101dc24ec4d7e579748862599c6"
+    },
+    {
+      "path": "assets/c7642cb3d121c484.png",
+      "bytes": 38146,
+      "sha256": "c7642cb3d121c4845fce2c4364846a991e276a0146f19087c0fa3d9ed39fc701"
+    },
+    {
+      "path": "assets/c9d4e8fbc2990c24.png",
+      "bytes": 18496,
+      "sha256": "c9d4e8fbc2990c24c3a0eaf508032607781fe5e61242c65bf6b58a791b8021b4"
+    },
+    {
+      "path": "assets/ca93e9e3f8429317.png",
+      "bytes": 236191,
+      "sha256": "ca93e9e3f8429317f17f05cb816ff0d0f2fb8678eacd2f8a5ac25b0056512fe4"
+    },
+    {
+      "path": "assets/d17514b2d55294db.png",
+      "bytes": 121790,
+      "sha256": "d17514b2d55294db9b630a8069dca545de06bbdcb469ea9209f91f669bc7786a"
+    },
+    {
+      "path": "assets/d646b268f22e576c.jpg",
+      "bytes": 39660,
+      "sha256": "d646b268f22e576c35bc884770136519b34dfd684fd3eb0f5d097ba64c82254e"
+    },
+    {
+      "path": "assets/d80dbe1c4ed025e4.png",
+      "bytes": 85297,
+      "sha256": "d80dbe1c4ed025e42a7941768778a7d7e4839f467020d8dd640f5148f9957bb0"
+    },
+    {
+      "path": "assets/dc3679fbb620483c.png",
+      "bytes": 184311,
+      "sha256": "dc3679fbb620483c44f6ade9afaf24c427e8623c53c3cf0568b82020e817d478"
+    },
+    {
+      "path": "assets/e232c5ee751886a2.png",
+      "bytes": 38461,
+      "sha256": "e232c5ee751886a24ed10f3a86f42cab64f94eb0865558cb3c00b0b664dd6a54"
+    },
+    {
+      "path": "assets/e8fbc2de6d8cfbcc.png",
+      "bytes": 112773,
+      "sha256": "e8fbc2de6d8cfbcce7fd99eb9b5d6f6334d3bfff774e2c2c7b62020e9e2fbe1f"
+    },
+    {
+      "path": "assets/ea38eb79c7e07ae2.png",
+      "bytes": 30064,
+      "sha256": "ea38eb79c7e07ae2232e96eca8688ed21c528600cc8f5ef4a4db17a2762c246e"
+    },
+    {
+      "path": "assets/ed9a92138683a047.png",
+      "bytes": 80784,
+      "sha256": "ed9a92138683a0474c54a70ee15b861979dc22a35b35a439b1b3733a772be26b"
+    },
+    {
+      "path": "assets/ee59be5d3f7f29ac.png",
+      "bytes": 245756,
+      "sha256": "ee59be5d3f7f29acdfa1095856ba7a63d563929b18695dd53c94a5ed779a4c4b"
+    },
+    {
+      "path": "assets/f47bc0698f3613f0.png",
+      "bytes": 47365,
+      "sha256": "f47bc0698f3613f070d32374d5b1915b34ac7900a0358027a0f07942aa834453"
+    },
+    {
+      "path": "assets/f62341ad046792d8.png",
+      "bytes": 190692,
+      "sha256": "f62341ad046792d821e1a90e52b2da15334e002873fecb2b4d385069fe5cb791"
+    },
+    {
+      "path": "assets/fdff07de4f99546f.png",
+      "bytes": 39035,
+      "sha256": "fdff07de4f99546f8d72cd37f560f2297b4c138dbc1eac429bb1793d3aaa33d2"
+    },
+    {
+      "path": "assets/fec760464747e392.png",
+      "bytes": 43848,
+      "sha256": "fec760464747e39233b97c373d7c25fd532cf2a495d911d735c377730cd2faf6"
+    },
+    {
+      "path": "examples/socket_demo.py",
+      "bytes": 3997,
+      "sha256": "f378fc4e502ac8fe4fc971f08f7b33babb7f593f8256eaf8c262174678988bf5"
+    },
+    {
+      "path": "foundations/MathForML.html",
+      "bytes": 77803,
+      "sha256": "ef28931374334ac51e3845b16f43035987c7d0000c9ede6086c1b2fa58688b36"
+    },
+    {
+      "path": "foundations/NetworkBasics.html",
+      "bytes": 13390,
+      "sha256": "5afac06a888c7092880e3e6325c8f2eac09d212739234c5b6bfd9e6c972bb830"
+    },
+    {
+      "path": "foundations/SourceEvidence.html",
+      "bytes": 6786,
+      "sha256": "216c04dba6c915c50f9d0abb537cdf42bc72644b6e498f0df5c95ca8ec78d6bb"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5089,
+      "sha256": "054d127458fc28b43ed60e99d7546c8e51b50c3dd4619eef240eb896c4db6838"
+    },
+    {
+      "path": "notes.css",
+      "bytes": 7462,
+      "sha256": "24af03328a053e14b7a7447e10d7f1fede50872f8ad3712731405a689a68b9e3"
+    },
+    {
+      "path": "pdf/CS5222-A4.pdf",
+      "bytes": 12407558,
+      "sha256": "f758e97588bac99d27e15cfd2f3d9f75e48a598d849fd316d16fa86e7ceb2062"
+    },
+    {
+      "path": "pdf/CS5489-A4.pdf",
+      "bytes": 14688922,
+      "sha256": "cfb69f7d48d36e2f3a708934d4b7fde74abfa3db5bda28b137968b16edabff78"
+    },
+    {
+      "path": "pdf/Foundations-A4.pdf",
+      "bytes": 4330008,
+      "sha256": "e621115616387dae7c5470852c0bcb57cdd4cf1cea8feca04932ed4b378e68fd"
+    }
+  ],
+  "pdfs": [
+    {
+      "path": "pdf/CS5489-A4.pdf",
+      "pages": 124,
+      "sha256": "cfb69f7d48d36e2f3a708934d4b7fde74abfa3db5bda28b137968b16edabff78",
+      "source_sha256": "cca36965cffbee0bfca883738bc7a8212e3573a9ab335c43c0c6b6f416717b7b",
+      "removed_local_links": 33,
+      "rewritten_links": 45,
+      "content_streams_and_geometry_unchanged": true
+    },
+    {
+      "path": "pdf/CS5222-A4.pdf",
+      "pages": 67,
+      "sha256": "f758e97588bac99d27e15cfd2f3d9f75e48a598d849fd316d16fa86e7ceb2062",
+      "source_sha256": "08c3f348d401b66dcdf05059be10c543f7a55487ea8022abf2ef9e4f35a4f68b",
+      "removed_local_links": 34,
+      "rewritten_links": 25,
+      "content_streams_and_geometry_unchanged": true
+    },
+    {
+      "path": "pdf/Foundations-A4.pdf",
+      "pages": 41,
+      "sha256": "e621115616387dae7c5470852c0bcb57cdd4cf1cea8feca04932ed4b378e68fd",
+      "source_sha256": "c30a056e55a1cde69fb3d755ec2a84c7e784bea6128e718740349d535604c8ba",
+      "removed_local_links": 24,
+      "rewritten_links": 61,
+      "content_streams_and_geometry_unchanged": true
+    }
+  ],
+  "local_references_as_text": [
+    {
+      "document": "CS5489/Lecture01.html",
+      "label": "Intro PDF"
+    },
+    {
+      "document": "CS5489/Lecture01.html",
+      "label": "Lecture1a"
+    },
+    {
+      "document": "CS5489/Lecture01.html",
+      "label": "Lecture1b"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "Lecture2a Notebook"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "PDF"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "Lecture2b Notebook"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "PDF"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "source-manifest.json"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "H1"
+    },
+    {
+      "document": "CS5489/Lecture02.html",
+      "label": "HF"
+    },
+    {
+      "document": "CS5489/Lecture03.html",
+      "label": "Lecture3a"
+    },
+    {
+      "document": "CS5489/Lecture03.html",
+      "label": "Lecture3b"
+    },
+    {
+      "document": "CS5489/Lecture03.html",
+      "label": "Lecture3c"
+    },
+    {
+      "document": "CS5489/Lecture03.html",
+      "label": "SVM 手写补充"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "Lecture4a"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "Lecture4b"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "数据记录"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "CSV"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "verify_lecture_examples.py"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "脚本"
+    },
+    {
+      "document": "CS5489/Lecture04.html",
+      "label": "JSON"
+    },
+    {
+      "document": "CS5489/Tutorial01.html",
+      "label": "原Tutorial1"
+    },
+    {
+      "document": "CS5489/Tutorial02.html",
+      "label": "Tutorial2v2.ipynb"
+    },
+    {
+      "document": "CS5489/Tutorial02.html",
+      "label": "dataAG.json"
+    },
+    {
+      "document": "CS5489/Tutorial03.html",
+      "label": "Tutorial3.ipynb"
+    },
+    {
+      "document": "CS5489/Assignment01.html",
+      "label": "Assignment1-Doc.ipynb"
+    },
+    {
+      "document": "CS5489/Assignment01.html",
+      "label": "Assignment1-Final.ipynb"
+    },
+    {
+      "document": "CS5489/Assignment01.html",
+      "label": "smishing_train.txt"
+    },
+    {
+      "document": "CS5489/Assignment01.html",
+      "label": "smishing_val_test.txt"
+    },
+    {
+      "document": "CS5489/Assignment01.html",
+      "label": "smishing_val_test.csv"
+    },
+    {
+      "document": "CS5222/Chapter01.html",
+      "label": "完整PPT（78页）"
+    },
+    {
+      "document": "CS5222/Chapter01.html",
+      "label": "课堂Q&A（6页）"
+    },
+    {
+      "document": "CS5222/Chapter01.html",
+      "label": "本轮材料清单"
+    },
+    {
+      "document": "CS5222/Chapter02.html",
+      "label": "完整Chapter2（107页）"
+    },
+    {
+      "document": "CS5222/Chapter02.html",
+      "label": "socket-self-test.json"
+    },
+    {
+      "document": "CS5222/Tutorial01.html",
+      "label": "原题PDF（3页）"
+    },
+    {
+      "document": "CS5222/Tutorial01.html",
+      "label": "教师解答PPT（10页）"
+    },
+    {
+      "document": "CS5222/Tutorial01.html",
+      "label": "network_examples.py"
+    },
+    {
+      "document": "CS5222/Tutorial02.html",
+      "label": "原题PDF（3页）"
+    },
+    {
+      "document": "CS5222/Tutorial02.html",
+      "label": "教师解答PPT（13页）"
+    },
+    {
+      "document": "CS5222/Tutorial02.html",
+      "label": "2026-09-23观察"
+    },
+    {
+      "document": "CS5222/Tutorial02.html",
+      "label": "observe_network.py"
+    },
+    {
+      "document": "CS5222/Tutorial02.html",
+      "label": "network-example-results.json"
+    },
+    {
+      "document": "CS5222/Tutorial03.html",
+      "label": "原题PDF（3页）"
+    },
+    {
+      "document": "CS5222/Tutorial03.html",
+      "label": "完整输出"
+    },
+    {
+      "document": "CS5222/Tutorial03.html",
+      "label": "浏览观察记录"
+    },
+    {
+      "document": "CS5222/Tutorial03.html",
+      "label": "network_examples.py"
+    },
+    {
+      "document": "CS5222/Assignment01.html",
+      "label": "原任务（4页）"
+    },
+    {
+      "document": "CS5222/Assignment01.html",
+      "label": "network_examples.py"
+    },
+    {
+      "document": "CS5222/ResearchReportGuide.html",
+      "label": "原任务与Rubric"
+    },
+    {
+      "document": "CS5222/ResearchReportGuide.html",
+      "label": "原任务"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "Lecture2a"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "Lecture2b"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "既有基础主稿"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "figure-data.json"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "build_figures.py"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "检查记录"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "extend_figures.py"
+    },
+    {
+      "document": "foundations/MathForML.html",
+      "label": "extra-figure-data.json"
+    },
+    {
+      "document": "foundations/NetworkBasics.html",
+      "label": "network_examples.py"
+    },
+    {
+      "document": "foundations/NetworkBasics.html",
+      "label": "复算记录"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "本轮source-manifest"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "ML sample_final_questions.docx"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "ML Home_Assignments_1.pdf"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "CS5222 review.docx"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "原source-manifest"
+    },
+    {
+      "document": "foundations/SourceEvidence.html",
+      "label": "本轮检查目录"
+    }
+  ]
+}

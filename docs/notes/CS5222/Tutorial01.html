@@ -1,0 +1,162 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="tutorial-1-switching-circuits-and-sharing">Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=19">A4 打印版 · 第 19–25 页</a>　图可点击放大。</p>
+<p><a href="Chapter01.html#switching">Chapter 1</a> · <a href="index.html">课程目录</a> · <a href="Tutorial02.html">下一份Tutorial</a></p>
+<p>按当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原题PDF（3页）</span> 的Q1–4逐题讲解，并对照 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">教师解答PPT（10页）</span>。下文“教师结论”指该文件；推演、时间表和变式由整理者补充。所有选择题的原选项在原页图中，正文不靠选项猜答案。</p>
+<p><strong>可选先修：</strong> <a href="../foundations/NetworkBasics.html#units">bit/byte与速率</a>、<a href="../foundations/NetworkBasics.html#timeline">流水线时间轴</a>、<a href="../foundations/MathForML.html#combinations">组合概率</a>。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原题</th>
+<th>优先级</th>
+<th>难度/卡点</th>
+<th>本题检验；依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>核心必会</td>
+<td>中；不同包可以重叠</td>
+<td>画存储转发时间轴；教师解答3–4</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>核心必会</td>
+<td>中；每次连接占用哪些边</td>
+<td>给出可行路由与容量上界；教师解答6–7</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>核心必会</td>
+<td>低；单电路速率</td>
+<td>单位换算与建立时延；教师解答9</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>核心必会</td>
+<td>中；独立与组合数</td>
+<td>容量和人数分布；教师解答10</td>
+</tr>
+</tbody>
+</table></div>
+<p>这是当前必做学习目标的划分，不是历年命题频率。</p>
+<p><a id="q1"></a></p>
+<h2 id="q1-store-and-forward">Q1. Store-and-forward｜先等整包到，再转发</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/55781a74c6f7dc8f.png" rel="noopener" target="_blank"><img alt="Original Tutorial 1 page 1" decoding="async" loading="lazy" src="../assets/55781a74c6f7dc8f.png"/></a></p>
+<p><strong>完整条件 / Conditions:</strong> 一个源主机、一个分组交换机、一个目的主机；两条链路速率为R₁、R₂，包长L bit。存储转发，忽略排队、传播和处理时延。b问改为相同速率R，P=3个L-bit包跨N=2条链路。 / One switch connects a sender and receiver through links R₁ and R₂. Packets contain L bits. Use store-and-forward and ignore queueing, propagation and processing. In part b, three equal packets cross two equal-rate R links.</p>
+<p><strong>a的推演：</strong> t=0开始发送；t=L/R₁时整包抵达交换机；交换机此时才开始第二段，又花L/R₂。因此教师结论为</p>
+<div class="arithmatex">\[d=L/R_1+L/R_2\quad\text{（选C）}.\]</div>
+<p>不是 <span class="arithmatex">\(L/(R_1+R_2)\)</span>，因为这两条链路是先后经过，不是并行拼成一条更快链路。</p>
+<p><strong>b的推演：</strong> 令T=L/R，把每段链路当成一次只能发送一包的工位：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>时段</th>
+<th>源→交换机</th>
+<th>交换机→目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0到T</td>
+<td>包1</td>
+<td>等待整包1</td>
+</tr>
+<tr>
+<td>T到2T</td>
+<td>包2</td>
+<td>包1</td>
+</tr>
+<tr>
+<td>2T到3T</td>
+<td>包3</td>
+<td>包2</td>
+</tr>
+<tr>
+<td>3T到4T</td>
+<td>无</td>
+<td>包3</td>
+</tr>
+</tbody>
+</table></div>
+<p>最后整包到达时间4T=4L/R，选D；与教师解答第4页 <span class="arithmatex">\((P+1)L/R\)</span> 一致。一般等速N跳为 <span class="arithmatex">\((P+N-1)L/R\)</span>，但必须保留本题全部简化条件。</p>
+<p><strong>English answer:</strong> (a) L/R₁+L/R₂. (b) 4L/R. Store-and-forward constrains each packet, but separate links can transmit different packets simultaneously.</p>
+<p><strong>变式 / Transfer:</strong> 5个包、3条同速链路，同样忽略其他时延，多久？ / Five packets cross three equal-rate links under the same assumptions. Find completion time.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>7L/R。第一包3L/R，之后4个每隔L/R到。 / 7L/R: three intervals for the first packet, then four further intervals.</p>
+</details>
+<p><a id="q2"></a></p>
+<h2 id="q2-circuit-capacity">Q2. Circuit capacity｜数连接，也要数它消耗了几条边</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1e2d72fcd697a65c.png" rel="noopener" target="_blank"><img alt="Original ring diagram and Q2" decoding="async" loading="lazy" src="../assets/1e2d72fcd697a65c.png"/></a></p>
+<p><strong>条件 / Conditions:</strong> A、B、C、D顺时针围成四边环，每条边4条电路，一次连接在路径每条边占一条电路。 / Four switches A,B,C,D form a clockwise ring; each link supports four circuits. A connection uses one circuit on every traversed link.</p>
+<p><strong>a 最大任意连接数 / Maximum arbitrary simultaneous connections:</strong> 让每条边只承载相邻两点之间的连接，每边4个、4条边，总16，选C。上界也为16，因为全网总共16份“边电路”且每连接至少占一份，所以这个构造达到上界。</p>
+<p><strong>b 全部A到C / All connections from A to C:</strong> 每个至少两跳，可分别走A–B–C与A–D–C，各4，总8，选B。A出发仅8份电路，给出同样的上界；不是16÷4，因为每连接没有绕完整一圈。</p>
+<p><strong>c 四个A–C加四个B–D / Four A–C plus four B–D:</strong> 可行，选B（Yes）。按教师方案：A–C中2个经B、2个经D；B–D中2个经A、2个经C。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>连接数</th>
+<th>占用的边</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A–B–C</td>
+<td>2</td>
+<td>AB、BC</td>
+</tr>
+<tr>
+<td>A–D–C</td>
+<td>2</td>
+<td>AD、DC</td>
+</tr>
+<tr>
+<td>B–A–D</td>
+<td>2</td>
+<td>BA、AD</td>
+</tr>
+<tr>
+<td>B–C–D</td>
+<td>2</td>
+<td>BC、CD</td>
+</tr>
+</tbody>
+</table></div>
+<p>逐边相加AB=4、BC=4、CD=4、DA=4，不超过容量。不要只说“总共8小于16，所以可以”，那忽略了路径可能挤在同一条边。</p>
+<p><strong>English answer:</strong> (a)16; (b)8; (c)Yes, split each opposite-pair demand evenly between its two two-hop paths. Every link then carries exactly four circuits.</p>
+<p><strong>变式 / Transfer:</strong> 每边只有3条电路，全部A–C最多多少？ / With three circuits per link, what is the maximum for A–C connections only?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>6，两条边不重叠路径各3。 / Six, with three on each disjoint two-hop path.</p>
+</details>
+<p><a id="q3"></a></p>
+<h2 id="q3-fdm-and-setup">Q3. FDM and setup｜总速率不等于你的那一份</h2>
+<p><strong>条件 / Conditions:</strong> 文件160000 bit；电路网络用12个等宽频带，总速率1.536 Mbps，建立端到端电路需600 ms，随后才发文件。求总时间。 / A 160000-bit file uses one of twelve equal-rate FDM circuits sharing 1.536 Mbps. Circuit setup takes 600 ms before transmission. Find total time.</p>
+<p>每电路速率 <span class="arithmatex">\(1.536\times10^6/12=128000\)</span>bit/s。发送用 <span class="arithmatex">\(160000/128000=1.25\)</span>s，加setup0.6s，共<strong>1.85s，选A</strong>。教师解答第9页相同。题目未提供传播等其他时延，按该简化模型不另外虚构一项。</p>
+<p><strong>English answer:</strong> Each circuit supplies 128 kbps; 1.25 s transmission plus 0.60 s setup gives 1.85 s.</p>
+<p>常见错法：直接除总速率1.536Mbps；把600ms当600s；把160000bit再乘8（本来就已经是bit）。</p>
+<p><strong>变式 / Transfer:</strong> 同电路发送320000bit、setup不变，总时间？ / Double the file size to 320000 bits without changing setup or circuit rate.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>2.5+0.6=3.1s。 / 3.1 s. 文件翻倍只让发送部分翻倍，不把建立时延翻倍。</p>
+</details>
+<p><a id="q4"></a></p>
+<h2 id="q4-statistical-multiplexing">Q4. Statistical multiplexing｜算人数前，先说是否独立</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/04c2ac662500e314.png" rel="noopener" target="_blank"><img alt="Original Q3 continuation and Q4" decoding="async" loading="lazy" src="../assets/04c2ac662500e314.png"/></a></p>
+<p><strong>条件 / Conditions:</strong> 共享3Mbps；每人活跃时需150kbps，每人10%时间活跃。a用电路交换；b/c用分组交换，c共有120用户。 / Users share 3 Mbps, each requiring 150 kbps when active, with activity fraction 10%. Part a uses circuits; parts b/c use packet switching, with 120 users in c.</p>
+<p>a 每用户预留150kbps，可容纳 <span class="arithmatex">\(3\times10^6/(150\times10^3)=20\)</span>人，选B。不把它再除活跃比例，电路资源已经预留。</p>
+<p>b 随机时刻某用户活跃概率0.1，选A。把长期活跃比例作为该随机时刻概率，是题目的稳态抽样约定。</p>
+<p>c 在<strong>用户独立、每人同为p=0.1</strong>的模型下，K~Binomial(120,0.1)，恰n人活跃概率</p>
+<div class="arithmatex">\[P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n},\quad n=0,1,\ldots,120.\]</div>
+<p>对应原选项B（其因子顺序先写0.9）。组合数选出哪些人在发；0.1乘n次、0.9乘其余120−n次。原题没有清楚写独立，教师二项解答隐含这个假设，不能遗漏。</p>
+<p><strong>English answer:</strong> (a)20 users; (b)0.1; (c)choose(120,n)·0.1ⁿ·0.9¹²⁰⁻ⁿ, assuming independent user activity.</p>
+<p>平均活跃人数Np=12并不意味着始终12人；容量20也不保证任何时刻都够用。补充：超额事件为K&gt;20，应该求从21起的尾概率，不是只算K=20或K=21。这是分析边界，不是原题额外要求。</p>
+<p><strong>变式 / Transfer:</strong> 3个独立用户、p=0.1，容量可同时容纳2人，超额概率？ / Three independent users have p=0.1 each; capacity supports two. Find excess-demand probability.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>三人全活跃，0.1³=0.001。 / All three must be active, giving 0.001.</p>
+</details>
+<h2 id="_1">回查与巩固</h2>
+<p>所有数值与环路逐边占用由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算。原题PDF p1=Q1/Q2引入，p2=Q2/Q3引入，p3=Q3继续/Q4；教师解答1–2背景、3–4Q1、5电路图、6–7Q2、8FDM/TDM、9Q3、10Q4均已对应。原版本副本不重复计算。</p>
+<p>复习使用<a href="../../cards.html#CS5222-N071">现有Tutorial1卡</a>，首选N071/N072（存储转发）、N076（FDM）、N077（人数与容量），以及<a href="Chapter01.html#qa">Chapter1</a>相关题。学习完应能用英文解释 <em>why</em>，不只记住C/D/B这些选项字母。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

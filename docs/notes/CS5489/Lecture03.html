@@ -1,0 +1,432 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 3 · Discriminative Classifiers｜从概率分布走向分类边界 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-3-discriminative-classifiers">Lecture 3 · Discriminative Classifiers｜从概率分布走向分类边界</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=83">A4 打印版 · 第 83–97 页</a>　图可点击放大。</p>
+<p><a href="index.html">课程目录</a> · <a href="Lecture02.html">上一讲：Bayes</a> · <a href="Tutorial03.html">Tutorial 3</a> · <a href="Lecture04.html">下一讲：回归</a></p>
+<p>植物园仍然要辨认鸢尾花。上一讲先为每种花建立测量值的分布，再用 Bayes 规则判断新花。这一讲换个问题：如果最后只需要判断类别，能不能直接学习“什么测量结果应该分在哪边”？老师按 <strong>线性分类 → Logistic Regression → SVM → Kernel SVM → 特征与模型比较</strong> 展开，本讲义保持这个顺序。</p>
+<p>主依据为当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture3a</span>、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture3b</span>、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture3c</span> 及 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">SVM 手写补充</span>。下文 A、B、C 表示这三份 Notebook 的从 1 开始的单元号，S 表示 PDF 页码。教学补算和修正均不是教师另发的标准答案。</p>
+<p><strong>基础复习（可跳过）</strong>：看不懂点积、距离时先读<a href="../foundations/MathForML.html#projection">长度与投影</a>；求梯度、约束和乘子卡住时读<a href="../foundations/MathForML.html#optimization">梯度与约束</a>。Python 数组操作回到 <a href="Lecture01.html#arrays">Lecture 1</a>。先修页解释工具，本讲仍会完整解释分类方法。</p>
+<div class="toc">
+<ul>
+<li><a href="#lecture-3-discriminative-classifiers">Lecture 3 · Discriminative Classifiers｜从概率分布走向分类边界</a><ul>
+<li><a href="#1-generative-versus-discriminative">1. Generative versus discriminative｜先弄懂我们换了什么目标</a></li>
+<li><a href="#2-linear-classifier-and-separating-hyperplane">2. Linear classifier and separating hyperplane｜一张有方向的分界线</a></li>
+<li><a href="#3-logistic-regression">3. Logistic regression｜把分数翻译成概率</a></li>
+<li><a href="#4-regularization-and-optimization">4. Regularization and optimization｜别把训练数据背成身份证号码</a></li>
+<li><a href="#5-iris-example-and-cross-validation-c">5. Iris example and cross-validation｜让验证集帮我们选 C</a></li>
+<li><a href="#6-multiclass-classification-if">6. Multiclass classification｜三类不是多加一个 if 就结束</a></li>
+<li><a href="#7-maximum-margin">7. Maximum margin｜不仅分开，还想留出余地</a></li>
+<li><a href="#8-lagrangian-and-duality">8. Lagrangian and duality｜换一组未知数，不是凭空变公式</a></li>
+<li><a href="#9-kkt-and-support-vectors">9. KKT and support vectors｜乘子告诉我们哪条约束在起作用</a></li>
+<li><a href="#10-soft-margin-svm">10. Soft-margin SVM｜允许有代价的违规</a></li>
+<li><a href="#11-multiclass-svm-and-kernel-trick">11. Multiclass SVM and kernel trick｜直线不够，就改变表示</a></li>
+<li><a href="#12-rbf-and-custom-kernels">12. RBF and custom kernels｜相似度也有尺度</a></li>
+<li><a href="#13-features-scaling-and-imbalance">13. Features, scaling and imbalance｜同一模型也会被表示方式影响</a></li>
+<li><a href="#14-classification-summary">14. Classification summary｜把不同方法放在同一张地图</a></li>
+<li><a href="#15-back-to-the-tutorial-and-english-self-test">15. Back to the tutorial and English self-test｜从本讲走向实践</a></li>
+<li><a href="#16">16. 原课疑点与覆盖索引</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>优先级</th>
+<th>理解难度与卡点</th>
+<th>应达到的能力；判断依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线性分数、sigmoid、logistic loss</td>
+<td>核心必会</td>
+<td>中；标签编码、概率方向</td>
+<td>手算分数、概率和损失；A24–52</td>
+</tr>
+<tr>
+<td>正则化、CV、预处理</td>
+<td>核心必会</td>
+<td>中；训练/验证边界</td>
+<td>能设计无泄漏实验；A65–73、C7–15、T3</td>
+</tr>
+<tr>
+<td>margin、hard/soft SVM</td>
+<td>核心必会</td>
+<td>中至高；距离与函数值</td>
+<td>解释并计算间隔、slack；B11–60、S1–4</td>
+</tr>
+<tr>
+<td>SVM dual、KKT</td>
+<td>核心必会</td>
+<td>高；对谁求导、约束符号</td>
+<td>跟完关键求导并解释乘子；B37–44、S2–4</td>
+</tr>
+<tr>
+<td>核、特征映射及参数</td>
+<td>核心必会</td>
+<td>中至高；隐式内积</td>
+<td>手算小核矩阵、实现原任务；B83–123、T3</td>
+</tr>
+<tr>
+<td>多分类、编码、不平衡</td>
+<td>常规掌握</td>
+<td>中；机制与实现区分</td>
+<td>选择表示与评估方法；A74–99、C16–42</td>
+</tr>
+<tr>
+<td>强对偶的一般证明、核的一般谱理论</td>
+<td>二读拓展</td>
+<td>高；数学条件</td>
+<td>当前只需理解适用边界；整理者建议，未据此宣称“不考”</td>
+</tr>
+</tbody>
+</table></div>
+<p>优先级首先来自当前课件和 Tutorial 的实际要求。历史复习资料能帮助复习，不能把一个旧样题的出现次数叫作“高频”，也不能代替本学期或 QE 范围确认。</p>
+<p><a id="linear"></a></p>
+<h2 id="1-generative-versus-discriminative">1. Generative versus discriminative｜先弄懂我们换了什么目标</h2>
+<p>生成式分类器学 <span class="arithmatex">\(p(\mathbf x\mid y)\)</span> 和 <span class="arithmatex">\(p(y)\)</span>，再得到后验 <span class="arithmatex">\(p(y\mid\mathbf x)\)</span>。判别式分类器直接学后验或分类分数。两者都使用带标签的训练数据；“判别式”不等于“不需要概率”，SVM 和 Logistic Regression 也不是同一种训练目标。</p>
+<p>老师先从上一讲搭桥（A8–23）。假设两个类别各维条件独立，<strong>所有类别、所有维度共享同一个方差 <span class="arithmatex">\(\sigma^2&gt;0\)</span></strong>，均值分别为 <span class="arithmatex">\(\boldsymbol\mu,\boldsymbol\nu\)</span>，先验为 <span class="arithmatex">\(\pi_1,\pi_2&gt;0\)</span>。比较两个后验的对数比：</p>
+<div class="arithmatex">\[\log\frac{p(y=1\mid\mathbf x)}{p(y=2\mid\mathbf x)}
+=\sum_{j=1}^d\frac{\mu_j-\nu_j}{\sigma^2}x_j
++\frac{\|\boldsymbol\nu\|^2-\|\boldsymbol\mu\|^2}{2\sigma^2}
++\log\frac{\pi_1}{\pi_2}.\]</div>
+<p>为什么突然变成直线？把 <span class="arithmatex">\((x_j-\mu_j)^2\)</span> 和 <span class="arithmatex">\((x_j-\nu_j)^2\)</span> 展开，两边的 <span class="arithmatex">\(x_j^2\)</span> 抵消，只剩一次项和常数。这个抵消依赖共享方差；不要套回 Lecture 2 的逐类完整协方差模型。</p>
+<p>将各个一次项系数记成 <span class="arithmatex">\(w_j\)</span>，所有常数合成 <span class="arithmatex">\(b\)</span>，得到 <span class="arithmatex">\(f(\mathbf x)=\mathbf w^T\mathbf x+b\)</span>。接下来不必先估计均值和方差，可以直接从数据学习 <span class="arithmatex">\(\mathbf w,b\)</span>。</p>
+<p><strong>English takeaway (整理表达):</strong> A shared-variance Gaussian model yields a linear log-posterior ratio. Discriminative learning estimates a decision rule or a posterior directly.</p>
+<h2 id="2-linear-classifier-and-separating-hyperplane">2. Linear classifier and separating hyperplane｜一张有方向的分界线</h2>
+<p>从 A24 开始，理论标签改成 <span class="arithmatex">\(y\in\{-1,+1\}\)</span>，不再是前面的 1、2。输入 <span class="arithmatex">\(\mathbf x\in\mathbb R^d\)</span>、权重 <span class="arithmatex">\(\mathbf w\in\mathbb R^d\)</span>，偏置 <span class="arithmatex">\(b\)</span> 是一个数。<span class="arithmatex">\(f&gt;0\)</span> 判 +1，<span class="arithmatex">\(f&lt;0\)</span> 判 −1；<span class="arithmatex">\(f=0\)</span> 要约定平局处理。分数本身不是概率。</p>
+<p>老师原例 <span class="arithmatex">\(\mathbf w=(2,1)^T,b=0\)</span>：看见 <span class="arithmatex">\((2,-1)\)</span> 就算 <span class="arithmatex">\(2\times2-1=3\)</span>，判 +1；看见 <span class="arithmatex">\((-2,1)\)</span> 得 −3，判 −1。边界 <span class="arithmatex">\(2x_1+x_2=0\)</span> 垂直于 <span class="arithmatex">\(\mathbf w\)</span>。二维是线，三维是平面，<span class="arithmatex">\(d\)</span> 维叫超平面（hyperplane），维度为 <span class="arithmatex">\(d-1\)</span>，要求 <span class="arithmatex">\(\mathbf w\ne0\)</span>。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/2ecc896ff776d50c.png" rel="noopener" target="_blank"><img alt="Linear scores and sigmoid probabilities" decoding="async" loading="lazy" src="../assets/2ecc896ff776d50c.png"/></a></p>
+<p>图左看原例边界，右边看同一个分数怎样转换为概率。画图代码与补算保存在 <code>tools/verify_lecture_examples.py</code>；图是本轮重算，不是新的课堂原图。</p>
+<p><strong>自测 / Check:</strong> 若 <span class="arithmatex">\(\mathbf w=(2,1)^T,b=-1,\mathbf x=(1,2)^T\)</span>，分数和预测是什么？ / Find the score and class for these values.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p><span class="arithmatex">\(f=2+2-1=3&gt;0\)</span>，预测 +1。 / The score is 3; predict +1. 偏置移动边界，不增加一个观测维度。</p>
+</details>
+<p><a id="logistic"></a></p>
+<h2 id="3-logistic-regression">3. Logistic regression｜把分数翻译成概率</h2>
+<p>“分数为 3”不直接告诉我们有多确定。Logistic Regression 用 sigmoid：</p>
+<div class="arithmatex">\[\sigma(z)=\frac1{1+e^{-z}},\qquad p(y=+1\mid\mathbf x)=\sigma(f(\mathbf x)),\quad p(y=-1\mid\mathbf x)=1-\sigma(f(\mathbf x)).\]</div>
+<p>分数 0 对应 0.5；分数 2 对应约 0.8808；−2 对应约 0.1192。概率相加为 1。名称里虽然有 regression，这里做的是分类。A36 的一维原例 <span class="arithmatex">\(f(x)=2x-4\)</span>，所以边界在 <span class="arithmatex">\(x=2\)</span>，不是在 <span class="arithmatex">\(x=0\)</span>。</p>
+<p>现在反过来：给出训练数据，怎样找权重？每个样本希望模型给它的<strong>真实类别</strong>较高概率。利用 <span class="arithmatex">\(1-\sigma(z)=\sigma(-z)\)</span>，两种标签合并为 <span class="arithmatex">\(p(y\mid\mathbf x)=\sigma(yf(\mathbf x))\)</span>。这个写法只适用于 <span class="arithmatex">\(y=\pm1\)</span>；不能直接把 0/1 标签代进去。</p>
+<p>令 <span class="arithmatex">\(z_i=y_i f(\mathbf x_i)\)</span>。它为正说明分对，负说明分错，零在边界。独立样本的条件似然相乘，取对数后相加；最大化对数似然等价于最小化负对数：</p>
+<div class="arithmatex">\[E(\mathbf w,b)=\sum_{i=1}^N\ell(z_i),\qquad \ell(z)=\log(1+e^{-z}).\]</div>
+<p>若真实标签 −1，分数却为 2，那么 <span class="arithmatex">\(z=-2\)</span>、损失约 2.1269；同样标签配分数 −2，损失约 0.1269。损失是“对真实答案有多不买账”，不是错误样本的简单计数。即使分对但信心不足，损失仍不为零。</p>
+<p><strong>English:</strong> Logistic regression minimizes the negative conditional log-likelihood. The signed score <span class="arithmatex">\(yf(x)\)</span> distinguishes correct from incorrect predictions.</p>
+<h2 id="4-regularization-and-optimization">4. Regularization and optimization｜别把训练数据背成身份证号码</h2>
+<p>模型可能靠很大的权重把训练点分得极其自信，但新数据稍有变化就出错。A49–51 给权重零均值高斯先验，协方差 <span class="arithmatex">\((C/2)I\)</span>，得到课堂目标：</p>
+<div class="arithmatex">\[E=\frac1C\|\mathbf w\|^2+\sum_i\log(1+e^{-y_i(\mathbf w^T\mathbf x_i+b)}),\qquad C&gt;0.\]</div>
+<p>第一项惩罚大权重，第二项拟合数据。<strong>小 <span class="arithmatex">\(C\)</span>：更强正则；大 <span class="arithmatex">\(C\)</span>：更弱正则。</strong> 这是一种 MAP 解释，偏置在这份公式里未被惩罚。库中的 <span class="arithmatex">\(1/2\)</span>、求和/平均及 solver 约定可能不同，不应从同一个数值 C 推断不同软件必然输出同一模型。</p>
+<p>老师说用迭代优化（A52）。补足最关键一步：对一个样本，</p>
+<div class="arithmatex">\[\frac{d\ell}{dz}=-\frac1{1+e^z}=-\sigma(-z),\qquad
+\nabla_{\mathbf w}\ell=-y\sigma(-yf)\mathbf x.\]</div>
+<p>第一式来自先求 <span class="arithmatex">\(\log u\)</span> 的导数再乘 <span class="arithmatex">\(u=1+e^{-z}\)</span> 的导数；第二式再乘 <span class="arithmatex">\(z=y(\mathbf w^T\mathbf x+b)\)</span> 对权重的导数。加上正则得到</p>
+<div class="arithmatex">\[\nabla_{\mathbf w}E=\frac2C\mathbf w-\sum_i y_i\sigma(-y_if_i)\mathbf x_i,\quad
+\frac{\partial E}{\partial b}=-\sum_i y_i\sigma(-y_if_i).\]</div>
+<p>梯度下降把参数更新为 <span class="arithmatex">\(\mathbf w\leftarrow\mathbf w-\eta\nabla E\)</span>，<span class="arithmatex">\(\eta&gt;0\)</span> 是学习率。减号表示向局部下降方向走；步子过大仍会跨过谷底。</p>
+<p><strong>补一步题 / Fill a step:</strong> 单个样本 <span class="arithmatex">\(x=2,y=+1,w=b=0\)</span>，无正则，<span class="arithmatex">\(\eta=0.1\)</span>。一次同时更新得到什么？ / Compute one simultaneous gradient step with these values.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p><span class="arithmatex">\(f=0,\sigma(-yf)=0.5\)</span>，<span class="arithmatex">\(\partial E/\partial w=-1\)</span>、<span class="arithmatex">\(\partial E/\partial b=-0.5\)</span>。新 <span class="arithmatex">\(w=0.1,b=0.05\)</span>，新分数 0.25，正确类别概率增加到约 0.5622。 / The updated parameters are w=0.1, b=0.05; the positive-class probability becomes about 0.5622.</p>
+</details>
+<h2 id="5-iris-example-and-cross-validation-c">5. Iris example and cross-validation｜让验证集帮我们选 C</h2>
+<p>A54–64 用 iris2.csv 的两项测量，固定 <code>random_state=4487</code>，各一半训练与测试；<code>C=100</code> 学到一条边界。原 A59 的系数是老师保存的输出，依赖版本/求解器，不能当成永不变化的常量。本轮关键计算另行重算，见配套运行报告。</p>
+<p>A66 画几个 C 的测试表现属于课堂探索。正式选参应该在训练集内部做 K-fold cross-validation（CV）：将训练数据分 K 份，每次留一份验证，其他份训练；每个 C 得 K 个验证分数，取平均；选好后用<strong>整个原训练集</strong>重新拟合，最后才评估保留测试集。A69 的“all data”在这里应理解为所有训练数据，不包括用于最终评价的测试集。</p>
+<p>如果还要标准化，<code>StandardScaler</code> 必须放在 <code>Pipeline</code> 里面，让每一折只用本折训练部分拟合均值与标准差。提前用整个训练集缩放再 CV，会把验证折的信息带进去。固定减 0.5 不依赖数据估计，性质不同。</p>
+<pre><code class="language-python">from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=3000))
+search = GridSearchCV(model, {'logisticregression__C':[0.1,1,10]}, cv=5)
+search.fit(trainX, trainY)
+# Only now evaluate search on the untouched testX, testY.
+</code></pre>
+<p>当前接口使用 <code>model_selection</code>；原文提到的 <code>cross_validation</code> 是旧模块名。<code>mean_test_score</code> 在 GridSearchCV 中指每折的验证分数，不是你保留的外部测试集成绩。</p>
+<h2 id="6-multiclass-classification-if">6. Multiclass classification｜三类不是多加一个 if 就结束</h2>
+<p>A74–85 的 one-vs-rest（OvR）为每一类训练“它 versus 其他类”分类器，然后比较各类分数/概率。三类要三个分类器。它们分别训练，原始 sigmoid 输出不必相加为 1；实现可进一步归一化。</p>
+<p>A86–99 的 softmax 则一起训练 K 组权重，<span class="arithmatex">\(f_c(\mathbf x)=\mathbf w_c^T\mathbf x\)</span>（偏置可加入或吸收到常数特征）：</p>
+<div class="arithmatex">\[p_c=\frac{e^{f_c}}{\sum_{j=1}^K e^{f_j}},\qquad \ell=-\sum_{c=1}^K y_c\log p_c.\]</div>
+<p><span class="arithmatex">\(\mathbf y\)</span> 是 one-hot 真实标签，仅真实类别的分量为 1，所以损失就是该类概率的负对数。分数 <span class="arithmatex">\((0,\log2,\log3)\)</span> 对应概率 <span class="arithmatex">\((1/6,2/6,3/6)\)</span>；若真实类别为第 2 类，损失 <span class="arithmatex">\(\log3\approx1.0986\)</span>。数值实现先减最大分数再指数，概率不变且更稳定。</p>
+<p>原 <code>multi_class='ovr'</code> / <code>'multinomial'</code> 是旧接口写法。需要明确 OvR 时用 <code>OneVsRestClassifier(LogisticRegression(...))</code>；不要靠新版默认值猜老师在示范哪一种模型。</p>
+<p><a id="svm"></a></p>
+<h2 id="7-maximum-margin">7. Maximum margin｜不仅分开，还想留出余地</h2>
+<p>B4–26 从两团可分数据开始。有很多条线能分对训练数据，SVM 优先选离最近点也尽量远的线。这就像在两排桌子中间留通道：只要没碰桌子不代表通道已经够宽。这个类比只说明几何距离，模型并不真的理解桌子的用途。</p>
+<p>点到超平面距离为 <span class="arithmatex">\(|\mathbf w^T\mathbf x+b|/\|\mathbf w\|\)</span>。分母不能省：同时把 <span class="arithmatex">\(\mathbf w,b\)</span> 乘 10，分界线没动，分数放大 10 倍，距离不能跟着放大。</p>
+<p>线性可分、标签正确侧的前提下，选择归一化使最近点 <span class="arithmatex">\(y_if_i=1\)</span>。一侧 margin 为 <span class="arithmatex">\(1/\|\mathbf w\|\)</span>，两条支持平面间的<strong>总宽度</strong>为 <span class="arithmatex">\(2/\|\mathbf w\|\)</span>。于是 hard-margin SVM：</p>
+<div class="arithmatex">\[\min_{\mathbf w,b}\frac12\|\mathbf w\|^2\quad\text{s.t. } y_i(\mathbf w^T\mathbf x_i+b)\ge1\quad\forall i.\]</div>
+<p>目标让间隔大，约束保证所有点都在正确侧且不侵入间隔。单写 <span class="arithmatex">\(|f_i|\ge1\)</span> 不够，它也容许把标签全部分反；S1 中绝对值中间式必须连着“正确分类”的前提读。</p>
+<p><strong>完整小算例（补充）</strong>：一维两点 <span class="arithmatex">\(x_1=-1,y_1=-1\)</span>，<span class="arithmatex">\(x_2=1,y_2=1\)</span>。约束为 <span class="arithmatex">\(w-b\ge1\)</span> 和 <span class="arithmatex">\(w+b\ge1\)</span>，相加得 <span class="arithmatex">\(w\ge1\)</span>。最小 <span class="arithmatex">\(w^2/2\)</span> 在 <span class="arithmatex">\(w=1,b=0\)</span>，两点都是支持向量，一侧距离 1，总宽度 2。</p>
+<p><a id="dual"></a></p>
+<h2 id="8-lagrangian-and-duality">8. Lagrangian and duality｜换一组未知数，不是凭空变公式</h2>
+<p>先理解约束写法。若统一写 <span class="arithmatex">\(g_i\ge0\)</span>，拉格朗日函数（Lagrangian）是 <span class="arithmatex">\(L=f-\sum_i\alpha_i g_i\)</span>、<span class="arithmatex">\(\alpha_i\ge0\)</span>；若写 <span class="arithmatex">\(h_i\le0\)</span>，则是 <span class="arithmatex">\(L=f+\sum_i\alpha_i h_i\)</span>。这两种记号等价，不能只抄乘子前的号。</p>
+<p>对 hard SVM，<span class="arithmatex">\(g_i=y_i(\mathbf w^T\mathbf x_i+b)-1\)</span>：</p>
+<div class="arithmatex">\[L(\mathbf w,b,\boldsymbol\alpha)=\frac12\mathbf w^T\mathbf w-\sum_i\alpha_i[y_i(\mathbf w^T\mathbf x_i+b)-1].\]</div>
+<p>先固定 <span class="arithmatex">\(\alpha\)</span>，对原变量 <span class="arithmatex">\(\mathbf w,b\)</span> 取最小值。展开与求导：</p>
+<div class="arithmatex">\[L=\frac12\mathbf w^T\mathbf w-\mathbf w^T\sum_i\alpha_iy_i\mathbf x_i-b\sum_i\alpha_i y_i+\sum_i\alpha_i,\]</div>
+<div class="arithmatex">\[\nabla_{\mathbf w}L=\mathbf w-\sum_i\alpha_iy_i\mathbf x_i=0,
+\qquad \partial L/\partial b=-\sum_i\alpha_i y_i=0.\]</div>
+<p>所以 <span class="arithmatex">\(\mathbf w=\sum_i\alpha_i y_i\mathbf x_i\)</span> 且 <span class="arithmatex">\(\sum_i\alpha_i y_i=0\)</span>。若后一项不为零，<span class="arithmatex">\(b\)</span> 可让 L 向负无穷走，不能形成有限对偶函数。将两式代回，二次项一正一负相减，得到</p>
+<div class="arithmatex">\[\max_{\boldsymbol\alpha}\sum_i\alpha_i-\frac12\sum_{i,j}\alpha_i\alpha_jy_iy_j\mathbf x_i^T\mathbf x_j,
+\quad\sum_i\alpha_iy_i=0,\quad\alpha_i\ge0.\]</div>
+<p>原来未知数是 d 个权重和 b；现在每个训练点对应一个 <span class="arithmatex">\(\alpha_i\)</span>。<strong>对偶（dual）</strong>不是换了数据，只是用“各样本怎样共同支撑边界”表示同一问题。</p>
+<p>对前面的 <span class="arithmatex">\((-1,-1),(1,+1)\)</span> 小例，两乘子相等为 a，目标 <span class="arithmatex">\(2a-2a^2\)</span>。导数 <span class="arithmatex">\(2-4a=0\)</span> 得 <span class="arithmatex">\(a=1/2\)</span>，恢复 <span class="arithmatex">\(w=(1/2)(-1)(-1)+(1/2)(1)(1)=1\)</span>，与直接解一致。</p>
+<p>对偶函数给原问题最优值的下界（weak duality）。凸性配合适当约束资格条件可得到 strong duality；“凸问题一律无条件相等”说得太快。当前可分 hard SVM 可将分离器放大得到严格可行点，soft SVM 也有严格可行构造，满足相应条件。一般理论放二读，不必在入门时先证明整本凸优化。</p>
+<h2 id="9-kkt-and-support-vectors">9. KKT and support vectors｜乘子告诉我们哪条约束在起作用</h2>
+<p>Karush–Kuhn–Tucker（KKT）条件在这里包含：原约束可行、乘子非负、对 <span class="arithmatex">\(\mathbf w,b\)</span> 的驻点条件、互补松弛 <span class="arithmatex">\(\alpha_i(y_if_i-1)=0\)</span>。</p>
+<p>它是两个非负数相乘等于零，不是“两者都必须为零”。若 <span class="arithmatex">\(y_if_i&gt;1\)</span>，必有 <span class="arithmatex">\(\alpha_i=0\)</span>；若 <span class="arithmatex">\(\alpha_i&gt;0\)</span>，必有 <span class="arithmatex">\(y_if_i=1\)</span>。但 <strong><span class="arithmatex">\(\alpha_i=0\)</span> 不能推出严格 <span class="arithmatex">\(y_if_i&gt;1\)</span></strong>，退化情况下点可能恰在边界而乘子为零。A、B 和 S 的简略箭头要按这些单向蕴含读。</p>
+<p>预测可写成 <span class="arithmatex">\(\operatorname{sign}(\sum_i\alpha_i y_i\mathbf x_i^T\mathbf x_*+b)\)</span>，零乘子的点没有直接贡献。用一个合适的边界支持向量恢复 <span class="arithmatex">\(b=y_i-\mathbf w^T\mathbf x_i\)</span>，数值程序常对多个合适点综合处理。</p>
+<p><strong>变式 / Transfer:</strong> 把两点移到 <span class="arithmatex">\(x=\pm2\)</span>，标签仍为两侧 −1/+1。求 w、b、一侧 margin 和两个乘子。 / Move the two points to ±2 and find the hard-margin solution and multipliers.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p><span class="arithmatex">\(w=1/2,b=0\)</span>，margin=2。设两个乘子均 a，<span class="arithmatex">\(w=4a\)</span>，所以 <span class="arithmatex">\(a=1/8\)</span>。 / w=0.5, b=0; the one-sided margin is 2 and both multipliers are 0.125. 不能因为坐标加倍就说权重也加倍。</p>
+</details>
+<h2 id="10-soft-margin-svm">10. Soft-margin SVM｜允许有代价的违规</h2>
+<p>有重叠/噪声时，强求所有点正确且留出间隔可能无解。为每点引入无量纲 slack <span class="arithmatex">\(\xi_i\ge0\)</span>：</p>
+<div class="arithmatex">\[\min_{\mathbf w,b,\boldsymbol\xi}\frac12\|\mathbf w\|^2+C\sum_i\xi_i,
+\quad y_if_i\ge1-\xi_i,\quad\xi_i\ge0,\quad C&gt;0.\]</div>
+<p>在最优解，对给定分数取最小允许 slack：<span class="arithmatex">\(\xi_i=\max(0,1-y_if_i)\)</span>，即 hinge loss。<span class="arithmatex">\(y_if_i=1.4\)</span> 时 slack=0；0.4 时 slack=0.6，<strong>仍分类正确</strong>；−0.2 时 slack=1.2，才是错分。slack 是分数上的缺口，几何长度还要除 <span class="arithmatex">\(\|w\|\)</span>。</p>
+<p>消去 slack 后为 <span class="arithmatex">\(\frac12\|w\|^2+C\sum_i\max(0,1-y_if_i)\)</span>。整体除 C 得正则系数 <span class="arithmatex">\(1/(2C)\)</span>。B58 写成 <span class="arithmatex">\(1/C\)</span> 时相当于重新定义了 C，不能在数值比较时无声跳过因子 2。</p>
+<p>S3 对 <span class="arithmatex">\(\xi_i\ge0\)</span> 引入另一个乘子 <span class="arithmatex">\(\gamma_i\)</span>，<span class="arithmatex">\(\partial L/\partial\xi_i=C-\alpha_i-\gamma_i=0\)</span>，故 <span class="arithmatex">\(0\le\alpha_i\le C\)</span>。对偶目标形式不变，增加上界。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>最优乘子情形</th>
+<th>可以可靠推出什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\alpha_i=0\)</span></td>
+<td>slack=0，<span class="arithmatex">\(y_if_i\ge1\)</span>；不保证严格大于</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0&lt;\alpha_i&lt;C\)</span></td>
+<td>slack=0，<span class="arithmatex">\(y_if_i=1\)</span>；适合恢复 b</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\alpha_i=C\)</span></td>
+<td><span class="arithmatex">\(y_if_i\le1\)</span>；可以在边界、间隔内或错分</td>
+</tr>
+</tbody>
+</table></div>
+<p>大 C 让违规更贵，小 C 更愿意牺牲部分训练拟合。不是“大 C 永远更好”。原 <code>C=inf</code> 是概念性硬间隔示范，新接口要求有限 C；大有限 C 也只是近似，并需核查可分性与间隔。</p>
+<h2 id="11-multiclass-svm-and-kernel-trick">11. Multiclass SVM and kernel trick｜直线不够，就改变表示</h2>
+<p>B61–82 用 Iris、CV 和多类 SVM。原 <code>SVC</code> 多类内部为 one-vs-one，K 类训练 <span class="arithmatex">\(K(K-1)/2\)</span> 个二分类器，再投票。输出分数呈 OvR 形状不意味着内部改成了 OvR 训练；需要 OvR 模型时显式使用包装器，其网格参数名为 <code>estimator__C</code>。</p>
+<p>接着 B83–88 画 XOR、中心与两侧、双月形。XOR 的 <span class="arithmatex">\((1,1),(-1,-1)\)</span> 一组，<span class="arithmatex">\((1,-1),(-1,1)\)</span> 另一组，原平面没有一条直线能分开；补一个 <span class="arithmatex">\(x_1x_2\)</span> 特征，前组 +1、后组 −1，就能分。这个特征有意义是因为它捕捉了“同号”关系，不是维数越高自动越聪明。矛盾标签或不合适映射不会因扩维而消失。</p>
+<p>对偶里只用内积，所以可用 <span class="arithmatex">\(k(\mathbf x,\mathbf x')=\Phi(\mathbf x)^T\Phi(\mathbf x')\)</span> 直接算映射后的内积，省去显式构造巨大的 <span class="arithmatex">\(\Phi\)</span>。这是 kernel trick。</p>
+<p>老师二次多项式原例采用重复交叉项：<span class="arithmatex">\(\Phi(x_1,x_2)=(x_1^2,x_1x_2,x_2x_1,x_2^2)\)</span>，于是内积等于 <span class="arithmatex">\((\mathbf x^T\mathbf x')^2\)</span>。如果只保留一个交叉项，就要写 <span class="arithmatex">\(\sqrt2x_1x_2\)</span> 才等价。取 x=(1,2)、x′=(3,4)，核为 <span class="arithmatex">\(11^2=121\)</span>；映射内积为 <span class="arithmatex">\(1\times9+2\times12+2\times12+4\times16=121\)</span>。</p>
+<p>核 SVM 用 <span class="arithmatex">\(k(x_i,x_j)\)</span> 替代内积；软间隔仍须保留 <span class="arithmatex">\(0\le\alpha_i\le C\)</span>。非线性是在原输入空间说的，映射空间里的分类器仍然线性。</p>
+<h2 id="12-rbf-and-custom-kernels">12. RBF and custom kernels｜相似度也有尺度</h2>
+<p>RBF 核 <span class="arithmatex">\(k(x,x')=\exp(-\gamma\|x-x'\|^2)\)</span>，<span class="arithmatex">\(\gamma&gt;0\)</span>。小 gamma 的相似度随距离下降较慢；大 gamma 更局部，可形成复杂边界，但实际效果还取决于 C 和数据。gamma 的单位要与平方距离相抵；改变特征尺度等于改变距离含义。</p>
+<p>B114 的 20×20 网格、5 折要做 2000 次候选拟合，再最终重拟合。CV 分数和最终测试分数不能混称。B118 的有效实对称核要求对<strong>任意有限样本集合</strong>形成的 Gram 矩阵半正定，即任意实向量 z 有 <span class="arithmatex">\(z^TKz\ge0\)</span>；检查某一张小矩阵只是实现自检，不是普遍证明。原文一句 positive definite 应为 positive semidefinite。</p>
+<p>B119–123 的自定义示例实际用 <strong>Euclidean</strong> 距离 <span class="arithmatex">\(\exp(-\alpha\|x-x'\|_2)\)</span>；Tutorial3 明确改为 <strong>L1</strong> 距离 <span class="arithmatex">\(\exp(-\alpha\sum_j|x_j-x'_j|)\)</span>。两者不能因为都叫 Laplacian 就混用。函数输入为 <span class="arithmatex">\((N_1,d),(N_2,d)\)</span>，输出必须为 <span class="arithmatex">\((N_1,N_2)\)</span>；预测时比较的是测试与训练，不是测试与测试。</p>
+<p><strong>English:</strong> A kernel represents an inner product in a feature space. Tune kernel parameters using training-only validation, and state the exact distance convention.</p>
+<p><a id="preprocessing"></a></p>
+<h2 id="13-features-scaling-and-imbalance">13. Features, scaling and imbalance｜同一模型也会被表示方式影响</h2>
+<p>C7–15 先讨论尺度：标准化 <span class="arithmatex">\(\tilde x_j=(x_j-m_j)/s_j\)</span>，每个特征分别用训练均值与标准差；常数特征需要实现中的特殊处理，不能除零。Min-max 为 <span class="arithmatex">\(2(x-\min)/(\max-\min)-1\)</span>，新样本超出训练范围时可以落到 [−1,1] 之外。这不是程序必然出错。</p>
+<p>C16–24 转向表示。把 cat/dog/horse 编成 0/1/2 会强加虚假的次序和距离，one-hot 避免这个问题，但不自动表达动物相似性。原 C17 的 cat×horse=2 是算术笔误，0×2=0；真正的问题是数字的内积没有所需语义。Binning 将连续值分箱再 one-hot，会丢掉箱内细节；PolynomialFeatures 增加一次、平方和交互项；log 变换压缩正数跨度，需说明定义域，不能对零或负数直接 log。</p>
+<p>C25–34 的例子有 200 对 20 个样本。<code>class_weight='balanced'</code> 使用 <span class="arithmatex">\(w_c=N/(K N_c)\)</span>，两权重为 0.55、5.5，让两类总权重相等；它改变损失，不会凭空生成新数据。C35–42 的垃圾邮件例子讨论的是<strong>错误代价不同</strong>：合法邮件被扔掉更严重。人为设权重 {0:0.2,1:5} 让 class1 的单个样本权重是另一类的 25 倍，需要先说清哪个标签代表什么。</p>
+<p><strong>自测 / Check:</strong> 1000封合法邮件、10封垃圾邮件，全部预测合法，accuracy 是否足以说明成功？ / Is always predicting legitimate mail successful on this imbalanced set?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>accuracy=1000/1010≈99.01%，但垃圾邮件召回率为0；两类 balanced accuracy=(1+0)/2=0.5。 / Accuracy is about 99.01%, spam recall is zero, and balanced accuracy is 0.5. 应按任务代价同时看各类表现。</p>
+</details>
+<h2 id="14-classification-summary">14. Classification summary｜把不同方法放在同一张地图</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>训练在做什么</th>
+<th>输出/优势</th>
+<th>条件与代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bayes / NB</td>
+<td>估计先验与类条件分布</td>
+<td>可多类；结构假设降低估计负担</td>
+<td>依赖分布/独立假设；边界未必非线性</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td>正则化条件似然</td>
+<td>概率与线性分数</td>
+<td>概率校准仍需检查，不是名称保证</td>
+</tr>
+<tr>
+<td>Linear SVM</td>
+<td>权衡间隔与 hinge 违规</td>
+<td>高维线性判别</td>
+<td>原始分数非概率；尺度/C有影响</td>
+</tr>
+<tr>
+<td>Kernel SVM</td>
+<td>在核特征空间做 SVM</td>
+<td>非线性与自定义相似度</td>
+<td>核条件、调参、Gram矩阵开销</td>
+</tr>
+</tbody>
+</table></div>
+<p>C44–50 的统一写法为 <span class="arithmatex">\(\sum_i L(y_i,f(x_i))+\lambda\Omega(f)\)</span>：数据拟合加模型复杂度惩罚。Logistic loss 对分对的点仍有非零惩罚，hinge 超过间隔后为0；原画图将 logistic loss 除以 log2 是视觉尺度调整，不能无声当成同一正则强度的目标。</p>
+<p>“No Free Lunch”提醒我们不存在对所有任务都占优的模型，不代表在特定数据与假设下无法比较模型。用一致划分、合适指标和验证设计比较，才是老师从算法走向实验的用意（这是整理后的课程串联，而非老师的逐字陈述）。</p>
+<h2 id="15-back-to-the-tutorial-and-english-self-test">15. Back to the tutorial and English self-test｜从本讲走向实践</h2>
+<p><a href="Tutorial03.html">Tutorial 3</a> 将图像展平成特征，先比较 LR 与 linear SVM，再裁剪与使用 L1 核。它检验的是这讲的表示、CV、模型比较与权重解读，不是仅会调用 fit。</p>
+<ol>
+<li><strong>Why does multiplying both w and b by a positive constant leave the boundary unchanged? / 为什么同时正比例放大 w、b 不改变边界？</strong> 答：零集合不变，距离分子分母同比例变。 / The zero set is unchanged and the scale cancels in geometric distance.</li>
+<li><strong>Does a point inside the margin have to be misclassified? / 间隔内必然错分吗？</strong> 答：不是，<span class="arithmatex">\(0\lt yf\lt 1\)</span> 仍正确。 / No; a signed score between zero and one is correct but violates the margin.</li>
+<li><strong>Why put scaling inside CV? / 为什么在每折内部缩放？</strong> 答：验证折不能影响拟合的预处理参数。 / Validation data must not determine fitted preprocessing parameters.</li>
+<li><strong>What is the difference between a decision score and a probability? / 分数与概率有什么区别？</strong> 答：分数可任意实数，概率需在[0,1]且对类别归一。 / Scores need not be bounded or normalized; class probabilities do.</li>
+</ol>
+<p>先复习已有卡 <a href="../../cards.html#CS5489-M143">M143、M144、M146：SVM间隔</a>、<a href="../../cards.html#CS5489-M165">M166：核函数</a>；按卡号定位，卡组复习继续在 Markji。本讲义不增加卡片。</p>
+<h2 id="16">16. 原课疑点与覆盖索引</h2>
+<p><strong>已核对修正：</strong> B38 不应对所有不等式乘子都强行令 <span class="arithmatex">\(\partial L/\partial\lambda=0\)</span>；应使用KKT。B40强对偶需条件；B41/S4的乘子关系需保留单向蕴含；S2名称为 Karush 而非 Krause；S2弱对偶用≤而不是总用&lt;；S3–4的软间隔乘子边界取包含端点的解释；B58正则系数差2；B86扩维不保证可分；B118半正定非严格正定；C17乘法笔误。原件均未改动。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原位置（单元号从1起）</th>
+<th>本文对应</th>
+<th>内容处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1–7</td>
+<td>开篇、§1</td>
+<td>课程位置、生成式/判别式、设置</td>
+</tr>
+<tr>
+<td>A8–23</td>
+<td>§1</td>
+<td>共享方差推导、iris2、后验图代码用途</td>
+</tr>
+<tr>
+<td>A24–31</td>
+<td>§2</td>
+<td>线性函数、超平面、两半空间</td>
+</tr>
+<tr>
+<td>A32–48</td>
+<td>§3</td>
+<td>sigmoid、MLE、signed score、loss</td>
+</tr>
+<tr>
+<td>A49–52</td>
+<td>§4</td>
+<td>先验、正则、优化；补完整梯度</td>
+</tr>
+<tr>
+<td>A53–64</td>
+<td>§5</td>
+<td>原Iris划分、系数、预测图与准确率</td>
+</tr>
+<tr>
+<td>A65–73</td>
+<td>§5</td>
+<td>C、CV、结果字段</td>
+</tr>
+<tr>
+<td>A74–85</td>
+<td>§6</td>
+<td>OvR及三类Iris演示</td>
+</tr>
+<tr>
+<td>A86–100</td>
+<td>§6、§14</td>
+<td>softmax、one-hot似然、交叉熵与总结；末空单元</td>
+</tr>
+<tr>
+<td>B1–10</td>
+<td>§7</td>
+<td>设置、可分数据、多个候选边界</td>
+</tr>
+<tr>
+<td>B11–30</td>
+<td>§7</td>
+<td>margin图、参数/样本扰动直觉、距离</td>
+</tr>
+<tr>
+<td>B31–36</td>
+<td>§7</td>
+<td>归一化、约束、硬间隔目标</td>
+</tr>
+<tr>
+<td>B37–48</td>
+<td>§8–9</td>
+<td>Lagrangian、dual、乘子、预测</td>
+</tr>
+<tr>
+<td>B49–60</td>
+<td>§10</td>
+<td>slack、C、hinge及图示</td>
+</tr>
+<tr>
+<td>B61–82</td>
+<td>§11、§5</td>
+<td>Iris、网格、测试、多类OvO/OvR</td>
+</tr>
+<tr>
+<td>B83–100</td>
+<td>§11</td>
+<td>非线性例子、映射、多项式核及边界</td>
+</tr>
+<tr>
+<td>B101–117</td>
+<td>§12</td>
+<td>RBF、gamma、Iris网格搜索</td>
+</tr>
+<tr>
+<td>B118–124</td>
+<td>§12、§14</td>
+<td>合法核、Euclidean自定义核、总结</td>
+</tr>
+<tr>
+<td>C1–6</td>
+<td>§5、§13</td>
+<td>数据与作图辅助函数</td>
+</tr>
+<tr>
+<td>C7–24</td>
+<td>§13</td>
+<td>缩放、编码、binning、polynomial、log</td>
+</tr>
+<tr>
+<td>C25–42</td>
+<td>§13</td>
+<td>数量不平衡与错误代价</td>
+</tr>
+<tr>
+<td>C43–53</td>
+<td>§14–15</td>
+<td>比较表、loss/regularization/SRM、应用与NFL</td>
+</tr>
+<tr>
+<td>S1</td>
+<td>§7</td>
+<td>距离、归一化、硬间隔；原图与前提</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>§8–9</td>
+<td>约束、KKT、弱/强对偶</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>§8、§10</td>
+<td>硬对偶、软原问题及三组求导</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>§9–10</td>
+<td>支持向量与乘子情形；修正退化边界</td>
+</tr>
+</tbody>
+</table></div>
+<p>Notebook重复绘图单元与辅助代码按其服务的概念合并，不漏算为“新主题”。四页手写材料已逐页看图；下面保留阅读入口，放大看原式后回到§8–10的逐步解释。</p>
+<details>
+<summary>SVM手写原图（四页）</summary>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/216de13d54fbaccd.png" rel="noopener" target="_blank"><img alt="SVM supplement page 1" decoding="async" loading="lazy" src="../assets/216de13d54fbaccd.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8f1c813df208266b.png" rel="noopener" target="_blank"><img alt="SVM supplement page 2" decoding="async" loading="lazy" src="../assets/8f1c813df208266b.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/539ac5bf04a08385.png" rel="noopener" target="_blank"><img alt="SVM supplement page 3" decoding="async" loading="lazy" src="../assets/539ac5bf04a08385.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b2da8c9479a4e1b6.png" rel="noopener" target="_blank"><img alt="SVM supplement page 4" decoding="async" loading="lazy" src="../assets/b2da8c9479a4e1b6.png"/></a></p>
+</details><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

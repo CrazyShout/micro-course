@@ -1,0 +1,408 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 1 · SMS Classification · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="assignment-1-sms-classification">Assignment 1 · SMS Classification</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=74">A4 打印版 · 第 74–82 页</a></p>
+<h1 id="_1">从课堂概率模型到一个可解释、可复现的短信分类实验</h1>
+<p>本地方法指南 · 2026-09-22</p>
+<p><a href="Lecture02.html">Lecture 2 整讲讲义</a> · <a href="Tutorial02.html">Tutorial 2 可运行示范</a> · <a href="index.html">运行与文件说明</a></p>
+<p>本文件按“纸笔详解、实验讲方案”编写。下面的手算例子给完整解答；实际短信实验提供拆解、接口、验证和自查，不包含训练好的作业模型或正式预测文件。数字例子明确标为教学数据，文件规模则来自实际输入核对。</p>
+<p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment1-Doc.ipynb</span>（D，23个cell）、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment1-Final.ipynb</span>（F，11个cell）。cell从文件第一个单元开始计数。截止日期、评分与提交手续见<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>，本文件集中解释技术工作。</p>
+<h2 id="lecture-2">本作业怎样接上 Lecture 2？</h2>
+<p>Lecture 2教你把文字表示为向量，再估计每类的分布，用Bayes规则分类。Tutorial 2让你在新闻上跑过表示、模型、比较、错分和调参。Assignment 1把目标换成短信，并要求你自己选择一条可靠的流程、解释尝试过程、复现最终预测。</p>
+<p>这里最容易漏掉的不是再找一个更复杂的分类器，而是把几个环节接对：标签是否一致，文本和Id是否对齐，哪份数据允许选参数，使用什么指标，以及最终Notebook能否从干净状态生成同样结果。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>学习优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据、标签、Id与Usage</td>
+<td>核心必会</td>
+<td>中：几份文件的角色不同</td>
+<td>会对齐与验证，解释数据流</td>
+<td>D5–12、F5–6及实际CSV</td>
+</tr>
+<tr>
+<td>Balanced accuracy</td>
+<td>核心必会</td>
+<td>中：宏平均与整体比例不同</td>
+<td>手算、解释、用于选择</td>
+<td>D3 Evaluation</td>
+</tr>
+<tr>
+<td>表示与NB基线</td>
+<td>核心必会</td>
+<td>中：预处理也要拟合</td>
+<td>能连接Lecture2与Tutorial2</td>
+<td>D3 Methodology、Lecture2b</td>
+</tr>
+<tr>
+<td>验证与受控比较</td>
+<td>核心必会</td>
+<td>高：测试不能参与反复选择</td>
+<td>会制定协议并记录尝试</td>
+<td>D3 Methodology/Evaluation</td>
+</tr>
+<tr>
+<td>错误分析与复现</td>
+<td>核心必会</td>
+<td>中：解释必须落到证据</td>
+<td>会检查、定位、重跑</td>
+<td>D3、D17–23、F3/8</td>
+</tr>
+<tr>
+<td>逻辑回归、SVM等候选</td>
+<td>常规掌握</td>
+<td>中到高：另有先修</td>
+<td>需要时回Lecture3学习</td>
+<td>D3允许自选方法；当前Lecture3</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些是整理者基于当前任务的学习优先级，不是往年题型频率或本学期考试预测。</p>
+<p><a id="task"></a></p>
+<h2 id="1-goal">1. Goal｜先把预测目标说清楚</h2>
+<p><strong>原课：D2–5。核心必会；难度低；要求准确解释输入、输出与类别。</strong></p>
+<p>一条输入是短信文本，输出只有一个标签：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>标签</th>
+<th>原英文名称</th>
+<th>本任务中的含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>normal</td>
+<td>正常短信</td>
+</tr>
+<tr>
+<td>1</td>
+<td>spam</td>
+<td>垃圾短信</td>
+</tr>
+<tr>
+<td>2</td>
+<td>smishing</td>
+<td>通过短信实施的钓鱼信息</td>
+</tr>
+</tbody>
+</table></div>
+<p>Smishing是短信钓鱼，在本作业单列一类。不要因为它也具有垃圾信息特征，就把1和2合并；也不要在画图、编码和导出时更换标签顺序。模型的classes_与预测概率列必须明确对应。</p>
+<p><strong>English takeaway：</strong> The input is an SMS text and the output is one of three specified labels: normal, spam or smishing. Keep the same label mapping throughout preprocessing, evaluation and prediction output.</p>
+<p><a id="files"></a></p>
+<h2 id="2-load-the-data">2. Load the Data｜三份数据文件分别承担什么工作？</h2>
+<p><strong>原课：D5–10、F5–6。核心必会；难度中；要求能画出训练与评估的数据流。</strong></p>
+<p>本次实际文件如下。TXT的内容也按CSV规则读；文本里可能有逗号，不能简单用字符串split(",")拆每一行。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>当前原文件</th>
+<th>实际结构与规模</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">smishing_train.txt</span></td>
+<td>无表头，2985行；每行文本、标签两列</td>
+<td>训练与训练内部验证</td>
+</tr>
+<tr>
+<td><span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">smishing_val_test.txt</span></td>
+<td>无表头，2986行；每行只有文本</td>
+<td>待预测的验证／测试文本，顺序须保留</td>
+</tr>
+<tr>
+<td><span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">smishing_val_test.csv</span></td>
+<td>有表头Id、Prediction、Usage，共2986行</td>
+<td>标签／用途元数据，通过Id与上一文件对应</td>
+</tr>
+</tbody>
+</table></div>
+<p>训练标签数量为 normal 2454、spam 234、smishing 297，说明多数类明显更多。Usage有1493条val和1493条test；当前Id唯一且恰为1到2986。以上是文件结构核对，不是模型训练结果。</p>
+<p><strong>原课核对：</strong> D5文字提到smishing_test.txt，但当前代码D10和实际下载文件使用smishing_val_test.txt。D5又称标签CSV“only contains the SMS text”，也与实际三列表头不符。以当前文件结构及读取代码为准，原文件保留不修改。</p>
+<p>Prediction这个列名在元数据中提供类别值，<strong>并不是你刚训练出的模型预测</strong>。当前文件的val和test部分都能读到类别数值；能看到不意味着可以用test标签选参数。保持老师明确区分的Usage含义。</p>
+<p>建议在训练前完成以下检查：</p>
+<pre><code class="language-python"># 接口示意：此处不进行训练或写提交文件。
+texts_train, labels_train = read_text_data(train_path)
+texts_eval, _ = read_text_data(eval_text_path)
+metadata = read_split_metadata(meta_path)
+
+# 保留CSV里的Id；确认它确实对应原文本行号。
+assert metadata["Id"].is_unique
+assert metadata["Id"].tolist() == list(range(1, len(texts_eval) + 1))
+assert set(metadata["Usage"]) == {"val", "test"}
+assert len(metadata) == len(texts_eval)
+</code></pre>
+<p>若将来Id不连续，不能继续靠“数组第i个元素配Id=i+1”猜。先确认提供者的映射规则，再建立显式对应。重复文本也不应直接删掉：先检查是否跨划分、标签是否冲突；评价与最终输出仍需保持原题要求的记录集合和顺序。</p>
+<p><strong>English takeaway：</strong> The evaluation text file and metadata have different roles. Align them using the supplied IDs and preserve the original text order. Visible test labels must not be used for model selection.</p>
+<p><a id="metric"></a></p>
+<h2 id="3-evaluationaccuracy">3. Evaluation｜为什么普通accuracy不够？</h2>
+<p><strong>原课：D3 Evaluation。核心必会；难度中；要求手算并解释指标。</strong></p>
+<p>如果大部分短信是normal，全部猜normal就能拿到看似不错的普通accuracy，却可能完全漏掉spam和smishing。老师因此指定 <strong>balanced accuracy（平衡准确率）</strong>。</p>
+<p>在三类都有真实样本的普通多类分类中：</p>
+<div class="arithmatex">\[\mathrm{Recall}_c=\frac{\mathrm{TP}_c}{\text{真实属于类别c的样本数}},
+\qquad
+\mathrm{BalancedAccuracy}=\frac13\sum_{c=0}^{2}\mathrm{Recall}_c.\]</div>
+<p>Recall（召回率）问“该类真实样本找回多少”。Accuracy是整体预测正确比例；precision是“预测成该类的记录中有多少是真的”。这三个英文词不能混译为同一种“准确”。</p>
+<h3 id="worked-example">完整手算 / Worked example</h3>
+<p>下面是<strong>人为教学混淆矩阵，不是短信作业成绩</strong>。行是真实标签，列是预测标签：</p>
+<p>English context: This is a synthetic teaching matrix, not an assignment result. Rows are true labels; columns are predicted labels.</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>True \ Predicted</th>
+<th style="text-align: right;">normal</th>
+<th style="text-align: right;">spam</th>
+<th style="text-align: right;">smishing</th>
+<th style="text-align: right;">该类真实数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>normal</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr>
+<td>spam</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>smishing</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table></div>
+<p>中文题：求普通accuracy和balanced accuracy，再与全部猜normal比较。<br/>
+English question: Compute ordinary and balanced accuracy, then compare with predicting normal for every example.</p>
+<ol>
+<li>对角线正确数为90+5+4=99，总数130，普通accuracy为 <span class="arithmatex">\(99/130\approx76.15\%\)</span>。</li>
+<li>三类召回率为90/100=0.90、5/20=0.25、4/10=0.40。</li>
+<li>Balanced accuracy为 <span class="arithmatex">\((0.90+0.25+0.40)/3=0.5167\)</span>，约51.67%。</li>
+<li>全部猜normal时普通accuracy为100/130≈76.92%，反而略高；但三类召回率是1、0、0，balanced accuracy只有1/3≈33.33%。</li>
+</ol>
+<p>English answer: Ordinary accuracy is 99/130≈76.15%, while balanced accuracy is (0.90+0.25+0.40)/3≈51.67%. The always-normal baseline has higher ordinary accuracy, 100/130≈76.92%, but balanced accuracy of only 1/3.</p>
+<p>这说明你必须按老师指定的指标选方案，而不是挑报告里最好看的那个数字。Balanced accuracy给每个类别相同的平均权重；它并不意味着已经显式定义了每一种误报／漏报的现实成本，也不能由此省略混淆矩阵。</p>
+<h3 id="transfer">独立变式 / Transfer</h3>
+<p>中文题：另一模型的三类召回率为0.8、0.5、0.6，真实类别数量仍是100、20、10。求两种accuracy。<br/>
+English question: Another model has recalls 0.8, 0.5 and 0.6 with the same true class counts 100, 20 and 10. Compute both accuracies.</p>
+<p>答案：正确数80+10+6=96，普通accuracy=96/130≈73.85%；balanced accuracy=(0.8+0.5+0.6)/3≈63.33%。整体正确数少了一点，但少数类召回改善，故指定指标更高。<br/>
+English answer: There are 96 correct predictions, giving ordinary accuracy≈73.85% and balanced accuracy≈63.33%. Better minority-class recall improves the assigned metric despite fewer total correct predictions.</p>
+<p>用分层训练内部验证尽量保证每一折都有三类。若某类没有真实样本，召回率分母为零，必须说明评价约定，不能任意填一个好看的数。这里采用sklearn默认的未调整balanced accuracy，而不是adjusted=True。<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html">官方指标定义</a></p>
+<p><strong>English takeaway：</strong> Balanced accuracy is the mean recall over classes in this setting. It limits majority-class dominance, but the confusion matrix is still needed to understand which errors remain.</p>
+<p><a id="baseline"></a></p>
+<h2 id="4-methodology">4. Methodology｜先跑通一条可信的基线</h2>
+<p><strong>原课：D3 Methodology、D17。核心必会；难度中；要求能说明每一步输入输出。</strong></p>
+<p>建议先选一条已经在Lecture 2和Tutorial 2里讲清的流程，而不是同时加入五个还不理解的模型：</p>
+<blockquote>
+<p>原训练短信 → 训练内部划分 → 词表与表示 → NB模型 → 验证预测 → balanced accuracy与混淆矩阵。</p>
+</blockquote>
+<p>可以先比较“CountVectorizer＋BernoulliNB”和“词计数或TF-IDF＋MultinomialNB”。前者看词出现与未出现，后者看计数或非负权重。短信短、含数字和URL，所以新闻实验里的停用词、词表规模、最优alpha不能原封不动当成作业答案。</p>
+<p>列出基线配置时至少写清：小写化、分词、是否删停用词、词或字符n-gram、词表上限、TF-IDF规范、模型与alpha。每一项都改变“模型看见什么”；例如清洗掉所有数字可能同时删掉无用编号与有用金额特征，需要验证，不凭直觉宣布一定更好。</p>
+<p>为代码定义清楚接口，比把全部步骤塞进一个单元更容易复现：</p>
+<pre><code class="language-python">def load_inputs(data_dir):
+    # 返回训练文本/标签、评估文本、Id/Usage元数据
+    ...
+
+def build_pipeline(config):
+    # 返回表示+分类器的Pipeline；这里不在全量数据上提前fit
+    ...
+
+def evaluate_on_validation(pipeline, train_text, train_y,
+                           val_text, val_y):
+    # 训练、验证预测、指标和混淆矩阵；不使用test标签
+    ...
+</code></pre>
+<p>这些是待你实现的接口，不是已经训练好的参考作业。具体NB调用可回看<a href="Tutorial02.html">Tutorial 2</a>，公式含义见<a href="Lecture02.html#comparison">Lecture 2</a>。</p>
+<p><strong>English takeaway：</strong> Establish a reproducible baseline with explicit preprocessing and an aligned metric. Treat the vectorizer and any learned text transformation as part of the fitted model pipeline.</p>
+<p><a id="validation"></a></p>
+<h2 id="5-validation">5. Validation｜每份数据什么时候能用？</h2>
+<p><strong>原课：D3 Evaluation/Methodology及Usage字段。核心必会；难度高；要求能解释选择与最终评价的边界。</strong></p>
+<p>以下是针对原要求的实现建议，不把它说成模板已经替你写好的代码：</p>
+<ol>
+<li><strong>开发候选：</strong> 在smishing_train内部使用分层划分或分层交叉验证，选少量有理由的配置。样板建议5折、shuffle=True、random_state=42；原模板的全局随机种子为100，两者需明确记录，不混称同一次划分。</li>
+<li><strong>每折独立拟合预处理：</strong> 词表和IDF必须在该折训练部分拟合，不能先对全部2985条fit_transform再做CV。用Pipeline将预处理与分类器一起交给搜索器。</li>
+<li><strong>按val检查与选择：</strong> 使用Usage=="val"的记录执行原题的验证选择。若模型有迭代checkpoint，使用val决定保留哪一步；NB没有逐轮checkpoint，也仍有模型/参数选择。</li>
+<li><strong>冻结方案：</strong> 写下配置、训练数据使用范围、种子和依赖版本。若是否允许并入val重拟合没有明确规定，先保守地保持原训练集拟合，不自行把val/test合并进训练。</li>
+<li><strong>最后评价：</strong> 方案固定后再使用test作最终报告。不能因test结果不满意而返回调参，并继续声称它是独立测试。</li>
+</ol>
+<p>原任务要求生成评估文本的预测。即使最终输出覆盖val与test全部2986条，也不代表训练时可以使用全部对应标签。“预测哪些记录”和“用哪些记录选择模型”是两个不同问题。</p>
+<p><strong>伪代码 / Pseudocode</strong></p>
+<pre><code class="language-text">load training texts and labels
+load evaluation texts plus Id/Usage metadata
+define a small candidate set
+for each candidate:
+    cross-validate the whole preprocessing/model pipeline inside training data
+select promising candidates
+fit each candidate on the permitted training data
+compare on Usage == "val" using balanced accuracy
+freeze the selected procedure
+evaluate on Usage == "test" only after freezing
+verify IDs and output schema when preparing the required final artifact
+</code></pre>
+<p><strong>English takeaway：</strong> Validation selects the procedure; test data assess the fixed choice. All learned preprocessing belongs inside the training fold. Producing predictions for a record does not authorize using its true label for development.</p>
+<p><a id="compare"></a></p>
+<h2 id="6">6. 怎样增加一个有理由的实验？</h2>
+<p><strong>依据：D3允许自选方法并要求记录尝试。常规掌握；难度中；要求提出可检验假设。</strong></p>
+<p>每次改动先写一句理由，例如“保留字符片段可能帮助识别拼写变体”，再说明怎样保持其他条件相同。不要同时换词表、模型、划分和评价指标，最后只说“新方案好”。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>要比较什么</th>
+<th>可以改变什么</th>
+<th>应保持什么</th>
+<th>需要记录什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平滑强度</td>
+<td>alpha</td>
+<td>文本划分、表示、指标</td>
+<td>各候选验证值，不只冠军</td>
+</tr>
+<tr>
+<td>表示方式</td>
+<td>count / TF-IDF / binary</td>
+<td>尽可能相同的候选流程与评价协议</td>
+<td>数值含义与模型是否兼容</td>
+</tr>
+<tr>
+<td>n-gram范围</td>
+<td>unigram / bigram等</td>
+<td>数据、指标、搜索预算</td>
+<td>特征规模和稀疏性变化</td>
+</tr>
+<tr>
+<td>类别不平衡处理</td>
+<td>适用模型的权重或采样策略</td>
+<td>评价集合与标签定义</td>
+<td>各类召回率，采样仅在训练折</td>
+</tr>
+<tr>
+<td>模型家族</td>
+<td>NB / 逻辑回归 / SVM</td>
+<td>同一验证协议与可比预算</td>
+<td>方法差别，不只参数名称</td>
+</tr>
+</tbody>
+</table></div>
+<p>逻辑回归、线性SVM和核方法属于跨讲可选路径：分别回<a href="https://crazyshout.github.io/micro-course/?lesson=ml10">ML10</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml12">ML12</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml14">ML14</a>。原作业允许选择其他算法，不等于必须把所有候选都训练一次。</p>
+<p>每个实验记录一行即可：配置ID、数据协议、表示、模型、关键参数、验证balanced accuracy、三类recall、耗时和解释。未运行的字段留空并写“未运行”，不要把希望得到的效果填成结果。</p>
+<p><strong>English takeaway：</strong> State a hypothesis for each change and compare candidates under the same validation protocol. Record unsuccessful attempts as well as improvements, without treating one score difference as proof of causation.</p>
+<p><a id="errors"></a></p>
+<h2 id="7-error-analysis">7. Error analysis｜把“错了”变成下一步能查的线索</h2>
+<p><strong>依据：D3 Documentation与原课错误查看。核心必会；难度中；要求用证据解释。</strong></p>
+<p>先看哪一类召回最低、被错分到哪里，再抽取少量验证集错误。保留原文本、真值、预测、模型使用到的特征及对应分数；展示文本时只取判断所需片段，不把整份数据贴进报告。</p>
+<p>对一条错误按顺序问：文本是否读取完整？列和Id是否对齐？关键信息是否被清洗或词表截断？这两个类别是否在词袋上很像？模型是否只靠一个常见词给出很高置信？若怀疑标签问题，记录证据，不为了提高分数直接改评价标签。</p>
+<p>应把“观察”和“待验证解释”写成两句。例如：“三个smishing验证样本被预测为spam”是观察；“模型没有利用链接结构”是需要查特征和做对照的假设。<strong>开发阶段</strong>使用val或训练内部验证的错误来改进方法，避免反复依据test错误设计新规则。</p>
+<p><strong>回到老师的明确要求：</strong> D3 的 Results and Visualization 还要求展示<strong>测试集中的正确分类与错误分类样本</strong>，并对错分提出解释。因此在方案已经冻结、完成最终测试之后，报告中仍应选取这两类测试样本作描述性分析；不能因为开发阶段避免看test，就把这项报告要求省略。此时解释观察与局限，不再依据这些样本调参后重复声称同一test是独立验收。若据此产生新的改进想法，将它列作后续工作，并用新的未触碰数据检验。</p>
+<p><strong>English takeaway：</strong> Diagnose data alignment and representation before inventing a model story. Use validation errors for development. After freezing the procedure and evaluating it, the assignment also requires examples of both correctly and incorrectly classified test samples. Analyze them descriptively without using those observations to retune and rebrand the same test as an independent evaluation.</p>
+<p><a id="reproducibility"></a></p>
+<h2 id="8-final-submission-notebook">8. Final submission notebook｜换个干净内核，还能生成一样的预测吗？</h2>
+<p><strong>原课：D3、D13–17、F3–8。核心必会；难度中；要求解释并验证可复现性。</strong></p>
+<p>Assignment1-Doc记录探索过程；Assignment1-Final负责重现最后的固定流程。探索Notebook里变量“碰巧存在”，不代表Final能独立运行。</p>
+<p>原模板D14随机选择标签，只演示Id,Prediction文件格式，不能用作训练好的基线或实验成绩。另一处实际问题是：<strong>F6使用pd.read_csv，但F4没有导入pandas as pd</strong>；如果之前没有在同一内核里运行Doc的导入，会出现未定义名称。自己的Final应显式包含需要的导入，不能依赖另一个Notebook。</p>
+<p>准备最终结果时检查：</p>
+<ul>
+<li>从干净内核运行，数据路径、文件编码和依赖均明确。</li>
+<li>训练数据、划分、种子、配置与文档说明一致。</li>
+<li>词表、IDF与分类器使用同一条固定流程。</li>
+<li>报告包含方案冻结后的正确与错误测试样本及有边界的解释，满足D3的结果分析要求。</li>
+<li>每条评估文本恰有一个合法预测，取值只为0、1、2。</li>
+<li>Id唯一、覆盖范围和顺序正确；没有排序预测数组却忘记同步Id。</li>
+<li>原模板writer按照位置产生i+1；仅在已确认当前位置对应这些Id时使用。</li>
+<li>在相同环境中从头重跑，固定流程给出同样的预测；跨版本变化要重新检查。</li>
+</ul>
+<p>此指南不生成正式预测CSV。正式文件及提交格式要求仍以Canvas和<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>为准。</p>
+<p><strong>English takeaway：</strong> A reproducible final notebook must declare its own imports, data paths, preprocessing, parameters and random seeds. Correct predictions with incorrect ID alignment still produce an invalid output.</p>
+<p><a id="check"></a></p>
+<h2 id="9">9. 合上指南，检查自己能否解释</h2>
+<p><strong>Q1 中文：</strong> 为什么普通accuracy更高的模型，可能不符合这份作业的选择目标？<br/>
+<strong>Q1 English:</strong> Why might a model with higher ordinary accuracy be less suitable under the assignment metric?<br/>
+<strong>答：</strong> 多数类主导整体比例；balanced accuracy看三类recall的均值，因此要比较指定指标与每类表现。<br/>
+<strong>Answer:</strong> Majority-class performance can dominate ordinary accuracy. The assigned metric averages class recalls, so compare balanced accuracy and per-class results.</p>
+<p><strong>Q2 中文：</strong> 没用test标签，但把test文本放进词表拟合，是否仍影响独立评价？<br/>
+<strong>Q2 English:</strong> Does including test text in vocabulary fitting affect independent evaluation even without using its labels?<br/>
+<strong>答：</strong> 会，表示已经利用test信息；预处理也是拟合的一部分。<br/>
+<strong>Answer:</strong> Yes. Representation learning used test information; preprocessing is part of fitting.</p>
+<p><strong>Q3 中文：</strong> CSV中Id完整且预测都合法，能否证明文件正确？<br/>
+<strong>Q3 English:</strong> Do complete IDs and valid class values prove that a prediction file is correct?<br/>
+<strong>答：</strong> 不能，还要验证每个预测是否对应同Id的原短信，以及流程是否按允许的数据训练。<br/>
+<strong>Answer:</strong> No. Verify that each prediction matches the text with that ID and that the procedure used only permitted training data.</p>
+<p><strong>Q4 中文：</strong> 本文件的51.67%能否写进自己的作业实验结果？<br/>
+<strong>Q4 English:</strong> Can the 51.67% in this guide be reported as your assignment result?<br/>
+<strong>答：</strong> 不能，它是人为混淆矩阵的教学计算，没有训练短信分类器。<br/>
+<strong>Answer:</strong> No. It is a calculation from an artificial teaching matrix, not a trained SMS classifier's measured result.</p>
+<p>已有卡片可配合：<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M091">M091类别不平衡</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M092">M092 balanced accuracy</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M095">M095数据泄漏</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M099">M099错误分析</a>。第一次先完成数据流与指标手算，再按需要复习实验方法卡。</p>
+<h2 id="10">10. 原任务覆盖与来源</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原位置</th>
+<th>本指南位置／处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1–2</td>
+<td>标题与任务；D1为空白单元</td>
+</tr>
+<tr>
+<td>D3 Goal / Methodology / Evaluation</td>
+<td>§1、3–7；明确任务、指标和实验流程</td>
+</tr>
+<tr>
+<td>D3 What to hand in / Documentation / Grading</td>
+<td>技术复现见§8；行政清单链接课程信息</td>
+</tr>
+<tr>
+<td>D4–6</td>
+<td>§2 数据文件与读取要求</td>
+</tr>
+<tr>
+<td>D7–12</td>
+<td>§2、8 运行设置、读取函数、标签与元数据</td>
+</tr>
+<tr>
+<td>D13–14</td>
+<td>§8 随机预测仅为格式示例</td>
+</tr>
+<tr>
+<td>D15–16</td>
+<td>§2、7 数据查看；建议先转NumPy数组再做标签布尔索引</td>
+</tr>
+<tr>
+<td>D17–23</td>
+<td>§4–8承接自行实现与记录；其余为空白代码槽</td>
+</tr>
+<tr>
+<td>F1–3</td>
+<td>§8最终复现任务；F1为空白</td>
+</tr>
+<tr>
+<td>F4–6</td>
+<td>§2、8 读取、导入和文件对齐</td>
+</tr>
+<tr>
+<td>F7–11</td>
+<td>§8固定流程接口与验收；实现由学习者完成</td>
+</tr>
+</tbody>
+</table></div>
+<p>本指南不把历史作业的做法当作这次作业要求；跨讲方法明确标来源。主要根据当前两份模板和实际文件，指标定义另参考scikit-learn官方文档。普通概率分类的基础回到<a href="Lecture02.html">Lecture02.md</a>，完整运行示范回到<a href="Tutorial02.html">Tutorial02.ipynb</a>。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

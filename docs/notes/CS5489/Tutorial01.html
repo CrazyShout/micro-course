@@ -1,0 +1,570 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 1 · From Python loops to orthonormal vectors · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
+<h1 id="tutorial-1-from-python-loops-to-orthonormal-vectors">Tutorial 1 · From Python loops to orthonormal vectors</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=14">A4 打印版 · 第 14–24 页</a>　图可点击放大。</p>
+<h2 id="_1">从变量变化，走到能验证的程序</h2>
+<p><a href="Lecture01.html">Lecture 1</a> · <a href="../foundations/MathForML.html#projection">数学补课</a> · <a href="index.html">课程目录</a></p>
+<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial1</span>的47个单元编写；单元号从1起算，不是In[n]。本文件是可运行参考讲解，例题答案是整理者实现。原课Colab挂盘在本机由显式路径替代；不运行会改写原材料的示范。</p>
+<p>原任务顺序：认识Notebook状态 → 数非平凡因子 → 折线图和直方图 → 读取数据 → Gram–Schmidt。先完整运行，再合上答案自己写一次。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原任务</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求与依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1–13 Notebook与变量</td>
+<td>核心必会</td>
+<td>低，执行顺序</td>
+<td>能从干净内核复现；当前原任务</td>
+</tr>
+<tr>
+<td>T14–25 因子与图</td>
+<td>核心必会</td>
+<td>中，循环范围和两种横轴</td>
+<td>能独立实现并解释输出</td>
+</tr>
+<tr>
+<td>T26–34 数据文件</td>
+<td>常规掌握</td>
+<td>中，路径与数组轴</td>
+<td>能读取、核对shape、画点</td>
+</tr>
+<tr>
+<td>T35–45 Gram–Schmidt</td>
+<td>核心必会</td>
+<td>高，投影与张成空间</td>
+<td>实现并检查正交、长度与空间保持</td>
+</tr>
+<tr>
+<td>T46–47 查帮助</td>
+<td>常规掌握</td>
+<td>低，工具用法</td>
+<td>会查接口而非猜参数</td>
+</tr>
+</tbody>
+</table></div>
+<p>以上来自当前任务，不是历史试卷频率。</p>
+</section>
+<section id="cell-2">
+<h2 id="0-setup">0. Setup｜本地路径与输出位置</h2>
+<p>只在本节修改路径。例题新文件和图片放在本讲义输出目录，原件只读。
+English: Configure paths here; generated files go to the learning-note output directory.</p>
+</section>
+<section id="cell-3">
+<div class="code-input"><div class="cell-label">In [1]</div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">pickletools</span><span class="o">,</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">COURSE</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">/</span><span class="s1">'CS5489/Lecture1/Tutorial/data1.pickle'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">COURSE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">'Run from Course or its course-notes directory, or set COURSE explicitly.'</span><span class="p">)</span>
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">COURSE</span><span class="o">/</span><span class="s1">'CS5489/Lecture1/Tutorial/data1.pickle'</span>
+<span class="n">NOTES</span> <span class="o">=</span> <span class="n">COURSE</span><span class="o">/</span><span class="s1">'codexing/CS5489/course-notes'</span>
+<span class="n">ASSETS</span> <span class="o">=</span> <span class="n">NOTES</span><span class="o">/</span><span class="s1">'assets'</span><span class="p">;</span> <span class="n">ASSETS</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">OUTPUT</span> <span class="o">=</span> <span class="n">NOTES</span><span class="o">/</span><span class="s1">'outputs/Tutorial01'</span><span class="p">;</span> <span class="n">OUTPUT</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">BLUE</span><span class="p">,</span> <span class="n">GOLD</span> <span class="o">=</span> <span class="s1">'#2878a5'</span><span class="p">,</span> <span class="s1">'#bd7c20'</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.figsize'</span><span class="p">:(</span><span class="mf">6.4</span><span class="p">,</span><span class="mf">4.2</span><span class="p">),</span><span class="s1">'font.size'</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="s1">'axes.spines.top'</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span><span class="s1">'axes.spines.right'</span><span class="p">:</span><span class="kc">False</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Input:'</span><span class="p">,</span> <span class="n">DATA</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">COURSE</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><pre>Input: CS5489/Lecture1/Tutorial/data1.pickle
+</pre></div>
+</section>
+<section id="cell-4">
+<h2 id="1-notebook-state">1. Notebook state｜屏幕顺序不等于执行顺序</h2>
+<p><strong>原任务T3–13 / Task:</strong> 运行单元、重复更新变量、重启内核观察状态。 / Run cells, repeat an update, and understand kernel restart.</p>
+<p><code>x=x+1</code>先读取旧x，再算右侧，最后把新值赋给x。以下把三次运行展开，保存清楚的状态轨迹。不要为了演示NameError让全篇运行中断。</p>
+</section>
+<section id="cell-5">
+<div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">trace</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">before</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">trace</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'Run'</span><span class="p">:</span><span class="n">run</span><span class="p">,</span><span class="s1">'Before x'</span><span class="p">:</span><span class="n">before</span><span class="p">,</span><span class="s1">'After x'</span><span class="p">:</span><span class="n">x</span><span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">trace</span><span class="p">))</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">not_defined_in_this_kernel</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Expected teaching example: a name must be defined before it is read.'</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Run</th>
+<th>Before x</th>
+<th>After x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Expected teaching example: a name must be defined before it is read.
+</pre></div>
+</section>
+<section id="cell-6">
+<p><strong>独立题 / Try:</strong> 初始x=10，把<code>x=x*2</code>执行两次，得到多少？重启内核后直接运行这一行会怎样？ / Starting at x=10, execute x=x*2 twice. What happens if you restart the kernel and run only that line?</p>
+<p><strong>答 / Answer:</strong> 40；重启清除了变量，需重新定义x。 / 40; after restart x must be initialized again. 保存的旧输出不证明当前内核仍有这个值。</p>
+</section>
+<section id="cell-7">
+<h2 id="2-count-factors">2. Count factors｜先写人能逐行跟上的版本</h2>
+<p><strong>原任务T14–18 / Task:</strong> 对2到100的每个整数，统计除1和自身之外的正因子数。 / Count positive divisors excluding 1 and n for every integer n from 2 through 100.</p>
+<p>对n=12，逐个试d=2,…,11；<code>n % d == 0</code>表示除后余数为0。2、3、4、6通过，得到4。<code>return</code>应在整个循环结束后执行，不能发现第一个因子就离开。</p>
+</section>
+<section id="cell-8">
+<div class="code-input"><div class="cell-label">In [3]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">count_factors</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'n must be an integer at least 2'</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">total</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">101</span><span class="p">)</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">count_factors</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">])</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">count_factors</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">count_factors</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">count_factors</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">99</span>
+<span class="c1"># Independent pair-of-divisors check, including perfect squares only once.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">paired_count</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="o">==</span><span class="n">n</span> <span class="k">else</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">isqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">%</span><span class="n">d</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">fs</span><span class="p">,[</span><span class="n">paired_count</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'12 has these non-trivial factors:'</span><span class="p">,</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span> <span class="k">if</span> <span class="mi">12</span><span class="o">%</span><span class="n">d</span><span class="o">==</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'n'</span><span class="p">:</span><span class="n">xs</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="s1">'Non-trivial factors'</span><span class="p">:</span><span class="n">fs</span><span class="p">[:</span><span class="mi">10</span><span class="p">]}))</span>
+</pre></div>
+</div>
+<div class="output"><pre>12 has these non-trivial factors: [2, 3, 4, 6]
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>n</th>
+<th>Non-trivial factors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<th>1</th>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<th>2</th>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<th>3</th>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<th>4</th>
+<td>6</td>
+<td>2</td>
+</tr>
+<tr>
+<th>5</th>
+<td>7</td>
+<td>0</td>
+</tr>
+<tr>
+<th>6</th>
+<td>8</td>
+<td>2</td>
+</tr>
+<tr>
+<th>7</th>
+<td>9</td>
+<td>1</td>
+</tr>
+<tr>
+<th>8</th>
+<td>10</td>
+<td>2</td>
+</tr>
+<tr>
+<th>9</th>
+<td>11</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-9">
+<p><strong>变式 / Transfer:</strong> 不运行程序，求9和13的结果。 / Without running the program, find the counts for 9 and 13.
+<strong>答 / Answer:</strong> 9只有3，得到1；13为素数，得到0。 / 9 has only divisor 3, giving 1; 13 is prime, giving 0.</p>
+<p>第一张图问“每个数有几个因子”，第二张图问“有多少数落在某个因子数里”。两个横轴不是同一个东西。</p>
+</section>
+<section id="cell-10">
+<div class="code-input"><div class="cell-label">In [4]</div><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">fs</span><span class="p">,</span><span class="s1">'o-'</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Integer n'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Non-trivial divisor count'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'One count for each integer, 2 through 100'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut01-factor-count.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b6cc77c4beb783b8.png" rel="noopener" target="_blank"><img alt="Executed Tutorial01 figure, cell 10" decoding="async" loading="lazy" src="../assets/b6cc77c4beb783b8.png"/></a></div>
+</section>
+<section id="cell-11">
+<div class="code-input"><div class="cell-label">In [5]</div><div class="highlight"><pre><span></span><span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span><span class="n">fs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">frequencies</span><span class="p">,</span><span class="n">edges</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span><span class="n">bins</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">frequencies</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">==</span><span class="mi">99</span> <span class="ow">and</span> <span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">25</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span><span class="n">edgecolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Non-trivial divisor count'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Number of integers'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'Distribution of the 99 divisor counts'</span><span class="p">,</span><span class="n">xticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">fs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut01-factor-histogram.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Total histogram frequency:'</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">frequencies</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/c9d4e8fbc2990c24.png" rel="noopener" target="_blank"><img alt="Executed Tutorial01 figure, cell 11" decoding="async" loading="lazy" src="../assets/c9d4e8fbc2990c24.png"/></a></div>
+<div class="output"><pre>Total histogram frequency: 99
+</pre></div>
+</section>
+<section id="cell-12">
+<p>看图检查：0这一箱对应素数，共25个；所有箱合计99。原固定坐标范围对应本题，换输入范围后应重新检查是否截掉数据。
+English: The zero bin contains the 25 primes in this range. Histogram counts total 99; fixed axis limits need reconsideration when the range changes.</p>
+</section>
+<section id="cell-13">
+<h2 id="3-load-and-plot-the-supplied-array">3. Load and plot the supplied array｜先核对两根轴</h2>
+<p><strong>原任务T26–34 / Task:</strong> 从原data1.pickle读入mydata，检查shape，画第1列对第2列。 / Load mydata, inspect its shape, and plot column 1 against column 2.</p>
+<p>Pickle可以包含对象重建操作，只读取这份已核对来源的课程文件。参考代码限定其允许重建的NumPy类型；不能把它当成任意未知文件的安全转换器。</p>
+</section>
+<section id="cell-14">
+<div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ArrayOnlyUnpickler</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">Unpickler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">module</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'numpy.core.multiarray'</span><span class="p">,</span><span class="s1">'numpy._core.multiarray'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span><span class="o">==</span><span class="s1">'_reconstruct'</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">numpy._core.multiarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">_reconstruct</span>
+            <span class="k">return</span> <span class="n">_reconstruct</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">==</span><span class="s1">'numpy'</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'ndarray'</span><span class="p">,</span><span class="s1">'dtype'</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">pickle</span><span class="o">.</span><span class="n">UnpicklingError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexpected object type: </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">DATA</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">mydata</span><span class="o">=</span><span class="n">ArrayOnlyUnpickler</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">'latin1'</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mydata</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">mydata</span><span class="o">.</span><span class="n">ndim</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">mydata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mydata</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Actual shape:'</span><span class="p">,</span><span class="n">mydata</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="s1">'dtype:'</span><span class="p">,</span><span class="n">mydata</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mydata</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">mydata</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Feature 1 (provided units unspecified)'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Feature 2 (provided units unspecified)'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'Every row is one point from data1.pickle'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut01-data-scatter.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><pre>Actual shape: (120, 2) dtype: float64
+</pre></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b9ef3e181752d182.png" rel="noopener" target="_blank"><img alt="Executed Tutorial01 figure, cell 14" decoding="async" loading="lazy" src="../assets/b9ef3e181752d182.png"/></a></div>
+</section>
+<section id="cell-15">
+<p><code>mydata[:,0]</code>选所有行的第0列，不是第一行。原文字说120×2，以下最终结果以实际shape为准；散点图不自动给这些点增加类别标签或物理单位。
+<strong>自查 / Check:</strong> <code>mydata[:3,:]</code>取什么？ / What does mydata[:3,:] select?
+<strong>答 / Answer:</strong> 前三条样本的全部特征，形状(3,2)。 / All features of the first three samples, shape (3,2).</p>
+</section>
+<section id="cell-16">
+<p><a id="gram-schmidt"></a></p>
+<h2 id="4-gramschmidt">4. Gram–Schmidt｜拿走已有方向，剩下才是新信息</h2>
+<p><strong>原任务T35–45 / Task:</strong> 输入矩阵V每列是一个向量，返回同一张成空间的正交归一列E。 / Return orthonormal columns spanning the same column space as V.</p>
+<p>先补<a href="../foundations/MathForML.html#projection">长度、投影与张成空间</a>。例如v=(2,1)、u=(1,0)，投影到u方向是(2,0)，相减余下(0,1)。不是把所有向量分别除以长度就能让它们互相垂直。</p>
+<p>对非零u，<span class="arithmatex">\(P_u(v)=(v^Tu)/(u^Tu)\,u\)</span>。原步骤是从第k列减去已有各方向的投影，再归一化。下面存储单位方向q，因此投影简化为<span class="arithmatex">\((q^Tv)q\)</span>。这对应原课的classical Gram–Schmidt；严重病态数据宜使用QR等稳健方法，不宣称这段小实现适合所有数值问题。</p>
+</section>
+<section id="cell-17">
+<div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">myGS</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+    <span class="n">V</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">V</span><span class="o">.</span><span class="n">ndim</span><span class="o">!=</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">V</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="n">V</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Need a finite tall or square 2-D matrix'</span><span class="p">)</span>
+    <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">scale</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Zero columns cannot define unit directions'</span><span class="p">)</span>
+    <span class="n">E</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">v</span><span class="o">=</span><span class="n">V</span><span class="p">[:,</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">u</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E</span><span class="p">[:,</span><span class="n">j</span><span class="p">],</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">E</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">length</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">length</span><span class="o">&lt;=</span><span class="n">rtol</span><span class="o">*</span><span class="n">scale</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Columns are dependent or numerically too close to dependent'</span><span class="p">)</span>
+        <span class="n">E</span><span class="p">[:,</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">u</span><span class="o">/</span><span class="n">length</span>
+    <span class="k">return</span> <span class="n">E</span>
+<span class="n">V</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">before</span><span class="o">=</span><span class="n">V</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">E</span><span class="o">=</span><span class="n">myGS</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">before</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@E</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">E</span><span class="o">@</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@V</span><span class="p">),</span><span class="n">V</span><span class="p">,</span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+<span class="n">Q</span><span class="p">,</span><span class="n">_</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">'reduced'</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">E</span><span class="nd">@E</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">Q</span><span class="nd">@Q</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">myGS</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Dependent-column test: explicitly rejected, no division by zero.'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">'Dependent columns were not rejected'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'E shape:'</span><span class="p">,</span><span class="n">E</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">E</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Orthonormality error:'</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@E</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Span reconstruction error:'</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">E</span><span class="o">@</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@V</span><span class="p">)</span><span class="o">-</span><span class="n">V</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><pre>Dependent-column test: explicitly rejected, no division by zero.
+E shape: (4, 3)
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0.235702</td>
+<td>-0.226527</td>
+<td>0.827393</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0.000000</td>
+<td>0.741362</td>
+<td>0.468296</td>
+</tr>
+<tr>
+<th>2</th>
+<td>-0.235702</td>
+<td>0.597209</td>
+<td>-0.180599</td>
+</tr>
+<tr>
+<th>3</th>
+<td>0.942809</td>
+<td>0.205934</td>
+<td>-0.251998</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Orthonormality error: 4.918300529807393e-16
+Span reconstruction error: 1.7227701019713026e-15
+</pre></div>
+</section>
+<section id="cell-18">
+<div class="code-input"><div class="cell-label">In [8]</div><div class="highlight"><pre><span></span><span class="n">gram</span><span class="o">=</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@E</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.6</span><span class="p">,</span><span class="mf">4.2</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">im</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gram</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'Blues'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">gram</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span><span class="n">ha</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">'white'</span> <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="n">j</span> <span class="k">else</span> <span class="s1">'black'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">yticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">'e1'</span><span class="p">,</span><span class="s1">'e2'</span><span class="p">,</span><span class="s1">'e3'</span><span class="p">],</span><span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">'e1'</span><span class="p">,</span><span class="s1">'e2'</span><span class="p">,</span><span class="s1">'e3'</span><span class="p">],</span><span class="n">title</span><span class="o">=</span><span class="s1">'Inner products EᵀE: target identity'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Inner product'</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut01-gram.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/a3a4082bfff5a462.png" rel="noopener" target="_blank"><img alt="Executed Tutorial01 figure, cell 18" decoding="async" loading="lazy" src="../assets/a3a4082bfff5a462.png"/></a></div>
+</section>
+<section id="cell-19">
+<p><strong>输出解读 / Interpretation:</strong> 对角线1表示单位长度，非对角线接近0表示正交；另一项重建检查才说明没有换成无关的子空间。 / Diagonal ones check unit lengths; near-zero off-diagonal entries check orthogonality. Reconstruction checks that the original span was retained.</p>
+<p><strong>独立变式 / Transfer:</strong> V的两列是(1,0)和(1,1)。手算E；如果第二列改成(2,0)又怎样？ / Hand-compute E for columns (1,0) and (1,1). What changes if the second column becomes (2,0)?
+<strong>答 / Answer:</strong> 得到(1,0)、(0,1)；改后第二列残差为零，只提供一个方向，不能产生两个正交单位列。 / The basis is (1,0),(0,1). The replacement is dependent and yields a zero residual, so two unit directions cannot be produced.</p>
+</section>
+<section id="cell-20">
+<div class="code-input"><div class="cell-label">In [9]</div><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">=</span><span class="p">{</span><span class="s1">'source'</span><span class="p">:</span><span class="s1">'Tutorial1.ipynb; data1.pickle'</span><span class="p">,</span><span class="s1">'integer_range'</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span><span class="s1">'integer_count'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span><span class="s1">'histogram_total'</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">frequencies</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span><span class="s1">'prime_count'</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">'data_shape'</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="s1">'gs_shape'</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="s1">'gs_orthogonality_error'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@E</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">))),</span><span class="s1">'gs_span_error'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">E</span><span class="o">@</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="nd">@V</span><span class="p">)</span><span class="o">-</span><span class="n">V</span><span class="p">)),</span><span class="s1">'all_checks_passed'</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+<span class="p">(</span><span class="n">NOTES</span><span class="o">/</span><span class="s1">'tutorial01-results.json'</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'Check'</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">),</span><span class="s1">'Result'</span><span class="p">:[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">values</span><span class="p">()]}))</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>source</td>
+<td>Tutorial1.ipynb; data1.pickle</td>
+</tr>
+<tr>
+<th>1</th>
+<td>integer_range</td>
+<td>[2, 100]</td>
+</tr>
+<tr>
+<th>2</th>
+<td>integer_count</td>
+<td>99</td>
+</tr>
+<tr>
+<th>3</th>
+<td>histogram_total</td>
+<td>99</td>
+</tr>
+<tr>
+<th>4</th>
+<td>prime_count</td>
+<td>25</td>
+</tr>
+<tr>
+<th>5</th>
+<td>data_shape</td>
+<td>[120, 2]</td>
+</tr>
+<tr>
+<th>6</th>
+<td>gs_shape</td>
+<td>[4, 3]</td>
+</tr>
+<tr>
+<th>7</th>
+<td>gs_orthogonality_error</td>
+<td>4.918300529807393e-16</td>
+</tr>
+<tr>
+<th>8</th>
+<td>gs_span_error</td>
+<td>1.7227701019713026e-15</td>
+</tr>
+<tr>
+<th>9</th>
+<td>all_checks_passed</td>
+<td>True</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-21">
+<h2 id="5-help-and-return">5. Help and return｜最后练一次英文解释</h2>
+<p>原T46–47可用<code>help(myGS)</code>或Jupyter中的<code>myGS?</code>查看接口。调试先读异常最后一行和对应代码位置；重启并从头运行，能排除“旧变量碰巧还在”的情况。</p>
+<p><strong>Q / 题：</strong> Why is EᵀE=I not the only check? / 为什么只检查EᵀE=I还不够？
+<strong>A / 答：</strong> An unrelated orthonormal basis can also pass it; check that E reconstructs every original column. / 无关的正交基也能通过，还要检查原列能由E重建。</p>
+<p><a href="Lecture01.html#linear-algebra">回Lecture1</a> · <a href="Lecture02.html">下一讲Lecture2</a> · <a href="https://crazyshout.github.io/micro-course/?lesson=ml04">微课ML04</a>。按课程目录提供的已有卡号巩固，算法仍需独立重写。</p>
+<h2 id="_1-2">原文件覆盖索引</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原单元</th>
+<th>本文件对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1–6</td>
+<td>标题、Setup；身份填空不代填，Colab改为本地路径</td>
+</tr>
+<tr>
+<td>T7–13</td>
+<td>§1状态轨迹与预期NameError</td>
+</tr>
+<tr>
+<td>T14–18</td>
+<td>§2因子程序</td>
+</tr>
+<tr>
+<td>T19–25</td>
+<td>§2两幅原任务图</td>
+</tr>
+<tr>
+<td>T26–34</td>
+<td>§3数据读取、shape、散点</td>
+</tr>
+<tr>
+<td>T35–45</td>
+<td>§4投影、实现、原矩阵及三种检查</td>
+</tr>
+<tr>
+<td>T46–47</td>
+<td>§5帮助与收尾；T47为空单元</td>
+</tr>
+</tbody>
+</table></div>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

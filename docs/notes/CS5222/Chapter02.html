@@ -1,0 +1,326 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Chapter 2 · Application Layer｜让两端的程序真正说上话 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="chapter-2-application-layer">Chapter 2 · Application Layer｜让两端的程序真正说上话</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=33">A4 打印版 · 第 33–45 页</a>　图可点击放大。</p>
+<p><a href="index.html">课程目录</a> · <a href="Chapter01.html">上一章</a> · <a href="Tutorial03.html">Tutorial 3</a> · <a href="Assignment01.html">Assignment 1</a> · <a href="ResearchReportGuide.html">Research Report</a></p>
+<p>上一章知道消息可以穿过网络，这一章把镜头移到两端：浏览器怎样开口要网页，邮件怎样送到邮箱，名字怎样换成地址，多个用户怎样互相传文件，视频为什么可以边下边播。最后亲手让两个本机程序交换一句话。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整Chapter2（107页）</span>，保持 <strong>应用原则 → HTTP → 邮件 → DNS → P2P → 视频/CDN → socket</strong> 的实际正文顺序。三个part副本按内容去重。早期目录列FTP，但当前完整文件没有独立FTP教学段，后半目录已改为视频/CDN；本文不把历史FTP资料补成当前已讲章节。课件来源为Kurose/Ross、Man Hon Cheung修改，原图版权保留。</p>
+<p><strong>可选基础：</strong> <a href="../foundations/NetworkBasics.html#messages">报文与字节</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。运行Python先读<a href="../CS5489/Lecture01.html#functions-classes">Lecture1的函数与文件</a>；不用为网络另抄一套Python基础。</p>
+<div class="toc">
+<ul>
+<li><a href="#chapter-2-application-layer">Chapter 2 · Application Layer｜让两端的程序真正说上话</a><ul>
+<li><a href="#1-applications-processes-and-sockets">1. Applications, processes and sockets｜先找到真正对话的双方</a></li>
+<li><a href="#2-service-requirements">2. Service requirements｜“可靠”不等于“准时”</a></li>
+<li><a href="#3-web-and-httphtml">3. Web and HTTP｜拿到HTML不等于拿齐整页</a><ul>
+<li><a href="#_1">连接可以复用，请求是否并行还要另问</a></li>
+<li><a href="#_2">读报文：把每一行与问题对应</a></li>
+</ul>
+</li>
+<li><a href="#4-cookies-and-caches">4. Cookies and caches｜识别会话，与复用内容是两件事</a></li>
+<li><a href="#5-electronic-mail-and-smtp">5. Electronic mail and SMTP｜把“送到邮箱”和“打开邮箱”拆开</a></li>
+<li><a href="#6-pop3-imap-and-webmail">6. POP3, IMAP and webmail｜下载之后要不要留在服务器？</a></li>
+<li><a href="#7-dns-services-and-hierarchy">7. DNS services and hierarchy｜通讯录不是只放在一台电脑上</a></li>
+<li><a href="#8-recursive-versus-iterative-dns">8. Recursive versus iterative DNS｜是“替我办完”，还是“告诉我下一站”</a></li>
+<li><a href="#9-dns-records-and-messages">9. DNS records and messages｜名字、值、类型、有效时间要一起读</a></li>
+<li><a href="#10-p2p-file-distribution">10. P2P file distribution｜新加入的人也可以带来上传能力</a></li>
+<li><a href="#11-bittorrent">11. BitTorrent｜先找邻居，再交换稀缺块</a></li>
+<li><a href="#12-video-dash-and-cdn">12. Video, DASH and CDN｜边下边播，需要的不只是平均带宽</a></li>
+<li><a href="#13-socket-programming">13. Socket programming｜把课堂的大写转换例子真正跑通</a></li>
+<li><a href="#14-back-to-the-course">14. Back to the course｜用一条请求链把本章连起来</a></li>
+<li><a href="#15-source-coverage-and-cautions">15. Source coverage and cautions｜每一页有去处</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求与依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构、进程、socket、TCP/UDP</td>
+<td>核心必会</td>
+<td>中；对象/服务边界</td>
+<td>解释并运行通信；P4–17、94–105</td>
+</tr>
+<tr>
+<td>HTTP消息与时延</td>
+<td>核心必会</td>
+<td>中；连接、流水线、对象数</td>
+<td>解读完整请求、画RTT；P19–37、T3</td>
+</tr>
+<tr>
+<td>SMTP、POP3、IMAP</td>
+<td>核心必会</td>
+<td>中；投递和访问分开</td>
+<td>写出完整事务与状态；P39–51、A1</td>
+</tr>
+<tr>
+<td>DNS、递归/迭代、缓存</td>
+<td>核心必会</td>
+<td>中；谁向谁问</td>
+<td>跟踪消息与算RTT；P53–69、T3</td>
+</tr>
+<tr>
+<td>P2P、BitTorrent</td>
+<td>常规掌握</td>
+<td>中；资源下界与实际性能</td>
+<td>推导三项下界，解释分块；P71–80</td>
+</tr>
+<tr>
+<td>视频、DASH、CDN</td>
+<td>常规掌握</td>
+<td>中；码率/吞吐/缓冲</td>
+<td>解释机制、算小例；P82–92</td>
+</tr>
+</tbody>
+</table></div>
+<p>当前任务是优先级的主要依据。历史样题、复习笔记不等于本学期完整考试说明；没有据此声称某节“不考”。</p>
+<p><a id="processes"></a></p>
+<h2 id="1-applications-processes-and-sockets">1. Applications, processes and sockets｜先找到真正对话的双方</h2>
+<p>P3–4列出Web、邮件、游戏、会议、视频等应用，它们通常运行于端系统，开发一个网络应用不需要重新编写沿途每台路由器。进程（process）是运行中的程序；一个主机能同时有多个进程，因此只写主机IP不够，还需端口等传输端点信息。</p>
+<p>Client/server架构中，一方提供相对稳定可达的服务，客户端发起请求；P2P中节点既请求也提供资源。纯P2P不依赖永远在线的中心数据服务器，但实际系统可有tracker、登录或协调服务，不能由“使用P2P”推断完全没有服务器。客户端/服务器也可以是某一次交互的角色，不是某台机器终身的职业。</p>
+<p>Socket是进程与传输服务之间的接口，像门而不是道路本身。应用把bytes交给接口，操作系统负责后面的传输机制。IP帮助定位网络端点，端口帮助区分服务；课件32-bit指IPv4，不适用于所有IP版本。P10代码调用的是<code>connect</code>，是主动客户端，即使附近注释写了“accept incoming”。</p>
+<p><strong>自查 / Check:</strong> 同一IP上有Web和邮件服务，只给IP能否指出收消息的进程？ / Can an IP address alone distinguish a web process from a mail process on the same host?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>不够，还要传输协议与端口等端点信息。 / No; transport protocol and port information are needed. 课堂HTTP 80、SMTP 25是相应传统服务示例，不是全部现代配置。</p>
+</details>
+<h2 id="2-service-requirements">2. Service requirements｜“可靠”不等于“准时”</h2>
+<p>P12应用协议规定消息类型、语法、语义和交互规则。开放标准便于互操作；专有协议由特定实体控制，但不意味着一定没有任何公开文档。选择传输服务前，先问应用需要什么：完整性、及时性、持续吞吐、安全性。</p>
+<p>文件少一段不能算完成，实时通话晚到的音节可能已没有价值。TCP提供可靠、有序字节流，并有流控（保护接收端）与拥塞控制（适应网络）；它不承诺固定时限、最小吞吐，也不自动加密。UDP提供数据报接口，没有这些内建可靠性/顺序保证；应用可在其上实现所需机制。TCP可靠性也不是“网络永久断开仍能保证交付”，失败会暴露给应用。</p>
+<p>P17用SSL称呼安全层，是旧术语；今天应区分TLS与旧SSL。教学要点是加密、完整性和端点认证需要额外机制，不能将“用TCP”当作已经安全。服务表里的码率与应用例名是课堂时代背景，核心是需求比较，不是当前产品参数清单。</p>
+<p><strong>English:</strong> Reliability, ordering, latency, throughput and security are different service properties. UDP's minimal service lets applications choose additional mechanisms, but does not remove responsibility for congestion and reliability design.</p>
+<p><a id="http"></a></p>
+<h2 id="3-web-and-httphtml">3. Web and HTTP｜拿到HTML不等于拿齐整页</h2>
+<p>P19先分base HTML和referenced objects：HTML告诉浏览器还需要哪些图片、脚本等，每个对象有URL。URL不只是主机名，还包含路径、可能的协议方案、端口等。本章和Tutorial使用传统HTTP/1.x over TCP模型；不能把“HTTP必然使用TCP”推广到HTTP/3，后者基于QUIC。<a href="https://www.rfc-editor.org/rfc/rfc9114">RFC9114</a> 这里只澄清适用范围，不扩成新考纲。</p>
+<p>浏览器是HTTP客户端，Web服务器应请求返回资源（P20）。HTTP无状态是说核心请求语义不要求服务器记住先前请求，不等于TCP连接没有状态，也不等于网站不能存购物车；cookie等机制随后会补上会话关联。</p>
+<h3 id="_1">连接可以复用，请求是否并行还要另问</h3>
+<p>Non-persistent HTTP：每个对象新建TCP连接。简化为握手1RTT、请求到首个响应1RTT，再加对象发送时间；忽略DNS等其他部分时 <span class="arithmatex">\(2RTT+L/R\)</span>。它不是包含TLS、慢启动、服务处理的全现实上网公式。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/97aeaf6d091363b8.png" rel="noopener" target="_blank"><img alt="Original non-persistent HTTP timing" decoding="async" loading="lazy" src="../assets/97aeaf6d091363b8.png"/></a></p>
+<p>Persistent HTTP：复用连接，后续对象省去重新握手。<strong>持久连接不等于流水线（pipelining）</strong>；无流水线时每次等上一请求响应后才发下一次。多个并行TCP连接又是第三个概念，可让不同对象同时等待，但占更多资源，吞吐也受共享瓶颈限制。</p>
+<p>补充小例：base HTML加2个小对象，都在同服务器，忽略发送时间和DNS。串行非持久共3×2=6RTT；单个持久无流水线是1握手+3请求=4RTT；拿到HTML后一次发两个后续请求的理想流水线模型为3RTT。先问清协议/浏览器约定，才有唯一算式。原P27画的是顺序复用，Tutorial3c据此读。</p>
+<h3 id="_2">读报文：把每一行与问题对应</h3>
+<p>P30–31请求行是method、request target、version；头字段包括Host、User-Agent、Accept等；CRLF分行，空行结束头部。GET通常索取表示；HEAD只请求相应响应头；POST提交内容供资源处理，不能仅凭方法名保证请求是否“安全”或是否一定有某种body。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/bb5d7848a34fc82f.png" rel="noopener" target="_blank"><img alt="Original HTTP request fields" decoding="async" loading="lazy" src="../assets/bb5d7848a34fc82f.png"/></a></p>
+<p>原HTTP/1.1文本适合观察ASCII结构；不要据此认为所有HTTP版本在传输中都用相同明文文本布局。Tutorial3将用真实题干逐项判断，IP地址未出现时应明确说无法仅从这些头字段得到，不能从Host误认浏览器地址。</p>
+<p><strong>English:</strong> A page may require multiple object requests. Connection persistence, pipelining and parallel connections are separate choices; name the timing model before counting RTTs.</p>
+<h2 id="4-cookies-and-caches">4. Cookies and caches｜识别会话，与复用内容是两件事</h2>
+<p>P32–35的Susan购物例子：网站生成标识，响应<code>Set-Cookie</code>交给浏览器，浏览器后续发<code>Cookie</code>，服务器用它找到后端会话/购物车。四部分是响应头、浏览器保存、服务端记录、后续请求头。Cookie不是自动等于用户名密码，也不保证一个ID就足以安全认证；它也带来跨请求关联与隐私问题。</p>
+<p>P36–37的cache对浏览器是服务器，对origin又是客户端。命中且可用时直接回应，未命中向源获取，减少响应时延与接入流量。需要考虑新鲜度、验证及不应共享的个人内容；不是“见到任意响应就永久缓存”。这和cookie保存会话身份作用不同。</p>
+<p><strong>变式 / Transfer:</strong> 一个代理向源服务器请求未命中的对象时，它是client还是server？对原浏览器呢？ / What roles does a proxy play toward the origin and toward the browser?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>对源是client，对浏览器是server。 / It is a client to the origin and a server to the browser. 角色按具体交互定义。</p>
+</details>
+<p><a id="mail"></a></p>
+<h2 id="5-electronic-mail-and-smtp">5. Electronic mail and SMTP｜把“送到邮箱”和“打开邮箱”拆开</h2>
+<p>P39–43中Alice的user agent先把信交给发送邮件服务器，放入outgoing queue；服务器经SMTP投递到Bob的邮件服务器，进入mailbox；Bob再用客户端访问。发件/收件服务器可能在不同交互中分别担当client/server。</p>
+<p>SMTP通过命令/响应完成greeting、邮件传送、结束。课堂P42原对话顺序是 <code>HELO</code> → <code>MAIL FROM</code> → <code>RCPT TO</code> → <code>DATA</code> → 邮件内容 → 单独一行<code>.</code> → <code>QUIT</code>。只有服务器给出354后才发DATA内容；250代表该阶段成功，但不是“Bob已阅读”。同一持久TCP连接可投递多封邮件。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/dc3679fbb620483c.png" rel="noopener" target="_blank"><img alt="Original SMTP conversation" decoding="async" loading="lazy" src="../assets/dc3679fbb620483c.png"/></a></p>
+<p>P44将HTTP称pull、SMTP称push，是典型课堂使用方式；HTTP也支持客户端上传，别把类比读成协议完全禁止别的方向。邮件内容头<code>From/To/Subject</code>与SMTP信封命令作用不同；头部与正文之间为空行。P41/45的7-bit ASCII是基础历史模型，附件与国际化需编码/扩展，不能说现代电子邮件只能写英文。</p>
+<p><strong>English:</strong> SMTP transfers mail to a receiving server. Message headers are distinct from SMTP envelope commands, and server acceptance does not mean the recipient has read the message.</p>
+<p><a id="pop3"></a></p>
+<h2 id="6-pop3-imap-and-webmail">6. POP3, IMAP and webmail｜下载之后要不要留在服务器？</h2>
+<p>P46–51讨论访问协议。POP3的三阶段是Authorization、Transaction、Update。客户端认证后用LIST看大小、RETR取内容、DELE标记删除，成功QUIT进入Update提交删除。<strong>RETR本身不会自动删除</strong>，DELE也不是立刻不可撤销地移除；在Transaction中RSET可清除删除标记，非正常断开不进入正常Update流程。<a href="https://www.rfc-editor.org/rfc/rfc1939">RFC1939 §§5–6</a></p>
+<p>Download-and-delete与download-and-keep由客户端是否标记删除并成功结束会话等行为形成，不是“POP3只能删”。跨会话不维护IMAP那样的文件夹/已读同步状态，不等于服务器不保存邮箱或不能提供持久UIDL识别；客户端可记住已下载UID来避免重复下载。</p>
+<p>IMAP把邮件和文件夹等状态留在服务器，支持多设备一致访问。Webmail中浏览器与网站通常使用HTTP(S)，而邮件服务器之间仍可SMTP；不要因为你在网页按发送，就断言浏览器直接向所有收件服务器开SMTP连接。完整两封邮件事务见<a href="Assignment01.html#pop3">Assignment1 P17</a>。</p>
+<h2 id="7-dns-services-and-hierarchy">7. DNS services and hierarchy｜通讯录不是只放在一台电脑上</h2>
+<p>P53–59的Domain Name System既是分布式数据库，也是应用层协议。它解决主机名到地址、别名、邮件服务器定位与负载分布等问题。一个名字可以返回多个地址，同一台服务器也可服务多个名字。</p>
+<p>层次结构root → TLD → authoritative：root提供往顶级域方向的委派线索，TLD提供进一步委派，权威服务器维护其zone记录。local resolver负责替本地主机查询与缓存，但不严格是这个层级里的额外一层。zone与domain不必相同，因为可以向下委派子区。</p>
+<p>P57把root写成“自己联系权威并取回最终映射”不代表通常迭代解析的根服务行为；按随后P60–61的常见图，递归解析器接收referral后自己继续查询。<a href="https://www.rfc-editor.org/rfc/rfc1034">RFC1034 §4.3</a> 原页根服务器实例数量是当时快照，不作为当前数量。不要把根服务标识数、实例数、物理机器数混成同一个概念。</p>
+<p><a id="dns"></a></p>
+<h2 id="8-recursive-versus-iterative-dns">8. Recursive versus iterative DNS｜是“替我办完”，还是“告诉我下一站”</h2>
+<p>请求主机向本地resolver发递归请求：“请给最终答案或错误”。resolver向root、TLD、权威发迭代请求：“若不知道，告诉我下一站”。收到最终答案再返还主机。P62展示全递归作为另一种可能模式，不能默认每一层都替下一层递归。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/ca93e9e3f8429317.png" rel="noopener" target="_blank"><img alt="Original iterative DNS query flow" decoding="async" loading="lazy" src="../assets/ca93e9e3f8429317.png"/></a></p>
+<p>看图先跟数字1–8，不要把每根箭头当一个RTT：一次往返有去和回。无缓存、顺序访问root/TLD/权威时，若host↔local为RTT_L，每个local↔远端为RTT_r，总RTT_L+3RTT_r。命中local缓存、无需再验证且忽略处理时，只RTT_L。这个算式在Tutorial3保留完整原图。</p>
+<p>缓存有TTL，回答可以非权威但仍来自缓存的权威资料链。过期需要重新查询；记录变化不会自动让所有旧缓存同时消失。DNS TTL是缓存时间概念，和IP TTL的跳数控制不是同一字段。</p>
+<h2 id="9-dns-records-and-messages">9. DNS records and messages｜名字、值、类型、有效时间要一起读</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>name→value</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>主机名→IPv4地址</td>
+<td>地址映射；IPv6另用AAAA（补充区分）</td>
+</tr>
+<tr>
+<td>NS</td>
+<td>区域/域名→权威服务器主机名</td>
+<td>委派；不是直接给全部终端IP</td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>别名→规范名</td>
+<td>后续仍需得到地址记录</td>
+</tr>
+<tr>
+<td>MX</td>
+<td>邮件域→邮件交换服务器名</td>
+<td>实际还含优先级字段；不是发往Web服务器的A记录</td>
+</tr>
+</tbody>
+</table></div>
+<p>P66–67的查询/响应共用结构：ID匹配事务；flags说明请求/回答、是否希望递归、是否支持递归、是否权威等；counts说明后续questions、answers、authority、additional的数量。附加区可以携带相关地址，减少后续查询，但不是任意附加记录都自动可信。</p>
+<p>P68新公司例子：向注册商登记域和权威服务器，父区设置委派NS，必要时有glue地址；在自己权威区添加www的地址记录。课件同页混用<code>networkuptopia</code>/<code>networkutopia</code>且www与apex不一致，是拼写/名称示意问题；真正配置时它们是不同DNS名字，必须统一，不能指望解析器猜出来。</p>
+<p>P69的DDoS、缓存投毒与反射放大用来理解可靠性/信任边界。原“Not successful to date”属于旧课件时代性断言，本文不把它当今天已验证事实。缓存降低某些上游访问压力，但不能证明DNS不可能遭攻击。</p>
+<p><strong>English:</strong> Recursive resolution delegates completion; iterative resolution returns referrals. DNS records have distinct types and TTLs; a non-authoritative cached answer is not automatically an incorrect answer.</p>
+<h2 id="10-p2p-file-distribution">10. P2P file distribution｜新加入的人也可以带来上传能力</h2>
+<p>P71–75先给理想模型：服务器有F bit文件，需分发到N个peer，服务器上传u_s bit/s，peer i上传uᵢ、下载dᵢ，核心网络不额外限速，<span class="arithmatex">\(d_{min}=\min_i d_i\)</span>。</p>
+<p>Client-server的服务器共需上传NF bit，最慢客户端下载F bit：</p>
+<div class="arithmatex">\[D_{cs}\ge\max\left(\frac{NF}{u_s},\frac F{d_{min}}\right).\]</div>
+<p>服务器不必物理“顺序开完一个连接才开下一个”，NF/u_s来自总上传工作量，哪怕并行也绕不过这个容量下界。</p>
+<p>P2P可互助上传，但最初至少要有一份文件从源头出去；每个节点仍须下载F，所有节点总共需NF的接收量：</p>
+<div class="arithmatex">\[D_{p2p}\ge\max\left(\frac F{u_s},\frac F{d_{min}},\frac{NF}{u_s+\sum_i u_i}\right).\]</div>
+<p>图和公式是理想容量下界，实际调度、块稀缺、离线、协议开销会增加耗时。P75“always less”应读为在理想能力比较中不劣且有时更好，可能相等，不能保证任意实际P2P更快。</p>
+<p><strong>回到P75原例：</strong> 每个peer上传u，F/u=1小时，服务器u_s=10u，所有下载速率至少u_s。于是CS下界为N/10小时；P2P下界为max(0.1,N/(10+N))小时。N=10时为1小时对0.5小时，N=100时为10小时对约0.909小时；N=1时两者均0.1小时。用户增加也带来上传资源，这解释了原图的扩展性趋势。</p>
+<p><strong>完整补算：</strong> F=100Mbit、N=4、u_s=10Mbps、每个dᵢ=5Mbps、uᵢ=2Mbps。CS下界max(40,20)=40s；P2P下界max(10,20,400/18)=22.22s。分母总上传18Mbps，不把下载速率也当上传资源加进去。</p>
+<p><strong>变式 / Transfer:</strong> 同条件但各peer上传0，P2P下界？ / Set every peer upload rate to zero; keep all other parameters.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>max(10,20,40)=40s，与CS相同。 / 40 s, equal to the client-server bound. 这是“P2P一定严格更快”的反例。</p>
+</details>
+<h2 id="11-bittorrent">11. BitTorrent｜先找邻居，再交换稀缺块</h2>
+<p>P76–80中torrent是交换同一文件分块的peer集合，tracker帮助发现参与者，不必亲自发送全部文件。peer加入时无块，逐渐下载并向别人上传；成员离开/加入称churn。</p>
+<p>请求块采用rarest-first，优先扩散目前邻居中少见的块，降低最后只缺同一块的风险。发送方面，课堂用“偏向近期给自己较高上传速率的四个伙伴，每10秒重评、每30秒随机尝试一个新伙伴”的tit-for-tat/optimistic unchoking例子。这里的4/10/30是所述算法版本参数，不是所有客户端永恒不变的网络协议定律。随机试新伙伴避免只锁在既有关系里。</p>
+<p>原P76的<code>256Kb chunks</code>是图中文字，实际分块长度随torrent选择，b/B也需辨别；理解单位见基础页，不要求把这个旧示例当标准固定块长。</p>
+<h2 id="12-video-dash-and-cdn">12. Video, DASH and CDN｜边下边播，需要的不只是平均带宽</h2>
+<p>P82–84先解释视频由连续图像组成；空间冗余可压缩同一帧重复信息，时间冗余利用帧间变化。不同编码码率对应不同质量/数据量，但码率不是用户网络吞吐。“4Mbps视频”指播放每秒需要约4Mbit编码数据，而不是网络必然提供4Mbps。</p>
+<p>P85–88从单个HTTP文件到Dynamic Adaptive Streaming over HTTP（DASH）：服务器把视频切成时间块，同一块有多个码率版本，manifest给出访问位置；客户端估计吞吐与缓冲状况，决定何时请求、用哪档、从哪里取。不能只用刚测到的瞬时峰值去选最高清，否则缓冲会先抗议。</p>
+<p>补算：4秒片段、编码2Mbps，块大小8Mbit；可用吞吐4Mbps时下载2秒，若同时正常播放，缓冲时长净增加约2秒。若只有1Mbps则下载8秒，需要足够初始缓冲，否则会停顿。这里忽略请求/变码率等开销，不能当所有编码器每块都精确恒长。</p>
+<p>P89–92用CDN把副本放在多个地理/网络位置，降低单站压力与长路径问题。Enter deep靠近接入网络、地点多；bring home集中于较少大型IXP附近集群。选择“近”往往看网络路径/负载，不只地图公里数。DASH控制表示与请求，CDN提供分发位置，二者可配合但不是同义词。原用户数、流量占比和部署地点数均为原页时期的案例。</p>
+<p><strong>English:</strong> Encoding rate describes media demand, while throughput describes delivery capacity. DASH adapts chunk requests; CDNs distribute replicas across serving locations.</p>
+<p><a id="sockets"></a></p>
+<h2 id="13-socket-programming">13. Socket programming｜把课堂的大写转换例子真正跑通</h2>
+<p>P94–105的原任务：client读一句文字 → server转大写 → 回给client。当前原代码含Python2 <code>raw_input</code>/print写法，以及<code>from socket import *</code>与<code>socket.AF_INET</code>混用。配套 <a href="../examples/socket_demo.py">socket_demo.py</a> 使用Python3、模块导入、显式UTF-8编码和超时，只绑定本机127.0.0.1。</p>
+<p>UDP路径：<code>socket(AF_INET,SOCK_DGRAM)</code> → 服务端bind → client.sendto(data,address) → server.recvfrom得到bytes和client地址 → sendto回复 → client.recvfrom。它不做连接握手；收到回包不证明所有未来数据报都可靠。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/975487a708ea4511.png" rel="noopener" target="_blank"><img alt="Original UDP socket flow" decoding="async" loading="lazy" src="../assets/975487a708ea4511.png"/></a></p>
+<p>TCP路径：server创建监听socket、bind、listen；client创建socket再connect；server.accept返回<strong>新的连接socket</strong>；双方用该连接收发；结束关闭连接socket，监听socket可继续接新连接。P102用源端口帮助区分连接，完整连接识别还涉及双方地址/端口与协议，不能只看一个源端口。</p>
+<pre><code class="language-sh"># 在本目录运行。两个终端；服务端只处理一次请求便退出。
+python labs/socket_demo.py --transport udp --role server --port 12000
+python labs/socket_demo.py --transport udp --role client --port 12000 --message 'hello network'
+# TCP只需把两边的udp同时改成tcp。
+python labs/socket_demo.py --self-test
+</code></pre>
+<p>TCP没有消息边界：本例规定每条文本以换行结束，<code>sendall</code>发送全部bytes，接收循环直到换行，不能假设一次recv(1024)一定收到整句。UDP保留报文边界，但要保证例题报文在接收缓冲范围内。不要把课堂的一次recv小示范当成任意长度程序的通用实现。</p>
+<p>本轮loopback执行记录见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">socket-self-test.json</span>，包括UDP、TCP和超过一次读取大小的TCP消息。它验证本机接口与消息分帧，不测量跨互联网可靠性或时延。</p>
+<p><strong>独立任务 / Try:</strong> 将客户端文字改成<code>course practice</code>，两种协议各运行一次；再解释TCP为什么有监听与连接两个socket。 / Run both transports with this message, then explain the two server-side TCP sockets.</p>
+<details>
+<summary>预期与解释 / Expected result</summary>
+<p>输出<code>COURSE PRACTICE</code>。监听socket接受新连接，连接socket处理当前客户端的数据，职责不同。 / The reply is COURSE PRACTICE; the listening socket accepts connections while the connected socket exchanges this client's data.</p>
+</details>
+<h2 id="14-back-to-the-course">14. Back to the course｜用一条请求链把本章连起来</h2>
+<p>打开网页时：DNS得到服务地址 → socket取得所选传输服务 → HTTP表达所需资源 → 响应中的cookie可关联状态、cache可复用内容。邮件用SMTP投递、POP3/IMAP/HTTP访问；大文件与视频则进一步考虑peer上传能力、分块、编码与分发位置。共同的问题始终是：<strong>双方是谁、消息怎么写、何时发送、需要哪些服务、状态由谁保存。</strong></p>
+<p>接着做<a href="Tutorial03.html">Tutorial3</a>的报文/DNS/HTTP题和<a href="Assignment01.html#pop3">Assignment1</a>的POP3与Zoom分析。首轮可选 <strong><a href="../../cards.html#CS5222-N100">N100（连接复用）</a>、<a href="../../cards.html#CS5222-N111">N118（Webmail路径）</a>、<a href="../../cards.html#CS5222-N121">N124（DNS查询模式）</a>、<a href="../../cards.html#CS5222-N231">N233（HTTP时序）</a></strong>，在Markji按卡号定位。相关<a href="https://crazyshout.github.io/micro-course/?lesson=net05">微课NET05</a>继续可用。</p>
+<p>英文自测：<strong>Explain why persistent HTTP does not necessarily imply pipelining. / 为什么持久HTTP不等于流水线？</strong> 关键答：复用的是连接，流水线另决定是否在上一响应完成前发后续请求。 / Persistence reuses a connection; pipelining additionally overlaps outstanding requests.</p>
+<h2 id="15-source-coverage-and-cautions">15. Source coverage and cautions｜每一页有去处</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>完整PPT页</th>
+<th>对应正文</th>
+<th>核对重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1–3</td>
+<td>开篇</td>
+<td>来源、目标、应用例</td>
+</tr>
+<tr>
+<td>4–12</td>
+<td>§1–2</td>
+<td>架构、进程、socket、寻址、语法语义</td>
+</tr>
+<tr>
+<td>13–17</td>
+<td>§2</td>
+<td>服务需求、TCP/UDP、旧SSL表述</td>
+</tr>
+<tr>
+<td>18–22</td>
+<td>§3</td>
+<td>目录、对象、HTTP/TCP和无状态</td>
+</tr>
+<tr>
+<td>23–29</td>
+<td>§3</td>
+<td>非持久/持久/并行、RTT约定</td>
+</tr>
+<tr>
+<td>30–31</td>
+<td>§3</td>
+<td>完整请求与字段</td>
+</tr>
+<tr>
+<td>32–37</td>
+<td>§4</td>
+<td>cookie四部件、proxy/cache</td>
+</tr>
+<tr>
+<td>38–45</td>
+<td>§5</td>
+<td>目录、邮件结构、SMTP原事务、信封/内容</td>
+</tr>
+<tr>
+<td>46–51</td>
+<td>§6</td>
+<td>POP3三阶段、keep/delete、IMAP、webmail</td>
+</tr>
+<tr>
+<td>52–59</td>
+<td>§7</td>
+<td>目录、DNS服务、层级与local resolver</td>
+</tr>
+<tr>
+<td>60–63</td>
+<td>§8</td>
+<td>递归/迭代的两种图、TTL/cache</td>
+</tr>
+<tr>
+<td>64–69</td>
+<td>§9</td>
+<td>RR、消息、注册/委派、攻击概念</td>
+</tr>
+<tr>
+<td>70–75</td>
+<td>§10</td>
+<td>目录、P2P架构、分发下界与原例</td>
+</tr>
+<tr>
+<td>76–80</td>
+<td>§11</td>
+<td>tracker、块、churn、rarest-first、tit-for-tat</td>
+</tr>
+<tr>
+<td>81–88</td>
+<td>§12</td>
+<td>目录、视频编码、HTTP流媒体、DASH</td>
+</tr>
+<tr>
+<td>89–92</td>
+<td>§12</td>
+<td>CDN两种布局、ISP/IXP回接</td>
+</tr>
+<tr>
+<td>93–105</td>
+<td>§13</td>
+<td>目录、任务、UDP/TCP流程与全部原代码含义</td>
+</tr>
+<tr>
+<td>106–107</td>
+<td>§14–15</td>
+<td>协议共同主题、控制/数据、状态、可靠性、边缘复杂性</td>
+</tr>
+</tbody>
+</table></div>
+<p>part1对应完整1–22，part2对应23–65，part3对应66–107；内容核对忽略明确的页脚重编号。课件列出的旧RFC/客户端与数字保留为原例，现代边界澄清不宣称教师另外讲过。未下载的FTP正文或后续章节在覆盖中标记缺失，不用历史资料充数。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

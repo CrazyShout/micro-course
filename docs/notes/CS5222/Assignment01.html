@@ -1,0 +1,231 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="assignment-1-chapters-1-and-2">Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=53">A4 打印版 · 第 53–63 页</a>　图可点击放大。</p>
+<p><a href="index.html">课程目录</a> · <a href="Chapter01.html">Chapter1</a> · <a href="Chapter02.html">Chapter2</a> · <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原任务（4页）</span></p>
+<p>本讲义提供P6、P31、P17的纸笔推导及Zoom资料核查方法。没有教师解答文件，以下为整理答案；不是可直接替代你个人论证的正式提交文档。截止日期、提交格式和手续回查原任务及<a href="https://crazyshout.github.io/micro-course/notices.html">课程信息栏</a>。</p>
+<p>基础可选：<a href="../foundations/NetworkBasics.html">单位与时间轴</a>、<a href="../foundations/NetworkBasics.html#messages">报文字段</a>。当前四题都属于核心任务；P6难点是首/末位事件，P31是跨链路重叠，P17是跨会话状态，Zoom是产品情境与来源边界。难度均中等，不从历史单题出现推断高频。</p>
+<div class="toc">
+<ul>
+<li><a href="#assignment-1-chapters-1-and-2">Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据</a><ul>
+<li><a href="#p6-transmission-and-propagation">P6. Transmission and propagation｜最后一位刚出发，第一位可能已经到达</a></li>
+<li><a href="#p31-message-segmentation">P31. Message segmentation｜像流水线一样，让不同链路同时工作</a></li>
+<li><a href="#p17-pop3">P17. POP3｜完成整次事务，不只补两行</a><ul>
+<li><a href="#a-download-and-delete">a. Download and delete / 下载并删除</a></li>
+<li><a href="#b-download-and-keep">b. Download and keep / 下载并保留</a></li>
+<li><a href="#c-second-keep-mode-session">c. Second keep-mode session / 五分钟后的第二次会话</a></li>
+</ul>
+</li>
+<li><a href="#zoom-apply-protocol-ideas-with-sourceszoom">Zoom. Apply protocol ideas with sources｜先说研究的是哪一种Zoom连接</a><ul>
+<li><a href="#a">a. 应用协议：产品生态的三项，与原生媒体路径分开</a></li>
+<li><a href="#b-architecture">b. 架构 / Architecture</a></li>
+<li><a href="#c-transport">c. 传输 / Transport</a></li>
+<li><a href="#d-ip-lecturers-host-ip">d. 老师电脑的IP / Lecturer's host IP</a></li>
+<li><a href="#_1">怎样整理成自己的作答</a></li>
+</ul>
+</li>
+<li><a href="#_2">覆盖、复算与验收</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><a id="p6"></a></p>
+<h2 id="p6-transmission-and-propagation">P6. Transmission and propagation｜最后一位刚出发，第一位可能已经到达</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8dce74637beb8fd4.png" rel="noopener" target="_blank"><img alt="Original Assignment1 P6" decoding="async" loading="lazy" src="../assets/8dce74637beb8fd4.png"/></a></p>
+<p><strong>条件 / Conditions:</strong> 主机A、B相距m米，链路发送速率R bit/s，传播速度s m/s，包长L bit。忽略处理、排队，从A开始发送首位计时t=0。 / Hosts A and B are m metres apart; link rate is R bit/s, propagation speed s m/s, and packet length L bits. Ignore processing and queueing and start timing with the first bit.</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原小问</th>
+<th>中文推导与答案</th>
+<th>English answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a 传播</td>
+<td><span class="arithmatex">\(d_{prop}=m/s\)</span>，距离除速度</td>
+<td>Propagation delay is m/s.</td>
+</tr>
+<tr>
+<td>b 发送</td>
+<td><span class="arithmatex">\(d_{trans}=L/R\)</span>，数据量除速率</td>
+<td>Serialization time is L/R.</td>
+</tr>
+<tr>
+<td>c 整包端到端</td>
+<td><span class="arithmatex">\(L/R+m/s\)</span>，末位先被送入链路再传播</td>
+<td>Complete-packet delay is L/R+m/s.</td>
+</tr>
+<tr>
+<td>d t=dtrans，末位位置</td>
+<td>在连续比特模型的边界时刻刚离开A进入链路，还没有走完整条路</td>
+<td>The last bit is just entering the link at A.</td>
+</tr>
+<tr>
+<td>e dprop&gt;dtrans，首位位置</td>
+<td>仍在线路内，离A的距离为<span class="arithmatex">\(sL/R\lt m\)</span></td>
+<td>The first bit remains on the link, sL/R metres from A.</td>
+</tr>
+<tr>
+<td>f dprop&lt;dtrans，首位位置</td>
+<td>已到达B；不能继续说还在链路上</td>
+<td>The first bit has already reached B.</td>
+</tr>
+<tr>
+<td>g 两时延相等</td>
+<td><span class="arithmatex">\(m/s=L/R\)</span>，故<span class="arithmatex">\(m=sL/R\)</span></td>
+<td>Set m=sL/R.</td>
+</tr>
+</tbody>
+</table></div>
+<p>g给s=2.5×10⁸m/s、L=120bit、R=56kbps=56000bit/s：</p>
+<div class="arithmatex">\[d_{trans}=120/56000\approx0.002142857\text{ s},\quad m\approx535714.29\text{ m}=535.714\text{ km}.\]</div>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5f9999d2c9f3653c.png" rel="noopener" target="_blank"><img alt="First-bit versus last-bit time diagram" decoding="async" loading="lazy" src="../assets/5f9999d2c9f3653c.png"/></a></p>
+<p>图是帮助读事件的教学示意（参数2ms/8ms），不是g题的参数图。g的数值单独复算，避免把示意图标注抄进答案。</p>
+<p><strong>变式 / Transfer:</strong> L=240bit、R不变，要保持两时延相等，m如何变化？ / Double packet length while keeping R and s fixed; how must m change?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>m翻倍，约1071.429km。 / m doubles to about 1071.429 km. 改变的是等时延所需距离，不是信号速度。</p>
+</details>
+<p><a id="p31"></a></p>
+<h2 id="p31-message-segmentation">P31. Message segmentation｜像流水线一样，让不同链路同时工作</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/c01c3b5505e2a75d.png" rel="noopener" target="_blank"><img alt="Original complete topology and all P31 questions" decoding="async" loading="lazy" src="../assets/c01c3b5505e2a75d.png"/></a></p>
+<p><strong>条件 / Conditions:</strong> 原图源→交换机1→交换机2→目的，共3条2Mbps链路；消息8×10⁶bit，存储转发，忽略传播、排队和处理。分段时为800个10000bit包，题目未另加包头。 / An 8-million-bit message crosses three 2-Mbps store-and-forward links. Ignore propagation, queueing and processing. Segmentation creates 800 packets of 10000 bits each, with no additional header overhead specified.</p>
+<p>a 不分段，第一链路 <span class="arithmatex">\(8\times10^6/(2\times10^6)=4\)</span>s；交换机必须等整条消息，3跳总<strong>12s</strong>。 / Without segmentation: 4 s to the first switch and 12 s to the destination.</p>
+<p>b 单包发送10000/(2×10⁶)=<strong>0.005s=5ms</strong>。第一包到第一交换机t=5ms；它继续去第二交换机时，源发送第二包，第二包在t=<strong>10ms</strong>完全到第一交换机。 / First packet reaches switch1 at 5 ms; packet2 is completely received there at 10 ms.</p>
+<p>c 第一包到目的需3×5ms，后续799包每隔5ms到，总 <span class="arithmatex">\((800+3-1)\times0.005=\mathbf{4.01s}\)</span>。 / Completion time is 4.01 s. 链路本身没变快，减少的是“大消息在每一跳全等完”的串行等待。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1bfe3d486e4ea4d0.png" rel="noopener" target="_blank"><img alt="Calculated unsegmented versus segmented completion" decoding="async" loading="lazy" src="../assets/1bfe3d486e4ea4d0.png"/></a></p>
+<p>图上分段只展开前几个包并标注800包完成时刻；不是把800个包画成三个包后漏算剩余数据。</p>
+<p>d 其他好处：较短包给其他流量穿插机会；出现丢失时可只重传受影响部分（若上层协议支持）；较小存储/处理单位便于逐包转发。 / Segmentation enables interleaving, selective retransmission when supported, and manageable forwarding units.</p>
+<p>e 代价：每包头部和处理开销，更多调度；可能乱序，需要识别与重组；重传/超时机制增加复杂度。 / Costs include headers, per-packet processing, possible reordering, reassembly and recovery complexity. 不把“越小永远越快”当结论；本题忽略头部是有意简化。</p>
+<p><strong>变式 / Transfer:</strong> 同消息改成400包，每包20000bit，其他不变，总多久？ / Use 400 packets of 20000 bits with the same path.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>每包10ms，总(400+3−1)×0.01=4.02s。 / 4.02 s. 仍近似受源端总上传4s约束，只是流水线填充稍慢。</p>
+</details>
+<p><a id="pop3"></a></p>
+<h2 id="p17-pop3">P17. POP3｜完成整次事务，不只补两行</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/06198b9a7d286981.png" rel="noopener" target="_blank"><img alt="Original P17 and completion requirement" decoding="async" loading="lazy" src="../assets/06198b9a7d286981.png"/></a></p>
+<p><strong>完整条件 / Conditions:</strong> 已认证进入transaction，LIST给两封邮件，编号1/2、大小498/912byte；原片段已经RETR1。a为download-and-delete，b为download-and-keep，均继续到服务完成。c在b后退出，5分钟后再次登录，无新邮件，给出第二会话。 / Two messages of 498 and 912 octets are present. Finish the full download-and-delete and download-and-keep transactions, then show a second keep-mode session five minutes later with no new mail.</p>
+<p>原题略去若干<code>+OK</code>确认；下面补齐规范响应。<code>[message ...]</code>只是未知邮件内容的说明占位，<strong>不是实际发送的协议文本</strong>，不声称已重建498/912字节正文。每行以CRLF结束，单独<code>.</code>结束多行结果。命令字大小写不影响本题含义。</p>
+<h3 id="a-download-and-delete">a. Download and delete / 下载并删除</h3>
+<pre><code class="language-text">C: LIST
+S: +OK 2 messages (1410 octets)
+S: 1 498
+S: 2 912
+S: .
+C: RETR 1
+S: +OK 498 octets
+S: [message 1 content]
+S: .
+C: DELE 1
+S: +OK message 1 marked for deletion
+C: RETR 2
+S: +OK 912 octets
+S: [message 2 content]
+S: .
+C: DELE 2
+S: +OK message 2 marked for deletion
+C: QUIT
+S: +OK signing off
+</code></pre>
+<p>DELE先标记，成功QUIT使会话进入UPDATE并提交删除；本例假设操作成功且没有异常退出。只写DELE1然后QUIT会漏掉第二封的下载与删除。 / Retrieve both messages, mark both for deletion, then successfully quit to commit the update.</p>
+<h3 id="b-download-and-keep">b. Download and keep / 下载并保留</h3>
+<pre><code class="language-text">C: LIST
+S: +OK 2 messages (1410 octets)
+S: 1 498
+S: 2 912
+S: .
+C: RETR 1
+S: +OK 498 octets
+S: [message 1 content]
+S: .
+C: RETR 2
+S: +OK 912 octets
+S: [message 2 content]
+S: .
+C: QUIT
+S: +OK signing off
+</code></pre>
+<p>没有DELE，两封保留。RETR不会自动删除；“keep”不是另加一个名叫KEEP的POP3命令。 / No messages are marked for deletion, so both remain on the server.</p>
+<h3 id="c-second-keep-mode-session">c. Second keep-mode session / 五分钟后的第二次会话</h3>
+<p>假设没有额外客户端UIDL去重、服务器未改变这两封邮件的编号，重新认证后仍LIST两封；可以再次RETR1/2。原问题仅说“无新邮件”，没有说服务器将已读邮件隐藏。</p>
+<pre><code class="language-text">S: +OK POP3 server ready
+C: USER &lt;username&gt;
+S: +OK
+C: PASS &lt;password&gt;
+S: +OK authenticated
+C: LIST
+S: +OK 2 messages (1410 octets)
+S: 1 498
+S: 2 912
+S: .
+C: RETR 1
+S: +OK 498 octets
+S: [message 1 content]
+S: .
+C: RETR 2
+S: +OK 912 octets
+S: [message 2 content]
+S: .
+C: QUIT
+S: +OK signing off
+</code></pre>
+<p>尖括号凭据是示意，讲义不会连接真实邮箱。实际客户端可保存UIDL跳过已下载邮件；若采用这种扩展约定，可能LIST/UIDL核对后不RETR旧邮件。应明确这是客户端保存状态的行为，而不是“POP3服务器因为上次读过就删掉”。<a href="https://www.rfc-editor.org/rfc/rfc1939">RFC1939</a>（本轮核查2026-09-23）</p>
+<p><strong>English answer:</strong> With no deletion and no client-side duplicate suppression, both messages are still available and can be downloaded again. State any UIDL-based client behavior explicitly.</p>
+<p><strong>变式 / Transfer:</strong> b中仅DELE1并成功QUIT，之后无新邮件，剩多少总字节？ / Delete only message1 in part b and successfully quit. How many message octets remain?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>只剩原邮件2，912byte；新会话编号不应依赖旧编号恒定。 / 912 octets remain; message numbers need not remain identical across sessions.</p>
+</details>
+<p><a id="zoom"></a></p>
+<h2 id="zoom-apply-protocol-ideas-with-sourceszoom">Zoom. Apply protocol ideas with sources｜先说研究的是哪一种Zoom连接</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/2b5e9f7fe3e1e319.png" rel="noopener" target="_blank"><img alt="Original Zoom questions" decoding="async" loading="lazy" src="../assets/2b5e9f7fe3e1e319.png"/></a></p>
+<p><strong>原问题 / Questions:</strong> a列举三种应用层协议并解释作用；b主要client-server还是P2P；c主要传输协议及原因；d学生是否需要老师电脑IP及原因。 / Identify three application-layer protocols and their roles, explain the main architecture and transport choice, and determine whether a student needs the lecturer's host IP.</p>
+<p><strong>核查情境：2026-09-23，普通多人Zoom Meetings、原生Zoom Workplace客户端、经Zoom云入会的默认讨论范围。</strong> 没有实际抓取本校课堂流量，也未确认本校启用哪些企业功能。因此下述为官方资料支撑的典型架构分析，不是对某一次课堂连接的实测报告。</p>
+<h3 id="a">a. 应用协议：产品生态的三项，与原生媒体路径分开</h3>
+<p>题目未限定客户端类型，可用下表列出Zoom产品生态明确支持的三项，并把各自情境写进答案：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>协议</th>
+<th>功能（中文）</th>
+<th>English explanation</th>
+<th>证据/适用情境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td>网页/客户端与Zoom Web服务的请求、资源获取等</td>
+<td>Secure HTTP access to web services and content</td>
+<td><a href="https://support.zoom.com/hc/en/article?id=zm_kb&amp;sysparm_article=KB0060548">官方网络配置</a>明确HTTP/HTTPS访问与CDN；不据端口猜全部音视频都经HTTP</td>
+</tr>
+<tr>
+<td>SIP</td>
+<td>让标准会议室端点进行会话建立/互通</td>
+<td>Session signaling for supported standards-based room endpoints</td>
+<td><a href="https://support.zoom.com/hc/en/article?id=zm_kb&amp;sysparm_article=KB0060661">Conference Room Connector</a>；不是所有原生客户端必经路径</td>
+</tr>
+<tr>
+<td>H.323（协议族）</td>
+<td>另一类标准音视频会议端点经连接器接入</td>
+<td>A conferencing protocol suite for supported room-system interoperability</td>
+<td>同一官方连接器资料；需注明它是协议族而非单一报文协议</td>
+</tr>
+</tbody>
+</table></div>
+<p>这不是说一台普通笔记本每次入会同时跑这三项。若教师将题意限定为<strong>原生客户端自身的媒体/控制三种协议</strong>，应按该范围补充特定版本的技术资料，而不能把SIP/H.323互通项冒充原生路径。公开端口表只能证明传输端口用途，不能单独证明RTP/SRTP等内部封装；本讲义不按猜测凑成一个统一答案。</p>
+<h3 id="b-architecture">b. 架构 / Architecture</h3>
+<p>普通多人云会议主要由云服务协调与转发，按课程分类主要是client-server：各客户端向服务基础设施连接，云处理参与者发现、会话与媒体分发。<strong>这是基于官方云连接/回退说明的架构归纳</strong>，不宣称所有Zoom部署都是纯同一种拓扑。<a href="https://library.zoom.com/advanced-enterprise-services/zoom-mesh/zoom-mesh-explainer">Zoom Mesh官方说明</a></p>
+<p><strong>English:</strong> Ordinary multi-participant cloud meetings are primarily client-server in the course's sense; clients rely on Zoom infrastructure for coordination and media distribution.</p>
+<p>明确例外：官方允许同一局域网的两人会议在符合设置条件时用peer-to-peer；加入第三人等情况会使用云。<a href="https://support.zoom.com/hc/en/article?id=zm_kb&amp;sysparm_article=KB0067877">两人P2P说明</a> 企业启用Zoom Mesh时，局域网内可由parent客户端给child分发视频；这是有云协调的混合机制，不能拿来证明普通多人课堂始终直接连接老师。</p>
+<h3 id="c-transport">c. 传输 / Transport</h3>
+<p>实时媒体通常优先UDP，官方DSCP文档说明默认媒体在UDP8801等端口，特定管理设置可拆分音频/视频/共享端口。<a href="https://library.zoom.com/admin-corner/network-management/quality-of-service-and-network-best-practices-explainer/using-dscp-marking-with-zoom">官方媒体端口说明</a> 控制/Web访问及媒体回退可以使用TCP；“Zoom只用UDP”错误。课程层面的原因是实时音视频更在意及时性，可由应用处理丢失与适应码率，而TCP有序交付可能让后续数据等重传；这解释选择动机，不意味UDP本身自动更可靠或保证低延迟。</p>
+<p><strong>English:</strong> Real-time media commonly prefers UDP, while control/web traffic and fallback paths may use TCP. Low delay and application-level adaptation matter more than waiting indefinitely for every media byte.</p>
+<h3 id="d-ip-lecturers-host-ip">d. 老师电脑的IP / Lecturer's host IP</h3>
+<p>在普通云课堂情境，学生连接的是Zoom提供的服务端点，不需要自己先解析或输入老师个人电脑的IP。老师和学生各自向基础设施建立通信，服务负责转发；知道meeting ID也不是把它翻译成老师IP。这个结论是上述云路由模型的推断，未验证学校实际配置。</p>
+<p><strong>English:</strong> In an ordinary cloud meeting, the student does not need to obtain the lecturer's host IP; Zoom infrastructure routes the session. Peer/mesh configurations may use other local endpoints and require separate analysis.</p>
+<h3 id="_1">怎样整理成自己的作答</h3>
+<p>每个判断写成“结论 → 明确情境 → 机制 → 官方来源及查阅日期”。区分产品支持、当前默认与本机实测三种证据。原题是应用课程知识的调查题，不应把一段不知年份的博客当软件永久架构。</p>
+<h2 id="_2">覆盖、复算与验收</h2>
+<p>原PDF p1的P6(a–g)、p2的P31(a–e)及原拓扑、p3的P17(a–c)及“写到事务结束”要求、p4的Zoom(a–d)全部对应。数值和分包图由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算；原题未给邮件正文，因此事务只保留占位，不伪造内容。</p>
+<p>完成前检查：每个速率/长度有单位，每段延迟不多算漏算；POP3包含两封邮件与成功结束；Zoom区分客户端/部署并注明来源时间。再回到<a href="../../cards.html#CS5222-N260">已有N260–N263</a>复习对应知识，不把提交手续做成知识卡。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

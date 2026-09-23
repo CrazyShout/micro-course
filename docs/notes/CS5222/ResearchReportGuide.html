@@ -1,0 +1,193 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Research Report Guide｜把一个真实问题解释清楚 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="research-report-guide">Research Report Guide｜把一个真实问题解释清楚</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=64">A4 打印版 · 第 64–67 页</a></p>
+<p><a href="index.html">课程目录</a> · <a href="Chapter01.html">Chapter1</a> · <a href="Chapter02.html">Chapter2</a> · <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原任务与Rubric</span> · <a href="https://crazyshout.github.io/micro-course/notices.html">课程信息栏</a></p>
+<p>这是一份研究与写作方法指南，不是一篇替你完成的报告。原任务要求研究你在日常生活、新闻或工作中遇到的新网络技术，联系教材Chapter1–7，排除Chapter8安全主题；用自己的解释和图说明机制，并反思学习过程。格式、页数、评分与提交要求以链接的当前原任务为准。</p>
+<p>本任务不需要统一加一页数学补课。需要什么取决于选题：涉及码率/吞吐就回<a href="../foundations/NetworkBasics.html#units">网络单位</a>，涉及状态/时间就回<a href="../foundations/NetworkBasics.html#messages">报文与时间轴</a>。没有实际卡点便直接开始。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>能力</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>达标表现；依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>明确问题、解释机制</td>
+<td>核心必会</td>
+<td>中至高；不能只有名词</td>
+<td>不看原文也能画出数据/控制流；原任务A</td>
+</tr>
+<tr>
+<td>来源核查与边界</td>
+<td>核心必会</td>
+<td>中；资料版本/适用场景</td>
+<td>每个关键结论有对应证据；原任务p2</td>
+</tr>
+<tr>
+<td>图文与英语表达</td>
+<td>核心必会</td>
+<td>中；精简与可读</td>
+<td>图能帮助解释一个具体难点；原Rubric</td>
+</tr>
+<tr>
+<td>真实反思</td>
+<td>核心必会</td>
+<td>中；具体变化而非套话</td>
+<td>记录自己确实做过的核查与困难；原任务B</td>
+</tr>
+<tr>
+<td>复杂数学/未用机制</td>
+<td>按需拓展</td>
+<td>可能高</td>
+<td>只有支撑论点时补；整理者建议，不暗示不考</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="1">1. 选题从一件事开始，不从一串热门缩写开始</h2>
+<p>先记录你<strong>确实遇到</strong>的情况：某个应用在带宽变化时切画质、同一内容从不同地点下载速度不同、多人共享网络时服务突然卡顿。这里只是提示观察角度，不替你声称你经历过。题目应围绕一个能解释的机制问题，例如“客户端怎样在吞吐波动时选择下一视频块的编码版本”。</p>
+<p>接着用三道筛子缩小范围：这个问题属于网络吗？能对应教材哪一层/哪章？在本次篇幅内能用一幅图、一个小场景说明主要机制吗？“所有5G技术”往往太宽；“某种特定机制在什么条件下改善什么问题”更容易论证。新颖不等于选最难的词，也不能把很成熟的整项技术直接称为“最新”。若选DASH等课内基础，需说明你研究的具体新变化、部署或问题，不能只复述课件。</p>
+<p><strong>English framing (整理表达):</strong> <em>This report examines how [a specific mechanism] addresses [a concrete networking problem] under [a defined setting].</em> 方括号由你基于实际调查填写，不是可以不查资料就套用的结论。</p>
+<h2 id="2">2. 把问题、机制、效果连成一条可核查的解释</h2>
+<p>先写旧方法遇到什么限制，再写新机制改了哪一步，最后讨论收益与代价。不要“协议很先进，所以性能很好”这样跳过中间因果链。</p>
+<p>以分块视频为<strong>教学例</strong>：播放每秒消耗编码数据 → 网络吞吐会变动 → 缓冲可能耗尽 → 客户端按估计吞吐/缓冲选择下一块 → 可能减少停顿，但画质也会变化。这里每条箭头都能被课程概念支持，而不是把“自适应”三个字当解释。</p>
+<p><strong>完整补算 / Worked example:</strong> 4秒片段编码2Mbps，数据量8Mbit；若稳定吞吐4Mbps，下载2秒。在缓冲足够、同时播放、忽略请求与解码开销时，缓冲净增加4−2=2秒。 / A four-second segment encoded at 2 Mbps contains 8 Mbit. At 4 Mbps throughput it downloads in two seconds, increasing the playable buffer by two seconds under the stated assumptions.</p>
+<p><strong>变式 / Transfer:</strong> 网络降至1Mbps，同一块需几秒？若开始时只缓冲3秒会发生什么？ / At 1 Mbps, how long does the same chunk take, and what if only three seconds are buffered initially?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>下载8秒，已有缓冲只能撑3秒，理想模型中会停顿约5秒，等块到后才续播。 / Download takes eight seconds; under the simplified model, playback stalls for about five seconds. 这说明要考虑安全余量和估计误差，而不是平均值刚好够就万事大吉。</p>
+</details>
+<p>这段算例可以帮助理解，不是声称某软件测得5秒卡顿，也不作为你的真实体验写进reflection。</p>
+<h2 id="3">3. 找来源时，为每一句重要话准备证据</h2>
+<p>优先找协议标准、技术提供方文档、原始研究论文或可复核的测量报告。二手讲解和AI适合帮助形成问题，但需要回到原资料核对。网页存在不等于它支撑你的那句话。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>写作中的主张</th>
+<th>应找的证据</th>
+<th>必须检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>协议怎样工作</td>
+<td>规范/原设计文档</td>
+<td>版本、消息顺序、可选项、条件</td>
+</tr>
+<tr>
+<td>某产品使用此机制</td>
+<td>官方当前产品文档</td>
+<td>原生/浏览器/企业部署是否相同</td>
+</tr>
+<tr>
+<td>性能提高多少</td>
+<td>原实验/可重复测量</td>
+<td>对比方法、数据、指标、环境</td>
+</tr>
+<tr>
+<td>有哪些限制</td>
+<td>规范限制、实验失败或设计分析</td>
+<td>不把推断写成已测事实</td>
+</tr>
+<tr>
+<td>为什么和课程有关</td>
+<td>教材/当前课件定位</td>
+<td>是当前已学，还是教材后续章节</td>
+</tr>
+</tbody>
+</table></div>
+<p>可维护一张很小的工作表，放在你自己的研究草稿里：<code>Claim | Source/section | Version/date | Supports what | Does not support what</code>。它服务这次报告的证据组织，不是另建网站功能或错题系统。</p>
+<p>如引用AI输出，原任务要求说明使用并自行负责核查；图、引用也要查，不能只给一个模型名字就当技术来源。对论文核对题名、作者、年份、DOI/官方页面，打开原文确认所引结论和实验设置。查不到的来源先删除或标待核查，不让它以漂亮引用格式混进正文。</p>
+<h2 id="4">4. 图要解释困难，不是给文字化妆</h2>
+<p>选择一种与你的核心问题匹配的图：</p>
+<ul>
+<li>交互问题画时序图，标清参与者、请求、响应、时间方向；</li>
+<li>架构问题画节点与数据/控制流，说明图中箭头是什么；</li>
+<li>权衡问题画有单位的曲线，说明数据来自实测、论文还是教学计算。</li>
+</ul>
+<p>画完问自己：读者通过这张图能更容易答出哪个问题？如果只是几个彩色方框拼满一页，却没说明数据从哪到哪，就还需要重画。引用原图标来源，改编图标“Adapted from…”，自己计算的图保存脚本和输入。AI图同样要署明并逐条检查技术结构，不能因为好看就默认网络方向正确。</p>
+<h2 id="5">5. 英文报告怎样组织才连贯</h2>
+<p>建议采用内容驱动的小标题，而非每段中英对照：英文完成正式论证，中文草稿帮助自己先讲懂。术语第一次出现给全称与缩写，随后保持一致。以下是结构与写作提示，<strong>不是已经写好的提交内容</strong>：</p>
+<ol>
+<li><strong>Problem and context</strong>：你实际怎样接触主题？问题是什么、研究范围到哪里？</li>
+<li><strong>Background from the course</strong>：挑真正用到的1–3个概念，解释它们为何必要。</li>
+<li><strong>How the mechanism works</strong>：沿一个具体请求/数据流走完步骤，配关键图。</li>
+<li><strong>Benefits, limits and evidence</strong>：哪项收益有证据，代价是什么，什么条件下不适用？</li>
+<li><strong>Discussion</strong>：你基于证据形成的判断、未解决问题与合理后续方向。</li>
+</ol>
+<p>每段先给主张，再解释机制，再放证据与条件。比如 <em>The mechanism reduces repeated origin fetches when reusable content is available in cache</em> 比 <em>It greatly improves everything</em> 更可核查。不要把“可能”藏起来，也不用给每句话堆三个形容词。</p>
+<p><strong>英文自测 / English self-check:</strong> <em>What changes, why does it help, and under what conditions might it not help? / 改变了什么，为何有效，何时可能无效？</em> 若不能脱稿回答，正文还需要补机制，而非继续增加术语。</p>
+<h2 id="6-reflection-log">6. Reflection log｜写你真的经历过的理解变化</h2>
+<p>原任务五问都要回答，但不需要装作做了一场宏大科研：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原问题</th>
+<th>真实记录的抓手</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What did you learn that you did not know before?</td>
+<td>原来怎么理解，哪个具体事实改变了它</td>
+</tr>
+<tr>
+<td>What was the most challenging part?</td>
+<td>一个真正卡住的机制/推导/资料冲突</td>
+</tr>
+<tr>
+<td>How did GenAI help or hinder?</td>
+<td>它帮你拆了哪一步，或给过什么误导</td>
+</tr>
+<tr>
+<td>How did you verify AI-generated information?</td>
+<td>打开了哪个原来源、比对哪句、做了什么检查</td>
+</tr>
+<tr>
+<td>What would you do differently next time?</td>
+<td>一个具体可实行的改进</td>
+</tr>
+</tbody>
+</table></div>
+<p>可从现在开始记两三条带日期的研究记录，报告结束时据实整理。没有发生的测试、阅读、困难或“恍然大悟”不要补写成个人经历；如果没用某工具，就不写用了。反思的价值在真实改进，不在像获奖感言。</p>
+<h2 id="7">7. 交付前的自查与来源覆盖</h2>
+<p>读者应能复述你的问题与机制，认出它对应课程哪部分；一张图能独立读懂；数字都有单位、来源和条件；观点与已验证事实分开。英语表达、引用、AI使用说明、格式与评分要求逐项回查<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原任务</span>及课程信息，不在知识卡里记截止日期。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原任务位置</th>
+<th>本指南对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>p1 Goal、题目范围</td>
+<td>开篇、§1</td>
+</tr>
+<tr>
+<td>p1 Format、提交构成</td>
+<td>原任务/信息栏链接；不生成正式提交件</td>
+</tr>
+<tr>
+<td>p1 A：接触途径、机制、联系、动机/创新/挑战/观点</td>
+<td>§1–2、§5</td>
+</tr>
+<tr>
+<td>p1 自己的表达、图与清晰度</td>
+<td>§4–5</td>
+</tr>
+<tr>
+<td>p2 GenAI引用、图/参考核查责任</td>
+<td>§3–4</td>
+</tr>
+<tr>
+<td>p2 B：五个Reflection问题</td>
+<td>§6逐项对应</td>
+</tr>
+<tr>
+<td>p2 Evaluation、p3 Rubric</td>
+<td>开篇能力表、§7；具体权重以原页为准</td>
+</tr>
+</tbody>
+</table></div>
+<p>后续选定真实主题后再补那一项必要基础、原始来源与图；这份指南不预先替你选择经历或给出整篇代写报告。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

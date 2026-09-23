@@ -1,0 +1,764 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 3 · Linear classifiers, cropping and an L1 kernel · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
+<h1 id="tutorial-3-linear-classifiers-cropping-and-an-l1-kernel">Tutorial 3 · Linear classifiers, cropping and an L1 kernel</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=98">A4 打印版 · 第 98–112 页</a>　图可点击放大。</p>
+<h2 id="_1">从同一份数据比较模型，别让实验条件悄悄换了</h2>
+<p><a href="Lecture03.html">Lecture 3</a> · <a href="Lecture01.html#arrays">Python/NumPy</a> · <a href="index.html">课程目录</a></p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial3.ipynb</span> 的 68 个单元，按原顺序展开。原标题为 <em>Gender Classification from Face Images</em>。本笔记只把文件名提供的 0/1 当成给定基准标签，分析模型是否重现这些标注；标签与模型结果不能确立照片中人物的真实身份。参考代码和答案为整理者实现，不是教师解答。</p>
+<p>真正要学会的是：45×40 图像怎样变为向量，怎样在训练内部选 C，怎样读线性权重，怎样公平比较裁剪与自定义核。本数据很小，单次测试10张，错一张就变10个百分点，结论必须与这个限制一起读。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原任务</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求与依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T4–16 加载、展平、划分</td>
+<td>核心必会</td>
+<td>中；轴和顺序</td>
+<td>核对形状、标签规则、同一批索引</td>
+</tr>
+<tr>
+<td>T17–40 LR/SVM</td>
+<td>核心必会</td>
+<td>中；CV与测试</td>
+<td>完成训练、评估、权重及错误分析</td>
+</tr>
+<tr>
+<td>T41–63 裁剪</td>
+<td>核心必会</td>
+<td>中；掩码尺寸</td>
+<td>保持样本划分，检查改变的只有表示</td>
+</tr>
+<tr>
+<td>T64–68 自定义核</td>
+<td>核心必会</td>
+<td>高；两层参数循环</td>
+<td>检查核矩阵形状、用CV选择α/C</td>
+</tr>
+</tbody>
+</table></div>
+<p>依据均为当前原任务，不是历史考试频率。数学卡点可选读<a href="../foundations/MathForML.html#vectors-covariance">矩阵</a>和<a href="../foundations/MathForML.html#projection">长度与距离</a>。</p>
+</section>
+<section id="cell-2">
+<h2 id="0-parameters-and-provenance">0. Parameters and provenance｜将实验约定写在最前面</h2>
+<p>保留原 <code>np.random.seed(100)</code> 和 80/20、<code>random_state=4487</code> 划分；ZIP顺序不擅自排序。原任务未规定候选网格，本参考实现选择 C=10^-3,…,10^3（7个值），α=0.001/0.01/0.1/1，5折分层CV、shuffle=True、seed42。所有模型使用相同折划分。不把这些候选值冒充老师给出的标准答案。</p>
+<p>English: Preserve the instructor's data order and train/test split. Candidate grids and shuffled stratified CV are explicit reference-implementation choices.</p>
+</section>
+<section id="cell-3">
+<div class="code-input"><div class="cell-label">In [1]</div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">zipfile</span><span class="o">,</span><span class="w"> </span><span class="nn">fnmatch</span><span class="o">,</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">image</span> <span class="k">as</span> <span class="n">mpimg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="n">COURSE</span><span class="o">=</span><span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span><span class="o">*</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">/</span><span class="s1">'CS5489/Lecture3/Tutorial3/photos-bw.zip'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()),</span><span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">COURSE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">'Set COURSE to the Course directory containing the original photos-bw.zip.'</span><span class="p">)</span>
+<span class="n">DATA</span><span class="o">=</span><span class="n">COURSE</span><span class="o">/</span><span class="s1">'CS5489/Lecture3/Tutorial3/photos-bw.zip'</span>
+<span class="n">NOTES</span><span class="o">=</span><span class="n">COURSE</span><span class="o">/</span><span class="s1">'codexing/CS5489/course-notes'</span><span class="p">;</span> <span class="n">ASSETS</span><span class="o">=</span><span class="n">NOTES</span><span class="o">/</span><span class="s1">'assets'</span>
+<span class="n">ASSETS</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">SPLIT_SEED</span><span class="o">=</span><span class="mi">4487</span><span class="p">;</span> <span class="n">CV_SEED</span><span class="o">=</span><span class="mi">42</span>
+<span class="n">CS</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span> <span class="n">ALPHAS</span><span class="o">=</span><span class="p">[</span><span class="mf">.001</span><span class="p">,</span><span class="mf">.01</span><span class="p">,</span><span class="mf">.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.figsize'</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="s1">'font.size'</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="s1">'axes.spines.top'</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span><span class="s1">'axes.spines.right'</span><span class="p">:</span><span class="kc">False</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Source SHA256:'</span><span class="p">,</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">DATA</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="output"><pre>Source SHA256: 9adbd795bf63b2408ae08e6610a80d8c3475e7c1e2df37fa3759449aa04df6ee
+</pre></div>
+</section>
+<section id="cell-4">
+<p><a id="data-input"></a></p>
+<h2 id="1-load-and-inspect">1. Load and inspect｜一行不是一个像素，而是一张图</h2>
+<p><strong>原任务 T4–16 / Task:</strong> 从ZIP内存读取图像，展示，展平、减0.5并划分。 / Load PNGs from ZIP without extracting, inspect them, flatten, center by 0.5, and split.</p>
+<p>45行×40列=1800个像素。<code>reshape(50,-1)</code>后50行仍是50张图。原文件名首字母m映射1，否则映射0；这里只复现给定标签编码，并检查确实只有预期的m/f命名。</p>
+</section>
+<section id="cell-5">
+<div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">DATA</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">z</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span> <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="s1">'photos-bw/*.png'</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">'mf'</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+    <span class="n">images</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">s</span><span class="p">)),</span><span class="nb">format</span><span class="o">=</span><span class="s1">'png'</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">names</span><span class="p">])</span>
+<span class="n">Y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'m'</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">names</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="o">==</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">images</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">images</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">images</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">&lt;=</span><span class="mi">1</span>
+<span class="n">X</span><span class="o">=</span><span class="n">images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span>
+<span class="n">train_idx</span><span class="p">,</span><span class="n">test_idx</span><span class="o">=</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Y</span><span class="p">)),</span><span class="n">train_size</span><span class="o">=</span><span class="mf">.8</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="n">SPLIT_SEED</span><span class="p">)</span>
+<span class="n">trainY</span><span class="p">,</span><span class="n">testY</span><span class="o">=</span><span class="n">Y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="n">Y</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_idx</span><span class="p">)</span><span class="o">==</span><span class="mi">40</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_idx</span><span class="p">)</span><span class="o">==</span><span class="mi">10</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">train_idx</span><span class="p">)</span><span class="o">&amp;</span><span class="nb">set</span><span class="p">(</span><span class="n">test_idx</span><span class="p">)</span>
+<span class="n">folds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">StratifiedKFold</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="n">CV_SEED</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="n">trainY</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Image shape:'</span><span class="p">,</span><span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="s1">'X:'</span><span class="p">,</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="s1">'range:'</span><span class="p">,(</span><span class="n">X</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">X</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'split'</span><span class="p">:[</span><span class="s1">'all'</span><span class="p">,</span><span class="s1">'train'</span><span class="p">,</span><span class="s1">'test'</span><span class="p">],</span><span class="s1">'size'</span><span class="p">:[</span><span class="mi">50</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+    <span class="s1">'label 0'</span><span class="p">:[</span><span class="nb">sum</span><span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span><span class="nb">sum</span><span class="p">(</span><span class="n">trainY</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span><span class="nb">sum</span><span class="p">(</span><span class="n">testY</span><span class="o">==</span><span class="mi">0</span><span class="p">)],</span><span class="s1">'label 1'</span><span class="p">:[</span><span class="nb">sum</span><span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="mi">1</span><span class="p">),</span><span class="nb">sum</span><span class="p">(</span><span class="n">trainY</span><span class="o">==</span><span class="mi">1</span><span class="p">),</span><span class="nb">sum</span><span class="p">(</span><span class="n">testY</span><span class="o">==</span><span class="mi">1</span><span class="p">)]}))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">montage</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">shape</span><span class="p">,</span><span class="n">maxw</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">*</span><span class="n">shape</span><span class="p">);</span> <span class="n">rows</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="n">maxw</span><span class="p">));</span> <span class="n">width</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">maxw</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="n">canvas</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">rows</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">width</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="n">canvas</span><span class="p">[(</span><span class="n">j</span><span class="o">//</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:(</span><span class="n">j</span><span class="o">//</span><span class="n">width</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],(</span><span class="n">j</span><span class="o">%</span><span class="n">width</span><span class="p">)</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:(</span><span class="n">j</span><span class="o">%</span><span class="n">width</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">=</span><span class="n">img</span>
+    <span class="k">return</span> <span class="n">canvas</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">montage</span><span class="p">(</span><span class="n">images</span><span class="p">,(</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">)),</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Provided 50-image benchmark (ZIP order)'</span><span class="p">,</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Image columns'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Image rows'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut03-input-montage.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><pre>Image shape: (50, 45, 40) X: (50, 1800) range: (np.float64(-0.5), np.float64(0.5))
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>split</th>
+<th>size</th>
+<th>label 0</th>
+<th>label 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>all</td>
+<td>50</td>
+<td>20</td>
+<td>30</td>
+</tr>
+<tr>
+<th>1</th>
+<td>train</td>
+<td>40</td>
+<td>15</td>
+<td>25</td>
+</tr>
+<tr>
+<th>2</th>
+<td>test</td>
+<td>10</td>
+<td>5</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/3691cb146272b175.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 5" decoding="async" loading="lazy" src="../assets/3691cb146272b175.png"/></a></div>
+</section>
+<section id="cell-6">
+<p>固定减0.5不需要从测试数据估计任何量，所以可以在划分前做。这里不额外加标准化，以对应原任务；若以后加入估计均值/标准差的变换，必须放在每折训练的Pipeline里。</p>
+<p><strong>自查 / Check:</strong> 为什么不能裁剪后重新随机划分再比较？ / Why not randomly split again after cropping?
+<strong>答 / Answer:</strong> 差异会同时包含表示变化与样本难度变化，无法归因。 / The comparison would confound representation changes with different test examples.</p>
+</section>
+<section id="cell-7">
+<h2 id="2-logistic-regressionc">2. Logistic regression｜选C只看训练内部的验证表现</h2>
+<p><strong>原任务 T17–22 / Task:</strong> CV选择C，报告训练和测试准确率。 / Select C using CV and report train/test accuracy.</p>
+<p>代码先在40张训练图内部做5折，每折32训练/8验证；最佳C再用40张重训。测试10张从不参与选C。候选并列时GridSearchCV采用候选顺序中的第一个，这是执行约定，不是更小C一定更好的证明。</p>
+</section>
+<section id="cell-8">
+<div class="code-input"><div class="cell-label">In [3]</div><div class="highlight"><pre><span></span><span class="n">models</span><span class="o">=</span><span class="p">{};</span> <span class="n">rows</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_linear</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">features</span><span class="p">,</span><span class="n">kind</span><span class="p">):</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span><span class="n">solver</span><span class="o">=</span><span class="s1">'lbfgs'</span><span class="p">)</span> <span class="k">if</span> <span class="n">kind</span><span class="o">==</span><span class="s1">'LR'</span> <span class="k">else</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">=</span><span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,{</span><span class="s1">'C'</span><span class="p">:</span><span class="n">CS</span><span class="p">},</span><span class="n">cv</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span><span class="n">scoring</span><span class="o">=</span><span class="s1">'accuracy'</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">error_score</span><span class="o">=</span><span class="s1">'raise'</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="n">trainY</span><span class="p">);</span> <span class="n">models</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">search</span>
+    <span class="n">row</span><span class="o">=</span><span class="p">{</span><span class="s1">'model'</span><span class="p">:</span><span class="n">key</span><span class="p">,</span><span class="s1">'features'</span><span class="p">:</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s1">'C'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]),</span>
+         <span class="s1">'CV accuracy'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">best_score_</span><span class="p">),</span>
+         <span class="s1">'train accuracy'</span><span class="p">:</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">trainY</span><span class="p">,</span><span class="n">search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])),</span>
+         <span class="s1">'test accuracy'</span><span class="p">:</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">testY</span><span class="p">,</span><span class="n">search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]))}</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">);</span><span class="k">return</span> <span class="n">search</span>
+<span class="n">lr</span><span class="o">=</span><span class="n">fit_linear</span><span class="p">(</span><span class="s1">'LR full'</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="s1">'LR'</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span><span class="n">lr</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">'mean_test_score'</span><span class="p">],</span><span class="s1">'o-'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'C (inverse regularization strength)'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Mean 5-fold validation accuracy'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'LR: select C using training data only'</span><span class="p">,</span><span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.03</span><span class="p">));</span><span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut03-lr-cv.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>features</th>
+<th>C</th>
+<th>CV accuracy</th>
+<th>train accuracy</th>
+<th>test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>LR full</td>
+<td>1800</td>
+<td>0.1</td>
+<td>0.9</td>
+<td>0.95</td>
+<td>0.8</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/4f0f38f1036cf3c0.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 8" decoding="async" loading="lazy" src="../assets/4f0f38f1036cf3c0.png"/></a></div>
+</section>
+<section id="cell-9">
+<h2 id="3-weight-image-and-errors">3. Weight image and errors｜权重回答的是“哪些像素推动分数”</h2>
+<p><strong>原任务 T23–29 / Task:</strong> 显示w、正确/错分样本并解释。 / Visualize coefficients and correct/incorrect benchmark predictions.</p>
+<p><span class="arithmatex">\(f(x)=\sum_jw_jx_j+b\)</span>。正w配较亮像素，或负w配较暗像素，都能使给定标签1的分数增加。权重接近零表示在这条线性规则里直接贡献小，不等于这个区域在所有任务中都没有信息。相关像素之间会分摊权重；亮度、背景、裁剪、少量样本均可能影响规则。不能将某块红/蓝区域解释为人群身份的因果证据。</p>
+<p>原T16平均图用全部数据，只作展示，不进入训练；这里同样展示完整平均图并明确它不是模型输入变换。错误分组只表示与给定基准标签是否一致。</p>
+</section>
+<section id="cell-10">
+<div class="code-input"><div class="cell-label">In [4]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">show_weights</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="n">features</span><span class="p">,</span><span class="n">shape</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">w</span><span class="o">=</span><span class="n">search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">);</span> <span class="n">limit</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span><span class="nb">abs</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">axs</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mf">3.4</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">);</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Mean image: display only'</span><span class="p">)</span>
+    <span class="n">im</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span><span class="n">vmin</span><span class="o">=-</span><span class="n">limit</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">limit</span><span class="p">);</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="s1">' coefficients'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Pixel column'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Pixel row'</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">'Weight'</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span><span class="s1">'-'</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'-weights.png'</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="c1"># Algebra check: coefficient image and estimator produce the same score.</span>
+    <span class="n">direct</span><span class="o">=</span><span class="n">features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span><span class="nd">@search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">+</span><span class="n">search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">intercept_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">direct</span><span class="p">,</span><span class="n">search</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_errors</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="n">features</span><span class="p">,</span><span class="n">shape</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">pred</span><span class="o">=</span><span class="n">search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]);</span><span class="n">bad</span><span class="o">=</span><span class="n">pred</span><span class="o">!=</span><span class="n">testY</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">axs</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,[</span><span class="n">bad</span><span class="p">,</span><span class="o">~</span><span class="n">bad</span><span class="p">],[</span><span class="s1">'Disagreement with provided labels'</span><span class="p">,</span><span class="s1">'Agreement with provided labels'</span><span class="p">]):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">montage</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span><span class="o">+</span><span class="mf">.5</span><span class="p">,</span><span class="n">shape</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">, n=</span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span><span class="s1">'-'</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'-errors.png'</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">testY</span><span class="p">,</span><span class="n">pred</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">'given 0'</span><span class="p">,</span><span class="s1">'given 1'</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'predicted 0'</span><span class="p">,</span><span class="s1">'predicted 1'</span><span class="p">]))</span>
+<span class="n">show_weights</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span><span class="n">X</span><span class="p">,(</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="s1">'LR full'</span><span class="p">);</span><span class="n">show_errors</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span><span class="n">X</span><span class="p">,(</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="s1">'LR full'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/c7642cb3d121c484.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 10" decoding="async" loading="lazy" src="../assets/c7642cb3d121c484.png"/></a></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/d80dbe1c4ed025e4.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 10" decoding="async" loading="lazy" src="../assets/d80dbe1c4ed025e4.png"/></a></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>predicted 0</th>
+<th>predicted 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>given 0</th>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<th>given 1</th>
+<td>0</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-11">
+<p><strong>输出怎样读 / Reading:</strong> 先读混淆矩阵，再看错误组共有几张，最后提出能检验的原因，例如外围像素是否贡献较大。仅看一张错分图不能确定原因；后面的裁剪是一个干预比较。 / Read the confusion matrix and error count before forming hypotheses. A single misclassified image does not establish a cause; cropping provides a controlled representation comparison.</p>
+</section>
+<section id="cell-12">
+<h2 id="4-linear-svm">4. Linear SVM｜换目标，保持数据不变</h2>
+<p><strong>原任务 T30–40 / Task:</strong> 在相同划分上训练线性SVM，CV选C，比较准确率、权重和错误。 / Repeat with a linear SVM on the same split and compare accuracy, weights, and errors.</p>
+<p>LR的logistic loss与SVM的hinge loss对边界附近样本的处理不同，不能期望w完全一致。系数绝对大小也不能脱离目标函数与C直接比较。以下统一色图含义，分别标注各图的数值范围。</p>
+</section>
+<section id="cell-13">
+<div class="code-input"><div class="cell-label">In [5]</div><div class="highlight"><pre><span></span><span class="n">sv</span><span class="o">=</span><span class="n">fit_linear</span><span class="p">(</span><span class="s1">'SVM full'</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="s1">'SVM'</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">));</span><span class="n">show_weights</span><span class="p">(</span><span class="n">sv</span><span class="p">,</span><span class="n">X</span><span class="p">,(</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="s1">'SVM full'</span><span class="p">);</span><span class="n">show_errors</span><span class="p">(</span><span class="n">sv</span><span class="p">,</span><span class="n">X</span><span class="p">,(</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="s1">'SVM full'</span><span class="p">)</span>
+<span class="n">w1</span><span class="o">=</span><span class="n">lr</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">();</span><span class="n">w2</span><span class="o">=</span><span class="n">sv</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Coefficient-direction cosine:'</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">w1</span><span class="nd">@w2</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w2</span><span class="p">))))</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>features</th>
+<th>C</th>
+<th>CV accuracy</th>
+<th>train accuracy</th>
+<th>test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>LR full</td>
+<td>1800</td>
+<td>0.10</td>
+<td>0.9</td>
+<td>0.950</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>1</th>
+<td>SVM full</td>
+<td>1800</td>
+<td>0.01</td>
+<td>0.9</td>
+<td>0.925</td>
+<td>0.8</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/34afab8a3fc01baa.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 13" decoding="async" loading="lazy" src="../assets/34afab8a3fc01baa.png"/></a></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/24bcffdf7d07f853.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 13" decoding="async" loading="lazy" src="../assets/24bcffdf7d07f853.png"/></a></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>predicted 0</th>
+<th>predicted 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>given 0</th>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<th>given 1</th>
+<td>0</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Coefficient-direction cosine: 0.9439830620502164
+</pre></div>
+</section>
+<section id="cell-14">
+<p><strong>English:</strong> Different losses and regularization settings can produce different coefficient patterns. Similar performance does not imply identical decision rules.</p>
+</section>
+<section id="cell-15">
+<h2 id="5-crop-the-same-images">5. Crop the same images｜先查尺寸，再解释性能</h2>
+<p><strong>原任务 T41–63 / Task:</strong> 使用掩码、同一划分，重训LR/SVM并解释变化。 / Crop with the given mask, preserve the split, and repeat LR/SVM experiments.</p>
+<p>当前实际代码是 <code>[18:40,11:29]</code>，Python右端不含：高22、宽18，共396维。原T44仍说24×24、576维，对应被注释掉的旧掩码，不是本次实际输入。裁剪减少外围信息也可能丢掉有用信号，不预先写“必然更好”。</p>
+</section>
+<section id="cell-16">
+<div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="n">mask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">);</span><span class="n">mask</span><span class="p">[</span><span class="mi">18</span><span class="p">:</span><span class="mi">40</span><span class="p">,</span><span class="mi">11</span><span class="p">:</span><span class="mi">29</span><span class="p">]</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">Xm</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span><span class="n">mask</span><span class="o">.</span><span class="n">ravel</span><span class="p">()];</span> <span class="k">assert</span> <span class="n">Xm</span><span class="o">.</span><span class="n">shape</span><span class="o">==</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">396</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">Xm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span><span class="n">images</span><span class="p">[:,</span><span class="mi">18</span><span class="p">:</span><span class="mi">40</span><span class="p">,</span><span class="mi">11</span><span class="p">:</span><span class="mi">29</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">axs</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Given mask: rows 18:40, cols 11:29'</span><span class="p">,</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Column'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Row'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">montage</span><span class="p">(</span><span class="n">Xm</span><span class="o">+</span><span class="mf">.5</span><span class="p">,(</span><span class="mi">22</span><span class="p">,</span><span class="mi">18</span><span class="p">)),</span><span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'50 cropped images, same order'</span><span class="p">,</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Montage column'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Montage row'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut03-crop.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">lr_crop</span><span class="o">=</span><span class="n">fit_linear</span><span class="p">(</span><span class="s1">'LR crop'</span><span class="p">,</span><span class="n">Xm</span><span class="p">,</span><span class="s1">'LR'</span><span class="p">);</span><span class="n">sv_crop</span><span class="o">=</span><span class="n">fit_linear</span><span class="p">(</span><span class="s1">'SVM crop'</span><span class="p">,</span><span class="n">Xm</span><span class="p">,</span><span class="s1">'SVM'</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+<span class="n">show_weights</span><span class="p">(</span><span class="n">lr_crop</span><span class="p">,</span><span class="n">Xm</span><span class="p">,(</span><span class="mi">22</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span><span class="s1">'LR crop'</span><span class="p">);</span><span class="n">show_weights</span><span class="p">(</span><span class="n">sv_crop</span><span class="p">,</span><span class="n">Xm</span><span class="p">,(</span><span class="mi">22</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span><span class="s1">'SVM crop'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/259c9744039578e6.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 16" decoding="async" loading="lazy" src="../assets/259c9744039578e6.png"/></a></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>features</th>
+<th>C</th>
+<th>CV accuracy</th>
+<th>train accuracy</th>
+<th>test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>LR full</td>
+<td>1800</td>
+<td>0.10</td>
+<td>0.900</td>
+<td>0.950</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>1</th>
+<td>SVM full</td>
+<td>1800</td>
+<td>0.01</td>
+<td>0.900</td>
+<td>0.925</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>2</th>
+<td>LR crop</td>
+<td>396</td>
+<td>1.00</td>
+<td>0.850</td>
+<td>0.975</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>3</th>
+<td>SVM crop</td>
+<td>396</td>
+<td>10.00</td>
+<td>0.825</td>
+<td>1.000</td>
+<td>0.9</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/4ddfa314d0d27128.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 16" decoding="async" loading="lazy" src="../assets/4ddfa314d0d27128.png"/></a></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8209c68645ef7971.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 16" decoding="async" loading="lazy" src="../assets/8209c68645ef7971.png"/></a></div>
+</section>
+<section id="cell-17">
+<div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="n">mask_flat</span><span class="o">=</span><span class="n">mask</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'LR full'</span><span class="p">,</span><span class="s1">'SVM full'</span><span class="p">]:</span>
+    <span class="n">w</span><span class="o">=</span><span class="n">models</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">share</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="o">~</span><span class="n">mask_flat</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: fraction of squared coefficient magnitude outside crop = </span><span class="si">{</span><span class="n">share</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'LR'</span><span class="p">,</span><span class="s1">'SVM'</span><span class="p">]:</span>
+    <span class="n">full</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span><span class="o">==</span><span class="n">key</span><span class="o">+</span><span class="s1">' full'</span><span class="p">);</span><span class="n">crop</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span><span class="o">==</span><span class="n">key</span><span class="o">+</span><span class="s1">' crop'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: test accuracy change after cropping = </span><span class="si">{</span><span class="n">crop</span><span class="p">[</span><span class="s2">"test accuracy"</span><span class="p">]</span><span class="o">-</span><span class="n">full</span><span class="p">[</span><span class="s2">"test accuracy"</span><span class="p">]</span><span class="si">:</span><span class="s1">+.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><pre>LR full: fraction of squared coefficient magnitude outside crop = 0.952
+SVM full: fraction of squared coefficient magnitude outside crop = 0.963
+LR: test accuracy change after cropping = +0.000
+SVM: test accuracy change after cropping = +0.100
+</pre></div>
+</section>
+<section id="cell-18">
+<p>这个能量比例只是权重分布的描述，不是“某区域解释了多少正确率”。判断哪种表示更好，应同时查看CV、保留测试及小样本波动；如果看完测试再挑方法，这个测试就成了探索依据，不能再称完全独立的最终证据。</p>
+<p><strong>变式 / Transfer:</strong> 若改用 <code>[17:41,8:32]</code>，输入几维？能沿用396维权重吗？ / What dimension follows from this alternative crop, and can 396-dimensional weights be reused?
+<strong>答 / Answer:</strong> 24×24=576维；不能，特征坐标和模型需要重新匹配并训练。 / 576 dimensions; the coordinates and model must be rebuilt and refitted.</p>
+</section>
+<section id="cell-19">
+<h2 id="6-custom-kernelsvm">6. Custom kernel｜先用两个小向量检查，再接入SVM</h2>
+<p><strong>原任务 T64–68 / Task:</strong> 实现 <span class="arithmatex">\(k(x,y)=\exp(-\alpha\sum_j|x_j-y_j|)\)</span>；外层试α、内层CV选C，比较结果。 / Implement the L1 kernel, select alpha and C by training-only CV, and compare results.</p>
+<p>例如 x=(0,1)、y=(2,1)，L1距离=2，α=0.5时核值 <span class="arithmatex">\(e^{-1}\approx0.3679\)</span>。训练输入(A,A)给40×40，预测输入(B,A)给10×40。不是写一个只处理单个向量的函数就够。</p>
+<p>原文字称它总比RBF衰减慢，需要限定距离尺度：一维同系数时 d&gt;1 有 <span class="arithmatex">\(e^{-d}&gt;e^{-d^2}\)</span>，但0&lt;d&lt;1时反过来。不同维度、尺度、α/γ不能直接套这个比较。</p>
+</section>
+<section id="cell-20">
+<div class="code-input"><div class="cell-label">In [8]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">l1_kernel</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+    <span class="n">A</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">A</span><span class="p">);</span><span class="n">B</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span><span class="o">!=</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">B</span><span class="o">.</span><span class="n">ndim</span><span class="o">!=</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">alpha</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Two 2D matrices with matching feature counts and positive alpha are required.'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="o">*</span><span class="n">cdist</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s1">'cityblock'</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">l1_kernel</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],[[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">K</span><span class="o">=</span><span class="n">l1_kernel</span><span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="n">Xm</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="mf">.01</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="o">==</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">K</span><span class="p">,</span><span class="n">K</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&gt;-</span><span class="mf">1e-9</span> <span class="c1"># Implementation check, not a general proof.</span>
+<span class="k">assert</span> <span class="n">l1_kernel</span><span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span><span class="n">Xm</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="o">==</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">kernel_runs</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">ALPHAS</span><span class="p">:</span>
+    <span class="c1"># Binding alpha in the default argument avoids the late-binding loop bug.</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="k">lambda</span> <span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">:</span><span class="n">l1_kernel</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">=</span><span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">),{</span><span class="s1">'C'</span><span class="p">:</span><span class="n">CS</span><span class="p">},</span><span class="n">cv</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span><span class="n">scoring</span><span class="o">=</span><span class="s1">'accuracy'</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">error_score</span><span class="o">=</span><span class="s1">'raise'</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span><span class="n">trainY</span><span class="p">)</span>
+    <span class="n">kernel_runs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">alpha</span><span class="p">,</span><span class="n">search</span><span class="p">))</span>
+<span class="n">best_alpha</span><span class="p">,</span><span class="n">best_kernel</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">kernel_runs</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">'alpha'</span><span class="p">:</span><span class="n">a</span><span class="p">,</span><span class="s1">'best C'</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">'C'</span><span class="p">],</span><span class="s1">'CV accuracy'</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">best_score_</span><span class="p">}</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="n">kernel_runs</span><span class="p">]))</span>
+<span class="n">kernel_row</span><span class="o">=</span><span class="p">{</span><span class="s1">'model'</span><span class="p">:</span><span class="s1">'L1 SVM crop'</span><span class="p">,</span><span class="s1">'features'</span><span class="p">:</span><span class="mi">396</span><span class="p">,</span><span class="s1">'C'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">best_kernel</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]),</span>
+    <span class="s1">'CV accuracy'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">best_kernel</span><span class="o">.</span><span class="n">best_score_</span><span class="p">),</span><span class="s1">'train accuracy'</span><span class="p">:</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">trainY</span><span class="p">,</span><span class="n">best_kernel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])),</span>
+    <span class="s1">'test accuracy'</span><span class="p">:</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">testY</span><span class="p">,</span><span class="n">best_kernel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]))}</span>
+<span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kernel_row</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Selected alpha:'</span><span class="p">,</span><span class="n">best_alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>alpha</th>
+<th>best C</th>
+<th>CV accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0.001</td>
+<td>100.000</td>
+<td>0.850</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0.010</td>
+<td>10.000</td>
+<td>0.875</td>
+</tr>
+<tr>
+<th>2</th>
+<td>0.100</td>
+<td>10.000</td>
+<td>0.700</td>
+</tr>
+<tr>
+<th>3</th>
+<td>1.000</td>
+<td>0.001</td>
+<td>0.625</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Selected alpha: 0.01
+</pre></div>
+</section>
+<section id="cell-21">
+<p>同一CV折反复比较α和C是训练内部调参，本身允许；选出的最高CV分数会带有选择乐观性，不能把它当无偏泛化估计。<code>SVC</code>的非线性核没有可直接reshape为输入图像的普通w；不能把线性权重图代码硬套上去。</p>
+</section>
+<section id="cell-22">
+<div class="code-input"><div class="cell-label">In [9]</div><div class="highlight"><pre><span></span><span class="n">comparison</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">);</span><span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mf">4.5</span><span class="p">),</span><span class="n">layout</span><span class="o">=</span><span class="s1">'constrained'</span><span class="p">)</span>
+<span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">));</span><span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">pos</span><span class="o">-</span><span class="mf">.14</span><span class="p">,</span><span class="n">comparison</span><span class="p">[</span><span class="s1">'CV accuracy'</span><span class="p">],</span><span class="n">height</span><span class="o">=</span><span class="mf">.27</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Training-only CV'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">pos</span><span class="o">+</span><span class="mf">.14</span><span class="p">,</span><span class="n">comparison</span><span class="p">[</span><span class="s1">'test accuracy'</span><span class="p">],</span><span class="n">height</span><span class="o">=</span><span class="mf">.27</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Held-out split (10 images)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span><span class="n">yticklabels</span><span class="o">=</span><span class="n">comparison</span><span class="p">[</span><span class="s1">'model'</span><span class="p">],</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Accuracy against provided labels'</span><span class="p">,</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.03</span><span class="p">),</span><span class="n">title</span><span class="o">=</span><span class="s1">'Same split; different models and representations'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'upper center'</span><span class="p">,</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mf">.16</span><span class="p">),</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ASSETS</span><span class="o">/</span><span class="s1">'tut03-comparison.png'</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">baseline</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'test accuracy'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">'model'</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'LR crop'</span><span class="p">,</span><span class="s1">'SVM crop'</span><span class="p">])</span>
+<span class="n">delta</span><span class="o">=</span><span class="n">kernel_row</span><span class="p">[</span><span class="s1">'test accuracy'</span><span class="p">]</span><span class="o">-</span><span class="n">baseline</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'L1 kernel minus best cropped linear test accuracy: </span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s1">+.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Interpret only this provided benchmark and split; one test image changes accuracy by 0.10.'</span><span class="p">)</span>
+<span class="n">result</span><span class="o">=</span><span class="p">{</span><span class="s1">'source_sha256'</span><span class="p">:</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">DATA</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span><span class="s1">'image_shape'</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="s1">'crop_shape'</span><span class="p">:[</span><span class="mi">22</span><span class="p">,</span><span class="mi">18</span><span class="p">],</span>
+        <span class="s1">'train_indices'</span><span class="p">:</span><span class="n">train_idx</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="s1">'test_indices'</span><span class="p">:</span><span class="n">test_idx</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="s1">'train_seed'</span><span class="p">:</span><span class="n">SPLIT_SEED</span><span class="p">,</span><span class="s1">'cv_seed'</span><span class="p">:</span><span class="n">CV_SEED</span><span class="p">,</span>
+        <span class="s1">'C_candidates'</span><span class="p">:</span><span class="n">CS</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="s1">'alpha_candidates'</span><span class="p">:</span><span class="n">ALPHAS</span><span class="p">,</span><span class="s1">'selected_alpha'</span><span class="p">:</span><span class="n">best_alpha</span><span class="p">,</span><span class="s1">'models'</span><span class="p">:</span><span class="n">rows</span><span class="p">,</span>
+        <span class="s1">'all_checks_passed'</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">'scope'</span><span class="p">:</span><span class="s1">'Provided filename labels, not a claim about individual identity.'</span><span class="p">}</span>
+<span class="p">(</span><span class="n">NOTES</span><span class="o">/</span><span class="s1">'tutorial03-results.json'</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>features</th>
+<th>C</th>
+<th>CV accuracy</th>
+<th>train accuracy</th>
+<th>test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>LR full</td>
+<td>1800</td>
+<td>0.10</td>
+<td>0.900</td>
+<td>0.950</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>1</th>
+<td>SVM full</td>
+<td>1800</td>
+<td>0.01</td>
+<td>0.900</td>
+<td>0.925</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>2</th>
+<td>LR crop</td>
+<td>396</td>
+<td>1.00</td>
+<td>0.850</td>
+<td>0.975</td>
+<td>0.8</td>
+</tr>
+<tr>
+<th>3</th>
+<td>SVM crop</td>
+<td>396</td>
+<td>10.00</td>
+<td>0.825</td>
+<td>1.000</td>
+<td>0.9</td>
+</tr>
+<tr>
+<th>4</th>
+<td>L1 SVM crop</td>
+<td>396</td>
+<td>10.00</td>
+<td>0.875</td>
+<td>1.000</td>
+<td>0.9</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/60d99ff0d0d36551.png" rel="noopener" target="_blank"><img alt="Executed Tutorial03 figure, cell 22" decoding="async" loading="lazy" src="../assets/60d99ff0d0d36551.png"/></a></div>
+<div class="output"><pre>L1 kernel minus best cropped linear test accuracy: +0.000
+Interpret only this provided benchmark and split; one test image changes accuracy by 0.10.
+</pre></div>
+<div class="output"><pre>1789</pre></div>
+</section>
+<section id="cell-23">
+<h2 id="interpreting-this-run">本轮结果解读 / Interpreting this run</h2>
+<p>保存结果后出现的单独整数是 <code>write_text</code> 返回的写入字符数，不是模型得分。 / The standalone integer after saving is the character count returned by <code>write_text</code>, not a model score.</p>
+<p>完整图像的LR与线性SVM在10张测试图上均为0.80（2张与给定标签不一致），两组系数方向余弦约0.944，说明规则相似但并不相同。外围被裁掉部分占完整图系数平方和约95.2%/96.3%；它只描述当前权重分布，不是因果重要性比例。</p>
+<p>裁剪后LR测试仍0.80、SVM为0.90，但其CV分别从0.90降到0.85/0.825。这个不一致提醒我们：单个10张测试划分波动很大，不能只凭多分对一张就宣布裁剪普遍更优。L1核选择α=0.01、C=10，CV=0.875、测试0.90，与裁剪线性SVM测试相同；没有在这份测试上进一步提高。</p>
+<p><strong>English:</strong> Full-image LR and linear SVM both scored 0.80 on the ten-image split. Cropped LR scored 0.80 and cropped linear SVM 0.90, despite lower CV scores. The selected L1 kernel (alpha=0.01, C=10) scored 0.875 in CV and 0.90 on the held-out split, tying the cropped linear SVM. These small-sample results do not establish a universally better representation or a causal explanation for errors.</p>
+<p>这些数值对应本次数据哈希、固定划分与候选网格。以后改参数并重跑，必须重新核对这段解释与输出，不能保留旧结论。</p>
+</section>
+<section id="cell-24">
+<h2 id="7-independent-explanation-and-source-coverage">7. Independent explanation and source coverage｜合上代码，说清实验</h2>
+<ol>
+<li><strong>How are 45×40 pixels converted to the model input? / 怎样转成输入？</strong> 每图按一致顺序展平为1800维，一行一图；训练预测顺序相同。 / Flatten consistently into 1800 features per image.</li>
+<li><strong>Why is C selected without test labels? / 为什么选C不看测试标签？</strong> 防止选择过程适应测试集。 / To keep model selection from adapting to the held-out evaluation set.</li>
+<li><strong>Does a high coefficient identify a causal property of a person? / 大权重能说明人物的因果属性吗？</strong> 不能；它只是当前表示与模型对基准标签的统计规则。 / No; it describes this fitted rule on the benchmark representation.</li>
+<li><strong>If the L1 model ties the linear model on ten images, is it superior? / 10张上平局能证明优越吗？</strong> 不能；需更多独立证据，也要比较复杂度。 / No; more independent evidence and complexity considerations are needed.</li>
+</ol>
+<p>参考<a href="https://crazyshout.github.io/micro-course/?lesson=ml12">已有微课</a>与Lecture3末尾的卡片入口。先能解释实验中的每个选择，再刷卡记住原则。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原单元</th>
+<th>本笔记位置与处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1–3</td>
+<td>开篇、§0：身份栏不代填；保留原种子</td>
+</tr>
+<tr>
+<td>4–16</td>
+<td>§1：ZIP、尺寸、全部图、展平、中心化、固定划分；平均图仅展示</td>
+</tr>
+<tr>
+<td>17–22</td>
+<td>§2：LR、CV和训练/测试输出</td>
+</tr>
+<tr>
+<td>23–29</td>
+<td>§3：权重、错分/正确组、限制与待验证原因</td>
+</tr>
+<tr>
+<td>30–40</td>
+<td>§4：SVM同条件比较、权重方向与错误</td>
+</tr>
+<tr>
+<td>41–50</td>
+<td>§5：实际22×18掩码、396维、同一索引、平均图</td>
+</tr>
+<tr>
+<td>51–63</td>
+<td>§5：裁剪LR/SVM、性能、权重、独立变式</td>
+</tr>
+<tr>
+<td>64–68</td>
+<td>§6：L1核、手算/形状检查、α/C选择、实际比较；空单元无需占位</td>
+</tr>
+</tbody>
+</table></div>
+<p>本参考笔记的结果来自本轮执行。原课没有给出一套已完成的最佳参数答案，不能将这里的结果称为教师标准答案。原始文件、数据和卡片没有被改写。</p>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

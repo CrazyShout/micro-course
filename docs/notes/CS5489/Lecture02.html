@@ -1,0 +1,762 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 2 · Bayes Classifier &amp; Naive Bayes Classifier · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-2-bayes-classifier-naive-bayes-classifier">Lecture 2 · Bayes Classifier &amp; Naive Bayes Classifier</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=25">A4 打印版 · 第 25–46 页</a>　图可点击放大。</p>
+<h1 id="_1">从花朵测量到文本分类：老师这一讲的完整路线</h1>
+<p>本地样板 · 2026-09-22 · 依据当前 Canvas 的 Lecture2a、Lecture2b 编写。</p>
+<p><a href="Tutorial02.html">配套 Tutorial 2</a> · <a href="Assignment01.html">Assignment 1 方法指南</a> · <a href="index.html">使用与运行说明</a></p>
+<p><strong>基础复习（可跳过）：</strong> <a href="../foundations/MathForML.html#foundation-nav">按卡点选择：读公式与图像、概率、对数、导数、矩阵</a>。从四则运算和简单方程开始，每项附自查与图解；需要时再读，补完可返回本讲具体段落。</p>
+<p>这份讲义把老师同一讲中的概念、公式、图和代码串起来。英文标题沿用原课，主要解释使用中文；每节的 <strong>English takeaway</strong> 是整理后的英文表达。标为“补充解释”的段落用于补台阶，标为“原课核对”的内容说明课件或代码约定。这里没有课堂录音，因此不推测老师口头强调过什么。</p>
+<p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2a Notebook</span> / <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">PDF</span>，<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2b Notebook</span> / <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">PDF</span>。下文 A/B 分别代表这两份文件；cell 从文件第一个单元开始计数，包含 Markdown 和代码，不是执行次数 In[n]。PDF 页码从第一页计数。</p>
+<p><a id="intro"></a></p>
+<h2 id="_2">本讲先解决什么问题？</h2>
+<p>老师先给两种任务：收到一封邮件，判断是不是垃圾邮件；测量一朵鸢尾花，判断是哪一种。我们先沿用花朵，因为两个长度可以直接画出来；随后把同一套概率方法用于文字。</p>
+<p>植物园已经记录一些花的种类、花瓣长度和萼片宽度。新来一朵花，我们能测长度，但不知道种类。训练数据中的标签是过去已知的信息；预测时不能偷看新花的标签。要做的是从已有记录学一个规则，输入测量值，输出类别。</p>
+<p>上一讲的 Python、数组和概率在这里各有工作：数组保存记录，概率表达不确定性，程序把“估计参数”和“预测新样本”重复执行。本讲的路线由原课 Outline 和例子归纳：</p>
+<blockquote>
+<p>A：认识分类任务 → 用先验和类条件分布描述数据 → 从数据估计参数 → 用 Bayes 规则作决定。<br/>
+B：把一个测量推广到多个测量 → 检查条件独立假设 → 用完整协方差建模 → 把邮件变成向量 → 选择适合文字表示的 NB 模型。</p>
+</blockquote>
+<p>学完应能：解释 prior / likelihood / posterior 的区别；推导类别比例与高斯均值、方差的 MLE；手算一个 Bayes 决策；说明 NB 的条件独立和完整高斯的区别；把布尔、计数、TF-IDF 表示对应到实际代码；区分分类表现与模型假设是否成立。</p>
+<h3 id="_3">阅读地图与优先级</h3>
+<p>“核心必会”是依据当前课程结构和任务给出的学习建议，不代表教师公布的必考清单。难度按从基础起步的学习者评估。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>顺序与主题</th>
+<th>学习优先级</th>
+<th>难度：难在哪里</th>
+<th>掌握要求</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#classification">分类与生成模型</a></td>
+<td>核心必会</td>
+<td>低：区分输入与标签</td>
+<td>解释任务和两部分概率模型</td>
+<td>A4–12</td>
+</tr>
+<tr>
+<td><a href="#prior-mle">类别先验的 MLE</a></td>
+<td>核心必会</td>
+<td>中：从频数走到似然与求导</td>
+<td>推导、计算、核对计数</td>
+<td>A13–17</td>
+</tr>
+<tr>
+<td><a href="#gaussian-mle">高斯类条件与 MLE</a></td>
+<td>核心必会</td>
+<td>高：密度、对数、方差求导</td>
+<td>解释分布并推均值/方差</td>
+<td>A18–31；历史 H1 Ex2 为换分布推导</td>
+</tr>
+<tr>
+<td><a href="#bayes-rule">Bayes 决策与 log 分数</a></td>
+<td>核心必会</td>
+<td>中：条件方向与归一化</td>
+<td>手算类别和后验，说明适用条件</td>
+<td>A32–48</td>
+</tr>
+<tr>
+<td><a href="#gaussian-nb">Gaussian NB 与测试</a></td>
+<td>核心必会</td>
+<td>中：给定类别后的独立</td>
+<td>解释、计算、识别代码各步</td>
+<td>B3–32</td>
+</tr>
+<tr>
+<td><a href="#full-gaussian">完整协方差高斯</a></td>
+<td>核心必会</td>
+<td>高：矩阵、距离、分布宽度</td>
+<td>解释相关性，读懂得分与实现</td>
+<td>B33–54</td>
+</tr>
+<tr>
+<td><a href="#bow">词袋与 Bernoulli NB</a></td>
+<td>核心必会</td>
+<td>中：文档数与词次数不同</td>
+<td>建表示、手算出现/未出现证据</td>
+<td>B55–79；Tutorial 2</td>
+</tr>
+<tr>
+<td><a href="#smoothing">平滑、词解释、TF-IDF、Multinomial</a></td>
+<td>核心必会</td>
+<td>中：分母与特征语义</td>
+<td>计算、比较、避免数据泄漏</td>
+<td>B80–97；Tutorial 2；Assignment 1</td>
+</tr>
+<tr>
+<td><a href="#extensions">其他预处理和词表示</a></td>
+<td>常规掌握</td>
+<td>低：知道解决什么问题</td>
+<td>解释用途与限制</td>
+<td>B99–100</td>
+</tr>
+<tr>
+<td>条件高斯分块证明、LDA 后验推导</td>
+<td>二读拓展</td>
+<td>高：配方与矩阵代数</td>
+<td>本讲先认出假设差别，证明后读</td>
+<td>历史 H1 Ex3–4，非当前 Lecture 2 明列任务</td>
+</tr>
+</tbody>
+</table></div>
+<p>先修只需补够本讲：乘法法则、条件概率、和为 1；自然对数把乘积变成和；一元导数的链式法则；向量、转置、矩阵乘法。正文会就近解释，并在需要的地方链接<a href="../foundations/MathForML.html#foundation-nav">可选数学补课</a>。课内主题也可沿<a href="https://crazyshout.github.io/micro-course/?lesson=ml05">概率微课</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml06">参数估计微课</a>复习。</p>
+<h2 id="part-a-bayes-classifier">Part A · Bayes Classifier</h2>
+<p><a id="classification"></a></p>
+<h2 id="1-classification-examples-general-classification-problem">1. Classification Examples / General Classification Problem｜先认清一条记录</h2>
+<p><strong>原课：A4–8，PDF 1–3页。</strong></p>
+<p>可选补课：看不懂下标、列向量或数据形状时，先读<a href="../foundations/MathForML.html#symbols-functions">符号与函数</a>或<a href="../foundations/MathForML.html#vectors-covariance">一条记录怎样变成向量</a>。</p>
+<p>老师用 petal length（花瓣长度）和 sepal width（萼片宽度）作特征。不要因为都叫“长度”就把 petal 和 sepal 认成同一个部位。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/30fa6223fd316493.jpg" rel="noopener" target="_blank"><img alt="老师原图：花瓣与萼片的部位标识" decoding="async" loading="lazy" src="../assets/30fa6223fd316493.jpg"/></a></p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>老师给的类别例图</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/92eb7ac5aa740623.jpg" rel="noopener" target="_blank"><img alt="原图：Iris versicolor" decoding="async" loading="lazy" src="../assets/92eb7ac5aa740623.jpg"/></a></td>
+<td><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/d646b268f22e576c.jpg" rel="noopener" target="_blank"><img alt="原图：Iris virginica" decoding="async" loading="lazy" src="../assets/d646b268f22e576c.jpg"/></a></td>
+</tr>
+<tr>
+<td>Versicolor，标签 1</td>
+<td>Virginica，标签 2</td>
+</tr>
+</tbody>
+</table></div>
+<p>图片原样来自 A5 引用的 imgs 文件。原 PDF 第2页的这三张图片在导出时缺失，本讲义使用仍保留的原图恢复上下文。</p>
+<p>数学上，一朵花用列向量 <span class="arithmatex">\(\mathbf{x}=(x_1,x_2)^T\in\mathbb{R}^2\)</span> 表示；<span class="arithmatex">\(x_1\)</span> 是花瓣长度，<span class="arithmatex">\(x_2\)</span> 是萼片宽度，单位均为厘米。类别 <span class="arithmatex">\(y\in\mathcal{Y}=\{1,2\}\)</span>，这些整数是名字，不表示 Virginica 比 Versicolor“大一倍”。</p>
+<p>代码把很多样本堆在矩阵里：X 的每一行是一朵花，每一列是一项测量。因此 X.shape=(100,2)，y.shape=(100,)。单个数学向量习惯写成列，与程序按行存样本并不矛盾。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/190e5812e6c619e8.png" rel="noopener" target="_blank"><img alt="按原 iris2.csv 重绘：每个点是一朵花，形状和颜色共同表示种类" decoding="async" loading="lazy" src="../assets/190e5812e6c619e8.png"/></a></p>
+<p><em>图：来自原100条记录，保留原坐标与厘米单位，重新绘制便于辨认；不是人为生成的花朵数据。</em></p>
+<p>两类的平均位置不同，但点有重叠。一个简单分界可能分对大多数，仍不能仅凭位置远近排除不确定性。这正是后面需要概率模型的原因。</p>
+<p><strong>English takeaway — 整理后的表达：</strong> A feature vector describes the measurements of one object. A class label identifies its category. Classification predicts the label of a new object from its observed features.</p>
+<p><a id="generative"></a></p>
+<h2 id="2-probabilistic-model-class-model">2. Probabilistic model / Class model｜把“这朵花从哪里来”分成两部分</h2>
+<p><strong>原课：A9–12，PDF 3–4页。核心必会；难度低；要求能解释模型分解。</strong></p>
+<p>可选补课：如果竖线后的条件容易混淆，先用<a href="../foundations/MathForML.html#conditional-probability">100封邮件的人数表</a>把分母看清楚。</p>
+<p>老师的 generative model（生成式模型）先描述类别出现的比例，再描述每类产生怎样的特征：</p>
+<div class="arithmatex">\[p(\mathbf{x},y)=p(y)\,p(\mathbf{x}\mid y).\]</div>
+<p>这里的“生成”是概率建模方式，并不要求程序真的画出一朵花。</p>
+<ul>
+<li><span class="arithmatex">\(p(y=c)\)</span> 是 <strong>prior probability（先验概率）</strong>：还没看这朵花的测量值，类别 c 有多常见。</li>
+<li><span class="arithmatex">\(p(\mathbf{x}\mid y=c)\)</span> 是 <strong>class-conditional distribution，CCD（类条件分布）</strong>：已经知道种类是 c 时，怎样的测量值比较常见。</li>
+<li>预测真正需要的是 <strong>posterior probability（后验概率）</strong> <span class="arithmatex">\(p(y=c\mid\mathbf{x})\)</span>：已经看见测量值之后，各种类有多可信。</li>
+</ul>
+<p>先验不是“随便猜一个数”，类条件分布也不是后验。它们的已知条件不同，就像“已知是猫，观察到胡子的可能性”和“观察到胡子，是猫的可能性”不能直接调换；后者还得考虑世界上有多少其他长胡子的对象。这个类比只帮助辨认条件方向，实际课题仍是花朵与邮件。</p>
+<p>A12 假设两类比例为 0.4、0.6，设参数 <span class="arithmatex">\(\pi=p(y=1)\)</span>，可写：</p>
+<div class="arithmatex">\[p(y)=\pi^{\mathbb{1}(y=1)}(1-\pi)^{\mathbb{1}(y=2)}.\]</div>
+<p>指示函数 <span class="arithmatex">\(\mathbb{1}(q)\)</span> 在条件 q 成立时取1，否则取0。若 y=1，式子留下 <span class="arithmatex">\(\pi\)</span>；若 y=2，留下 <span class="arithmatex">\(1-\pi\)</span>。这里的 <span class="arithmatex">\(\pi\)</span> 是待估先验参数；后面高斯常数中的 <span class="arithmatex">\(2\pi\)</span> 使用的是圆周率，含义由上下文区分。</p>
+<p><strong>English takeaway：</strong> A generative classifier models the class prior and the class-conditional distribution. Bayes' rule reverses the conditioning to obtain the posterior needed for prediction.</p>
+<p><a id="prior-mle"></a></p>
+<h2 id="3-learn-from-our-data">3. Learn from our data｜为什么类别比例是一个最大似然解？</h2>
+<p><strong>原课：A13–17，PDF 4–5页。核心必会；难度中；要求推导并核对计数。</strong></p>
+<p>可选补课：<a href="../foundations/MathForML.html#log-products">乘积为何能变成对数之和</a> · <a href="../foundations/MathForML.html#maxima-mle">从求导走到最大值</a>。补完后可直接返回这一节。</p>
+<p>假设训练标签 <span class="arithmatex">\(y_1,\ldots,y_N\)</span> 独立采自同一类别分布。数出标签1有 <span class="arithmatex">\(N_1\)</span> 个、标签2有 <span class="arithmatex">\(N_2\)</span> 个，<span class="arithmatex">\(N=N_1+N_2\)</span>。似然把<strong>已经看到的数据固定</strong>，让参数变化：</p>
+<div class="arithmatex">\[L(\pi)=\prod_{i=1}^N p(y_i;\pi)=\pi^{N_1}(1-\pi)^{N_2}.\]</div>
+<p>Maximum Likelihood Estimation，<strong>MLE（最大似然估计）</strong>选择让这些观测最容易出现的参数。它不是“给参数本身计算一个后验”。</p>
+<p>对数在正数上单调递增，不改变最大值的位置，并把乘积改成好处理的加法：</p>
+<div class="arithmatex">\[\ell(\pi)=\log L(\pi)=N_1\log\pi+N_2\log(1-\pi).\]</div>
+<p>两类都出现时，在 <span class="arithmatex">\(0&lt;\pi&lt;1\)</span> 中求导：</p>
+<div class="arithmatex">\[\frac{d\ell}{d\pi}=\frac{N_1}{\pi}-\frac{N_2}{1-\pi}=0
+\quad\Longrightarrow\quad N_1(1-\pi)=N_2\pi
+\quad\Longrightarrow\quad\hat\pi=\frac{N_1}{N}.\]</div>
+<p><strong>补充解释：为什么是最大值？</strong> 二阶导数为 <span class="arithmatex">\(-N_1/\pi^2-N_2/(1-\pi)^2&lt;0\)</span>，函数向下弯。若某类完全没有出现，最大值在0或1的边界；不能继续把会除以零的内点推导硬套过去。</p>
+<p>教学手算：10条标签中4条为1、6条为2，得到 <span class="arithmatex">\(\hat\pi=0.4\)</span>。原 iris2.csv 两类各50条，因此 A17 的代码得到 [0.5,0.5]。<strong>A12的0.4/0.6是说明先验的例子，A17的0.5/0.5才是该文件的经验比例。</strong></p>
+<p>多类时同理：<span class="arithmatex">\(\hat p(y=c)=N_c/N\)</span>。若训练集被人为按类抽样，这个比例反映抽样结果，不自动等于真实部署人群的类别比例。</p>
+<p><strong>English takeaway：</strong> Under independent sampling, the MLE of a class prior is its relative frequency in the training sample. An empirical training prior may differ from the deployment prior if sampling changes class proportions.</p>
+<p><a id="observation"></a></p>
+<h2 id="4-observation-model-gaussian-distribution">4. Observation model / Gaussian distribution｜从直方图到一条密度曲线</h2>
+<p><strong>原课：A18–25，PDF 5–7页。核心必会；难度中；要求区分概率、频数和密度。</strong></p>
+<p>可选补课：<a href="../foundations/MathForML.html#density-area">密度高度与区间面积</a> · <a href="../foundations/MathForML.html#mean-variance">均值、方差与标准差</a>。</p>
+<p>先只用花瓣长度 x。把两种花分别画直方图，可看到它们常出现在哪些长度附近。直接靠很多小柱子描述分布会比较零碎，于是老师选择高斯分布：</p>
+<div class="arithmatex">\[p(x\mid y=c)=\frac{1}{\sqrt{2\pi\sigma_c^2}}
+\exp\!\left[-\frac{(x-\mu_c)^2}{2\sigma_c^2}\right].\]</div>
+<p><span class="arithmatex">\(\mu_c\)</span> 是类别 c 的平均长度，单位厘米；<span class="arithmatex">\(\sigma_c\)</span> 是标准差，单位厘米；<span class="arithmatex">\(\sigma_c^2\)</span> 是方差，单位平方厘米。每个类别有自己的参数。均值控制山峰位置，标准差控制展开宽度；前面的系数保证曲线下的面积为1。</p>
+<p>连续变量的 <span class="arithmatex">\(p(x\mid c)\)</span> 是 <strong>density（密度）</strong>，单位为1/厘米。曲线高度不是“恰好这个长度的概率”，高度也不必小于1；一个长度区间的概率由区间下的面积给出。</p>
+<p><strong>原课核对：</strong> A20 没有设置 density=True，柱高实际是每箱计数，尽管纵轴标成了 p(x|y)。A30 才将直方图按密度归一化后与高斯曲线比较。读图要看代码如何统计，不能只看纵轴文字。</p>
+<p>A24 用均值2.3、标准差1.5演示曲线；这是高斯形状示例，不是从 iris 数据估出的参数。一维正态分布在均值两侧两个标准差内约有95.45%的概率质量，原图“95%”是近似，不能把这个数直接搬到二维椭圆。</p>
+<p><strong>English takeaway：</strong> A Gaussian class-conditional model has a mean and variance for each class. For a continuous feature, the density height is not a point probability; probabilities are areas over intervals.</p>
+<p><a id="gaussian-mle"></a></p>
+<h2 id="5-mle-for-gaussian">5. MLE for Gaussian｜均值和方差不是凭经验塞进公式</h2>
+<p><strong>原课：A26–31，PDF 7–9页。核心必会；难度高；要求能推导、计算、解释分母。</strong></p>
+<p>可选补课：下面用到<a href="../foundations/MathForML.html#derivative-rules">求导规则</a>、<a href="../foundations/MathForML.html#chain-rule">链式法则</a>和<a href="../foundations/MathForML.html#partial-derivatives">偏导时固定哪个变量</a>，每项都有分步算例。</p>
+<p>这一小节的 <span class="arithmatex">\(\{x_i\}_{i=1}^N\)</span> <strong>都是某一个类别的观测</strong>。这里 N 是该类样本数，不是前面两类相加的总数；以下先沿用原课记法，涉及多类时写 <span class="arithmatex">\(N_c\)</span>。</p>
+<p>在独立同分布、正方差的高斯模型下：</p>
+<div class="arithmatex">\[\ell(\mu,\sigma^2)=-\frac{N}{2}\log(2\pi\sigma^2)
+-\frac{1}{2\sigma^2}\sum_{i=1}^N(x_i-\mu)^2.\]</div>
+<p>先固定方差，对均值求导。平方残差外层求导后，还要乘内部 <span class="arithmatex">\(x_i-\mu\)</span> 对 <span class="arithmatex">\(\mu\)</span> 的导数 −1，两个负号抵消：</p>
+<div class="arithmatex">\[\frac{\partial\ell}{\partial\mu}
+=\frac{1}{\sigma^2}\sum_i(x_i-\mu)=0
+\quad\Rightarrow\quad
+\hat\mu=\frac{1}{N}\sum_i x_i.\]</div>
+<p>原课给出了方差结果，下面补中间步骤。令 <span class="arithmatex">\(v=\sigma^2\)</span>，避免把“对方差求导”和“对标准差求导”混在一起：</p>
+<div class="arithmatex">\[\frac{\partial\ell}{\partial v}
+=-\frac{N}{2v}+\frac{\sum_i(x_i-\mu)^2}{2v^2}=0
+\quad\Rightarrow\quad
+\hat\sigma^2=\frac{1}{N}\sum_i(x_i-\hat\mu)^2.\]</div>
+<p>例如某类的三个教学测量为2、4、6厘米：均值4厘米，平方偏差和为8平方厘米，MLE方差 <span class="arithmatex">\(8/3\)</span> 平方厘米，标准差 <span class="arithmatex">\(\sqrt{8/3}\)</span> 厘米。无偏样本方差使用 N−1，此例得到4平方厘米；它回答的是另一种估计性质，不能把分母替换后仍称同一个MLE公式。</p>
+<p>这些内点结论要求样本不是全部相同等退化情形。若全部观测相同，无约束正态似然会在方差趋向零时增大，不能把零方差当成正常的连续密度模型。</p>
+<p>A29 的 stats.norm.fit 返回 <strong>mean 和 standard deviation</strong>，不是方差；A30 的 scale 也接收标准差。变量名 G1std 与后面的平方根很容易混，应沿着单位检查。</p>
+<p>本次对原花瓣长度数据重算得到：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th style="text-align: right;">样本数</th>
+<th style="text-align: right;">均值 μ（cm）</th>
+<th style="text-align: right;">MLE标准差 σ（cm）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Versicolor（1）</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">4.2600</td>
+<td style="text-align: right;">0.4652</td>
+</tr>
+<tr>
+<td>Virginica（2）</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">5.5520</td>
+<td style="text-align: right;">0.5463</td>
+</tr>
+</tbody>
+</table></div>
+<p>这张表使用A部分的全体数据作分布说明；B部分的训练/测试实验会重新只用训练样本估参数，不能直接把这张表作为B的测试模型。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1156763d5105516b.png" rel="noopener" target="_blank"><img alt="原花瓣长度数据的拟合密度与后验，类别先验均为0.5" decoding="async" loading="lazy" src="../assets/1156763d5105516b.png"/></a></p>
+<p><em>图左沿用 A29 的 MLE 思路，用原数据重算；图右将在下一节解释。两边横轴相同，纵轴含义不同。参数与重算记录见 source-manifest.json 和本地检查记录。</em></p>
+<p><strong>English takeaway：</strong> For nondegenerate Gaussian observations, MLE gives the sample mean and the variance with denominator N. Standard deviation is the square root of variance. The N−1 covariance convention is a different estimator.</p>
+<p><a id="bayes-rule"></a></p>
+<h2 id="6-bayesian-decision-rule-bayes-rule">6. Bayesian Decision Rule / Bayes' Rule｜终于给新花一个类别</h2>
+<p><strong>原课：A32–40，PDF 9–11页。核心必会；难度中；要求手算后验和决策。</strong></p>
+<p>现在已经有类别比例，也知道各类通常长什么样。给定新测量 x，先算每个类别的“支持分数”：</p>
+<div class="arithmatex">\[s_c=p(x\mid y=c)p(y=c),\qquad
+p(y=c\mid x)=\frac{s_c}{\sum_{k\in\mathcal{Y}}s_k}.\]</div>
+<p>分母 <span class="arithmatex">\(p(x)=\sum_k p(x\mid k)p(k)\)</span> 把所有候选归一化。它与候选类别 c 无关，但会随输入 x 改变。在 <span class="arithmatex">\(p(x)&gt;0\)</span> 时，所有类别的后验和为1。</p>
+<p><strong>教学手算 / Worked example</strong></p>
+<p>中文题：某个新测量在两类下的密度为0.4、0.2，两个先验为0.25、0.75，采用相同错分代价。预测哪一类？两个后验是多少？</p>
+<p>English question: The class-conditional densities at a new measurement are 0.4 and 0.2, and the priors are 0.25 and 0.75. With equal misclassification costs, which class is selected and what are the two posteriors?</p>
+<p>答案：分子分别为 <span class="arithmatex">\(0.4\times0.25=0.10\)</span>、<span class="arithmatex">\(0.2\times0.75=0.15\)</span>。归一化得到0.4、0.6，选类2。只比密度会选类1，因此不能忘先验。分子的数值是密度乘概率，不应称为类别概率。</p>
+<p>English answer: The two unnormalized scores are 0.10 and 0.15. Normalization gives posteriors 0.4 and 0.6, so class 2 is selected. Comparing densities alone would ignore the prior.</p>
+<p><strong>补充解释：为什么选最大后验？</strong> 选类 c，在该输入处猜错的概率是 <span class="arithmatex">\(1-p(c\mid x)\)</span>；让它最小，就让后验最大。这个最优性结论针对真分布下的 <strong>0–1 loss（所有错分代价相同）</strong>。估出来的模型可能不准确；若漏报和误报的代价不同，则应比较期望损失，不能无条件使用同一门槛。</p>
+<p>二类的决策边界位于后验相等处。上图右侧两条曲线交会时，各为0.5；远离交会不一定就能证明真实世界“绝对安全”，它只是当前模型的判断。</p>
+<p><strong>原课核对：</strong> A39 用统计“类1后验更大”的网格点数找分界，隐含在所画区间里有一个按序交叉的条件。不同方差的高斯可以产生多个或没有交点；一般程序应查符号变化或解等分方程，不能只靠点数定位。</p>
+<p><strong>English takeaway：</strong> Under equal error costs and the true class probabilities, selecting the largest posterior minimizes conditional classification error. Estimated probabilities and unequal costs require separate care.</p>
+<p><a id="log-scores"></a></p>
+<h2 id="7-bayes-rule-revisited-log">7. Bayes rule revisited｜为什么代码常常只算 log 分子？</h2>
+<p><strong>原课：A41–49，PDF 11–13页。核心必会；难度中；要求辨认等价决策与归一化用途。</strong></p>
+<p>可选补课：如果不熟悉负对数和连乘变求和，先读<a href="../foundations/MathForML.html#powers-logs">指数与自然对数</a>。</p>
+<p>选谁最大时，所有类别都除以同一个正数，所以可以省略分母：</p>
+<div class="arithmatex">\[\hat y=\arg\max_c p(x\mid c)p(c)
+=\arg\max_c\{\log p(x\mid c)+\log p(c)\}.\]</div>
+<p>例如三个小概率相乘可能很小，高维文本更明显；对数把它们变成一串加法，不容易因下溢全变成0。但“为选类别省略分母”不等于“报告概率也不用归一化”。</p>
+<p>设 log 分子组成向量 <span class="arithmatex">\(z_c=\log p(x\mid c)+\log p(c)\)</span>，则</p>
+<div class="arithmatex">\[\log p(c\mid x)=z_c-\operatorname{logsumexp}(z),\qquad
+\operatorname{logsumexp}(z)=m+\log\sum_c e^{z_c-m},\quad m=\max_c z_c.\]</div>
+<p>减掉 m 后所有指数不超过1，再把 m 加回去；这个数值技巧不改变数学结果。比如 z=(−1001,−1000)，直接指数可能都变成0，但平移后是 <span class="arithmatex">\((e^{-1},1)\)</span>，后验约为(0.2689,0.7311)。</p>
+<p>A48 总结的训练与预测应能用英文复述：训练时按类别估计 CCD 和 prior；预测时对同一个新输入比较各类后验，或等价的 joint / log-joint scores。下面 Part B 只是在更换 CCD 的形式，这套外框仍保留。</p>
+<p><strong>English takeaway：</strong> The posterior, joint score and log-joint score give the same argmax when defined consistently. Use log-sum-exp to recover normalized probabilities without numerical underflow.</p>
+<h2 id="part-b-naive-bayes-classifier">Part B · Naive Bayes Classifier</h2>
+<p><a id="gaussian-nb"></a></p>
+<h2 id="8-naive-bayes-classifier-learn-gaussian-nb-model">8. Naive Bayes Classifier / Learn Gaussian NB model｜把两项测量一起使用</h2>
+<p><strong>原课：B1–24，PDF 1–7页。核心必会；难度中；要求解释条件独立、读参数形状和训练流程。</strong></p>
+<p>可选补课：<a href="../foundations/MathForML.html#vectors-covariance">按行数据与列向量</a> · <a href="../foundations/MathForML.html#independence">独立假设何时允许相乘</a>。</p>
+<p>一项测量丢掉了另一项信息。现在输入 <span class="arithmatex">\(\mathbf{x}=(x_1,x_2)^T\)</span>，需要联合分布 <span class="arithmatex">\(p(x_1,x_2\mid y)\)</span>。老师先用 <strong>Naive Bayes（朴素贝叶斯）</strong>简化：</p>
+<div class="arithmatex">\[p(\mathbf{x}\mid y=c)=\prod_{j=1}^{d}p(x_j\mid y=c).\]</div>
+<p>“朴素”指<strong>给定类别后，特征条件独立</strong>，不是说混在一起的所有花瓣和萼片长度必须无条件独立。不同类别的混合本来就可能带来整体相关性。</p>
+<p>Gaussian NB 让每一维都是一元高斯，每一类都有 d 个均值和 d 个方差：</p>
+<div class="arithmatex">\[\log p(\mathbf{x}\mid c)
+=\sum_{j=1}^{d}\left[
+-\frac12\log(2\pi\sigma_{c,j}^2)
+-\frac{(x_j-\mu_{c,j})^2}{2\sigma_{c,j}^2}
+\right].\]</div>
+<p>它相当于多元高斯的对角协方差模型。等密度线是沿坐标轴方向的椭圆，不能随数据的倾斜方向旋转。</p>
+<p><strong>课堂代码怎样对应公式</strong></p>
+<pre><code class="language-python">model = naive_bayes.GaussianNB()
+model.fit(trainX, trainY)
+model.class_prior_   # 每类先验
+model.theta_         # shape: (类别数, 特征数)，均值
+model.var_           # 同样形状，方差而非标准差
+</code></pre>
+<p>B12 使用50%训练、50%测试，random_state=4487。原代码没有传 stratify；前文提到可保持比例的分层方法，并不代表这一行已启用。不要擅自加上分层后又声称逐项复现了原划分。B5 的全局种子100和 B12 的显式划分种子也承担不同角色。</p>
+<p>估参数只能用训练集。B17–24的绘图代码则建立二维网格，把每个格点当新输入计算密度或后验，再恢复成图；图上密集的网格不是额外的训练花朵。椭圆绘图函数计算特征值来决定方向和轴长，第一遍读懂它在展示什么即可，不要求先背完整绘图实现。</p>
+<p><strong>English takeaway：</strong> Naive Bayes assumes feature independence conditional on the class. Gaussian NB estimates a mean and variance for every class–feature pair, giving an axis-aligned Gaussian model.</p>
+<p><a id="testing"></a></p>
+<h2 id="9-view-the-posterior-evaluate-on-the-test-set">9. View the Posterior / Evaluate on the test set｜看边界，也看它分错了谁</h2>
+<p><strong>原课：B25–32，PDF 7–9页。核心必会；难度低；要求区分拟合、预测、评价。</strong></p>
+<p>predict_proba 返回每条记录对各类的后验；predict 返回选中的类别。accuracy 是预测标签与真实标签相同的比例。数组里的第0列是什么类别，要结合 classes_ 或显式的类别映射确认，不能把“第一列”和“标签0”当同一件事。</p>
+<p>B31 用空心方框圈出测试错误。看这些点能检查错误是否集中在重叠区域，但“离边界远”仍可能错：模型的分布假设、数据质量或部署分布都可能出问题。</p>
+<p>原课“边界附近后验降低”的准确理解是：二类等代价边界附近，两个后验接近0.5，<strong>最大后验</strong>不高；不是说两个类别的概率会一起接近0。</p>
+<p><strong>English takeaway：</strong> Fit on training data, predict labels for test data, and compare them with the true labels. A probability column must be matched to its class label, and a confident model prediction can still be wrong.</p>
+<p><a id="full-gaussian"></a></p>
+<h2 id="10-naive-bayes-assumption-multivariate-gaussian">10. Naive Bayes Assumption / Multivariate Gaussian｜为什么椭圆需要倾斜？</h2>
+<p><strong>原课：B33–42，PDF 9–11页。核心必会；难度高；要求解释协方差和读懂得分。</strong></p>
+<p>可选补课：先用<a href="../foundations/MathForML.html#covariance">四条小数据算协方差</a>，再认识<a href="../foundations/MathForML.html#inverse-determinant">逆矩阵与行列式</a>；<a href="../foundations/MathForML.html#gaussian-bridge">马氏距离分步计算</a>可帮助读下面的式子。</p>
+<p>把同一种花单独拿出来，花瓣更长时萼片也可能更宽。独立模型把这种“一起变化”忽略了。完整高斯用一个矩阵把这些关系记下来：</p>
+<div class="arithmatex">\[\boldsymbol\mu_c\in\mathbb R^d,\qquad
+\boldsymbol\Sigma_c\in\mathbb R^{d\times d},\qquad
+p(\mathbf{x}\mid c)=
+\frac{\exp[-\frac12(\mathbf{x}-\boldsymbol\mu_c)^T
+\boldsymbol\Sigma_c^{-1}(\mathbf{x}-\boldsymbol\mu_c)]}
+{(2\pi)^{d/2}|\boldsymbol\Sigma_c|^{1/2}}.\]</div>
+<p>矩阵对角线是各维方差；非对角线是协方差。正协方差表示围绕均值同向变化的趋势，负协方差表示反向趋势。独立且二阶矩存在会得到零协方差；反过来一般不成立，联合高斯是零协方差可推出独立的重要特例。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/414e4e8415f5302b.png" rel="noopener" target="_blank"><img alt="原课四个协方差矩阵的等密度形状重绘" decoding="async" loading="lazy" src="../assets/414e4e8415f5302b.png"/></a></p>
+<p><em>图：均值都是零，两维方差都是1，非对角元分别为0、0.5、0.9、−0.9；输入无量纲。画的是马氏距离平方等于4的轮廓，不宣称每个二维椭圆包含95%的概率。</em></p>
+<p>公式里有两个容易跳过的部分：</p>
+<ol>
+<li><strong>Mahalanobis distance（马氏距离）</strong>修正“离均值多远”。在本来波动大的方向，偏离一点没有那么意外；在波动很小的方向，相同偏离更显眼。</li>
+<li><strong>Determinant（行列式）</strong>对应分布的尺度体积。一个到处摊得很宽的分布不能只因距离代价小就总占便宜，归一化系数也会降低密度高度。</li>
+</ol>
+<p>分类时的 log 分数可写成</p>
+<div class="arithmatex">\[g_c(\mathbf{x})=
+-\frac12(\mathbf{x}-\boldsymbol\mu_c)^T\boldsymbol\Sigma_c^{-1}(\mathbf{x}-\boldsymbol\mu_c)
+-\frac12\log|\boldsymbol\Sigma_c|+\log\pi_c,\]</div>
+<p>其中 <span class="arithmatex">\(\pi_c=p(y=c)\)</span>；所有类共有的 <span class="arithmatex">\(-\frac d2\log(2\pi)\)</span> 可以在比较时省略。只比较“校正后的距离”仍可能漏掉分布宽度和先验。</p>
+<p><strong>补充手算 / Worked bridge</strong></p>
+<p>取无量纲 <span class="arithmatex">\(\mathbf{x}=(1,1)^T\)</span>、均值零，比较 <span class="arithmatex">\(\Sigma_A=I\)</span> 与
+<span class="arithmatex">\(\Sigma_B=\begin{pmatrix}1&amp;0.5\\0.5&amp;1\end{pmatrix}\)</span>。A的距离平方为2。B的逆为
+<span class="arithmatex">\(\frac1{0.75}\begin{pmatrix}1&amp;-0.5\\-0.5&amp;1\end{pmatrix}\)</span>，所以距离平方为 <span class="arithmatex">\(4/3\)</span>。点沿两个坐标一起增大的方向移动，符合B的正相关趋势。若要完成类别比较，还需行列式和类别先验，不能只停在这两个距离。</p>
+<p>English check: With the same point and covariance matrices, which model gives a smaller squared Mahalanobis distance, and is that alone enough for classification?</p>
+<p>English answer: Model B gives 4/3, compared with 2 under A. No: covariance determinants and class priors also enter the Gaussian classification score.</p>
+<p><strong>English takeaway：</strong> Full covariance models within-class feature dependence. Gaussian classification combines a covariance-adjusted distance, a normalization term involving the determinant, and the class prior.</p>
+<p><a id="gaussian-code"></a></p>
+<h2 id="11-gaussian-bayes-classifier">11. Gaussian Bayes Classifier｜从公式读到老师的类实现</h2>
+<p><strong>原课：B39–54，PDF 10–14页。核心必会；难度高；要求辨认估计器、标签映射和数值处理。</strong></p>
+<p>可选补课：<a href="../foundations/MathForML.html#matrix-products">矩阵乘法与外积</a> · <a href="../foundations/MathForML.html#covariance">协方差公式怎样逐格计算</a>。</p>
+<p>对类别 c 的 <span class="arithmatex">\(N_c\)</span> 个训练样本，理论MLE为</p>
+<div class="arithmatex">\[\hat{\boldsymbol\mu}_c=\frac1{N_c}\sum_{i:y_i=c}\mathbf{x}_i,\qquad
+\hat{\boldsymbol\Sigma}_c=\frac1{N_c}\sum_{i:y_i=c}
+(\mathbf{x}_i-\hat{\boldsymbol\mu}_c)(\mathbf{x}_i-\hat{\boldsymbol\mu}_c)^T.\]</div>
+<p>协方差可能奇异：样本少、某些特征完全重复或方向上没有变化。B40加入 <span class="arithmatex">\(\alpha I\)</span>，给所有特征方向的方差增加正数；这能改善可逆性，但不是额外收集了数据。尺度不同的特征还需考虑这种惩罚的单位含义。</p>
+<p>B44 的实现可以按五个动作读：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>输入与输出</th>
+<th>对应数学工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fit</td>
+<td>X为样本×特征，y为标签</td>
+<td>按类别估均值、协方差、先验</td>
+</tr>
+<tr>
+<td>compute_logccd</td>
+<td>一批X、类别c → 每条样本一个值</td>
+<td><span class="arithmatex">\(\log p(\mathbf{x}\mid c)\)</span></td>
+</tr>
+<tr>
+<td>compute_logjoint</td>
+<td>X → 样本×类别</td>
+<td>加 <span class="arithmatex">\(\log\pi_c\)</span></td>
+</tr>
+<tr>
+<td>predict_logproba / predict_proba</td>
+<td>X → 样本×类别</td>
+<td>用 logsumexp 归一化／再指数</td>
+</tr>
+<tr>
+<td>predict</td>
+<td>X → 每条样本一个标签</td>
+<td>对类别轴取最大分数</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>原课核对：两个不能悄悄混用的约定。</strong></p>
+<ul>
+<li>B39 的MLE协方差分母是 <span class="arithmatex">\(N_c\)</span>；B44 的 numpy.cov(Xc,rowvar=False) 默认分母是 <span class="arithmatex">\(N_c-1\)</span>。要复现代码就保留默认；要严格实现该MLE公式，可指定 ddof=0。讲义同时说明二者，而不改写原文件。<a href="https://numpy.org/doc/stable/reference/generated/numpy.cov.html">NumPy 官方说明</a></li>
+<li>原类用 K=max(y)+1，默认标签连续从0开始。B46传入 trainY−1，B54预测后再加1。忘掉这对映射，会把模型预测正确但编码不同误算成错误。</li>
+</ul>
+<p>这是<strong>每个类别独立估计完整协方差</strong>；历史资料的 LDA 假设各类共享一个协方差矩阵，不能仅因都叫 Gaussian classifier 就视为相同。多估相关性会增加参数和数据需求，不保证在每个小数据集都更好。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/ed9a92138683a047.png" rel="noopener" target="_blank"><img alt="同一原课训练划分上的Gaussian NB和完整高斯决策边界" decoding="async" loading="lazy" src="../assets/ed9a92138683a047.png"/></a></p>
+<p><em>图：沿用原 B12 的50/50划分与种子4487，完整高斯保留原 numpy.cov 的 N_c−1 约定；点仅显示训练记录，虚线为两类后验相等处。测试比较由配套生成脚本单独核对，不通过这张训练图证明泛化。</em></p>
+<p>按原B12划分与上述代码约定，本次重算得到Gaussian NB为42/50=84%，完整高斯为45/50=90%。这解释了B53在该例子里的比较；只是一份固定小划分的结果，不能据此宣布完整协方差在任何数据上更优。</p>
+<p><strong>English takeaway：</strong> The instructor's GaussianBayes estimates a separate covariance matrix for each class. Its covariance code uses the N−1 convention, while the displayed MLE formula uses N. The custom class also requires an explicit label mapping.</p>
+<p><a id="bow"></a></p>
+<h2 id="12-naive-bayes-spam-classifier-text-document-representation">12. Naive Bayes Spam Classifier / Text Document Representation｜文字怎样进入同一套模型？</h2>
+<p><strong>原课：B55–58，PDF 14–15页。核心必会；难度低；要求构造向量并说明信息损失。</strong></p>
+<p>现在回到老师开头的邮件。概率模型需要特征，原始字符串还不是一组固定坐标。<strong>Bag-of-Words，BoW（词袋）</strong>先固定词表，每个位置对应一个词，再记录词出现多少次。</p>
+<p>原例词表依次为 [this, test, spam, foo]。句子“This is a test document”得到 [1,1,0,0]：不在词表里的词不占坐标。词表顺序就是模型坐标顺序，不能训练时第一列表示this，预测时第一列忽然变spam。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5df8836810b56eab.jpg" rel="noopener" target="_blank"><img alt="原课引用的词袋示意图，保留原文字" decoding="async" loading="lazy" src="../assets/5df8836810b56eab.jpg"/></a></p>
+<p>“this is spam”和“is this spam”得到相同向量 [1,0,1,0]。BoW保留哪些词及其计数，丢掉语序。“not good”和“good”也可能因为停用词处理丢掉重要差别，所以预处理选择应跟任务一起验证。</p>
+<p><strong>English takeaway：</strong> Bag-of-words maps documents to a fixed vocabulary coordinate system. It retains word occurrences or counts but discards word order; words outside the vocabulary are ignored.</p>
+<p><a id="vectorizer"></a></p>
+<h2 id="13-steps-to-make-bow">13. Steps to make BoW｜词表只能从训练资料里学</h2>
+<p><strong>原课：B58–71，PDF 15–20页。核心必会；难度中；要求读懂 fit / transform 与稀疏矩阵。</strong></p>
+<p>B59 从 email 子目录读取文本，各子目录对应一类。类别名称由 target_names 给出，别未经核对就假定数字1永远表示spam。随后B61用种子11做50/50划分。代码中的 replace 解码处理是读取策略，不是文本分类算法本身。</p>
+<p>B62/71 的 CountVectorizer 使用英文停用词、最多100个常见词，并默认小写化：</p>
+<pre><code class="language-python">cntvect = feature_extraction.text.CountVectorizer(
+    stop_words="english", max_features=100
+)
+trainX = cntvect.fit_transform(traintext)
+testX = cntvect.transform(testtext)
+</code></pre>
+<p>fit 确定词表，transform 按既定词表编码新文本。测试集只做后者；如果也在测试集拟合，既改变了列的含义，又让测试信息参与表示选择。</p>
+<p>输出矩阵是“文档数×实际词表大小”。大量零表示文档没出现该词；稀疏矩阵只存非零项，零仍然存在于模型的语义里。查看少量样本时可用 toarray，不能为了“看着方便”把任何规模的全文档矩阵都变成稠密数组。</p>
+<p>原 showVocab 是显示辅助：它按词字符串排序，但打印每个词的真实索引；注释“sort by index”不精确。它还成对调用 next，奇数个待显示词时需要处理最后一个。读懂方法不要求背这段打印代码。</p>
+<p><strong>English takeaway：</strong> Fit the vocabulary on training text and reuse exactly that mapping for other splits. Sparse storage omits stored zeros, not the meaning of absent words.</p>
+<p><a id="bernoulli"></a></p>
+<h2 id="14-naive-bayes-model-for-boolean-vectors">14. Naive Bayes model for Boolean vectors｜一个词没出现，也是一条证据</h2>
+<p><strong>原课：B72–79，PDF 20–25页。核心必会；难度中；要求区分出现文档数与出现总次数。</strong></p>
+<p>Bernoulli NB关心<strong>出现还是没出现</strong>。固定词j、类别c，令
+<span class="arithmatex">\(\pi_{j,c}=P(x_j=1\mid y=c)\)</span>，其中 <span class="arithmatex">\(x_j\in\{0,1\}\)</span>。若该类有 <span class="arithmatex">\(N_c\)</span> 篇文档，其中 <span class="arithmatex">\(N_{j,c}\)</span> 篇含词j，无平滑MLE为 <span class="arithmatex">\(\hat\pi_{j,c}=N_{j,c}/N_c\)</span>。</p>
+<p>同一封邮件写五遍“free”，在这一模型里仍是一次“出现”；不能把5加到“含词文档数”中。其文档 log 分数是</p>
+<div class="arithmatex">\[\log p(c)+\sum_{j=1}^{V}
+\big[x_j\log\pi_{j,c}+(1-x_j)\log(1-\pi_{j,c})\big].\]</div>
+<p>第二项中的 <span class="arithmatex">\((1-x_j)\)</span> 使未出现的词也贡献证据。模型像一份逐项核对的清单，勾上和没勾上都有意义；这个类比只针对固定词表的布尔特征，不能推成“所有没观察到的现实事物都算证据”。</p>
+<p>B74 的 BernoulliNB 默认可将计数按是否大于0转成布尔。注意 alpha=0 可能遇到零或一的估计，导致对数无穷或某个样本在所有类别下都被判为不可能；这正是老师接着讲平滑的原因。不要把数值警告当成正常概率。</p>
+<p><strong>English takeaway：</strong> Bernoulli NB models document-level word presence. Both present and absent vocabulary terms contribute to the score; repeated occurrences do not increase a binary feature.</p>
+<p><a id="smoothing"></a></p>
+<h2 id="15-smoothing">15. Smoothing｜没有见过，不等于绝不可能</h2>
+<p><strong>原课：B80–84，PDF 25–26页。核心必会；难度中；要求会算平滑参数并解释分母。</strong></p>
+<p>如果某类训练文档从未出现一个词，无平滑估计为0。它把有限样本里的“没见过”升级成了绝对禁令。老师给出的加法平滑为</p>
+<div class="arithmatex">\[\tilde\pi_{j,c}=\frac{N_{j,c}+\alpha}{N_c+2\alpha},\quad \alpha&gt;0.\]</div>
+<p>分母加 <span class="arithmatex">\(2\alpha\)</span>，因为这个词的Bernoulli试验只有“出现／未出现”两种结果；不是因为词表只有两个词，也不是因为只有两个类别。<span class="arithmatex">\(\alpha=1\)</span>通常叫 Laplace smoothing；其他正值是加法平滑。它改变估计，可能帮助泛化，不能保证任何一次测试分数都提高。</p>
+<p><strong>教学手算 / Worked example</strong></p>
+<p>中文题：两类各3篇文档，词表为 [free, meeting]。Spam里两个词分别出现在2、1篇，Ham里分别出现在0、2篇。取 <span class="arithmatex">\(\alpha=1\)</span>、相等先验，新邮件的布尔向量是 [1,0]。求两类的类条件分数和Spam后验。</p>
+<p>English question: Each class has three documents. In vocabulary [free, meeting], document-presence counts are [2,1] for Spam and [0,2] for Ham. Use alpha=1 and equal priors. For binary vector [1,0], find both conditional scores and the Spam posterior.</p>
+<p>答案：Spam参数 [3/5,2/5]，Ham参数 [1/5,3/5]。新邮件出现free但不出现meeting，所以分数为 <span class="arithmatex">\((3/5)(3/5)=9/25\)</span> 与 <span class="arithmatex">\((1/5)(2/5)=2/25\)</span>；相等先验消去后，Spam后验是 <span class="arithmatex">\(9/11\approx0.8182\)</span>。漏掉未出现项会得到另一个答案。</p>
+<p>English answer: Smoothed parameters are [3/5,2/5] and [1/5,3/5]. The conditional scores are 9/25 and 2/25, giving Spam posterior 9/11. The absent word contributes through its complementary probability.</p>
+<p><strong>English takeaway：</strong> Smoothing prevents unseen events from receiving an automatic zero estimate. The Bernoulli denominator adds two pseudo-count contributions because each feature has two possible outcomes.</p>
+<p><a id="words"></a></p>
+<h2 id="16-frequent-words-most-informative-words">16. Frequent words / Most informative words｜常见词不一定最能区分类别</h2>
+<p><strong>原课：B85–88，PDF 26–27页。常规掌握；难度中；要求解释词表排名的含义。</strong></p>
+<p>在Spam中出现率很高的词，可能在Ham中也很常见。按单类的 feature_log_prob_ 排名前十，得到的是该类模型下的高概率词；要讨论区分性，还需看另一类。</p>
+<p>老师比较 <span class="arithmatex">\(\log p(w_j\mid y=1)-\log p(w_j\mid y=0)\)</span>。差为正说明该词出现更支持类1，差大不等于它在真实世界因果地导致spam。对于Bernoulli完整文档分类，还要考虑词未出现的项和先验，不能把这一个排名直接当成全部决策公式。</p>
+<p><strong>原课核对：</strong> 平滑演示使用 bmodels，但B86/88仍读取之前的 bmodel。解读输出时必须说明在看哪个对象；要分析平滑结果，就应一致读取平滑模型。否则图、排名和结论可能来自不同实验。</p>
+<p><strong>English takeaway：</strong> A frequent word within one class need not distinguish that class from others. Compare class-specific scores and keep the model object consistent across plots, rankings and conclusions.</p>
+<p><a id="tfidf"></a></p>
+<h2 id="17-naive-bayes-for-count-vectors-tf-idf">17. Naive Bayes for Count Vectors / TF-IDF｜从是否出现，走到出现多少与多稀有</h2>
+<p><strong>原课：B89–92，PDF 27–28页。核心必会；难度中；要求读懂权重并区分数学简式与库实现。</strong></p>
+<p>Boolean只问有没有；count记录出现次数；<strong>term frequency，TF（词频）</strong>还会按文档长度归一化。原课写</p>
+<div class="arithmatex">\[\mathrm{TF}_{j,D}=\frac{w_j}{|D|},\qquad
+\mathrm{IDF}(j)=\log\frac{N}{N_j},\qquad
+x_j=\mathrm{TF}_{j,D}\,\mathrm{IDF}(j).\]</div>
+<p>这里 <span class="arithmatex">\(w_j\)</span> 是该词在当前文档D中的计数，<span class="arithmatex">\(|D|\)</span> 是文档词数；N是用于估计IDF的训练文档数，<span class="arithmatex">\(N_j\)</span> 是其中包含词j的文档数，<strong>不是词j出现的总次数</strong>。普遍出现在各文档中的词，区分文档的能力往往有限，因此IDF降低其权重。</p>
+<p>补充小例：4篇训练文档中，“market”出现在1篇，课堂简式给IDF=log4；“news”出现在全部4篇，给IDF=0。两者都只按“哪些文档含它”计数，单篇反复出现不增加文档频数。</p>
+<p><strong>原课核对：B91的库调用是另一个明确约定。</strong> TfidfTransformer(use_idf=True,norm="l1") 默认使用平滑IDF：
+<span class="arithmatex">\(\log[(1+N)/(1+N_j)]+1\)</span>，然后将非零文档向量按L1归一化；全零行仍是零。它不等于逐字执行上一段简式。例中“news”的库IDF是1而非0。<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html">官方参数与公式</a></p>
+<p>IDF同样只能从训练数据拟合，测试数据用同一个transform。词表、IDF和分类器都是流程的一部分，不是只有最后一个fit才可能用到测试信息。</p>
+<p><strong>English takeaway：</strong> TF uses within-document frequency; IDF uses training-document frequency. The instructor's conceptual TF-IDF formula differs from the transformer's smoothed IDF and final normalization, so state which convention is used.</p>
+<p><a id="multinomial"></a></p>
+<h2 id="18-naive-bayes-multinomial">18. Naive Bayes Multinomial｜模型里的“词概率”又换了含义</h2>
+<p><strong>原课：B93–97，PDF 29–30页。核心必会；难度中；要求比较模型与识别计数假设。</strong></p>
+<p>对原始计数向量 <span class="arithmatex">\(\mathbf{x}\)</span>，总词数 <span class="arithmatex">\(L=\sum_jx_j\)</span> 固定时，多项式模型给出</p>
+<div class="arithmatex">\[p(\mathbf{x}\mid c,L)=\frac{L!}{\prod_j x_j!}\prod_{j=1}^{V}\pi_{j,c}^{x_j},
+\qquad \sum_j\pi_{j,c}=1.\]</div>
+<p>这里 <span class="arithmatex">\(\pi_{j,c}\)</span> 描述该类的词质量如何在词表坐标间分配；与Bernoulli的“某篇文档含词j的概率”不同。Bernoulli各词的出现概率不必相加等于1。</p>
+<p>比较同一文档的类别时，阶乘项与c无关，于是得分只需</p>
+<div class="arithmatex">\[\log p(c)+\sum_jx_j\log\pi_{j,c}.\]</div>
+<p>若 <span class="arithmatex">\(T_{j,c}\)</span> 是类别c里词j的总计数，加法平滑为</p>
+<div class="arithmatex">\[\tilde\pi_{j,c}=\frac{T_{j,c}+\alpha}{\sum_{k=1}^V T_{k,c}+V\alpha}.\]</div>
+<p>分母是总词计数加 <span class="arithmatex">\(V\alpha\)</span>，不是文档数加 <span class="arithmatex">\(2\alpha\)</span>。同一个alpha名字在不同模型中作用于不同分布，不能照搬分母。</p>
+<p><strong>教学手算 / Worked example</strong></p>
+<p>中文题：词表仍为 [free, meeting]。两类的总词计数分别是 [6,2] 和 [1,7]，<span class="arithmatex">\(\alpha=1\)</span>，先验相等。新文档计数为 [2,0]，求Spam后验。</p>
+<p>English question: For vocabulary [free, meeting], total token counts are [6,2] for Spam and [1,7] for Ham. With alpha=1 and equal priors, find the Spam posterior for count vector [2,0].</p>
+<p>答案：两类参数分别 [0.7,0.3]、[0.2,0.8]。该文档的类别相关项为 <span class="arithmatex">\(0.7^2=0.49\)</span> 与 <span class="arithmatex">\(0.2^2=0.04\)</span>，Spam后验 <span class="arithmatex">\(49/53\approx0.9245\)</span>。重复free增加了证据；未出现的meeting指数为0，没有Bernoulli那样的补概率项。</p>
+<p>English answer: The parameters are [0.7,0.3] and [0.2,0.8]. The class-dependent factors are 0.49 and 0.04, so the Spam posterior is 49/53. Repeated occurrences affect the score, unlike binary presence.</p>
+<p><strong>原课核对：TF-IDF与阶乘公式不能混为一谈。</strong> B93同时写“归一化频率”和整数多项式PMF。严格的这个PMF定义在非负整数计数上；TF-IDF通常是分数权重。sklearn允许非负TF-IDF作为实用输入，仍使用加权log分数，但不能把这些权重逐项解释成整数计数的生成概率。B94的alpha=0.05是课堂邮件示例设置，不是适用于所有任务的固定答案。<a href="https://scikit-learn.org/stable/modules/naive_bayes.html">模型实现说明</a></p>
+<p><strong>English takeaway：</strong> Multinomial NB scores count or nonnegative weighted features using token-level parameters. Literal multinomial probabilities require integer counts; TF-IDF inputs are a practical weighted-feature use of the classifier.</p>
+<p><a id="extensions"></a></p>
+<h2 id="19-summary-other-text-preprocessing-other-word-models">19. Summary / Other text preprocessing / Other word models｜本讲留下哪些取舍？</h2>
+<p><strong>原课：B98–100，PDF 30–31页。常规掌握；难度低；要求比较用途和限制。</strong></p>
+<p>生成式分类把“怎样描述各类数据”变成主要建模选择。NB减少了参数数量，训练快、容易扩展到多类；有限数据时常是值得先做的基线。但课件“works with small amount of data”不是任何小样本任务都可靠的保证，分布假设不合适、样本不代表实际环境时仍会失败。预测标签不错，也不意味着后验数值已经校准。</p>
+<p>老师最后点到的改进方向各有目的：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原英文名称</th>
+<th>中文理解与例子</th>
+<th>第一遍掌握边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stemming</td>
+<td>按规则截取词干，例如 testing、tests → test</td>
+<td>知道会合并变体，也可能产生不自然词干</td>
+</tr>
+<tr>
+<td>Lemmatisation</td>
+<td>按语言规则归并词形，例如 went、going → go</td>
+<td>知道可能依赖词性与语言资源</td>
+</tr>
+<tr>
+<td>Removing numbers / punctuation</td>
+<td>对数字、标点做处理</td>
+<td>先判断是否含任务信息；短信金额、链接符号未必该删</td>
+</tr>
+<tr>
+<td>N-grams</td>
+<td>用连续n个词的组合保留部分局部语序</td>
+<td>能解释unigram与bigram；代价是词表扩大</td>
+</tr>
+<tr>
+<td>Word vectors</td>
+<td>用实向量表达词在上下文中的统计关系</td>
+<td>知道向量相似与上下文有关，不把向量运算当必然成立的语义定律</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些是原课提供的后续方向。第一遍不需要为每个名字另读一整章模型教程；先能解释为什么当前词袋可能不够。</p>
+<p><strong>English takeaway：</strong> Generative and naive Bayes models offer efficient, interpretable baselines, but their assumptions and representation choices matter. Preprocessing, n-grams and word vectors change which information is retained.</p>
+<p><a id="comparison"></a></p>
+<h2 id="20-what-changes-and-what-stays-the-same">20. 把整讲放回一张表｜What changes, and what stays the same?</h2>
+<p>所有模型都在比较“类条件支持×先验”；变的是特征表示和CCD假设。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入语义</th>
+<th>各类学什么</th>
+<th>主要条件或代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一维 Gaussian Bayes</td>
+<td>一个连续测量</td>
+<td>均值、方差、先验</td>
+<td>每类一元高斯</td>
+</tr>
+<tr>
+<td>Gaussian NB</td>
+<td>多个连续测量</td>
+<td>每维均值/方差、先验</td>
+<td>给定类后独立，对角协方差</td>
+</tr>
+<tr>
+<td>完整 Gaussian Bayes</td>
+<td>连续特征向量</td>
+<td>均值向量、各类协方差、先验</td>
+<td>建模相关性，参数与样本需求更高</td>
+</tr>
+<tr>
+<td>Bernoulli NB</td>
+<td>每词是否出现</td>
+<td>每类每词的文档出现率</td>
+<td>同时考虑出现和未出现</td>
+</tr>
+<tr>
+<td>Multinomial NB</td>
+<td>词计数；实现也接受非负权重</td>
+<td>每类的词质量分配</td>
+<td>计数模型与TF-IDF实用输入须区分</td>
+</tr>
+</tbody>
+</table></div>
+<p>Poisson NB是 <strong>Tutorial 2</strong> 引入的计数模型，先在本讲掌握“按类估参数—算log CCD—加prior—归一化”，再在教程中更换分布；它不属于 Lecture2a/2b 新出现的一页。</p>
+<p><a id="self-check"></a></p>
+<h2 id="21">21. 英文自测与少量卡片｜先解释，再检索</h2>
+<p>答案是最低合格要点的示例，不要求逐字背诵。</p>
+<p><strong>Q1 中文：</strong> 先验、类条件分布、后验各固定了什么？<br/>
+<strong>Q1 English:</strong> What is conditioned on in the prior, class-conditional distribution and posterior?<br/>
+<strong>答：</strong> 先验还未给定当前特征；类条件已知类别看特征；后验已知特征看类别。<br/>
+<strong>Answer:</strong> The prior is before observing the current features; the class-conditional distribution describes features given a class; the posterior describes classes given the observed features.</p>
+<p><strong>Q2 中文：</strong> 某类训练值为1、2、3。高斯MLE均值、方差是什么？无偏样本方差是否相同？<br/>
+<strong>Q2 English:</strong> A class has observations 1, 2 and 3. Find the Gaussian MLE mean and variance, and compare with the unbiased sample variance.<br/>
+<strong>答：</strong> 均值2，MLE方差2/3，无偏样本方差1；分母不同。<br/>
+<strong>Answer:</strong> The mean is 2, the MLE variance is 2/3, and the unbiased sample variance is 1.</p>
+<p><strong>Q3 中文：</strong> 似然相同、先验分别0.2/0.8，相同错分代价时选谁？<br/>
+<strong>Q3 English:</strong> With equal likelihoods, priors 0.2/0.8 and equal error costs, which class is selected?<br/>
+<strong>答：</strong> 第二类，后验与先验相同；若共同似然为0，不能这样归一化。<br/>
+<strong>Answer:</strong> Select the second class when the common likelihood is positive; the posterior equals the prior. A zero common likelihood makes this normalization undefined.</p>
+<p><strong>Q4 中文：</strong> 为什么给定类后的相关性会使 Gaussian NB 假设不成立？完整高斯是否一定测试更好？<br/>
+<strong>Q4 English:</strong> Why does within-class dependence challenge Gaussian NB, and must a full Gaussian perform better on test data?<br/>
+<strong>答：</strong> NB将类条件联合分布分解；完整模型允许协方差，但估计更多参数，有限数据时不保证更好。<br/>
+<strong>Answer:</strong> NB factorizes the class-conditional joint distribution. Full covariance permits dependence but estimates more parameters, so improvement is not guaranteed.</p>
+<p><strong>Q5 中文：</strong> free出现三次，Bernoulli NB和Multinomial NB怎样对待它？<br/>
+<strong>Q5 English:</strong> How do Bernoulli and multinomial NB treat three occurrences of “free”?<br/>
+<strong>答：</strong> Bernoulli将其变成一次出现；计数Multinomial使用计数3。<br/>
+<strong>Answer:</strong> Bernoulli represents presence as one; count-based multinomial NB uses the count three.</p>
+<p>先按本讲路线复习已有卡，再按需要复习其余卡；这里没有新增卡片：
+<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M052">先验MLE M052</a>、
+<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M058">Bayes决策 M058</a>、
+<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M061">Gaussian NB M061</a>、
+<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M081">文本平滑 M081</a>。
+这4张先检查主线；其余相关卡可在完成Tutorial练习后分批复习。</p>
+<h2 id="22">22. 重难点判断到底依赖什么？</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>证据</th>
+<th>本讲可用的结论</th>
+<th>不能推出的结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>当前A/B Outline、公式、原例与代码</td>
+<td>本学期确实提供了哪些内容，前后需要什么基础</td>
+<td>未提供录音时，不能声称老师口头反复强调</td>
+</tr>
+<tr>
+<td>当前Tutorial 2</td>
+<td>文本表示、NB比较、调参、解释错分、实现另一种CCD是实际训练目标</td>
+<td>教程出现过不自动等于期末高频</td>
+</tr>
+<tr>
+<td>当前Assignment 1</td>
+<td>分类流程、评估、复现需要能应用</td>
+<td>不证明所有高级模型都必须掌握</td>
+</tr>
+<tr>
+<td>H1：2024历史Home_Assignments_1，Ex2</td>
+<td>曾有“更换类条件分布并推MLE”的任务，支持练方法迁移</td>
+<td>不能把旧题中的Laplacian分布当当前新增页</td>
+</tr>
+<tr>
+<td>H1 Ex3–4</td>
+<td>历史资料涉及共享协方差LDA与条件高斯证明，难度较高</td>
+<td>不据此把完整证明列为当前Lecture2核心</td>
+</tr>
+<tr>
+<td>HF：2024/25东莞Sample Questions，2b/3b</td>
+<td>样题涉及NB优缺点和MLE推导，可用来练英文回答</td>
+<td>样题不是实际试卷，更不是香港本学期的高频统计</td>
+</tr>
+</tbody>
+</table></div>
+<p>H1的封面/首页只有2024日期，教师与校区归属仅由历史资料库上下文判断，未在该文件首页直接确认；HF封面明确“CITY UNIVERSITY OF HONG KONG (DONGGUAN) / Sample Questions”。两处仓库中的同内容副本按SHA-256去重，不算两年或两份独立证据。详见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">source-manifest.json</span>。</p>
+<p>历史原件：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">H1</span>；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">HF</span>。</p>
+<p><a id="coverage"></a></p>
+<h2 id="23">23. 原课覆盖索引｜回到老师哪一页？</h2>
+<p>下表覆盖全部149个Notebook单元，包括标题、设置、重复显示和空白收尾。连续范围中的代码与图片按教学目的合并解释；没有把它们冒充额外知识点。PDF分页是导出版定位辅助，Notebook cell是主要定位。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原位置</th>
+<th>PDF页</th>
+<th>本讲义位置／处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1–3</td>
+<td>1</td>
+<td>开头与学习地图；标题、Outline、导入设置</td>
+</tr>
+<tr>
+<td>A4–8</td>
+<td>1–3</td>
+<td>§1 分类任务、原花图、数据坐标</td>
+</tr>
+<tr>
+<td>A9–12</td>
+<td>3–4</td>
+<td>§2 生成模型、先验、指示函数</td>
+</tr>
+<tr>
+<td>A13–17</td>
+<td>4–5</td>
+<td>§3 类别先验MLE与实计数</td>
+</tr>
+<tr>
+<td>A18–25</td>
+<td>5–7</td>
+<td>§4 直方图、连续密度、正态示意</td>
+</tr>
+<tr>
+<td>A26–31</td>
+<td>7–9</td>
+<td>§5 均值/方差MLE、拟合图</td>
+</tr>
+<tr>
+<td>A32–40</td>
+<td>9–11</td>
+<td>§6 后验、Bayes决策、边界定位</td>
+</tr>
+<tr>
+<td>A41–47</td>
+<td>11–13</td>
+<td>§7 joint / log-joint 等价与数值稳定</td>
+</tr>
+<tr>
+<td>A48–49</td>
+<td>13</td>
+<td>§7总结；A49为空代码单元</td>
+</tr>
+<tr>
+<td>B1–5</td>
+<td>1–2</td>
+<td>§8 Outline、条件独立、运行设置</td>
+</tr>
+<tr>
+<td>B6–13</td>
+<td>2–4</td>
+<td>§8 数据、50/50划分、样本与网格区别</td>
+</tr>
+<tr>
+<td>B14–24</td>
+<td>4–7</td>
+<td>§8 参数、二维/三维密度、椭圆和后验绘图函数</td>
+</tr>
+<tr>
+<td>B25–32</td>
+<td>7–9</td>
+<td>§9 后验、测试、错分点</td>
+</tr>
+<tr>
+<td>B33–38</td>
+<td>9–10</td>
+<td>§10 协方差、四个矩阵例子与图</td>
+</tr>
+<tr>
+<td>B39–42</td>
+<td>10–11</td>
+<td>§11 MLE与正则；§10形状解释</td>
+</tr>
+<tr>
+<td>B43–54</td>
+<td>11–14</td>
+<td>§11完整类实现、标签映射、预测比较</td>
+</tr>
+<tr>
+<td>B55–58</td>
+<td>14–15</td>
+<td>§12 邮件任务、词袋原图与信息损失</td>
+</tr>
+<tr>
+<td>B59–71</td>
+<td>15–20</td>
+<td>§13 读取、划分、词表、稀疏矩阵与显示辅助</td>
+</tr>
+<tr>
+<td>B72–79</td>
+<td>20–25</td>
+<td>§14 Bernoulli拟合、词概率图、错分查看</td>
+</tr>
+<tr>
+<td>B80–84</td>
+<td>25–26</td>
+<td>§15平滑与测试比较的解释</td>
+</tr>
+<tr>
+<td>B85–88</td>
+<td>26–27</td>
+<td>§16 高频／区分性词排名、模型对象核对</td>
+</tr>
+<tr>
+<td>B89–92</td>
+<td>27–28</td>
+<td>§17 TF-IDF与库约定</td>
+</tr>
+<tr>
+<td>B93–97</td>
+<td>29–30</td>
+<td>§18 Multinomial、词参数、预测与排名</td>
+</tr>
+<tr>
+<td>B98–100</td>
+<td>30–31</td>
+<td>§19总结、预处理、n-gram与词向量</td>
+</tr>
+</tbody>
+</table></div>
+<p>数值和图由本地工具单独重算；原代码保留在原材料中。不同版本库的实际行为需结合随样板保存的环境版本核对。讲义中的教学手算均标明为补充，不冒充老师原题。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

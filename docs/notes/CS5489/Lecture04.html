@@ -1,0 +1,336 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 4 · Regression｜从“分到哪一类”走向“预测多少” · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-4-regression">Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=113">A4 打印版 · 第 113–124 页</a>　图可点击放大。</p>
+<p><a href="index.html">课程目录</a> · <a href="Lecture03.html">上一讲：分类</a> · <a href="../foundations/MathForML.html#rank-pseudoinverse">数学补课：秩与伪逆</a></p>
+<p>上一讲给一朵花贴类别标签。这一讲老师换成房价：已知房屋面积、售出时的年龄等信息，希望预测一个数值。输出不再是有限几个标签，而是实数。我们沿着 <strong>线性回归 → 特征选择 → 异常值 → 非线性回归 → 集成模型</strong> 走一遍。房价只是用于理解模型的课程数据，系数不是购房建议，也不证明因果关系。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4a</span>（A，88单元）和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4b</span>（B，104单元），单元号从1起算。<strong>当前没有下载到对应 Tutorial 4 或新 Assignment，本目录不虚构文件。</strong> 本文末尾的小题是补充学习题。</p>
+<p>基础复习可跳过：不熟悉函数和斜率，读<a href="../foundations/MathForML.html#symbols-functions">函数图像</a>；矩阵不满秩、不能直接求逆，读<a href="../foundations/MathForML.html#rank-pseudoinverse">秩与伪逆</a>；不熟悉向量导数，读<a href="../foundations/MathForML.html#optimization">梯度</a>。Python与数组回到<a href="Lecture01.html#arrays">Lecture1</a>。</p>
+<div class="toc">
+<ul>
+<li><a href="#lecture-4-regression">Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”</a><ul>
+<li><a href="#1-regression-and-the-housing-example">1. Regression and the housing example｜先弄清横纵轴的单位</a></li>
+<li><a href="#2-linear-regression-and-ols">2. Linear regression and OLS｜找一条总体偏差较小的线</a></li>
+<li><a href="#3-matrix-solution">3. Matrix solution｜先摆好矩阵，再求导</a></li>
+<li><a href="#4-housing-coefficients-and-feature-selection">4. Housing coefficients and feature selection｜大权重必须配着单位读</a></li>
+<li><a href="#5-ridge-regression">5. Ridge regression｜给不稳定方向加一条“别太夸张”的限制</a></li>
+<li><a href="#6-lasso">6. LASSO｜有时需要真的把系数变成零</a></li>
+<li><a href="#7-sparsity-and-omp">7. Sparsity and OMP｜每次挑方向，但要回头一起重拟合</a></li>
+<li><a href="#8-ransac">8. RANSAC｜不是每个离群点都值得把直线拽过去</a></li>
+<li><a href="#9-polynomial-regression">9. Polynomial regression｜对输入非线性，对参数仍线性</a></li>
+<li><a href="#10-kernel-ridge-regression">10. Kernel ridge regression｜把线性代数搬到样本之间</a></li>
+<li><a href="#11-support-vector-regression">11. Support vector regression｜在容忍带内不追究小误差</a></li>
+<li><a href="#12-trees-and-random-forests">12. Trees and random forests｜多位意见不同的“专家”怎样投票</a></li>
+<li><a href="#13-boosting-and-xgboost">13. Boosting and XGBoost｜后一棵树接着修前面的误差</a></li>
+<li><a href="#14-comparing-regression-methods">14. Comparing regression methods｜模型、目标、假设一起记</a></li>
+<li><a href="#15-english-self-test-and-review">15. English self-test and review｜解释清楚再复习</a></li>
+<li><a href="#16-source-coverage-and-execution-boundary">16. Source coverage and execution boundary｜能回查，也能知道哪些跑过</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求与依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OLS、残差与矩阵解</td>
+<td>核心必会</td>
+<td>中至高；样本放行还是列</td>
+<td>解释、手算、推导并判断可逆；A13–34</td>
+</tr>
+<tr>
+<td>Ridge、LASSO、OMP</td>
+<td>核心必会</td>
+<td>高；缩小与精确为零不同</td>
+<td>比较目标、选择特征、验证；A35–88</td>
+</tr>
+<tr>
+<td>RANSAC</td>
+<td>常规掌握</td>
+<td>中；阈值与随机采样</td>
+<td>解释并走完一次迭代；B4–15</td>
+</tr>
+<tr>
+<td>Polynomial、kernel ridge、SVR</td>
+<td>核心必会</td>
+<td>中至高；模型与损失</td>
+<td>计算小例，设计CV；B16–72</td>
+</tr>
+<tr>
+<td>Tree、RF、boosting</td>
+<td>常规掌握</td>
+<td>中；模型怎样组合</td>
+<td>解释机制、比较误差；B73–100</td>
+</tr>
+<tr>
+<td>大规模网格与一般核理论</td>
+<td>二读拓展</td>
+<td>高；计算规模</td>
+<td>能读流程和适用条件；未把原保存输出当本轮复现</td>
+</tr>
+</tbody>
+</table></div>
+<p>判断来自本学期原课的教学位置与代码；当前缺少该讲独立作业/教程佐证，不用历史预习填成“老师已经布置”。复杂程度和考试重要性分别记录。</p>
+<p><a id="data"></a></p>
+<h2 id="1-regression-and-the-housing-example">1. Regression and the housing example｜先弄清横纵轴的单位</h2>
+<p>输入 <span class="arithmatex">\(\mathbf x\in\mathbb R^d\)</span>，输出 <span class="arithmatex">\(y\in\mathbb R\)</span>；希望学到 <span class="arithmatex">\(\hat y=f(\mathbf x)\)</span>。误差 <span class="arithmatex">\(r_i=y_i-\hat y_i\)</span> 叫 residual（残差）。图上的点是观测，线/曲面是预测，二者不应混成“模型知道了真实价格”。</p>
+<p>A5先用 <code>make_regression</code> 生成100个一维点，<code>bias=30, noise=10, random_state=4487</code>，帮助辨认斜率、截距和噪声。接着 A7 引入 OpenML <code>house_prices</code>。本轮固定为 <strong>data ID 42165、version 1</strong>，原始取得表及字段、哈希保存到 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">数据记录</span>，读取副本为 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">CSV</span>。原课下载材料未改动。</p>
+<p>老师 mode1 的处理必须连同单位一起保留：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原字段</th>
+<th>处理后</th>
+<th>单位与解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GrLivArea</td>
+<td>除100</td>
+<td>100平方英尺（不是平方米）</td>
+</tr>
+<tr>
+<td>YrSold、YearBuilt</td>
+<td>相减</td>
+<td>售出时年龄，年</td>
+</tr>
+<tr>
+<td>SalePrice</td>
+<td>除1000</td>
+<td>原数据价格单位的千元，图中标为美元千元</td>
+</tr>
+<tr>
+<td>行采样</td>
+<td><code>[::4]</code></td>
+<td>每4行取1行，保留原顺序；不是随机抽样</td>
+</tr>
+</tbody>
+</table></div>
+<p>mode2 取 GrLivArea、TotRmsAbvGrd、GarageArea、TotalBsmtSF、Fireplaces、BedroomAbvGr、FullBath、LotArea、LowQualFinSF、OverallQual、OverallCond、YrSold、YearBuilt，合并最后两列为 Age 后剩12维；这些面积列不统一除100。预测目标仍除1000。不同 mode 的系数不能直接比数值。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1d0bce7667ddba7d.png" rel="noopener" target="_blank"><img alt="Housing data and fitted two-feature model" decoding="async" loading="lazy" src="../assets/1d0bce7667ddba7d.png"/></a></p>
+<p>看图先观察同一面积仍有不同价格：这解释了为何拟合不可能只靠“穿过每个点”。本轮脚本 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">verify_lecture_examples.py</span> 记录实际形状和计算；图与报告由同一固定数据生成。</p>
+<h2 id="2-linear-regression-and-ols">2. Linear regression and OLS｜找一条总体偏差较小的线</h2>
+<p>一维 <span class="arithmatex">\(\hat y=wx+b\)</span>，w是每增加一单位x的预测变化；b是在x=0的截距。多维 <span class="arithmatex">\(\hat y=\mathbf w^T\mathbf x+b\)</span>，每个系数解释为<strong>其他输入固定时模型的预测变化</strong>，不是现实中强行改变该属性的因果效应。</p>
+<p>Ordinary least squares（OLS，普通最小二乘）最小化平方残差和：</p>
+<div class="arithmatex">\[E(\mathbf w,b)=\sum_{i=1}^N[y_i-(\mathbf w^T\mathbf x_i+b)]^2.\]</div>
+<p>为什么平方？正负残差不能相互抵消，偏离越远罚得越多，也形成方便求导的目标。代价是极端点的影响可能很大。MSE=E/N，RMSE=<span class="arithmatex">\(\sqrt{E/N}\)</span>：MSE的单位是价格单位的平方，RMSE才回到价格单位。</p>
+<p><strong>完整补算</strong>：三点 <span class="arithmatex">\((0,1),(1,2),(2,2)\)</span>。<span class="arithmatex">\(\bar x=1,\bar y=5/3\)</span>，斜率</p>
+<div class="arithmatex">\[w=\frac{\sum_i(x_i-\bar x)(y_i-\bar y)}{\sum_i(x_i-\bar x)^2}=\frac1{2},\qquad b=\bar y-w\bar x=7/6.\]</div>
+<p>预测为 <span class="arithmatex">\(7/6,5/3,13/6\)</span>，残差为 <span class="arithmatex">\(-1/6,1/3,-1/6\)</span>，SSE=1/6，MSE=1/18。不是随便画一条“看起来差不多”的线，而是在明确目标下可复算的解。</p>
+<p><a id="ols"></a></p>
+<h2 id="3-matrix-solution">3. Matrix solution｜先摆好矩阵，再求导</h2>
+<p>老师 A20 <strong>把样本放在列上</strong>。吸收偏置后，每个 <span class="arithmatex">\(\tilde x_i=(x_i^T,1)^T\in\mathbb R^{d+1}\)</span>，<span class="arithmatex">\(X=[\tilde x_1,\ldots,\tilde x_N]\in\mathbb R^{(d+1)\times N}\)</span>，<span class="arithmatex">\(w\in\mathbb R^{d+1}\)</span>，<span class="arithmatex">\(y\in\mathbb R^N\)</span>。预测为 <span class="arithmatex">\(X^Tw\)</span>，形状恰是N。NumPy/sklearn通常样本放行，使用 <span class="arithmatex">\(A=X^T\)</span>，不要背公式却忘记转置。</p>
+<p>展开目标：</p>
+<div class="arithmatex">\[E=\|y-X^Tw\|^2=y^Ty-2y^TX^Tw+w^TXX^Tw.\]</div>
+<p>第一项不含w，导数0；第二项导数 <span class="arithmatex">\(-2Xy\)</span>；因为 <span class="arithmatex">\(XX^T\)</span> 对称，第三项导数 <span class="arithmatex">\(2XX^Tw\)</span>。令梯度为0：</p>
+<div class="arithmatex">\[XX^Tw=Xy.\]</div>
+<p>若 X 满行秩，可写 <span class="arithmatex">\(w=(XX^T)^{-1}Xy\)</span>。若不满秩（例如两列输入永远重复），逆不存在；仍可通过 <code>np.linalg.lstsq(A,y,rcond=None)</code> 或 <span class="arithmatex">\(A^+y\)</span> 得到最小范数最小二乘解。原 A21 的 <span class="arithmatex">\((XX^T)^{-1}X\)</span> 实际是 <strong><span class="arithmatex">\(X^T\)</span> 的伪逆</strong>，不是 X 的伪逆，维度就能发现这一点。数值实现优先解方程或QR/SVD，不显式求逆。</p>
+<p><strong>变式 / Transfer:</strong> 三点改成 <span class="arithmatex">\((0,2),(1,3),(2,3)\)</span>，w、b、MSE怎样变？ / Add one to every output in the worked example; how do w, b and MSE change?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>w仍1/2，b变13/6，残差与MSE不变。 / The slope remains 0.5, the intercept becomes 13/6, and MSE remains 1/18. 整条线向上平移1。</p>
+</details>
+<h2 id="4-housing-coefficients-and-feature-selection">4. Housing coefficients and feature selection｜大权重必须配着单位读</h2>
+<p>A25–34 分别用面积、年龄，以及两者共同拟合。原 A34 保存的文字系数“每100平方英尺增加8874、每年减少1048、截距82709”是<strong>原课结果</strong>。本轮记录另见 <code>lecture-examples-results.json</code>，不能为迎合旧数字改数据或声称完全一致。</p>
+<p>A35–41 看12个特征的散点/成对图。一个特征单独相关不代表加入其他特征后仍有同样贡献；面积、房间数可能彼此相关。想比较系数大小，先在训练数据上标准化，否则“美元/平方英尺”和“美元/年”不在同一尺度。标准化后系数对应输入改变一个训练标准差的预测差异。</p>
+<h2 id="5-ridge-regression">5. Ridge regression｜给不稳定方向加一条“别太夸张”的限制</h2>
+<p>Ridge目标为 <span class="arithmatex">\(\alpha\|w\|^2+\sum_i(y_i-f(x_i))^2\)</span>，<span class="arithmatex">\(\alpha\ge0\)</span>。与分类C相反，<strong>alpha越大，正则越强</strong>。若所有参数都惩罚，矩阵解为 <span class="arithmatex">\((XX^T+\alpha I)^{-1}Xy\)</span>。若偏置不惩罚（常用实现），要中心化后解特征权重并恢复截距，或将惩罚矩阵最后对角设0；不能无声把偏置也缩小。</p>
+<p>当 <span class="arithmatex">\(\alpha&gt;0\)</span> 且全部特征权重被惩罚，<span class="arithmatex">\(v^T(XX^T+\alpha I)v=\|X^Tv\|^2+\alpha\|v\|^2&gt;0\)</span>（v非零）。所以即使XXᵀ有零方向，加alpha后也能求解。这就是A45–49近重复特征演示要说明的事。</p>
+<p>一维、无截距补算：x=(1,2)，y=(1,2)，<span class="arithmatex">\(\sum x^2=\sum xy=5\)</span>。OLS w=1；alpha=5时 ridge w=5/(5+5)=0.5。预测偏离训练点，但权重更小，体现折衷，而非“正则化让每个分数都更好”。有限alpha通常使权重<strong>缩小而非精确归零</strong>。</p>
+<p>A51–62使用80/20、seed4487，标准化后扫alpha与RidgeCV。课堂图反复看测试MSE是探索；正式评估用训练内部CV选alpha，预处理也在每折拟合。原RidgeCV在预先缩放的整个训练集上做CV存在折内预处理信息泄漏，本讲配套示范改为Pipeline+GridSearchCV，并注明与原流程的差异。</p>
+<h2 id="6-lasso">6. LASSO｜有时需要真的把系数变成零</h2>
+<p>LASSO（Least Absolute Shrinkage and Selection Operator）把平方惩罚换成绝对值：</p>
+<div class="arithmatex">\[E=\sum_i(y_i-f(x_i))^2+\alpha\sum_j|w_j|.\]</div>
+<p>L2圆形约束平滑，L1菱形有位于坐标轴的尖角，最优等高线更容易在某个权重=0处接触。这是几何直觉，不表示每份数据一定产生稀疏解。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/181dd2c9446d1880.png" rel="noopener" target="_blank"><img alt="Instructor L1 geometry" decoding="async" loading="lazy" src="../assets/181dd2c9446d1880.png"/></a>
+<a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/13b6126ee1ec192e.png" rel="noopener" target="_blank"><img alt="Instructor L2 geometry" decoding="async" loading="lazy" src="../assets/13b6126ee1ec192e.png"/></a></p>
+<p>看图比较接触点是否落在轴上。更具体地，对一维目标 <span class="arithmatex">\(\sum_i(y_i-wx_i)^2+\alpha|w|\)</span>，记 <span class="arithmatex">\(a=\sum x_i^2&gt;0,t=\sum x_iy_i\)</span>。分别在w&gt;0和w&lt;0求导，结合w=0的尖角，得到</p>
+<div class="arithmatex">\[w=\frac{\operatorname{sign}(t)\max(|t|-\alpha/2,0)}a.\]</div>
+<p>沿用a=t=5，alpha=4得w=0.6；alpha=10得0。这叫软阈值。sklearn Lasso把拟合项写成 <span class="arithmatex">\(\|y-Aw\|^2/(2N)\)</span>，同名alpha与上式缩放不同；应先对齐目标再比较数字。</p>
+<p>A69–80用非零系数数目和CV选择alpha。原课特征列表是该数据/设置下的结果，不是宣告房间数等永远无用。相关变量可能互相替代；大alpha也可能丢掉真正有用的信号。</p>
+<h2 id="7-sparsity-and-omp">7. Sparsity and OMP｜每次挑方向，但要回头一起重拟合</h2>
+<p><span class="arithmatex">\(\|w\|_0\)</span>表示非零个数，不是真正的范数。限制 <span class="arithmatex">\(\|w\|_0\le K\)</span> 是组合选择问题，一般难以穷举。Orthogonal Matching Pursuit（OMP）用贪心近似：从残差开始，选与残差最相关的未选特征，加入活动集合，<strong>对所有已选特征联合重做最小二乘</strong>，再更新残差。</p>
+<p>原A83只写“计算新特征一个系数并减掉”，更接近普通 matching pursuit 的简写，缺少OMP的联合正交投影步骤。关联比较通常需中心化并对列作适当归一化，否则尺度大的特征占便宜；不要把标准化、单位范数和库默认处理混为一谈。</p>
+<p>补算采用无截距、列已单位归一的模型，取 <span class="arithmatex">\(a_1=(1,0)^T,a_2=(1,1)^T/\sqrt2\)</span>，y=(1,2)。先与a₂相关更大，第一次投影残差=(-0.5,0.5)；第二次加入a₁后必须联合解，得到系数(-1,2√2)，恰好重建y。若只保留原a₂系数不动，残差不会归零。A84的库实现就是联合更新的OMP。</p>
+<p><a id="ransac"></a></p>
+<h2 id="8-ransac">8. RANSAC｜不是每个离群点都值得把直线拽过去</h2>
+<p>B4–15展示大残差如何支配平方误差。Ridge缩小权重，但仍平方惩罚残差，因此不是专门的异常值过滤器。RANSAC（Random Sample Consensus）反复：随机选足够拟合的小子集 → 拟合候选模型 → 按残差阈值找inliers → 保留较大一致集 → 对一致集重新拟合。</p>
+<p>拟合二维图中的直线至少需要两个横坐标不同的点，不是任意两行都够。原手工示范B9有放回采样，可能抽中同一个点；学习时应检查退化样本并跳过。阈值T用y的单位，例如预测价格千元时T=15表示1.5万元，不是15%。inlier/outlier是相对于模型和阈值的判断，不自动代表真实数据好坏。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/45566e7f188dc8c5.png" rel="noopener" target="_blank"><img alt="OLS, ridge and RANSAC on the instructor synthetic outlier setup" decoding="async" loading="lazy" src="../assets/45566e7f188dc8c5.png"/></a></p>
+<p>本轮重算保留B5的4487/447数据种子及B13的RANSAC种子1234。图中对照线说明稳健拟合的目的；成功仍依赖足够的一致点、合理模型与阈值。补充概率：每次独立取s个点、单点为inlier概率约q，k次至少一次全inlier概率约 <span class="arithmatex">\(1-(1-q^s)^k\)</span>；近似假设应说明，不能当作任意数据都保证成功。</p>
+<h2 id="9-polynomial-regression">9. Polynomial regression｜对输入非线性，对参数仍线性</h2>
+<p>B16–39把x变成 <span class="arithmatex">\((1,x,x^2,\ldots,x^p)\)</span> 再线性拟合。曲线可以弯，但待估参数w仍线性进入。二元二次可含 <span class="arithmatex">\((1,x_1,x_2,x_1^2,x_1x_2,x_2^2)\)</span>；三次纯项为 <span class="arithmatex">\((x_1^3,x_1^2x_2,x_1x_2^2,x_2^3)\)</span>，原B34最后的 <span class="arithmatex">\(x_3^3\)</span> 是笔误。</p>
+<p>嵌套的未正则多项式模型在精确求最优时，增加阶数不会增加训练SSE，因为新模型仍可把新系数设0。但测试误差可能升高，数值病态也可能打乱浮点结果。用CV选degree；原Pipeline使<code>polyfeats__degree</code>可以被网格搜索访问。<code>neg_mean_squared_error</code>取负是因为搜索器统一找“越大越好”，画MSE时要变回正值。</p>
+<p><strong>变式 / Transfer:</strong> 二维输入(2,3)用含常数和一次项的二次映射，结果是什么？ / Give the degree-2 expansion including bias and linear terms for (2,3).</p>
+<details>
+<summary>答案 / Answer</summary>
+<p><span class="arithmatex">\((1,2,3,4,6,9)\)</span>，共6维。 / (1,2,3,4,6,9), six features. <code>include_bias=False</code>时去掉首项，若模型另估截距可避免重复常数列。</p>
+</details>
+<h2 id="10-kernel-ridge-regression">10. Kernel ridge regression｜把线性代数搬到样本之间</h2>
+<p>给N个训练点，<span class="arithmatex">\(K_{ij}=k(x_i,x_j)\)</span> 为N×N核矩阵，<span class="arithmatex">\(k_*=(k(x_1,x_*),…,k(x_N,x_*))^T\)</span> 为N维向量：</p>
+<div class="arithmatex">\[a=(K+\alpha I)^{-1}y,\qquad \hat y_*=k_*^Ta.\]</div>
+<p>字母a是每个训练样本的系数，和特征权重w、正则参数alpha区分。对有效半正定核、alpha&gt;0可解。截距/中心化要另外约定；默认KernelRidge并非自动拟合不惩罚的截距。</p>
+<p>完整小例：训练x=(0,1)，线性核 <span class="arithmatex">\(k(x,z)=xz\)</span>，y=(0,2)，alpha=1、无截距。K=diag(0,1)，a=(0,1)，在x<em>=2时k</em>=(0,2)，预测2。它与同一特征和同一惩罚的ridge等价；<strong>不等于任意PolynomialFeatures+无正则OLS</strong>。B41的“same as”需要补这个条件。多项式核映射包含缩放权重，也未必等于库默认多项式特征的未经缩放内积。</p>
+<p>RBF gamma控制距离尺度，alpha控制正则，二者作用不同。B50用10×10候选、5折，共500次候选拟合；保存的最佳CV分数是模型选择结果，不是独立测试证据。</p>
+<h2 id="11-support-vector-regression">11. Support vector regression｜在容忍带内不追究小误差</h2>
+<p>SVR在曲线两侧各留epsilon，<strong>总带宽2epsilon</strong>。残差的epsilon-insensitive loss为 <span class="arithmatex">\(\max(0,|y-f(x)|-\epsilon)\)</span>。残差0.3、epsilon0.5时损失0；残差−1.2时损失0.7。这里是超出带的<strong>绝对误差</strong>，不是普通平方误差；原总结B101的“squared error”不对应前面讲的标准epsilon-SVR。</p>
+<p>通常目标为 <span class="arithmatex">\(\frac12\|w\|^2+C\sum_i\max(0,|r_i|-\epsilon)\)</span>。原B57使用 <span class="arithmatex">\(1/C\)</span>正则写法时需对齐因子约定。带外和边界上的支持样本可能参与预测，退化情况不能把“在边界”与“非零系数”写成双向必然。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/654c74fc068e1f92.png" rel="noopener" target="_blank"><img alt="Epsilon-insensitive loss and regression tube" decoding="async" loading="lazy" src="../assets/654c74fc068e1f92.png"/></a></p>
+<p>图左先看容忍带，图右看损失的平底。C决定违约代价，epsilon决定忽略多大误差，gamma决定RBF核尺度。B70同时搜索三者：10×10×10候选、5折，共5000次候选拟合。讲义解释完整流程，本轮不把它称为已重跑的大型搜索。</p>
+<h2 id="12-trees-and-random-forests">12. Trees and random forests｜多位意见不同的“专家”怎样投票</h2>
+<p>回归树按阈值逐层分支，每个叶子输出其中训练目标的平均值（平方损失情形），所以形成台阶。单棵深树容易记住训练噪声。Random Forest通过bootstrap抽样，并在节点分裂时按设置随机选特征，让多棵树产生不同规则；最终预测是<strong>各树预测的平均</strong>，不是只找其中一棵树的叶子。</p>
+<p>例如三棵树对同一房屋输出180、210、210（千元），森林输出200。增加树通常稳定随机波动，但不保证每增加一棵测试误差就降低。原B91画的是训练MSE随树数变化，不能读成测试泛化曲线。B94再用5折选树深度，这才把复杂度选择和验证联系起来。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/0be69faab67f207c.jpg" rel="noopener" target="_blank"><img alt="Instructor random forest diagram" decoding="async" loading="lazy" src="../assets/0be69faab67f207c.jpg"/></a></p>
+<p>当前<code>RandomForestRegressor</code>默认<code>max_features=1.0</code>，即每个节点可考虑所有特征；若要演示特征子采样需显式设置。名称叫随机森林不意味着每份默认代码都有严格小于全部的候选特征数。叶子平均的树通常不擅长超出训练目标范围的外推；图看起来块状合理不等于已证明无数据区域预测正确。</p>
+<h2 id="13-boosting-and-xgboost">13. Boosting and XGBoost｜后一棵树接着修前面的误差</h2>
+<p>Bagging让多棵树主要并行学习不同抽样，boosting让后一个模型针对当前组合的不足继续学习。平方损失的负梯度与残差方向一致，因此可拟合 <span class="arithmatex">\(y-f_{t-1}(x)\)</span>，再作 <span class="arithmatex">\(f_t=f_{t-1}+\eta h_t\)</span>。若h拟合的是正梯度，则用减号。B97采用正梯度/减号约定，不要同时翻两个号。</p>
+<p>补算：当前预测(2,2)，真实值(3,1)，残差(1,−1)。若新弱学习器恰拟合残差，学习率0.5，新预测(2.5,1.5)，平方误差和从2降为0.5。这只验证一步机制，不表示每个实际弱学习器都能精确拟合。</p>
+<p>XGBoost在梯度提升树中还使用正则化及二阶信息。B98搜索列采样、分裂gamma、树深、行采样、学习率、树数；这里的<code>gamma</code>是最小分裂损失收益，<strong>不是RBF gamma</strong>。<code>RandomizedSearchCV(n_iter=200,cv=5,random_state=4487)</code>共1000次候选拟合。学习率是每轮贡献，不是某种“准确率参数”。</p>
+<p>按 <a href="https://xgboost.readthedocs.io/en/stable/parameter.html#learning-task-parameters">XGBoost官方参数说明</a>（查阅2026-09-23），<code>reg:squarederror</code>为平方误差目标，<code>reg:gamma</code>使用Gamma回归且目标须为正；不应将任意含0的非负目标直接套进去。原课仅导入而未用于教学计算的torch不列入环境需求。本轮以手算梯度步骤解释机制，没有执行原200候选XGBoost搜索，也不复述旧输出为新结果。</p>
+<h2 id="14-comparing-regression-methods">14. Comparing regression methods｜模型、目标、假设一起记</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>主要能力</th>
+<th>关键代价/条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OLS</td>
+<td>线性平方误差拟合</td>
+<td>异常值、共线性；解需秩条件</td>
+</tr>
+<tr>
+<td>Ridge</td>
+<td>缩小权重、稳定解</td>
+<td>通常不精确选零特征；需尺度一致</td>
+</tr>
+<tr>
+<td>LASSO</td>
+<td>稀疏线性模型</td>
+<td>alpha约定、相关特征选择不稳定</td>
+</tr>
+<tr>
+<td>OMP</td>
+<td>贪心选择少数特征</td>
+<td>需联合重拟合，不是一般全局L0最优</td>
+</tr>
+<tr>
+<td>RANSAC</td>
+<td>抗较多污染点</td>
+<td>模型、阈值、采样成功概率</td>
+</tr>
+<tr>
+<td>Polynomial/KRR</td>
+<td>弯曲预测关系</td>
+<td>复杂度、外推、核矩阵与正则</td>
+</tr>
+<tr>
+<td>SVR</td>
+<td>容忍带与稀疏样本系数</td>
+<td>epsilon/C/核调参，非平方损失</td>
+</tr>
+<tr>
+<td>RF/boosting trees</td>
+<td>组合规则捕捉交互</td>
+<td>仍需验证，树规则呈分段常数</td>
+</tr>
+</tbody>
+</table></div>
+<p>B103提到目标取log：只有正目标能直接log；改变后最小化的是log空间误差，更看重相对比例。简单exp回转一般对应log预测的反变换，不自动等于原空间条件均值；最终评价需回到任务要求的单位/指标。原文“see tutorial”不能视为我们已经下载了该Tutorial。</p>
+<h2 id="15-english-self-test-and-review">15. English self-test and review｜解释清楚再复习</h2>
+<ol>
+<li><strong>Why does ridge help with collinear features? / 为什么ridge能缓解共线性？</strong> 答：给正则化方向增加正对角项，限制不稳定大系数。 / It stabilizes penalized directions and discourages large unstable coefficients.</li>
+<li><strong>Does LASSO prove that a zero-weight feature is useless? / LASSO的零权重证明特征没用吗？</strong> 答：只说明当前表示、数据与正则设置未使用它。 / It is unused in this fitted model, not universally irrelevant.</li>
+<li><strong>What does OMP refit after selecting a feature? / OMP新选特征后重拟合什么？</strong> 答：全部已选特征的联合系数。 / All active coefficients jointly.</li>
+<li><strong>Does lower training MSE imply better prediction? / 训练MSE更低就一定更好？</strong> 答：不，需验证新数据表现与假设。 / No; assess generalization on appropriate validation data.</li>
+</ol>
+<p>首轮可选<a href="../../cards.html#CS5489-M187">现有回归卡</a> <strong>M187（OLS与残差）、M189（截距与设计矩阵）、M194（ridge）、M207（非线性输入与线性参数）</strong>，按卡号进入Markji；其他模型按实际遗忘情况再补，不新增整批卡片。参见<a href="https://crazyshout.github.io/micro-course/?lesson=ml16">回归微课</a>。</p>
+<h2 id="16-source-coverage-and-execution-boundary">16. Source coverage and execution boundary｜能回查，也能知道哪些跑过</h2>
+<p>关键手算、矩阵解、原种子合成数据、固定房价OLS及训练内部ridge选择由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">脚本</span> 实际运行，结果在 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">JSON</span>。大型kernel/SVR/XGBoost搜索只讲原流程；原结果引用在文字中明确标注。未生成作业提交预测文件。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原课单元</th>
+<th>本文对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1–12</td>
+<td>开篇、§1：任务、原合成例、房价与散点/三维含义</td>
+</tr>
+<tr>
+<td>A13–24</td>
+<td>§2–3：一/多维线性、OLS、偏置、推导、绘图函数</td>
+</tr>
+<tr>
+<td>A25–34</td>
+<td>§1、§4：单/双特征房价、单位与原系数</td>
+</tr>
+<tr>
+<td>A35–41</td>
+<td>§4：12特征与成对图</td>
+</tr>
+<tr>
+<td>A42–49</td>
+<td>§5：shrinkage、ridge、病态矩阵演示</td>
+</tr>
+<tr>
+<td>A50–62</td>
+<td>§5：固定划分、缩放、alpha路径、CV、系数</td>
+</tr>
+<tr>
+<td>A63–80</td>
+<td>§6：L1/L2、LASSO路径、非零数、CV</td>
+</tr>
+<tr>
+<td>A81–88</td>
+<td>§7：L0、OMP及与LASSO比较、末空单元</td>
+</tr>
+<tr>
+<td>B1–15</td>
+<td>§8：离群、OLS/Ridge、手工RANSAC、库实现</td>
+</tr>
+<tr>
+<td>B16–33</td>
+<td>§9：一维多项式、sin例、Age房价、Pipeline/CV</td>
+</tr>
+<tr>
+<td>B34–39</td>
+<td>§9：二维多项式及课件笔误</td>
+</tr>
+<tr>
+<td>B40–52</td>
+<td>§10：KRR、多项式/RBF、alpha/gamma搜索</td>
+</tr>
+<tr>
+<td>B53–72</td>
+<td>§11：容忍带、损失、核SVR、三参数搜索</td>
+</tr>
+<tr>
+<td>B73–85</td>
+<td>§12：集成、树、森林及各树/树数图</td>
+</tr>
+<tr>
+<td>B86–96</td>
+<td>§12：房价、训练MSE、树深CV</td>
+</tr>
+<tr>
+<td>B97–100</td>
+<td>§13：boosting/XGBoost机制与原搜索</td>
+</tr>
+<tr>
+<td>B101–104</td>
+<td>§14–16：比较、归一化、目标变换、末空单元</td>
+</tr>
+</tbody>
+</table></div>
+<p>原课疑点集中记录：A21伪逆对象需转置；A44截距是否惩罚需约定；A54“shrink to0”通常是趋近；A83漏掉OMP联合重拟合；B34末项应<span class="arithmatex">\(x_2^3\)</span>；B41核ridge与OLS不无条件等价；B53带宽应区分半宽；B101 SVR损失应为epsilon-insensitive绝对损失；B103目标反变换不自动是原空间均值。全部在所属解释处给出条件，原件保持不变。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

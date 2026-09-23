@@ -1,0 +1,376 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 1 · Introduction / Python / NumPy / Probability · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-1-introduction-python-numpy-probability">Lecture 1 · Introduction / Python / NumPy / Probability</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=2">A4 打印版 · 第 2–13 页</a>　图可点击放大。</p>
+<h1 id="_1">从“让机器学会认数字”，走到能读懂下一讲的代码</h1>
+<p><a href="index.html">课程目录</a> · <a href="Tutorial01.html">Tutorial 1动手笔记</a> · <a href="Lecture02.html">下一讲：概率分类</a></p>
+<p><strong>可选基础：</strong> <a href="../foundations/MathForML.html#symbols-functions">函数、下标与图像</a> · <a href="../foundations/MathForML.html#probability-density">概率与密度</a> · <a href="../foundations/MathForML.html#vectors-covariance">向量与矩阵</a>。只在卡住时补，不必先通读一遍数学。</p>
+<p>主线按当前老师材料：Intro → Lecture1a → Lecture1b。下文I是<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Intro PDF</span>页码，A/B是<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture1a</span>／<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture1b</span>从1起算的单元号。原件不改；重复执行的小演示按学习目的合并。</p>
+<p>这一讲先建立整门课的任务语言，再准备实际工具。你要能说清输入、目标与评价，能逐行读Python，知道数组的哪根轴是样本，并能把条件概率的方向读对。原课的安装界面和部分语法说明较旧，本文给出差异说明；日期、评分、提交手续仍查<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>与当前Canvas。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>优先级</th>
+<th>难度与卡点</th>
+<th>掌握要求、依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>学习任务、训练/验证/测试</td>
+<td>核心必会</td>
+<td>中，目标与流程不同</td>
+<td>解释并画出数据流；I9–26</td>
+</tr>
+<tr>
+<td>Python变量、容器与流程</td>
+<td>核心必会</td>
+<td>中，代码执行顺序</td>
+<td>跟踪值、独立写小程序；A15–123、Tutorial1</td>
+</tr>
+<tr>
+<td>函数与类</td>
+<td>常规掌握</td>
+<td>中，返回值、对象状态</td>
+<td>会调用、读懂fit/predict式接口；A125–153</td>
+</tr>
+<tr>
+<td>文件与表格</td>
+<td>常规掌握</td>
+<td>中，路径与数据类型</td>
+<td>能读输入并核对；A155–179</td>
+</tr>
+<tr>
+<td>数组形状、索引、广播与复制</td>
+<td>核心必会</td>
+<td>中至高，轴和共享数据</td>
+<td>能预测输出形状与修改影响；B3–120</td>
+</tr>
+<tr>
+<td>图与概率复习</td>
+<td>核心必会</td>
+<td>中，纵轴含义、条件方向</td>
+<td>画对图、手算边缘/条件概率；B122–139</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些是基于当前目标与任务的学习建议，不是教师公布的必考清单；Python底层机制并不因难就自动成为本课重点。</p>
+<p><a id="learning-task"></a></p>
+<h2 id="1-what-is-machine-learning">1. What is Machine Learning?｜先把“学会了”说得可检验</h2>
+<p><strong>原课I9–16。</strong> 老师用手写数字举例：一张28×28图像可以排成784个像素值，但同一个数字有很多写法。靠手工为每种笔迹写规则很困难，于是收集已知答案的例子，用算法估计从输入到输出的规律。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/95180ed0d57c2de2.png" rel="noopener" target="_blank"><img alt="老师Intro第12页的数字识别例子" decoding="async" loading="lazy" src="../assets/95180ed0d57c2de2.png"/></a></p>
+<p><em>原课整页图。看图像→向量→类别这条线：784是输入特征数，不是数字类别数；像素展开保持固定顺序，不能每张图换一种排法。</em></p>
+<p>Mitchell的任务表述可以拆成三个问题：<strong>task T</strong>做什么，<strong>experience E</strong>从什么经验学，<strong>performance P</strong>怎样衡量。识别数字时，T是分类，E是带标签的训练图，P可以是未参与训练的数据上的错误率。仅仅“看过更多数据”不保证有效学习：数据质量、采样偏差和评价方式都影响结论。</p>
+<p>机器学习是AI中的一类方法，也吸收统计等领域的工具。AI中的搜索、规划、知识表示不都等于机器学习；深度学习是多层神经网络方法，可用于多种学习设定，不能把它和“监督／无监督”并列成互斥的数据类型。</p>
+<p><strong>English takeaway:</strong> Define the task, experience and performance measure before choosing an algorithm. Learning from data must be evaluated on an appropriate task and population.</p>
+<p><a id="learning-types"></a></p>
+<h2 id="2-topics-in-machine-learning">2. Topics in Machine Learning｜训练资料告诉了我们什么？</h2>
+<p><strong>原课I16–22。</strong> 监督学习给出输入和目标：分类输出类别，回归输出数值。老师的数字“3还是8”是分类，给定条件预测寿命是回归；类别编码为0/1，不会因此自动成为回归。</p>
+<p>无监督学习没有为每个样本提供同样形式的目标标签。聚类找相似群组，降维把高维结构投影到较低维空间供观察。它不是“完全不需要评价”，而是评价目标需要另行说明。</p>
+<p>强化学习让智能体在状态中采取行动，获得可能延迟的奖励，行动还会影响未来状态。把一张图片分类对错反馈一次，不自动等于完整的强化学习问题。</p>
+<p>学习理论关心模型表达能力、样本量和泛化的关系。Intro中训练误差与测试误差的曲线帮助理解过拟合，不是任何数据都必然具有相同形状的定律。深度学习与应用列表是课程地图；不需要现在把每个应用再扩成一门课。</p>
+<p><strong>Q 中文：</strong> 按聊天内容分组、预测房价、让机器人学习一连串动作，分别对应什么典型设定？<br/>
+<strong>Q English:</strong> What typical settings match grouping messages, predicting house prices, and learning a sequence of robot actions?<br/>
+<strong>答／Answer：</strong> 无监督聚类、监督回归、强化学习；具体还需确认标签与反馈。 / Unsupervised clustering, supervised regression and reinforcement learning, subject to the actual labels and feedback.</p>
+<p><a id="pipeline"></a></p>
+<h2 id="3-ml-training-pipeline">3. ML Training Pipeline｜先练习，再选方法，最后才验收</h2>
+<p><strong>原课I23–28。</strong> 一份数据先经过特征表示，再进入模型训练。参数是从训练数据学到的数，例如一条分界线的系数；超参数是你选择的配置，例如正则化强度C。验证集帮助选择配置，测试集用于方案固定后的评价。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b4ded7df5583062c.png" rel="noopener" target="_blank"><img alt="老师Intro第23页的训练流程" decoding="async" loading="lazy" src="../assets/b4ded7df5583062c.png"/></a></p>
+<p><em>原课流程中的Error=21%是示意结果，不是本轮运行成绩。特征提取也可能学习参数；词表、均值和缩放量都要放进训练流程考虑。</em></p>
+<p>I24举例比较C=0.1、1、10，对应验证错误率25%、10%、21%；按这个指标选择C=1。不能随后反复看测试集、挑另一个C，再把那个测试结果称为独立验收。<strong>Inference（推断）</strong>是固定模型对输入作预测；“评估预测是否正确”还需要对应答案，两件事有区别。</p>
+<p><strong>独立变式 / Transfer：</strong> 三个模型训练错误率为0%、4%、8%，验证错误率为20%、9%、11%。以验证错误率选谁？ / Training errors are 0%,4%,8% and validation errors are 20%,9%,11%. Which model is selected by validation error?<br/>
+<strong>答／Answer：</strong> 第二个；训练集最低错误不保证验证最好。 / The second model. Minimum training error does not guarantee best validation performance.</p>
+<p>原课CILO要求解释、实现、应用和评价。Lecture负责方法，Tutorial把方法写成代码，Assignment练更完整的实验；本讲的Python与数学正是后面这些工作的工具。</p>
+<p><a id="notebook"></a></p>
+<h2 id="4-python-and-jupyter">4. Python and Jupyter｜一本有记忆的实验笔记</h2>
+<p><strong>原课A1–14、I6。</strong> Python用简洁的语句组织工作，NumPy/SciPy承担数值计算，scikit-learn提供模型，Matplotlib画图。Python语句本身未必快，向量化库可以调用高效实现；“易学”不等于一两天就能独立完成可靠实验。</p>
+<p>Notebook有Markdown与code两种单元；内核保存当前变量状态。单元从上到下摆放，不保证你刚才按这个顺序运行。因此复现时用“Restart Kernel and Run All”。输出仍在文件里而变量已经被清空，这并不矛盾。</p>
+<p>当前本地运行方法见<a href="index.html">README</a>。A7截图是旧版本示例，A13的locale排错针对旧环境，不作为今天无条件修改系统设置的操作。<code>help(x)</code>查询Python帮助；<code>x?</code>、<code>%history</code>等是IPython交互功能，不是普通<code>.py</code>文件语法。</p>
+<p><strong>English takeaway:</strong> Notebook state belongs to the running kernel. A clean top-to-bottom run tests whether the document is reproducible rather than dependent on earlier hidden actions.</p>
+<p><a id="variables"></a></p>
+<h2 id="5-identifiers-variables-and-types">5. Identifiers, variables and types｜变量像标签，先看贴在哪里</h2>
+<p><strong>原课A15–28、76–88。</strong> Python区分大小写，用缩进表示代码块。<code>x=3</code>把名字x绑定到对象；<code>x=x+1</code>先算右边再重新绑定，不能当成数学等式化简。</p>
+<pre><code class="language-python">x = 3
+x = x + 1       # now 4
+if x == 4:      # comparison, not assignment
+    print("four")
+</code></pre>
+<p><code>int</code>是整数，<code>float</code>是有限精度浮点数，<code>bool</code>是True/False，<code>str</code>是文本。<code>6/4</code>为1.5，<code>6//4</code>向下取整为1，<code>-3//2</code>为−2；<code>%</code>取余，<code>**</code>做幂。浮点计算不保证每个十进制小数都精确存储。</p>
+<p><code>and/or/not</code>组合判断；<code>in</code>检查成员；<code>==</code>比较值，<code>is</code>比较是不是同一个对象。<code>a=[1,2]; b=a; c=a[:]</code>中，b与a同一对象，c是另一个列表；a==c可以为真，而a is c为假。</p>
+<p><strong>Q / 题：</strong> x=2，先执行x+=3再执行x<em>=2，结果是什么？ / Starting with x=2, apply x+=3 and then x</em>=2.<br/>
+<strong>答／Answer：</strong> 10，按顺序先变5再变10。 / 10: first 5, then 10.</p>
+<p><a id="containers"></a></p>
+<h2 id="6-lists-tuples-strings-dictionaries-sets">6. Lists, tuples, strings, dictionaries, sets｜先选对装东西的方式</h2>
+<p><strong>原课A29–75、89–94。</strong> 列表可按顺序存记录并修改，元组固定其各位置绑定；字符串保存字符序列；字典把键映射到值；集合去除重复并做集合运算。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>类型/操作</th>
+<th>小例子与结果</th>
+<th>容易踩的坑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list / range</td>
+<td>list(range(2,8,2)) → [2,4,6]</td>
+<td>右端点8不包含，range本身不是已展开列表</td>
+</tr>
+<tr>
+<td>append / pop</td>
+<td>a.append(7)加末尾；a.pop()移除并返回末项</td>
+<td>一些原地修改方法返回None</td>
+</tr>
+<tr>
+<td>insert / del / sort / reverse</td>
+<td>指定位置插入、删除、排序、反转</td>
+<td>注意它们可能改变原对象；混合不可比较类型不能任意排序</td>
+</tr>
+<tr>
+<td>tuple</td>
+<td>(1,)是一元素元组</td>
+<td>逗号关键；元组不可变不代表内部引用的列表也不可变</td>
+</tr>
+<tr>
+<td>str</td>
+<td>"hello"[1:4] → "ell"；[-1] → "o"</td>
+<td>字符串不能原地改一个字符</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>{"name":"john"}["name"] → "john"</td>
+<td>键需要可哈希；keys()/items()是视图，不是可随意索引的列表</td>
+</tr>
+<tr>
+<td>set</td>
+<td>set([1,1,2]) → {1,2}</td>
+<td>用−、|、&amp;表示差、并、交，不把集合当固定位置数组</td>
+</tr>
+</tbody>
+</table></div>
+<p>切片<code>start:stop:step</code>先确定位置，stop不包括。<code>"hello"[0:5:2]</code>取位置0、2、4，得到"hlo"。序列<code>+</code>可以拼接，字符串<code>*3</code>是重复三次，不是数值乘法。</p>
+<p>字符串处理沿原课依次认识：<code>count</code>计数，<code>startswith/endswith</code>查前后缀，<code>find</code>找位置，<code>split</code>拆分，<code>join</code>连接，<code>replace</code>替换，<code>strip</code>移除首尾指定字符（默认空白）。<code>"a,b,c".split(',')</code>与<code>','.join(['a','b','c'])</code>把两种形式连接起来。<code>.format(...)</code>把数填进文本；例如<code>"{:.2f}".format(1.234)</code>得到"1.23"，这只改变显示，不修改原浮点值。</p>
+<p><strong>English takeaway:</strong> Choose containers by their purpose, and distinguish value equality, object identity and in-place mutation. Slices exclude the stop position.</p>
+<p><a id="control-flow"></a></p>
+<h2 id="7-conditional-statements-and-loops">7. Conditional statements and loops｜把每轮变量变化写出来</h2>
+<p><strong>原课A96–123。</strong> <code>if/elif/else</code>选择分支；<code>for</code>按元素迭代，<code>while</code>在条件成立时重复。缩进决定某句执行一次还是每轮都执行。</p>
+<pre><code class="language-python">total = 0
+for n in range(1, 6, 2):   # 1, 3, 5
+    total += n
+print(total)              # 9, after the loop
+</code></pre>
+<p>三轮total依次是1、4、9。<code>enumerate</code>同时给索引与值，<code>zip</code>把多个序列逐项配对，默认在最短序列结束时停止；遍历字典可用<code>for key, value in d.items()</code>。<code>break</code>退出循环，<code>continue</code>跳过本轮剩余部分；循环的<code>else</code>在正常结束、没有break时执行。</p>
+<p>先会写多行，再读列表推导式：<code>[4*x for x in values if x&gt;2]</code>表示遍历、筛选、变换并收集。A123实际代码为<code>4*item*4</code>，所以是16倍，不要把它按前一页4倍解释。更短的代码不一定更适合第一次学习。</p>
+<p><strong>变式 / Transfer：</strong> 对[1,2,3,4]只收集偶数的平方，结果是什么？ / Collect squares of the even values in [1,2,3,4].<br/>
+<strong>答／Answer：</strong> [4,16]，例如<code>[x*x for x in values if x%2==0]</code>。 / [4,16], by testing evenness before collecting the square.</p>
+<p><a id="functions-classes"></a></p>
+<h2 id="8-functions-and-classes">8. Functions and classes｜把动作封装，把状态放在对象里</h2>
+<p><strong>原课A125–153。</strong> 原函数<code>sum3(a,b=1,c=2)</code>有一个必需参数和两个默认参数。<code>sum3(0)</code>返回3，<code>sum3(b=1,a=5,c=2)</code>返回8。<code>print</code>让屏幕显示内容，<code>return</code>把结果交给调用者；只print而没有return，调用结果通常是None。</p>
+<pre><code class="language-python">def sum3(a, b=1, c=2):
+    """Return the sum of three values."""
+    return a + b + c
+result = sum3(*[1, 5, 2])          # positional unpacking: 8
+same = sum3(**{"a":5,"b":1,"c":2}) # keyword unpacking: 8
+</code></pre>
+<p>类把状态和动作组织在一起。原<code>MyList</code>的<code>self.x</code>每个实例各有一份，<code>MyList.num</code>是类共享的计数；<code>__init__</code>初始化对象，<code>self</code>是正在操作的实例。原<code>appendx</code>虽然注释写“class method”，实际是普通实例方法，并不是<code>@classmethod</code>。</p>
+<p><code>MyListAll(MyList)</code>继承并重写部分方法，父类初始化仍需正确调用。<code>_name</code>主要是约定，<code>__name</code>触发名字改写，不等于访问控制保险箱。<code>__str__</code>决定友好文本显示；<code>__dict__</code>、<code>__doc__</code>、<code>__module__</code>、<code>__name__</code>、<code>__bases__</code>帮助查看对象与类。原属性查找说明针对普通例子，更完整的描述符与继承细节留作语言学习，不要求本课先背完。</p>
+<p><strong>English takeaway:</strong> A function returns a result; an object can retain state across method calls. This prepares you to understand an estimator that is fitted first and used for prediction later.</p>
+<p><a id="files"></a></p>
+<h2 id="9-file-io-pickle-exceptions-and-pandas">9. File I/O, Pickle, exceptions and pandas｜读进来的是什么？</h2>
+<p><strong>原课A155–179。</strong> <code>with open(...) as f</code>在代码块退出时关闭文件。<code>read</code>读剩余全部文本，<code>readline</code>读一行，<code>readlines</code>读剩余行列表；读取位置会移动。写模式<code>w</code>会覆盖已有文件，所以本地练习只写自己的输出目录。</p>
+<p>Pickle以二进制保存Python对象结构，<code>wb/rb</code>分别写/读字节；它不是随便编辑的文本格式，加载可能执行对象重建操作，只用于可信输入。Python3的<code>pickle</code>已有加速实现，A168的独立cPickle说法和“1000倍”不作为当前保证。</p>
+<p><code>try/except/else/finally</code>分别负责尝试、处理匹配异常、无异常时执行、退出前清理。原示例裸<code>except</code>会把各种失败都叫“No file”，实际学习时应区分文件缺失、格式错误和程序错误，避免把坏数据悄悄吞掉。</p>
+<p>pandas的DataFrame是一张带列名的表，各列可以有不同类型。原例<code>df['Name']</code>取列，<code>df[df.Age&gt;30]</code>取符合条件的行，<code>df.Age.mean()</code>算Age均值。读CSV前确认首行是不是列名，否则可能把第一条样本当成表头。</p>
+<p><a id="arrays"></a></p>
+<h2 id="10-numpy-arrays">10. NumPy arrays｜先说清每根轴，再做计算</h2>
+<p><strong>原课B3–43。</strong> <code>np.arange(15).reshape(3,5)</code>按默认顺序把0…14排成3行5列。<code>shape</code>是(3,5)，<code>ndim</code>是2，<code>size</code>是15，<code>dtype</code>是元素类型。这四个量回答不同的问题。</p>
+<p><code>zeros/ones/full</code>生成明确初值；<code>empty</code>分配未初始化存储，里面可能是旧内存内容，<strong>不是随机数采样器</strong>。<code>arange</code>按步长、通常不含右端点，浮点步长需留意舍入；<code>linspace</code>按点数取等距点，默认包含两端；<code>logspace</code>在指数上等距。</p>
+<pre><code class="language-python">import numpy as np
+A = np.array([[1,2,3],[4,5,6],[7,8,9]])
+A[0,1]        # 2: row 0, column 1
+A[:,1]        # [2,5,8]: one whole feature column
+A[:2,1:3]     # [[2,3],[5,6]]
+mask = A[:,1] &gt; 4
+A[mask]       # rows 1 and 2
+</code></pre>
+<p>三维<code>np.arange(24).reshape(3,2,4)</code>可以看成3个2×4小表；<code>B[2,0,1]</code>得到17。<code>B[:,1,:]</code>保留所有组的第1行，结果3×4；循环默认沿第0轴走。数组的轴含义由数据定义，不能仅凭“二维”就猜行是特征。</p>
+<p><strong>Q / 题：</strong> A.shape=(20,4)，每行一条样本。A[:5,2]是什么形状？ / A has 20 row-wise samples and four features. What is the shape of A[:5,2]?<br/>
+<strong>答／Answer：</strong> (5,)，一个整数列索引移除了列轴；A[:5,2:3]则是(5,1)。 / (5,); a slice 2:3 would preserve a size-one second axis.</p>
+<p><a id="shapes-broadcasting"></a></p>
+<h2 id="11-shape-manipulation-and-broadcasting">11. Shape manipulation and broadcasting｜形状对齐不靠猜</h2>
+<p><strong>原课B44–83。</strong> <code>reshape</code>按元素顺序重新组织形状，总元素数必须匹配；<code>transpose</code>交换轴；<code>ravel</code>展开；<code>ndarray.resize</code>会原地改形状，不能与返回新形状视图的reshape混为一谈。<code>concatenate</code>沿指定既有轴拼接，<code>vstack/hstack</code>堆叠；<code>c_</code>、<code>r_</code>是原课的便捷写法。</p>
+<p>NumPy数组的<code>+,-,*,**</code>通常逐元素执行，矩阵乘法用<code>@</code>。<code>A.sum(axis=0)</code>把行方向合并，剩下各列的和；<code>axis=1</code>则得到各行的和。<code>argmax</code>返回位置，<code>max</code>返回数值。</p>
+<p>Broadcasting从最右侧逐轴比较：两边相等或其中一边为1才兼容，缺少的左侧轴视为1。一个(2,3)数组加(3,)向量，相当于给每行加同一组特征偏移；加(2,1)则给每行加各自的一个数。</p>
+<pre><code class="language-python">A = np.array([[1,2,3],[4,5,6]])
+b = np.array([1,2,3])
+c = np.array([[1],[2]])
+A + b   # [[2,4,6],[5,7,9]]
+A + c   # [[2,3,4],[6,7,8]]
+b + c   # [[2,3,4],[3,4,5]]
+</code></pre>
+<p><code>b[:,None]</code>把(3,)变成(3,1)，所以<code>b+b[:,None]</code>会得到3×3，而不是继续得到一条长度3的向量。它可能合法却不是你想做的事：没报错不是形状正确的证据。</p>
+<p><strong>变式 / Transfer：</strong> (5,3)加(5,)是否合法？若想每行加一个数，应怎样改？ / Can shapes (5,3) and (5,) broadcast? How do you add one number per row?<br/>
+<strong>答／Answer：</strong> 不兼容；把后者变成(5,1)。 / They are incompatible; reshape the second array to (5,1).</p>
+<p><a id="linear-algebra"></a></p>
+<h2 id="12-brief-linear-algebra-review">12. Brief linear algebra review｜同一个乘号前后可能是不同东西</h2>
+<p><strong>原课B84–109。</strong> 向量x、y的内积xᵀy把对应元素相乘再求和；长度为√(xᵀx)，距离为‖x−y‖₂。内积同时受长度与方向影响，不是无条件归一化的相似度。外积xyᵀ得到一个矩阵。</p>
+<p>矩阵乘法必须内维度相同：(m×d)乘(d×n)得到(m×n)，每格是左行与右列的点积：</p>
+<div class="arithmatex">\[c_{ij}=\sum_{k=1}^{d}a_{ik}b_{kj}.\]</div>
+<p><strong>原课勘误：</strong> B98求和符号使用k，但项中写成固定d；应如上按k遍历。B102的列向量个数也应跟矩阵的列数m对应，形状检查比死记图里的下标可靠。</p>
+<p>Ax可以看作A各列的线性组合；Aᵀx是x与A各列的内积；AB逐列形成Abⱼ；AᵀB是两组列之间的内积表；ABᵀ也可写成对应列外积之和。先数行列，再决定这里要的是一个数、一条向量还是一张表。</p>
+<p>原例x=(1,2,3)、y=(2,1,1)，内积7，长度√14，距离√6。<a href="../foundations/MathForML.html#matrix-products">需要逐格演算时补这里</a>。Tutorial1再把投影与正交化实现出来。</p>
+<p><a id="copies"></a></p>
+<h2 id="13-copies-and-views">13. Copies and views｜你改的是原件，还是副本？</h2>
+<p><strong>原课B110–120。</strong> <code>b=a</code>只多一个名字，没有复制。基础切片通常给共享底层数据的view，<code>a.copy()</code>才分配独立数据；布尔/高级索引通常会复制。reshape有时能返回view，有时需要复制，不能只凭外观判断。</p>
+<pre><code class="language-python">a = np.array([1,2,3,4])
+b = a
+c = a[1:3]
+d = a.copy()
+c[0] = 99
+print(a)        # [1,99,3,4]
+print(d)        # [1,2,3,4]
+</code></pre>
+<p>不同数组对象可以共享数据，所以<code>c is a</code>为假并不保证互不影响。必要时用<code>np.shares_memory</code>检查。模型实验里把视图误当副本，可能在预处理时把原训练数据改掉，导致后一个实验接收到不同输入。</p>
+<p><a id="plots-probability"></a></p>
+<h2 id="14-visualizing-data-and-probability">14. Visualizing data and probability｜图像和数字说同一句话</h2>
+<p><strong>原课B122–140。</strong> <code>plt.plot</code>绘制横纵值的对应，原<code>'bo-'</code>是蓝色圆点实线；颜色、点形和线型承担不同角色。图必须标轴和单位；因子计数图与直方图的区别将在Tutorial1实际画出来。</p>
+<p>随机变量X从一组可能值中取值。离散变量用PMF给各值概率，非负且和为1。Bernoulli只有0/1两个结果，p(1)=π、p(0)=1−π。Poisson描述固定曝光区间内的非负整数次数：</p>
+<div class="arithmatex">\[p(x)=e^{-\lambda}\frac{\lambda^x}{x!},\qquad x=0,1,2,\ldots.\]</div>
+<p>x!表示x×(x−1)×…×1，0!=1。这里λ是这个指定区间里的期望计数；若给的是每秒到达率r，观察t秒时应使用λ=rt，不能把不同区间的率与总数混用。模型假设是否合适要结合过程判断。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/ee59be5d3f7f29ac.png" rel="noopener" target="_blank"><img alt="原Lecture1b的Poisson示意图" decoding="async" loading="lazy" src="../assets/ee59be5d3f7f29ac.png"/></a></p>
+<p>连续变量用PDF，概率是区间面积，不是单点高度。原课用高斯说明均值μ与方差σ²；“p(x)叫likelihood”须看固定的是数据还是参数，单纯讲随机变量分布时更明确的词是density。</p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/345a9ac58655efb9.png" rel="noopener" target="_blank"><img alt="原Lecture1b的Gaussian示意图" decoding="async" loading="lazy" src="../assets/345a9ac58655efb9.png"/></a></p>
+<p><em>两幅图保留原图文字；上图给整数取值的概率质量，下图给连续密度。不是本轮数据拟合结果。</em></p>
+<p>原B134的联合概率表可完整手算：</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>p(x,y)</th>
+<th style="text-align: right;">Y=0</th>
+<th style="text-align: right;">Y=1</th>
+<th style="text-align: right;">p(x)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X=0</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.20</td>
+</tr>
+<tr>
+<td>X=1</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+<tr>
+<td>p(y)</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>原例题意 / Worked question：</strong> 求P(X=0|Y=0)，再求P(Y=0|X=0)。 / Find P(X=0|Y=0) and P(Y=0|X=0).</p>
+<p><strong>答／Answer：</strong> 分别0.08/0.4=0.2与0.08/0.2=0.4。分母由竖线后面的条件决定，调换条件不是同一问。 / The values are 0.2 and 0.4; the conditioning event determines the denominator.</p>
+<p>边缘概率通过对另一变量求和；连续情形改用积分。把联合概率写成两种乘法顺序，可得Bayes规则：</p>
+<div class="arithmatex">\[p(y\mid x)=\frac{p(x\mid y)p(y)}{\sum_k p(x\mid k)p(k)}.\]</div>
+<p>这里类别离散，因此分母求和；若y连续则应积分。分母必须为正。下一讲会用这个反转条件方向的工具，从“已知花种时花多长”走到“已知测量时更像哪种花”。</p>
+<p><strong>English takeaway:</strong> PMFs assign mass to discrete values; PDFs assign density whose interval integral is a probability. Marginalization removes a variable, while conditioning fixes one. Bayes' rule reverses the conditioning direction.</p>
+<p><a id="recap"></a></p>
+<h2 id="15">15. 合上讲义，检查自己能否讲明白</h2>
+<p>本讲关系是：任务与评价决定实验流程 → Python表达算法 → NumPy表达数据和矩阵 → 图检查实际结果 → 概率表达不确定性。接下来先做<a href="Tutorial01.html">Tutorial1</a>，再进入<a href="Lecture02.html">Lecture2</a>。</p>
+<p><strong>Q1 / 题：</strong> Why should preprocessing be considered part of training? / 为什么预处理也属于训练流程？<br/>
+<strong>A / 答：</strong> A vocabulary or scaling rule can learn from data; fit it on the appropriate training split and reuse it elsewhere. / 词表或缩放规则也学习数据信息，要在对应训练部分拟合。</p>
+<p><strong>Q2 / 题：</strong> What do shape, axis and view mean in an array operation? / shape、axis、view各说明什么？<br/>
+<strong>A / 答：</strong> Shape gives dimension sizes, an axis identifies the direction being indexed/reduced, and a view can share underlying data. / 分别是维度大小、操作方向和可能共享底层数据的数组。</p>
+<p><strong>Q3 / 题：</strong> In the original probability table, find P(X=1|Y=1). / 用原表求P(X=1|Y=1)。<br/>
+<strong>A / 答：</strong> 0.48/0.60=0.8. / 分母是Y=1整列的0.60。</p>
+<p>已有微课：<a href="https://crazyshout.github.io/micro-course/?lesson=ml02">Python ML02</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml03">数组 ML03</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml04">投影 ML04</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml05">概率 ML05</a>。已有卡优先复习<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M023">M023</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M028">M028</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M035">M035</a>；算法与调试能力需要实际运行检验。</p>
+<h2 id="_2">原材料覆盖索引</h2>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原位置</th>
+<th>讲义位置／处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I1–8</td>
+<td>开头与§3–4；身份、时间、评分等查原件/课程信息，不转为知识卡</td>
+</tr>
+<tr>
+<td>I9–15</td>
+<td>§1 目标、数字任务、T/E/P与AI关系</td>
+</tr>
+<tr>
+<td>I16–22</td>
+<td>§2 学习设定、理论、深度学习与应用</td>
+</tr>
+<tr>
+<td>I23–28</td>
+<td>§3 训练、选参、推断、工具与课程定位；I27漫画为辅助，不增知识点</td>
+</tr>
+<tr>
+<td>I29–36</td>
+<td>课程信息与参考书入口；后续计划不等于已下载课程；I35–36结束页</td>
+</tr>
+<tr>
+<td>A1–14</td>
+<td>§4语言与Notebook、旧环境说明、目录</td>
+</tr>
+<tr>
+<td>A15–28</td>
+<td>§5语句、变量和基本类型</td>
+</tr>
+<tr>
+<td>A29–75</td>
+<td>§6容器、序列、字符串与字典</td>
+</tr>
+<tr>
+<td>A76–94</td>
+<td>§5–6运算、身份、解包与集合</td>
+</tr>
+<tr>
+<td>A95–123</td>
+<td>§7分支、循环、列表推导；A95目录</td>
+</tr>
+<tr>
+<td>A124–153</td>
+<td>§8函数、参数解包、类与继承；A124目录</td>
+</tr>
+<tr>
+<td>A154–179</td>
+<td>§9文件、pickle、异常、pandas；A154目录</td>
+</tr>
+<tr>
+<td>B1–43</td>
+<td>§10数组创建、属性、索引与张量；B1–2导言</td>
+</tr>
+<tr>
+<td>B44–83</td>
+<td>§11形状、拼接、逐元素运算、轴与广播</td>
+</tr>
+<tr>
+<td>B84–109</td>
+<td>§12向量、矩阵与五种乘法解释</td>
+</tr>
+<tr>
+<td>B110–121</td>
+<td>§13别名、view、copy；B121目录</td>
+</tr>
+<tr>
+<td>B122–127</td>
+<td>§14作图与样式；B127目录</td>
+</tr>
+<tr>
+<td>B128–139</td>
+<td>§14概率、分布、联合/边缘/条件与Bayes</td>
+</tr>
+<tr>
+<td>B140</td>
+<td>官方语言/库学习入口；运行版本见本地README</td>
+</tr>
+</tbody>
+</table></div>
+<p>原Intro中“More data is better”、Python“一两天学会”等是课堂简述，本文已补条件；没有把旧截图或概括句当成当前软件保证。历史资料只辅助判断学习要求，本讲未据往年单题断言考试频率。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

@@ -10,6 +10,7 @@ import html
 import json
 import re
 import shutil
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -83,6 +84,7 @@ def main():
             (out/name).write_text(page)
         page=(source/'learning.html').read_text()
         page=page.replace('href="learning.html"','href="index.html"').replace('href="index.html">复习卡片','href="cards.html">复习卡片').replace('href="LEARNING_GUIDE.md"','href="guide.html"')
+        page=page.replace('href="CS5489/course-notes/README.html"','href="notes/index.html"')
         page=page.replace('<title>','<meta name="description" content="CS5489 与 CS5222：连续微课、双语卡片、独立练习和交互演示。"><title>',1)
         (out/'index.html').write_text(page)
         js=(source/'learning.js').read_text().replace('index.html','cards.html').replace('LEARNING_GUIDE.md','guide.html')
@@ -148,6 +150,17 @@ def main():
         shutil.copytree(source/'vendor/katex/fonts',out/'vendor/katex/fonts')
         (out/'guide.html').write_text(guide_html(learning['courses'],learning['lessons'],introductions))
         (out/'deck-introductions.json').write_text(json.dumps(introductions,ensure_ascii=False,indent=2)+'\n')
+        # The canonical notes exporter preserves source ownership and excludes
+        # raw Canvas files, local checks, credentials and file:// PDF links.
+        python=source/'CS5489/course-notes/.venv/bin/python'
+        if not python.is_file():raise RuntimeError('Build the course-notes Python environment before publishing notes')
+        subprocess.run([str(python),str(source/'scripts/export_course_notes.py'),'--output',str(out/'notes')],check=True)
+        notes=json.loads((out/'notes/manifest.json').read_text())
+        for page_path in out.glob('*.html'):
+            page=page_path.read_text()
+            if '<header' in page and 'href="notes/index.html"' not in page:
+                page=re.sub(r'(<header[\s\S]*?<nav[^>]*>)',r'\1<a href="notes/index.html">整讲讲义</a>',page,count=1)
+                page_path.write_text(page)
         (out/'.nojekyll').touch()
         # Content versions prevent mixed old scripts/styles after a Pages update.
         for page_path in out.glob('*.html'):
@@ -174,6 +187,7 @@ def main():
                   'moved_card_ids':notices['moved_card_ids'],
                   'courses':{c:{'lessons':v['lessons'],'cards':v['cards']} for c,v in learning['courses'].items()},
                   'total_lessons':len(learning['lessons']),'total_cards':len(reader['cards']),
+                  'course_notes':{'major_documents':notes['major_documents'],'reading_documents':len(notes['documents']),'pdf_pages':sum(p['pages'] for p in notes['pdfs'])},
                   'article_lessons':[l['id'] for l in learning['lessons'] if l.get('article')],
                   'article_figures':len(article_figures),
                   'teaching_units':sum(len(c['units']) for c in learning['curriculum']['courses'].values()),

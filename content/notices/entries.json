@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22",
+  "updated": "2026-10-03",
   "categories": {
     "scope": [
       "课程范围与考核",
@@ -23,42 +23,44 @@
       "id": "CS5222-UPDATE-20260922",
       "course": "CS5222",
       "category": "study",
-      "title_zh": "9月22日内容更新与Markji位置",
-      "title_en": "September 22 content and Markji locations",
-      "body_zh": "Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。",
-      "body_en": "Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.",
-      "material_snapshot": "2026-09-22",
-      "updated": "2026-09-22",
+      "title_zh": "10月3日：传输层与Tutorial4–5",
+      "title_en": "October 3: transport and Tutorials 4–5",
+      "body_zh": "Chapter3当前part1–2、Tutorial4–5已有整讲讲义；Chapter2课堂Q&A及Tutorial3教师解答已跟进。已有原卡已移入对应正式章节，未新增网络卡。当前Chapter3止于RTT与超时；后续流控、拥塞控制仍须等新课件核对。",
+      "body_en": "Notes now cover Chapter 3 parts 1–2 and Tutorials 4–5, with Chapter 2 Q&A and the Tutorial 3 solution checked. Existing cards have been moved to their current chapters; no networking cards were added. Current Chapter 3 ends at RTT and timeout estimation. Later flow/congestion control awaits new material.",
+      "material_snapshot": "2026-10-03",
+      "updated": "2026-10-03",
       "retired_card": false,
       "lesson_ids": [
         "net12",
-        "net10"
+        "net13",
+        "net14"
       ],
       "sources": [
         {
           "name": "micro-course",
           "href": "https://crazyshout.github.io/micro-course/",
           "unit": "update",
-          "locator": "2026-09-22",
+          "locator": "2026-10-03",
           "provenance": "Learning library update; not an instructor announcement"
         }
       ],
-      "body_zh_html": "<p>Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。</p>",
-      "body_en_html": "<p>Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.</p>"
+      "body_zh_html": "<p>Chapter3当前part1–2、Tutorial4–5已有整讲讲义；Chapter2课堂Q&amp;A及Tutorial3教师解答已跟进。已有原卡已移入对应正式章节，未新增网络卡。当前Chapter3止于RTT与超时；后续流控、拥塞控制仍须等新课件核对。</p>",
+      "body_en_html": "<p>Notes now cover Chapter 3 parts 1–2 and Tutorials 4–5, with Chapter 2 Q&amp;A and the Tutorial 3 solution checked. Existing cards have been moved to their current chapters; no networking cards were added. Current Chapter 3 ends at RTT and timeout estimation. Later flow/congestion control awaits new material.</p>"
     },
     {
       "id": "CS5489-UPDATE-20260922",
       "course": "CS5489",
       "category": "study",
-      "title_zh": "9月22日内容更新与Markji位置",
-      "title_en": "September 22 content and Markji locations",
-      "body_zh": "新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。",
-      "body_en": "New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.",
-      "material_snapshot": "2026-09-22",
-      "updated": "2026-09-22",
+      "title_zh": "10月3日：新讲义与Markji同步",
+      "title_en": "October 3: notes and Markji sync",
+      "body_zh": "Lecture5、Tutorial4与Assignment2方法指南已加入整讲讲义。神经网络与优化器复用原卡，章节已经同步；上轮M338–M341也已进入Markji。原有卡片身份保留，不必重建牌组。",
+      "body_en": "Lecture 5, Tutorial 4 and the Assignment 2 study guide are now included. Existing neural-network and optimizer cards have been moved to their current chapters. Previously prepared M338–M341 are now in Markji. Existing cards keep their identities; no new deck is needed.",
+      "material_snapshot": "2026-10-03",
+      "updated": "2026-10-03",
       "retired_card": false,
       "lesson_ids": [
-        "ml19",
+        "ml24",
+        "ml26",
         "ml31"
       ],
       "sources": [
@@ -66,12 +68,39 @@
           "name": "micro-course",
           "href": "https://crazyshout.github.io/micro-course/",
           "unit": "update",
-          "locator": "2026-09-22",
+          "locator": "2026-10-03",
           "provenance": "Learning library update; not an instructor announcement"
         }
       ],
-      "body_zh_html": "<p>新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。</p>",
-      "body_en_html": "<p>New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.</p>"
+      "body_zh_html": "<p>Lecture5、Tutorial4与Assignment2方法指南已加入整讲讲义。神经网络与优化器复用原卡，章节已经同步；上轮M338–M341也已进入Markji。原有卡片身份保留，不必重建牌组。</p>",
+      "body_en_html": "<p>Lecture 5, Tutorial 4 and the Assignment 2 study guide are now included. Existing neural-network and optimizer cards have been moved to their current chapters. Previously prepared M338–M341 are now in Markji. Existing cards keep their identities; no new deck is needed.</p>"
+    },
+    {
+      "id": "CS5489-A2-SUBMISSION",
+      "course": "CS5489",
+      "category": "assignment",
+      "title_zh": "Assignment 2：提交与评分要求",
+      "title_en": "Assignment 2: submission and marks",
+      "body_zh": "原Notebook第3单元规定Section 1为40分、Section 2为60分。提交带全部输出的完成版.ipynb及其导出PDF，填姓名和EID，将两份文件压成一个ZIP上传Canvas。原文注明每天迟交扣25分，但下载文件未给具体截止时间；以当前Canvas为准。网页指南是方法说明，不是已完成的个人提交。",
+      "body_en": "Cell 3 assigns 40 marks to Section 1 and 60 to Section 2. Submit the completed notebook with all outputs and its exported PDF, fill in your name/EID, and upload one ZIP containing both files to Canvas. The file states a penalty of 25 marks per late day but gives no specific deadline; check current Canvas. The web guide is a study aid, not a completed personal submission.",
+      "material_snapshot": "2026-10-03",
+      "updated": "2026-10-03",
+      "retired_card": false,
+      "lesson_ids": [
+        "ml24",
+        "ml26"
+      ],
+      "sources": [
+        {
+          "name": "Assignment2.ipynb",
+          "href": null,
+          "unit": "cell",
+          "locator": "3",
+          "provenance": "Current Canvas assignment instructions"
+        }
+      ],
+      "body_zh_html": "<p>原Notebook第3单元规定Section 1为40分、Section 2为60分。提交带全部输出的完成版.ipynb及其导出PDF，填姓名和EID，将两份文件压成一个ZIP上传Canvas。原文注明每天迟交扣25分，但下载文件未给具体截止时间；以当前Canvas为准。网页指南是方法说明，不是已完成的个人提交。</p>",
+      "body_en_html": "<p>Cell 3 assigns 40 marks to Section 1 and 60 to Section 2. Submit the completed notebook with all outputs and its exported PDF, fill in your name/EID, and upload one ZIP containing both files to Canvas. The file states a penalty of 25 marks per late day but gives no specific deadline; check current Canvas. The web guide is a study aid, not a completed personal submission.</p>"
     },
     {
       "id": "CS5222-N070",
@@ -126,10 +155,10 @@
       "category": "scope",
       "title_zh": "考核结构与资料范围",
       "title_en": "Assessment structure and material scope",
-      "body_zh": "课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。",
-      "body_en": "The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.",
-      "material_snapshot": "2026-09-22",
-      "updated": "2026-09-22",
+      "body_zh": "课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1–2 全文、Chapter 3 part1–2、Tutorial 1–5与Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。",
+      "body_en": "The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapters 1–2, Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.",
+      "material_snapshot": "2026-10-03",
+      "updated": "2026-10-03",
       "retired_card": true,
       "lesson_ids": [
         "net11"
@@ -143,8 +172,8 @@
           "provenance": "Canvas 2026A"
         }
       ],
-      "body_zh_html": "<p>课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。</p>",
-      "body_en_html": "<p>The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination&#x27;s maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.</p>"
+      "body_zh_html": "<p>课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1–2 全文、Chapter 3 part1–2、Tutorial 1–5与Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。</p>",
+      "body_en_html": "<p>The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination&#x27;s maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapters 1–2, Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.</p>"
     },
     {
       "id": "CS5222-N090",
@@ -230,10 +259,10 @@
       "category": "scope",
       "title_zh": "课程范围、学习顺序与考核",
       "title_en": "Scope, study sequence, and assessment",
-      "body_zh": "先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。",
-      "body_en": "Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.",
-      "material_snapshot": "2026-09-22",
-      "updated": "2026-09-22",
+      "body_zh": "先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–5、Tutorial 1–4 和 Assignment 1–2技术方法；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。",
+      "body_en": "Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–5, Tutorials 1–4 and Assignment 1–2 methods; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.",
+      "material_snapshot": "2026-10-03",
+      "updated": "2026-10-03",
       "retired_card": true,
       "lesson_ids": [
         "ml01"
@@ -247,8 +276,8 @@
           "provenance": "Canvas 2026A"
         }
       ],
-      "body_zh_html": "<p>先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。</p>",
-      "body_en_html": "<p>Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.</p>"
+      "body_zh_html": "<p>先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–5、Tutorial 1–4 和 Assignment 1–2技术方法；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。</p>",
+      "body_en_html": "<p>Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–5, Tutorials 1–4 and Assignment 1–2 methods; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.</p>"
     },
     {
       "id": "CS5489-M090",

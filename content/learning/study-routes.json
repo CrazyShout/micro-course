@@ -477,22 +477,22 @@
       "CS5489-M248",
       "CS5489-M249",
       "CS5489-M250",
-      "CS5489-M254"
+      "CS5489-M251"
     ],
     "after_practice": [
+      "CS5489-M254",
       "CS5489-M241",
       "CS5489-M242",
       "CS5489-M244",
       "CS5489-M245",
       "CS5489-M246",
       "CS5489-M247",
-      "CS5489-M251",
       "CS5489-M252",
       "CS5489-M253"
     ],
     "note": {
-      "zh": "先区分前向、反向和更新，手算一张小图的乘法与分叉，再用小数据过拟合调试。批量矩阵梯度、感知机、激活边界和输出损失匹配分组补。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Separate forward, backward and update steps, differentiate one small branching graph, then use tiny-data overfitting to debug. Add batch gradients, perceptrons, activation edge cases and output/loss matching by topic. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "当前Lecture5先掌握前向、反向、参数更新与批量梯度，再回Assignment2。M254等未迁移原卡仍按历史补充阅读。",
+      "en": "Current Lecture 5 supports forward/backward computation, updates and batch gradients. Apply these to Assignment 2; unpromoted cards such as M254 remain historical supplements."
     }
   },
   "ml25": {
@@ -518,13 +518,13 @@
   "ml26": {
     "first_pass": [
       "CS5489-M265",
-      "CS5489-M271",
-      "CS5489-M273"
+      "CS5489-M266",
+      "CS5489-M268"
     ],
     "after_practice": [
-      "CS5489-M266",
+      "CS5489-M271",
+      "CS5489-M273",
       "CS5489-M267",
-      "CS5489-M268",
       "CS5489-M269",
       "CS5489-M270",
       "CS5489-M272",
@@ -533,8 +533,8 @@
       "CS5489-M276"
     ],
     "note": {
-      "zh": "第一圈只抓训练步、dropout 与训练/评估模式。先看训练步单元；Momentum→AdaGrad/RMSProp→Adam/AdamW 另开一轮，读懂各自状态后再复习，不把优化器名字当菜单一口吞。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "First focus on training steps, dropout and train/eval modes, using the training-steps unit. Study Momentum → AdaGrad/RMSProp → Adam/AdamW in a separate pass after understanding each state variable. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "先掌握epoch/更新、Momentum与Adam，随后读AdaGrad和验证监控。dropout、归一化、AdamW等仍是可跳过的历史补充。",
+      "en": "Start with epochs/updates, momentum and Adam, then AdaGrad and validation monitoring. Dropout, normalization and AdamW remain optional historical supplements."
     }
   },
   "ml27": {
@@ -914,8 +914,8 @@
       "CS5222-N165"
     ],
     "note": {
-      "zh": "先用一次损坏或丢包说明 ACK、序号、定时器各救哪种场，再用同一次丢包比较 GBN/SR。校验和计算、利用率与序号空间各留一轮。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Use corruption or loss to explain each job of ACKs, sequence numbers and timers, then compare GBN/SR on the same loss event. Study checksum arithmetic, utilization and sequence-space limits in later passes. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "当前Chapter3先用丢包说明ACK、序号、定时器，再比较GBN/SR。校验和、利用率各留一轮；未迁移的序号空间深化仍为历史补充。",
+      "en": "Current Chapter 3 uses loss to motivate ACKs, sequence numbers and timers, then GBN/SR. Study checksums and utilization separately; unpromoted sequence-space details remain historical."
     }
   },
   "net14": {
@@ -924,10 +924,10 @@
       "CS5222-N168",
       "CS5222-N169",
       "CS5222-N170",
-      "CS5222-N175"
+      "CS5222-N171"
     ],
     "after_practice": [
-      "CS5222-N171",
+      "CS5222-N175",
       "CS5222-N172",
       "CS5222-N173",
       "CS5222-N174",
@@ -935,8 +935,8 @@
       "CS5222-N177"
     ],
     "note": {
-      "zh": "先把每段覆盖的字节范围写出来，缺口在哪里，累计 ACK 就停在哪里。窗口限额结合补充例题；RTO、快速重传、握手与关闭随后分组进入。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Write each segment's byte range; a cumulative ACK stops at the first gap. Use the window-limit example, then study RTO, fast retransmit, connection setup and closing in separate groups. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "当前part2先写每段字节范围、累计ACK，再算RTT/RTO。完整流控、快速重传、握手和关闭等后续主题保留预习。",
+      "en": "Current part 2 covers byte ranges, cumulative ACKs and RTT/RTO. Full flow control, fast retransmit, connection setup and closing remain preview topics."
     }
   },
   "net15": {

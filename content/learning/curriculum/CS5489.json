@@ -307,7 +307,9 @@
           }
         }
       ],
-      "activities": [],
+      "activities": [
+        "cs5489-tutorial-4"
+      ],
       "review": {
         "zh": "先问目标是什么数、用了什么单位；再问误差怎样记、模型怎样限制、方案由哪份数据选择。原讲义的输出是其运行记录，你的比较需要自己的可复现结果。",
         "en": "Identify the numerical target and units, the loss, complexity constraints and selection data. The source notebook outputs are its runs; your comparison needs your own reproducible results."
@@ -326,10 +328,63 @@
           "kind": "course"
         }
       ],
+      "missing": []
+    },
+    {
+      "id": "lecture-5",
+      "title": {
+        "zh": "Lecture 5 · 从线性判断到学习特征",
+        "en": "Lecture 5 · Neural networks"
+      },
+      "intro": {
+        "zh": "花朵的测量怎样变成类别概率？先从会纠错的感知机走到Softmax，再把可学习隐藏层放到分类器前面。老师5a建立分数、概率和梯度；5b接MLP、训练监控与MNIST。整讲讲义逐步解释，Assignment2检验能否把梯度写进程序。",
+        "en": "Follow the instructor from perceptron scores to softmax and gradients, then MLPs, monitoring and MNIST. Assignment 2 tests the implementation of those gradients."
+      },
+      "outcomes": [
+        {
+          "zh": "能手算前向与反向，检查batch、偏置和正则的梯度约定。",
+          "en": "Compute forward and backward passes with consistent batch averaging and shapes."
+        },
+        {
+          "zh": "能区分模型表示能力、优化过程与独立测试。",
+          "en": "Distinguish representation, optimization and evaluation."
+        }
+      ],
+      "lessons": [
+        {
+          "id": "ml24",
+          "lead": {
+            "zh": "沿计算图先算小例子，再接原课堂的矩阵反传。",
+            "en": "Start with a small computation graph, then map to the course matrix derivatives."
+          }
+        },
+        {
+          "id": "ml26",
+          "lead": {
+            "zh": "先看本讲SGD/优化器；后面的dropout与归一化仍是可选预习。",
+            "en": "Study current optimizers first; dropout and normalization remain optional previews."
+          }
+        }
+      ],
+      "activities": [
+        "cs5489-assignment-2"
+      ],
+      "review": {
+        "zh": "用整讲§4/§6手算，再看作业层接口；先会解释梯度，再谈训练成绩。",
+        "en": "Calculate the lecture examples, inspect the assignment interfaces, then explain gradients before reporting training performance."
+      },
+      "sources": [
+        {
+          "name": "Lecture5a.ipynb; Lecture5b.ipynb",
+          "locator": "A1–66; B1–96",
+          "kind": "course",
+          "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+        }
+      ],
       "missing": [
         {
-          "zh": "当前未下载Lecture4的配套Tutorial或新Assignment；不把历史题编号当成本期要求。",
-          "en": "No companion Lecture 4 tutorial or new assignment has been downloaded; historical numbering is not treated as current requirements."
+          "zh": "当前未提供ML Tutorial5；CNN没有在本次Notebook中完整展开。",
+          "en": "No current ML Tutorial 5 is supplied; these notebooks do not provide the complete CNN topic."
         }
       ]
     }
@@ -1203,6 +1258,477 @@
               "kind": "course"
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "cs5489-tutorial-4",
+      "kind": "tutorial",
+      "title": {
+        "zh": "Tutorial 4 · 单车回归与跨年调整",
+        "en": "Tutorial 4 · Bike demand regression"
+      },
+      "intro": {
+        "zh": "原77单元按六组真实任务展开；完整代码、实际输出及逐题解释见整讲讲义中的Tutorial4。",
+        "en": "Six groups follow the original 77 cells; complete executed code and explanations are in the Tutorial4 notes."
+      },
+      "units": [
+        "lecture-4"
+      ],
+      "lesson_ids": [
+        "ml19",
+        "ml20",
+        "ml31"
+      ],
+      "items": [
+        {
+          "id": "data",
+          "title": {
+            "zh": "数据与年份",
+            "en": "Data and years"
+          },
+          "task": {
+            "zh": "删除三列计数，one-hot四类字段，2011训练2012测试。",
+            "en": "Remove target components, encode four categories, and use the year split."
+          },
+          "approach": {
+            "zh": "检查cnt=casual+registered，按列名识别月份。",
+            "en": "Check the target identity and select months by name."
+          },
+          "check": {
+            "zh": "365/366天；1–3月91天，剩余275天。",
+            "en": "365/366 days; 91 new-training and 275 holdout days."
+          },
+          "pitfall": {
+            "zh": "不能把registered当事前预测特征。",
+            "en": "Do not leak the registered count."
+          },
+          "lesson_ids": [
+            "ml19"
+          ],
+          "card_ids": [
+            "CS5489-M187"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "linear",
+          "title": {
+            "zh": "基线与线性模型",
+            "en": "Baselines and linear models"
+          },
+          "task": {
+            "zh": "比较Dummy、OLS及训练内选alpha的Ridge。",
+            "en": "Compare dummy, OLS and CV-selected ridge."
+          },
+          "approach": {
+            "zh": "同一时间验证折；区分MSE、RMSE与MAE。",
+            "en": "Use identical temporal folds and distinguish error units."
+          },
+          "check": {
+            "zh": "新Notebook保存真实比较表及散点。",
+            "en": "Inspect actual tables and scatter plots."
+          },
+          "pitfall": {
+            "zh": "原T32横轴真值、纵轴预测；低估在下方。",
+            "en": "The original plot places truth on x; underprediction is below the line."
+          },
+          "lesson_ids": [
+            "ml19"
+          ],
+          "card_ids": [
+            "CS5489-M194"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "selection",
+          "title": {
+            "zh": "LASSO与OMP",
+            "en": "LASSO and OMP"
+          },
+          "task": {
+            "zh": "解释最大系数，并与OMP十特征比较。",
+            "en": "Interpret coefficients and compare ten-feature OMP."
+          },
+          "approach": {
+            "zh": "按编码单位读系数，比较共同和不同选择。",
+            "en": "Use encoded units and compare selections."
+          },
+          "check": {
+            "zh": "解释相关特征为何可能交换权重。",
+            "en": "Explain the effect of correlated predictors."
+          },
+          "pitfall": {
+            "zh": "系数大小不是因果效应。",
+            "en": "Coefficient size is not a causal effect."
+          },
+          "lesson_ids": [
+            "ml19"
+          ],
+          "card_ids": [
+            "CS5489-M338"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "nonlinear",
+          "title": {
+            "zh": "非线性回归",
+            "en": "Nonlinear regression"
+          },
+          "task": {
+            "zh": "训练内选择非线性模型参数，画预测图。",
+            "en": "Tune nonlinear models within training and plot predictions."
+          },
+          "approach": {
+            "zh": "用KRR/森林作有界参考网格，与同一基线比较。",
+            "en": "Use bounded kernel/forest grids against the same baseline."
+          },
+          "check": {
+            "zh": "区分CV选中模型与事后test排名。",
+            "en": "Separate CV selection from the test ranking."
+          },
+          "pitfall": {
+            "zh": "不能在测试最高分后倒称事先选定。",
+            "en": "Do not retroactively call a test winner preselected."
+          },
+          "lesson_ids": [
+            "ml20",
+            "ml31"
+          ],
+          "card_ids": [
+            "CS5489-M208"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "shift",
+          "title": {
+            "zh": "年份变化",
+            "en": "Year shift"
+          },
+          "task": {
+            "zh": "利用2012年一季度，预测后九个月。",
+            "en": "Use the first quarter to predict the remaining months."
+          },
+          "approach": {
+            "zh": "先将新训练与新测试按日期分开。",
+            "en": "Separate adaptation and evaluation dates."
+          },
+          "check": {
+            "zh": "四种方法必须共享275天测试记录。",
+            "en": "All four methods use the same 275 holdout days."
+          },
+          "pitfall": {
+            "zh": "已用于训练的一季度不再是测试。",
+            "en": "The first quarter is no longer held out."
+          },
+          "lesson_ids": [
+            "ml19"
+          ],
+          "card_ids": [
+            "CS5489-M201"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "adapt",
+          "title": {
+            "zh": "三种调整方法",
+            "en": "Three adaptation methods"
+          },
+          "task": {
+            "zh": "比较新数据单独、合并旧数据、拟合旧模型残差。",
+            "en": "Compare new-only, pooled and residual adaptation."
+          },
+          "approach": {
+            "zh": "固定选中的回归方法，残差y−f时加回预测残差。",
+            "en": "Fix the chosen method and add a truth-minus-prediction correction."
+          },
+          "check": {
+            "zh": "按Notebook实际结果解释，不预设某方法最好。",
+            "en": "Explain the measured result without assuming a winner."
+          },
+          "pitfall": {
+            "zh": "残差符号反了，修正方向也反。",
+            "en": "A reversed residual requires a reversed correction."
+          },
+          "lesson_ids": [
+            "ml19",
+            "ml20"
+          ],
+          "card_ids": [
+            "CS5489-M201"
+          ],
+          "sources": [
+            {
+              "name": "Tutorial4.ipynb",
+              "locator": "T4–76",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "Tutorial4.ipynb",
+          "locator": "T4–76",
+          "kind": "course",
+          "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+        }
+      ]
+    },
+    {
+      "id": "cs5489-assignment-2",
+      "kind": "assignment",
+      "title": {
+        "zh": "Assignment 2 · 反传与优化器",
+        "en": "Assignment 2 · Backpropagation and optimizers"
+      },
+      "intro": {
+        "zh": "保留原任务边界，完整数学解释与原文核对见独立Assignment2讲义；不把指南写成已训练的提交作业。",
+        "en": "Use the separate guide for derivations and source caveats; it is not a completed submission."
+      },
+      "units": [
+        "lecture-5"
+      ],
+      "lesson_ids": [
+        "ml24",
+        "ml26"
+      ],
+      "items": [
+        {
+          "id": "layers",
+          "title": {
+            "zh": "逐层反向传播",
+            "en": "Layer backpropagation"
+          },
+          "task": {
+            "zh": "实现Hidden/Output及predict接口。",
+            "en": "Implement Hidden, Output and predict interfaces."
+          },
+          "approach": {
+            "zh": "从平均损失推导同形梯度，在更新权重前算上游。",
+            "en": "Derive shape-consistent gradients before updating weights."
+          },
+          "check": {
+            "zh": "小批量有限差分应匹配同一个标量损失。",
+            "en": "Finite differences must match the same scalar objective."
+          },
+          "pitfall": {
+            "zh": "不要每层重复除batch。",
+            "en": "Do not average the propagated gradient repeatedly."
+          },
+          "lesson_ids": [
+            "ml24"
+          ],
+          "card_ids": [
+            "CS5489-M251"
+          ],
+          "sources": [
+            {
+              "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+              "locator": "A4–75; P1–4",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "exponent",
+          "title": {
+            "zh": "可学习指数",
+            "en": "Learnable exponent"
+          },
+          "task": {
+            "zh": "正区u^n，同时求u和n的导数。",
+            "en": "Differentiate the positive branch with respect to u and n."
+          },
+          "approach": {
+            "zh": "du=nu^(n−1)，dn=u^n log u；共享n汇总所有贡献。",
+            "en": "Use both derivatives and sum all contributions to shared n."
+          },
+          "check": {
+            "zh": "mask正区，检查标量指数与batch形状。",
+            "en": "Mask the positive region and verify gradient shapes."
+          },
+          "pitfall": {
+            "zh": "别对负数先算log再用where掩盖。",
+            "en": "Do not evaluate log on invalid negative inputs."
+          },
+          "lesson_ids": [
+            "ml24"
+          ],
+          "card_ids": [
+            "CS5489-M250"
+          ],
+          "sources": [
+            {
+              "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+              "locator": "A4–75; P1–4",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "wine",
+          "title": {
+            "zh": "Wine验证",
+            "en": "Wine validation"
+          },
+          "task": {
+            "zh": "按原标签阈值与划分，比较参考MLP。",
+            "en": "Use the given labels and split to compare MLP models."
+          },
+          "approach": {
+            "zh": "先划分再拟合缩放，记录与模板的流程修正。",
+            "en": "Split before fitting scaling and document the change."
+          },
+          "check": {
+            "zh": "训练/测试准确率必须来自实际运行。",
+            "en": "Report only executed training and test accuracies."
+          },
+          "pitfall": {
+            "zh": "公共指南不代填成绩或个人提交物。",
+            "en": "The public guide does not invent results or submissions."
+          },
+          "lesson_ids": [
+            "ml24",
+            "ml26"
+          ],
+          "card_ids": [
+            "CS5489-M265"
+          ],
+          "sources": [
+            {
+              "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+              "locator": "A4–75; P1–4",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "optimizers",
+          "title": {
+            "zh": "优化器状态",
+            "en": "Optimizer state"
+          },
+          "task": {
+            "zh": "实现GD、模拟SGD、Momentum、AdaGrad、Adam。",
+            "en": "Implement the five required optimizers."
+          },
+          "approach": {
+            "zh": "先手算一步，统一学习率、动量符号与epsilon位置。",
+            "en": "Check one step and the update conventions."
+          },
+          "check": {
+            "zh": "Adam步数从1开始；平方梯度不是中心方差。",
+            "en": "Start Adam at step one and use the raw second moment."
+          },
+          "pitfall": {
+            "zh": "Nesterov题目明确不用实现。",
+            "en": "Nesterov implementation is not required."
+          },
+          "lesson_ids": [
+            "ml26"
+          ],
+          "card_ids": [
+            "CS5489-M266",
+            "CS5489-M268"
+          ],
+          "sources": [
+            {
+              "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+              "locator": "A4–75; P1–4",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        },
+        {
+          "id": "trajectories",
+          "title": {
+            "zh": "比较轨迹",
+            "en": "Compare trajectories"
+          },
+          "task": {
+            "zh": "按原四组实验改变学习率、动量和函数。",
+            "en": "Follow the original four trajectory experiments."
+          },
+          "approach": {
+            "zh": "把初值、步数与噪声种子写清，保留静态图。",
+            "en": "Record initial state, steps and noise seed; save static plots."
+          },
+          "check": {
+            "zh": "原0.5/0.8初值冲突在指南中说明。",
+            "en": "The guide documents the conflicting initial values."
+          },
+          "pitfall": {
+            "zh": "不能拿不同步数的终点直接排名。",
+            "en": "Different budgets do not support a direct ranking."
+          },
+          "lesson_ids": [
+            "ml26"
+          ],
+          "card_ids": [
+            "CS5489-M265",
+            "CS5489-M268"
+          ],
+          "sources": [
+            {
+              "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+              "locator": "A4–75; P1–4",
+              "kind": "course",
+              "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "name": "Assignment2.ipynb; Section1_MLP_Primer.pdf",
+          "locator": "A4–75; P1–4",
+          "kind": "course",
+          "note": "当前Canvas；教学提示为整理补充。 / Current Canvas with authored explanations."
         }
       ]
     }

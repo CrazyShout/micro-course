@@ -41,7 +41,7 @@
 <p>这是当前必做学习目标的划分，不是历年命题频率。</p>
 <p><a id="q1"></a></p>
 <h2 id="q1-store-and-forward">Q1. Store-and-forward｜先等整包到，再转发</h2>
-<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/55781a74c6f7dc8f.png" rel="noopener" target="_blank"><img alt="Original Tutorial 1 page 1" decoding="async" loading="lazy" src="../assets/55781a74c6f7dc8f.png"/></a></p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/55781a74c6f7dc8f.png" rel="noopener" target="_blank"><img alt="Original Tutorial 1 page 1" decoding="async" height="1450" loading="lazy" src="../assets/55781a74c6f7dc8f.png" width="1025"/></a></p>
 <p><strong>完整条件 / Conditions:</strong> 一个源主机、一个分组交换机、一个目的主机；两条链路速率为R₁、R₂，包长L bit。存储转发，忽略排队、传播和处理时延。b问改为相同速率R，P=3个L-bit包跨N=2条链路。 / One switch connects a sender and receiver through links R₁ and R₂. Packets contain L bits. Use store-and-forward and ignore queueing, propagation and processing. In part b, three equal packets cross two equal-rate R links.</p>
 <p><strong>a的推演：</strong> t=0开始发送；t=L/R₁时整包抵达交换机；交换机此时才开始第二段，又花L/R₂。因此教师结论为</p>
 <div class="arithmatex">\[d=L/R_1+L/R_2\quad\text{（选C）}.\]</div>
@@ -87,7 +87,7 @@
 </details>
 <p><a id="q2"></a></p>
 <h2 id="q2-circuit-capacity">Q2. Circuit capacity｜数连接，也要数它消耗了几条边</h2>
-<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1e2d72fcd697a65c.png" rel="noopener" target="_blank"><img alt="Original ring diagram and Q2" decoding="async" loading="lazy" src="../assets/1e2d72fcd697a65c.png"/></a></p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/1e2d72fcd697a65c.png" rel="noopener" target="_blank"><img alt="Original ring diagram and Q2" decoding="async" height="1450" loading="lazy" src="../assets/1e2d72fcd697a65c.png" width="1025"/></a></p>
 <p><strong>条件 / Conditions:</strong> A、B、C、D顺时针围成四边环，每条边4条电路，一次连接在路径每条边占一条电路。 / Four switches A,B,C,D form a clockwise ring; each link supports four circuits. A connection uses one circuit on every traversed link.</p>
 <p><strong>a 最大任意连接数 / Maximum arbitrary simultaneous connections:</strong> 让每条边只承载相邻两点之间的连接，每边4个、4条边，总16，选C。上界也为16，因为全网总共16份“边电路”且每连接至少占一份，所以这个构造达到上界。</p>
 <p><strong>b 全部A到C / All connections from A to C:</strong> 每个至少两跳，可分别走A–B–C与A–D–C，各4，总8，选B。A出发仅8份电路，给出同样的上界；不是16÷4，因为每连接没有绕完整一圈。</p>
@@ -143,7 +143,7 @@
 </details>
 <p><a id="q4"></a></p>
 <h2 id="q4-statistical-multiplexing">Q4. Statistical multiplexing｜算人数前，先说是否独立</h2>
-<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/04c2ac662500e314.png" rel="noopener" target="_blank"><img alt="Original Q3 continuation and Q4" decoding="async" loading="lazy" src="../assets/04c2ac662500e314.png"/></a></p>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/04c2ac662500e314.png" rel="noopener" target="_blank"><img alt="Original Q3 continuation and Q4" decoding="async" height="1450" loading="lazy" src="../assets/04c2ac662500e314.png" width="1025"/></a></p>
 <p><strong>条件 / Conditions:</strong> 共享3Mbps；每人活跃时需150kbps，每人10%时间活跃。a用电路交换；b/c用分组交换，c共有120用户。 / Users share 3 Mbps, each requiring 150 kbps when active, with activity fraction 10%. Part a uses circuits; parts b/c use packet switching, with 120 users in c.</p>
 <p>a 每用户预留150kbps，可容纳 <span class="arithmatex">\(3\times10^6/(150\times10^3)=20\)</span>人，选B。不把它再除活跃比例，电路资源已经预留。</p>
 <p>b 随机时刻某用户活跃概率0.1，选A。把长期活跃比例作为该随机时刻概率，是题目的稳态抽样约定。</p>
@@ -159,4 +159,4 @@
 </details>
 <h2 id="_1">回查与巩固</h2>
 <p>所有数值与环路逐边占用由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算。原题PDF p1=Q1/Q2引入，p2=Q2/Q3引入，p3=Q3继续/Q4；教师解答1–2背景、3–4Q1、5电路图、6–7Q2、8FDM/TDM、9Q3、10Q4均已对应。原版本副本不重复计算。</p>
-<p>复习使用<a href="../../cards.html#CS5222-N071">现有Tutorial1卡</a>，首选N071/N072（存储转发）、N076（FDM）、N077（人数与容量），以及<a href="Chapter01.html#qa">Chapter1</a>相关题。学习完应能用英文解释 <em>why</em>，不只记住C/D/B这些选项字母。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料整理于 2026-09-23；网页发布于 2026-09-24。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>复习使用<a href="../../cards.html#CS5222-N071">现有Tutorial1卡</a>，首选N071/N072（存储转发）、N076（FDM）、N077（人数与容量），以及<a href="Chapter01.html#qa">Chapter1</a>相关题。学习完应能用英文解释 <em>why</em>，不只记住C/D/B这些选项字母。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

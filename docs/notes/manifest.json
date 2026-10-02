@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "date": "2026-09-24",
-  "major_documents": 15,
+  "date": "2026-10-03",
+  "major_documents": 21,
   "documents": [
     {
       "path": "CS5489/Lecture01.html",
@@ -33,7 +33,7 @@
     {
       "path": "CS5489/Lecture04.html",
       "source": "CS5489/course-notes/Lecture04.md",
-      "sha256": "6e2b47901f5810f433253d42c337ac077c9604dc2b82d7ce378adc36eb3ed896",
+      "sha256": "e044e762769e8114dc68e6514ee19c846674c7d1aa4a932cc7afaab087fe655f",
       "title": "Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”",
       "major": true,
       "images": 6,
@@ -87,11 +87,11 @@
     {
       "path": "CS5222/Chapter02.html",
       "source": "CS5222/course-notes/Chapter02.md",
-      "sha256": "e7d9f045717c30dc9e25d088d16823fa5dcb64534286aa53511d69ca6df6991b",
+      "sha256": "0d42fd865e56326dec6e4c79a8cce100b260777c2978a67007884a8155b4523c",
       "title": "Chapter 2 · Application Layer｜让两端的程序真正说上话",
       "major": true,
       "images": 5,
-      "answers": 4
+      "answers": 5
     },
     {
       "path": "CS5222/Tutorial01.html",
@@ -114,7 +114,7 @@
     {
       "path": "CS5222/Tutorial03.html",
       "source": "CS5222/course-notes/Tutorial03.md",
-      "sha256": "8336ee2f6df5a7b017d3995181000654155aedc3e6caf7a9aa4ea2f44fddff07",
+      "sha256": "9661cabeb7f5cf4e7f5ae33050a805587821fba94b400cc703c38560498b8d4e",
       "title": "Tutorial 3 · HTTP and DNS｜从报文证据走到时间计算",
       "major": true,
       "images": 4,
@@ -141,11 +141,11 @@
     {
       "path": "foundations/MathForML.html",
       "source": "learning/foundation-notes/MathForML.md",
-      "sha256": "517cd5bc99359830f482cb5b925300e096aea5f3c92e2cccc903dfb78c736cf8",
+      "sha256": "88538236e5dee4736e96b22864122b4d230d1318db6973a7cc4036b3d8201e3e",
       "title": "Math for Machine Learning｜看懂公式，再回到课堂",
       "major": false,
-      "images": 14,
-      "answers": 14
+      "images": 15,
+      "answers": 15
     },
     {
       "path": "foundations/NetworkBasics.html",
@@ -159,98 +159,182 @@
     {
       "path": "foundations/SourceEvidence.html",
       "source": "learning/foundation-notes/SourceEvidence.md",
-      "sha256": "4780632a149bdacc05c0d9fdd76791e87b8e536aea4982fb98cb05386f835d59",
+      "sha256": "66e0cee808299c7f8a4b0095af6eec96074fb7e786697de75b60ce9cc5625804",
       "title": "Sources and priorities｜重难点判断凭什么",
       "major": false,
       "images": 0,
       "answers": 0
+    },
+    {
+      "path": "CS5489/Lecture05.html",
+      "source": "CS5489/course-notes/Lecture05.md",
+      "sha256": "6f90719e6383026e1cfb0df61e3b3d0848f47bc6ad3492c1e98d00683a63a81f",
+      "title": "Lecture 5 · Neural Networks",
+      "major": true,
+      "images": 2,
+      "answers": 5
+    },
+    {
+      "path": "CS5489/Tutorial04.html",
+      "source": "CS5489/course-notes/Tutorial04.ipynb",
+      "sha256": "1ee72f457694d8562805df155331ec9dd4c8bfb3cef373aca76a058b6a88b42a",
+      "title": "Tutorial 4 · Predicting Bike Sharing Usage",
+      "major": true,
+      "images": 5,
+      "answers": 1
+    },
+    {
+      "path": "CS5489/Assignment02.html",
+      "source": "CS5489/course-notes/Assignment02.md",
+      "sha256": "17356ef0bc003c611c4450c4230b44daced0d1f07e65432e03528f1c8d155f42",
+      "title": "Assignment 2 · Backpropagation and Optimization",
+      "major": true,
+      "images": 0,
+      "answers": 2
+    },
+    {
+      "path": "CS5222/Chapter03.html",
+      "source": "CS5222/course-notes/Chapter03.md",
+      "sha256": "9aad21386d393125935d5d8596d1cdf314431d530d5d7e3441f20c7977ddcc16",
+      "title": "Chapter 3 · Transport Layer（当前 part 1–2）",
+      "major": true,
+      "images": 1,
+      "answers": 5
+    },
+    {
+      "path": "CS5222/Tutorial04.html",
+      "source": "CS5222/course-notes/Tutorial04.md",
+      "sha256": "8ad18669c96c12cb4035688003f63492337c705117924ce050d07f924dba1c90",
+      "title": "Tutorial 4 · File Distribution, BitTorrent and DASH",
+      "major": true,
+      "images": 1,
+      "answers": 4
+    },
+    {
+      "path": "CS5222/Tutorial05.html",
+      "source": "CS5222/course-notes/Tutorial05.md",
+      "sha256": "10c24c7a2c90191596da46d85dd01263ebb6fcd00a06363a64ee7e5c01dcae54",
+      "title": "Tutorial 5 · Demultiplexing, Checksums and Reliable Transfer",
+      "major": true,
+      "images": 2,
+      "answers": 3
     }
   ],
   "assets": [
     {
       "path": "CS5222/Assignment01.html",
-      "bytes": 21013,
-      "sha256": "3075183f7072528edff54b5066867a11ec353316bb6b33b3998e645dca98cade"
+      "bytes": 21145,
+      "sha256": "52a4f1c20e9d14208fb9c5698fa556e51dc92b9492d8ad88b24efedba3e7f26d"
     },
     {
       "path": "CS5222/Chapter01.html",
-      "bytes": 30355,
-      "sha256": "2198a202359d416e2a8746464f7e25894e569a1ece869a7768cf94803dd08771"
+      "bytes": 30726,
+      "sha256": "bf627aa5e9622db8785ca791cbcb63020f419dc2d8d1d978cb0b368942fb8811"
     },
     {
       "path": "CS5222/Chapter02.html",
-      "bytes": 33079,
-      "sha256": "ef110722c3db10c67c7f87cb04b6d783c9a628423b57df20d0e749bb8773d124"
+      "bytes": 36592,
+      "sha256": "058113d6599b9969bb4374cb13219df79e00d675ed11f315917884b3c9b5f763"
+    },
+    {
+      "path": "CS5222/Chapter03.html",
+      "bytes": 21919,
+      "sha256": "65bf74254700f13fbb833712589fb9df043a7415bf92b2014f5606bbb8fd8236"
     },
     {
       "path": "CS5222/ResearchReportGuide.html",
-      "bytes": 13495,
-      "sha256": "a3ff72302ef9d280da1d9d3bf33c3f67ee7403fb9477859bbc3745a4e628a8d8"
+      "bytes": 13466,
+      "sha256": "0a5579284a4468634d51c2bc4f201909f1fb1de4a4b630a973d2b76048c6518a"
     },
     {
       "path": "CS5222/Tutorial01.html",
-      "bytes": 12838,
-      "sha256": "0e0353d6197072d622bfa10ca048275dda887ae5d86450c36b0c5b7abed601a3"
+      "bytes": 12890,
+      "sha256": "554cca39f70135a6f7a7617fb481fc8703999144023b0da350700fb0459fe6a1"
     },
     {
       "path": "CS5222/Tutorial02.html",
-      "bytes": 13660,
-      "sha256": "a9659280ae37841d418c3e505483cf94c797a3bfe6e69769f8c3b5e4d2e2adaf"
+      "bytes": 13685,
+      "sha256": "2ef43d69a4c469782cc37646e9957c477104559d4d9437bd41368bb555fd2a68"
     },
     {
       "path": "CS5222/Tutorial03.html",
-      "bytes": 12954,
-      "sha256": "629883619ccd1ea4625400de61fc89eb07b3e4e5df360b56fb7b7d196db69b4a"
+      "bytes": 13424,
+      "sha256": "35a4bb20e8be73e9df841940a387798d4b79b076a86cb185cdd1c3e8c7a3591c"
+    },
+    {
+      "path": "CS5222/Tutorial04.html",
+      "bytes": 11438,
+      "sha256": "0f970bbcb9e5b49f9c0906ae4fce3ef04fdb55d01796ea29f6d55bae7c6010ff"
+    },
+    {
+      "path": "CS5222/Tutorial05.html",
+      "bytes": 10296,
+      "sha256": "7e803608fec854a40d999121bfdd81793b28d072b48198cd1943bff56c9bc56d"
     },
     {
       "path": "CS5222/index.html",
-      "bytes": 3857,
-      "sha256": "1bd11fa7804bd97b409b6dc920a84679a5149c6057debe5cb3d6baeab9129828"
+      "bytes": 4162,
+      "sha256": "1147406ad674e998788c5410827adbd49bc758d718fe04df20cce34b85bf94f1"
     },
     {
       "path": "CS5489/Assignment01.html",
-      "bytes": 29640,
-      "sha256": "ae5679f2afd8daadf64dafe36f59783b6f556d8e9bbf5931d29ec9b1ebd0d331"
+      "bytes": 29611,
+      "sha256": "4f0bf83e680543ca09e3b5f2230b62ad255a76e3fd4a12681147d2348a39aa6a"
+    },
+    {
+      "path": "CS5489/Assignment02.html",
+      "bytes": 21531,
+      "sha256": "72097458f0349c5a10be05c2a3d136863d8ebf4207079eb735727a0522c08e6c"
     },
     {
       "path": "CS5489/Lecture01.html",
-      "bytes": 33646,
-      "sha256": "0e767e32c699143fb63111b8d5e560611554e3add0a3eea0c2a652d26469d66a"
+      "bytes": 33725,
+      "sha256": "cb9725b2e4fda1973cbf6ffad1099b2343ab248de3aa23a836740dab74ea3f2c"
     },
     {
       "path": "CS5489/Lecture02.html",
-      "bytes": 66917,
-      "sha256": "89cab3720f306a4893c69e930fdd5c8ab9acd8f18dfd2210754d2684ccecc31d"
+      "bytes": 67091,
+      "sha256": "3416607b68d00697bb444c4faffca8484204af2e3b9d5e80da8420a6635c1691"
     },
     {
       "path": "CS5489/Lecture03.html",
-      "bytes": 41180,
-      "sha256": "9d9426a7780baf35d728ec7451456fe2f3e4eb6ef55e240f241d52a9d2b8b562"
+      "bytes": 41285,
+      "sha256": "ffc0ce7da60fecad87b202ef3b7b72e0440c9bca063d0a11cfd17584b4522299"
     },
     {
       "path": "CS5489/Lecture04.html",
-      "bytes": 32749,
-      "sha256": "b237c7c33c984ba238297d93c3b43186a4c5cd1562db01bc6a9b9f7f58305c86"
+      "bytes": 33025,
+      "sha256": "4123d3b3686dcc1fbed2e860dde1e5829ece8477d3dd82def95b79abd8956a27"
+    },
+    {
+      "path": "CS5489/Lecture05.html",
+      "bytes": 27814,
+      "sha256": "837e26c0d8c1402a2bbb5675f3bcbbd80da6d8c15e3d0aebd7e71a00fa45bfa6"
     },
     {
       "path": "CS5489/Tutorial01.html",
-      "bytes": 60538,
-      "sha256": "da4992cfb6b3decf34ba60084d528b6027c2e978ca62cb2c58d599a41747f7c4"
+      "bytes": 60609,
+      "sha256": "681f4f0cdba3757b2a75edd8cc2d3621c1fafdae706426286aecbe5ca26af7b3"
     },
     {
       "path": "CS5489/Tutorial02.html",
-      "bytes": 169253,
-      "sha256": "b522cf0b7bcc19bc7d215bc27f9762f0d796c1282bb83817935d3456dc9a9c66"
+      "bytes": 169324,
+      "sha256": "72b69de85e0e5a0642b3da83f5c073af337a7c590cc8e2b46a8987caae40bd7d"
     },
     {
       "path": "CS5489/Tutorial03.html",
-      "bytes": 98426,
-      "sha256": "54b9dc978bb1fe1ab2faadfc62bf1a45c21459aac437f30c8b2b89de55257aea"
+      "bytes": 98647,
+      "sha256": "bd607ea4e047c38431fec1ee70eebaf090869d11d33d455cb2ed78dc0f12e0b5"
+    },
+    {
+      "path": "CS5489/Tutorial04.html",
+      "bytes": 87353,
+      "sha256": "7d7a11f6cce43d99cf4cd718204536b97b4d781cde6e0d9c70aef4bd9c3eaf08"
     },
     {
       "path": "CS5489/index.html",
-      "bytes": 4041,
-      "sha256": "c56a53d5957ad78159f5a07e7ad292539900336e330e47ac6babbf1ab2fe0614"
+      "bytes": 4369,
+      "sha256": "eb6e1006e2bdbe2029ad177a232b12917d92a0dcda6164ea12ad685ebb35bf0d"
     },
     {
       "path": "assets/003d8c59f07f557d.png",
@@ -338,6 +422,11 @@
       "sha256": "24bcffdf7d07f853d8c7061ce061b45ea7582bdeb8b38bb6ffdb0235587abbbd"
     },
     {
+      "path": "assets/25262bb47a7a9cc6.png",
+      "bytes": 25336,
+      "sha256": "25262bb47a7a9cc6e30af4365da1fbe7d6db5e1dc765d0022c1055b35dbfe6eb"
+    },
+    {
       "path": "assets/259c9744039578e6.png",
       "bytes": 97238,
       "sha256": "259c9744039578e6d2d37b98ce2333d367346c649ceba194a8b198f0eaf076c4"
@@ -381,6 +470,16 @@
       "path": "assets/3691cb146272b175.png",
       "bytes": 266556,
       "sha256": "3691cb146272b1752b8206432e7f0994d82171bb877a1bb371e9b535ae00474f"
+    },
+    {
+      "path": "assets/374ad00f2a3c4e2f.png",
+      "bytes": 46067,
+      "sha256": "374ad00f2a3c4e2ffa178bf26371e6703e8e3cd340379a68d8672574d1848d35"
+    },
+    {
+      "path": "assets/38a5c9666edf97c0.png",
+      "bytes": 78770,
+      "sha256": "38a5c9666edf97c0e7d9897220fa697b904a34b9266004857189f5a02e33eb29"
     },
     {
       "path": "assets/394e7ac53f4f96f2.png",
@@ -443,9 +542,19 @@
       "sha256": "539ac5bf04a083852de5ca458cb0bd7b557fd35114aeb7b3e2290640bc8aedf5"
     },
     {
+      "path": "assets/54afa744b77756cc.png",
+      "bytes": 78353,
+      "sha256": "54afa744b77756cc6839cf94fc629b192c7b8f9f32be9966dab885df223fbd7f"
+    },
+    {
       "path": "assets/55781a74c6f7dc8f.png",
       "bytes": 162918,
       "sha256": "55781a74c6f7dc8f2f9f156a75ec22008e175412166e2963d6ab0c6f47874556"
+    },
+    {
+      "path": "assets/56540ef1ca54badb.png",
+      "bytes": 34050,
+      "sha256": "56540ef1ca54badbad75d8857baeb7f4e20e37693342f0aa4d4ebee0d83cdba3"
     },
     {
       "path": "assets/56646d7447dc56d6.png",
@@ -473,6 +582,11 @@
       "sha256": "5df8836810b56eab44e09f21f7a9b074103e09fb45da0bc6de4ab31e6e59adac"
     },
     {
+      "path": "assets/5f55209697f9b64e.png",
+      "bytes": 533762,
+      "sha256": "5f55209697f9b64e658421a6ff3a6a580e12803436dcde7799e478adcb234431"
+    },
+    {
       "path": "assets/5f9999d2c9f3653c.png",
       "bytes": 54009,
       "sha256": "5f9999d2c9f3653cf5b3bccf50e5e0af9900de35f2f0b19a59a7632e98ed7eaf"
@@ -496,6 +610,11 @@
       "path": "assets/654c74fc068e1f92.png",
       "bytes": 80880,
       "sha256": "654c74fc068e1f927e1f8efa741f6d33393d4ccb6d75b4c4d86ee11b4ebdd1d6"
+    },
+    {
+      "path": "assets/663548ece0579da1.png",
+      "bytes": 20219,
+      "sha256": "663548ece0579da113776a23e6440175c2f3ba22a7116ece5d5f8300b0c5f4de"
     },
     {
       "path": "assets/71720687f11aae45.png",
@@ -588,6 +707,11 @@
       "sha256": "b6227878f29440ed134d24c7b3da9abe46baf6f17c8e442b7971621f187f7e03"
     },
     {
+      "path": "assets/b65d1289107ae4ae.png",
+      "bytes": 71737,
+      "sha256": "b65d1289107ae4aeef2a5270f5674057aaad03c318d760784e7102c54a6ca9f7"
+    },
+    {
       "path": "assets/b6cc77c4beb783b8.png",
       "bytes": 61258,
       "sha256": "b6cc77c4beb783b8011b352605e05d3a86d9dd5703b8f394567ebac96055bf36"
@@ -596,6 +720,11 @@
       "path": "assets/b704cfe7ac42a7de.png",
       "bytes": 178870,
       "sha256": "b704cfe7ac42a7de1363f7f73486489d5bb857411e009d720e25c69b2a736784"
+    },
+    {
+      "path": "assets/b799a176bb25e6ac.png",
+      "bytes": 70630,
+      "sha256": "b799a176bb25e6ac3cb9c085f59e442a99d9385f3292da82aa36922e934dcc88"
     },
     {
       "path": "assets/b9ef3e181752d182.png",
@@ -628,6 +757,11 @@
       "sha256": "c7642cb3d121c4845fce2c4364846a991e276a0146f19087c0fa3d9ed39fc701"
     },
     {
+      "path": "assets/c8b1a53b1a27cab2.png",
+      "bytes": 82233,
+      "sha256": "c8b1a53b1a27cab2bc18f8f6add1d26de17c603277a704c76f21c8353de96b91"
+    },
+    {
       "path": "assets/c9d4e8fbc2990c24.png",
       "bytes": 18496,
       "sha256": "c9d4e8fbc2990c24c3a0eaf508032607781fe5e61242c65bf6b58a791b8021b4"
@@ -636,6 +770,11 @@
       "path": "assets/ca93e9e3f8429317.png",
       "bytes": 236191,
       "sha256": "ca93e9e3f8429317f17f05cb816ff0d0f2fb8678eacd2f8a5ac25b0056512fe4"
+    },
+    {
+      "path": "assets/cbdd2343dff37b54.png",
+      "bytes": 16861,
+      "sha256": "cbdd2343dff37b54558cef997bcb9ac09f3cfacaca4d5b549cbc3bda03ee7e0e"
     },
     {
       "path": "assets/d17514b2d55294db.png",
@@ -709,23 +848,23 @@
     },
     {
       "path": "foundations/MathForML.html",
-      "bytes": 77803,
-      "sha256": "ef28931374334ac51e3845b16f43035987c7d0000c9ede6086c1b2fa58688b36"
+      "bytes": 83700,
+      "sha256": "0a7a24d58b407c5339b6b5deca7c5eda03e61f9363951edf2dd9402563800720"
     },
     {
       "path": "foundations/NetworkBasics.html",
-      "bytes": 13390,
-      "sha256": "5afac06a888c7092880e3e6325c8f2eac09d212739234c5b6bfd9e6c972bb830"
+      "bytes": 13413,
+      "sha256": "1400b5cb954c6f8911891a83e05d34a0d3e07243e46b92b03a02badaf8fea29e"
     },
     {
       "path": "foundations/SourceEvidence.html",
-      "bytes": 6786,
-      "sha256": "216c04dba6c915c50f9d0abb537cdf42bc72644b6e498f0df5c95ca8ec78d6bb"
+      "bytes": 7401,
+      "sha256": "51f5910a6d70d6e72262fa67bebb94a8380e7ab3471bfcaa5a4a17fb81c3b63b"
     },
     {
       "path": "index.html",
-      "bytes": 5089,
-      "sha256": "054d127458fc28b43ed60e99d7546c8e51b50c3dd4619eef240eb896c4db6838"
+      "bytes": 5793,
+      "sha256": "82c13e8cbee553fbfa05f565fc9fcb397aca51a0fda9e05a01aae1fe787d7c27"
     },
     {
       "path": "notes.css",
@@ -734,46 +873,46 @@
     },
     {
       "path": "pdf/CS5222-A4.pdf",
-      "bytes": 12407558,
-      "sha256": "f758e97588bac99d27e15cfd2f3d9f75e48a598d849fd316d16fa86e7ceb2062"
+      "bytes": 14038239,
+      "sha256": "d37b298d31d2add1a1bed01bb9a706afefb6dce5309c4ac3b593610e47611f5b"
     },
     {
       "path": "pdf/CS5489-A4.pdf",
-      "bytes": 14688922,
-      "sha256": "cfb69f7d48d36e2f3a708934d4b7fde74abfa3db5bda28b137968b16edabff78"
+      "bytes": 17347280,
+      "sha256": "050cb32f0bc9048db0f0233be7e5c32aebbfdb5f71870d66182d7152a68cb9cd"
     },
     {
       "path": "pdf/Foundations-A4.pdf",
-      "bytes": 4330008,
-      "sha256": "e621115616387dae7c5470852c0bcb57cdd4cf1cea8feca04932ed4b378e68fd"
+      "bytes": 4477912,
+      "sha256": "43a24c66814bfd27fd48003f2056beb4e3bc63bf4aa40f982fe76110008540f1"
     }
   ],
   "pdfs": [
     {
       "path": "pdf/CS5489-A4.pdf",
-      "pages": 124,
-      "sha256": "cfb69f7d48d36e2f3a708934d4b7fde74abfa3db5bda28b137968b16edabff78",
-      "source_sha256": "cca36965cffbee0bfca883738bc7a8212e3573a9ab335c43c0c6b6f416717b7b",
-      "removed_local_links": 33,
-      "rewritten_links": 45,
+      "pages": 151,
+      "sha256": "050cb32f0bc9048db0f0233be7e5c32aebbfdb5f71870d66182d7152a68cb9cd",
+      "source_sha256": "9cf0d2731a27683d59b743245b7f4720251901b5f18de3e525f59b41c7e023f0",
+      "removed_local_links": 40,
+      "rewritten_links": 56,
       "content_streams_and_geometry_unchanged": true
     },
     {
       "path": "pdf/CS5222-A4.pdf",
-      "pages": 67,
-      "sha256": "f758e97588bac99d27e15cfd2f3d9f75e48a598d849fd316d16fa86e7ceb2062",
-      "source_sha256": "08c3f348d401b66dcdf05059be10c543f7a55487ea8022abf2ef9e4f35a4f68b",
-      "removed_local_links": 34,
-      "rewritten_links": 25,
+      "pages": 84,
+      "sha256": "d37b298d31d2add1a1bed01bb9a706afefb6dce5309c4ac3b593610e47611f5b",
+      "source_sha256": "eb91c3401aa5bd27ceb320416b0047fd6dcac8b2078e751f2eae8a6952c175ad",
+      "removed_local_links": 41,
+      "rewritten_links": 35,
       "content_streams_and_geometry_unchanged": true
     },
     {
       "path": "pdf/Foundations-A4.pdf",
-      "pages": 41,
-      "sha256": "e621115616387dae7c5470852c0bcb57cdd4cf1cea8feca04932ed4b378e68fd",
-      "source_sha256": "c30a056e55a1cde69fb3d755ec2a84c7e784bea6128e718740349d535604c8ba",
-      "removed_local_links": 24,
-      "rewritten_links": 61,
+      "pages": 43,
+      "sha256": "43a24c66814bfd27fd48003f2056beb4e3bc63bf4aa40f982fe76110008540f1",
+      "source_sha256": "48bf1d566aa6e3873bc873d1a59b3b2421470177593e6cb706d08b1c82008521",
+      "removed_local_links": 25,
+      "rewritten_links": 65,
       "content_streams_and_geometry_unchanged": true
     }
   ],
@@ -919,6 +1058,10 @@
       "label": "socket-self-test.json"
     },
     {
+      "document": "CS5222/Chapter02.html",
+      "label": "Q&A_cha2学生版"
+    },
+    {
       "document": "CS5222/Tutorial01.html",
       "label": "原题PDF（3页）"
     },
@@ -953,6 +1096,10 @@
     {
       "document": "CS5222/Tutorial03.html",
       "label": "原题PDF（3页）"
+    },
+    {
+      "document": "CS5222/Tutorial03.html",
+      "label": "教师解答13页"
     },
     {
       "document": "CS5222/Tutorial03.html",
@@ -1024,7 +1171,7 @@
     },
     {
       "document": "foundations/SourceEvidence.html",
-      "label": "本轮source-manifest"
+      "label": "9月23日source-manifest"
     },
     {
       "document": "foundations/SourceEvidence.html",
@@ -1045,6 +1192,54 @@
     {
       "document": "foundations/SourceEvidence.html",
       "label": "本轮检查目录"
+    },
+    {
+      "document": "CS5489/Lecture05.html",
+      "label": "Lecture5a"
+    },
+    {
+      "document": "CS5489/Lecture05.html",
+      "label": "Lecture5b"
+    },
+    {
+      "document": "CS5489/Tutorial04.html",
+      "label": "原Tutorial4.ipynb"
+    },
+    {
+      "document": "CS5489/Tutorial04.html",
+      "label": "原ZIP"
+    },
+    {
+      "document": "CS5489/Assignment02.html",
+      "label": "Assignment2.ipynb"
+    },
+    {
+      "document": "CS5489/Assignment02.html",
+      "label": "MLP Primer"
+    },
+    {
+      "document": "CS5489/Assignment02.html",
+      "label": "Wine CSV"
+    },
+    {
+      "document": "CS5222/Chapter03.html",
+      "label": "part1"
+    },
+    {
+      "document": "CS5222/Chapter03.html",
+      "label": "part2"
+    },
+    {
+      "document": "CS5222/Tutorial04.html",
+      "label": "原题2页"
+    },
+    {
+      "document": "CS5222/Tutorial04.html",
+      "label": "教师解答v2共15页"
+    },
+    {
+      "document": "CS5222/Tutorial05.html",
+      "label": "当前原题2页"
     }
   ]
 }

@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "给定输入 x=2，希望程序输出 3。先用最小的模型 q=wx；当 w=1 时它只输出 2。我们要知道把 w 往哪边改、改多少有帮助。若计算经过很多层，靠一个参数一个参数试太慢，反向传播便用每一步的局部导数，把最终误差有次序地传回来。",
-    "en": "For input x=2, a program should output 3. Start with q=wx: at w=1 it predicts only 2. Which way should w move? When a calculation contains many layers, testing every parameter separately becomes expensive. Backpropagation applies local derivatives in a systematic reverse order."
+    "zh": "给定输入 x=2，希望程序输出 3。先用最小的模型 q=wx；当 w=1 时它只输出 2。我们要知道把 w 往哪边改、改多少有帮助。若计算经过很多层，靠一个参数一个参数试太慢，反向传播便用每一步的局部导数，把最终误差有次序地传回来。\n\nLecture5现从感知机、多分类概率逐步走到反向传播。本节先讲计算图，再回整讲的批量矩阵推导；Assignment2中的可学习指数见独立作业指南。",
+    "en": "For input x=2, a program should output 3. Start with q=wx: at w=1 it predicts only 2. Which way should w move? When a calculation contains many layers, testing every parameter separately becomes expensive. Backpropagation applies local derivatives in a systematic reverse order.\n\nCurrent Lecture 5 connects perceptrons and multiclass probabilities to backpropagation; the full notes and Assignment 2 guide supply batch derivatives and the learnable exponent."
   },
   "sections": [
     {
@@ -151,6 +151,16 @@
       "cards": [
         "CS5489-M254"
       ]
+    },
+    {
+      "goal": "Read batch-gradient shapes and bias sums",
+      "sections": [
+        "matrix-batch"
+      ],
+      "practice": "card:CS5489-M251",
+      "cards": [
+        "CS5489-M251"
+      ]
     }
   ],
   "sources": [
@@ -171,6 +181,12 @@
       "locator": "ml24 · worked / practice / transfer",
       "kind": "derived",
       "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+    },
+    {
+      "name": "Lecture5a/b and Assignment2",
+      "locator": "Current downloaded Canvas, file-local unit numbering; 2026-10-03",
+      "kind": "course",
+      "note": "范围和推导按新原件核对。 / Scope checked against current originals."
     }
   ]
 }

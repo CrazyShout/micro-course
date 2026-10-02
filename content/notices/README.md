@@ -1,26 +1,36 @@
 # 课程信息与学习指南 / Course information and study guidance
 
-整理日期：2026-09-22。材料快照日期见各条目；不是教师新发布的公告。
+整理日期：2026-10-03。材料快照日期见各条目；不是教师新发布的公告。
 
 ## CS5489
 
-### 9月22日内容更新与Markji位置 / September 22 content and Markji locations
+### 10月3日：新讲义与Markji同步 / October 3: notes and Markji sync
 
-新内容已整理进网页：41张原卡按新Canvas复用，原卡仍可在Markji按卡号查找。原卡文字已同步，Markji内的章节位置尚待更新。CS5489新增M338–M341目前可在网页预览，尚未入Markji；不必反复搜索不存在的卡。
+Lecture5、Tutorial4与Assignment2方法指南已加入整讲讲义。神经网络与优化器复用原卡，章节已经同步；上轮M338–M341也已进入Markji。原有卡片身份保留，不必重建牌组。
 
-New Canvas content reuses 41 existing cards, whose updated text is available in Markji under the same IDs. Their Markji chapter locations are still pending. New CS5489 cards M338–M341 can be previewed on the website but are not yet in Markji.
+Lecture 5, Tutorial 4 and the Assignment 2 study guide are now included. Existing neural-network and optimizer cards have been moved to their current chapters. Previously prepared M338–M341 are now in Markji. Existing cards keep their identities; no new deck is needed.
 
-材料快照 / Material snapshot: 2026-09-22 · ID: CS5489-UPDATE-20260922
+材料快照 / Material snapshot: 2026-10-03 · ID: CS5489-UPDATE-20260922
 
-来源 / Source: micro-course · update 2026-09-22
+来源 / Source: micro-course · update 2026-10-03
+
+### Assignment 2：提交与评分要求 / Assignment 2: submission and marks
+
+原Notebook第3单元规定Section 1为40分、Section 2为60分。提交带全部输出的完成版.ipynb及其导出PDF，填姓名和EID，将两份文件压成一个ZIP上传Canvas。原文注明每天迟交扣25分，但下载文件未给具体截止时间；以当前Canvas为准。网页指南是方法说明，不是已完成的个人提交。
+
+Cell 3 assigns 40 marks to Section 1 and 60 to Section 2. Submit the completed notebook with all outputs and its exported PDF, fill in your name/EID, and upload one ZIP containing both files to Canvas. The file states a penalty of 25 marks per late day but gives no specific deadline; check current Canvas. The web guide is a study aid, not a completed personal submission.
+
+材料快照 / Material snapshot: 2026-10-03 · ID: CS5489-A2-SUBMISSION
+
+来源 / Source: Assignment2.ipynb · cell 3
 
 ### 课程范围、学习顺序与考核 / Scope, study sequence, and assessment
 
-先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–4 和 Tutorial 1–3；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。
+先学 Python/NumPy 和概率，再学贝叶斯分类与文本朴素贝叶斯，并用于 Assignment 1。当前介绍列出平时成绩 70%、期末 30%；期末考试与项目各自至少达到 30% 才能通过。幻灯片对项目所在周的描述不一致，截止时间以当前 Canvas 为准。正式章节卡覆盖 Lecture 1–5、Tutorial 1–4 和 Assignment 1–2技术方法；Extra Resources 提前介绍后续历史主题，两者均不等于已确认的 QE 范围。
 
-Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–4 and Tutorials 1–3; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.
+Learn Python/NumPy and probability, then Bayes classification and text naive Bayes, then apply them to Assignment 1. The current introduction lists 70% coursework and 30% final examination; the final and project each require at least 30% individually to pass. The slides disagree on the project week, so use current Canvas deadlines. The Canvas-aligned cards cover Lectures 1–5, Tutorials 1–4 and Assignment 1–2 methods; Extra Resources previews later historical topics. Neither defines a confirmed QE syllabus.
 
-材料快照 / Material snapshot: 2026-09-22 · ID: CS5489-M005
+材料快照 / Material snapshot: 2026-10-03 · ID: CS5489-M005
 
 来源 / Source: Lecture1 Intro.pdf · page 4-5,29
 
@@ -109,15 +119,15 @@ First read a module in order with answers visible. Then hide the answer and expl
 
 ## CS5222
 
-### 9月22日内容更新与Markji位置 / September 22 content and Markji locations
+### 10月3日：传输层与Tutorial4–5 / October 3: transport and Tutorials 4–5
 
-Chapter2后续、Tutorial3与Assignment1已整理进网页。N135–N148、N231–N233、N260–N263已复用原卡并同步出处；Markji内目前仍在Extra Resources，可按原卡号找到，章节位置尚待更新。网络本轮没有增加新卡。
+Chapter3当前part1–2、Tutorial4–5已有整讲讲义；Chapter2课堂Q&A及Tutorial3教师解答已跟进。已有原卡已移入对应正式章节，未新增网络卡。当前Chapter3止于RTT与超时；后续流控、拥塞控制仍须等新课件核对。
 
-Later Chapter 2, Tutorial 3 and Assignment 1 are available here. Cards N135–N148, N231–N233 and N260–N263 reuse their original IDs and updated sources. They remain under Extra Resources in Markji while chapter moves are pending. No networking cards were added.
+Notes now cover Chapter 3 parts 1–2 and Tutorials 4–5, with Chapter 2 Q&A and the Tutorial 3 solution checked. Existing cards have been moved to their current chapters; no networking cards were added. Current Chapter 3 ends at RTT and timeout estimation. Later flow/congestion control awaits new material.
 
-材料快照 / Material snapshot: 2026-09-22 · ID: CS5222-UPDATE-20260922
+材料快照 / Material snapshot: 2026-10-03 · ID: CS5222-UPDATE-20260922
 
-来源 / Source: micro-course · update 2026-09-22
+来源 / Source: micro-course · update 2026-10-03
 
 ### Chapter 2：已下载课件的覆盖范围 / Chapter 2: downloaded material coverage
 
@@ -134,11 +144,11 @@ The 107-slide full Chapter 2 and 42-slide part 3 are now available, covering DNS
 
 ### 考核结构与资料范围 / Assessment structure and material scope
 
-课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1、Chapter 2 全文、Tutorial 1–3 与 Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。
+课程概览规定平时成绩 30%、期末 70%，通过要求包括期末考试至少达到满分的 30%。平时任务含习题/论文作业、Wireshark 和研究报告。正式章节卡对应 Chapter 1–2 全文、Chapter 3 part1–2、Tutorial 1–5与Assignment 1；Extra Resources 单独预习后续历史主题和题目。此卡库不等于完整本学期课程，也不定义已确认的 QE 范围。
 
-The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapter 1, the complete Chapter 2, Tutorials 1–3 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.
+The overview assigns 30% to coursework and 70% to the final exam; passing requires at least 30% of the examination's maximum mark. Coursework includes problem/paper assignments, Wireshark and a research report. Canvas-aligned cards cover Chapters 1–2, Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1. Extra Resources separately previews historical later topics and exercises. This collection does not define a complete current course or a confirmed QE syllabus.
 
-材料快照 / Material snapshot: 2026-09-22 · ID: CS5222-N089
+材料快照 / Material snapshot: 2026-10-03 · ID: CS5222-N089
 
 来源 / Source: cs5222_overview_semA2026.pdf · page 5,11-13
 

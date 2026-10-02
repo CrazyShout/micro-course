@@ -6,6 +6,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 @@ M183 | x01-neighbors | learn | XKNN:8-14
 Q_EN: How does k-nearest-neighbor classification produce a prediction?
 Q_ZH: k 近邻分类怎样得到预测结果？
@@ -234,84 +244,6 @@ Q_ZH: 为什么核 PCA 的系数要结合特征值进行归一化？
 A_EN: Let $K_ca=\lambda_Ka$, $a^Ta=1$, and $\phi_c(x_i)$ be centered feature vectors. The squared norm of $v=\sum_i a_i\phi_c(x_i)$ is $a^TK_ca=\lambda_K$. Therefore divide v, equivalently its coefficients a, by $\sqrt{\lambda_K}$ to get a unit direction. Training scores are $K_ca/\sqrt{\lambda_K}=\sqrt{\lambda_K}a$. Only positive eigenvalues can be used in this normalization.
 A_ZH: 设 $K_ca=\lambda_Ka$、$a^Ta=1$，$\phi_c(x_i)$ 为中心化特征向量。组合 $v=\sum_i a_i\phi_c(x_i)$ 的范数平方是 $a^TK_ca=\lambda_K$，所以将v（等价地将系数a）除以 $\sqrt{\lambda_K}$ 才得到单位方向。训练得分为 $K_ca/\sqrt{\lambda_K}=\sqrt{\lambda_K}a$；只可用正特征值归一化。
 
-@@ M241 | x06-networks | learn | XNN:12-21
-Q_EN: How does the perceptron update a misclassified example?
-Q_ZH: 感知机怎样利用误分类样本更新参数？
-A_EN: For labels $y\in\{-1,+1\}$ and an augmented feature vector containing the bias coordinate, update $w\leftarrow w+\eta yx$ when the signed score is nonpositive. The update moves the score toward the correct side. Under separability and suitable bounded-data assumptions it terminates, but nonseparable data need not yield convergence.
-A_ZH: 对标签 $y\in\{-1,+1\}$，把偏置也并入扩展特征；有符号分数非正时，更新 $w\leftarrow w+\eta yx$。更新使分数朝正确一侧移动。在可分、数据有界等条件下可终止，但不可分数据不保证收敛。
-
-@@ M242 | x06-networks | worked | XNN:14-20
-Q_EN: Start with w=(0,0), take x=(2,1), y=-1 and learning rate 0.5. What is one perceptron update without a bias?
-Q_ZH: 无偏置时，w=(0,0)、x=(2,1)、y=-1、学习率 0.5，一次感知机更新得到什么？
-A_EN: The initial signed score is zero, so apply $w_{\rm new}=w+0.5(-1)x=(-1,-0.5)$. The new raw score is -2.5 and signed score is 2.5, correctly placing this example on the negative side. Correcting this one example can still change predictions for other examples.
-A_ZH: 初始有符号分数为零，因此更新为 $w_{\rm new}=w+0.5(-1)x=(-1,-0.5)$。新原始分数为 -2.5，有符号分数为 2.5，故该样本位于正确的负类一侧。但修正这个样本仍可能改变其他样本的预测。
-
-@@ M243 | x06-networks | learn | XNN:23-25
-Q_EN: Why does an MLP need nonlinear activation functions?
-Q_ZH: 多层感知机为什么需要非线性激活函数？
-A_EN: Composing affine layers without nonlinearities produces another affine map: $W_2(W_1x+b_1)+b_2=(W_2W_1)x+W_2b_1+b_2$. Depth alone then does not create nonlinear boundaries. An activation changes this composition, allowing hidden features to represent patterns that one affine map cannot express.
-A_ZH: 没有非线性时，仿射层的复合仍是仿射映射：$W_2(W_1x+b_1)+b_2=(W_2W_1)x+W_2b_1+b_2$。仅增加深度不会产生非线性边界。激活函数改变了这一结构，使隐藏特征可以表达单个仿射映射无法表示的模式。
-
-@@ M244 | x06-networks | learn | XNN:24,33
-Q_EN: How should I check the dimensions of a fully connected layer?
-Q_ZH: 怎样检查全连接层的维度？
-A_EN: With row-wise batches, input X is B-by-d, weights W are d-by-h and bias b has h entries. Then $Z=XW+b$ and activated output both have shape B-by-h. Some lectures use column vectors and transpose W instead; either convention works when all products and gradients are consistent.
-A_ZH: 若每行一个样本，输入 X 为 B 行 d 列，权重 W 为 d 行 h 列，偏置 b 有 h 个元素，则 $Z=XW+b$ 及激活后的输出均为 B 行 h 列。有些课件用列向量并转置 W；两种约定都可用，但乘法与梯度必须保持一致。
-
-@@ M245 | x06-networks | worked | XNN:23-24
-Q_EN: How many trainable parameters are in a dense layer from 4 inputs to 3 outputs with one bias per output?
-Q_ZH: 4 个输入、3 个输出且每个输出有一个偏置的全连接层，有多少参数？
-A_EN: There are $4\times3=12$ weights and 3 biases, totaling 15. Batch size does not multiply the parameter count because all examples share the same layer. A second layer has its own parameters and must be counted separately.
-A_ZH: 权重数为 $4\times3=12$，再加 3 个偏置，共 15 个。批量大小不会使参数量倍增，因为不同样本共享同一层。若还有第二层，需要另外统计它自己的参数。
-
-@@ M246 | x06-networks | learn | XNN:26-29
-Q_EN: How do sigmoid and ReLU affect gradient flow?
-Q_ZH: Sigmoid 和 ReLU 如何影响梯度传播？
-A_EN: Sigmoid has derivative $\sigma(z)(1-\sigma(z))$, at most 1/4 and very small in saturated regions. ReLU has derivative 1 for positive inputs and 0 for negative inputs, with a convention at zero. Repeated small derivatives can weaken early-layer gradients. ReLU helps in positive regions but does not guarantee healthy gradients everywhere.
-A_ZH: Sigmoid 导数为 $\sigma(z)(1-\sigma(z))$，最大为 1/4，在饱和区域很小。ReLU 对正输入的导数为 1，对负输入为 0，零点需采用约定。连续相乘的小导数会削弱前层梯度。ReLU 改善了正半轴的传播，但不保证所有位置都有良好梯度。
-
-@@ M247 | x06-networks | check | XNN:28-30
-Q_EN: What is a dying ReLU, and why might a leaky slope help?
-Q_ZH: 什么是失活的 ReLU？小的负半轴斜率为什么可能有帮助？
-A_EN: If a unit receives negative preactivations for all relevant training examples, its ReLU output and local gradient stay zero. Upstream parameter updates through that unit can stop. Leaky ReLU uses a small nonzero negative-side slope, allowing a gradient there. Initialization, input scaling and learning rate can also influence this problem.
-A_ZH: 如果某单元对所有相关训练样本的激活前数值都为负，ReLU 的输出和局部梯度就一直为零，通过该单元更新前方参数可能停滞。Leaky ReLU 在负半轴保留小的非零斜率，使梯度仍可通过。初始化、输入尺度和学习率也会影响这一问题。
-
-@@ M248 | x06-networks | learn | XNN:33-34; XCNN:3-5
-Q_EN: What is the difference between forward propagation, backpropagation and an optimizer step?
-Q_ZH: 前向传播、反向传播和优化器更新有什么区别？
-A_EN: A forward pass computes intermediate activations, predictions and loss. Backpropagation applies the chain rule backward to obtain derivatives of that loss. An optimizer uses these gradients to update parameters. Backpropagation itself is a differentiation procedure, not a synonym for gradient descent or a guarantee that the next update improves generalization.
-A_ZH: 前向传播计算中间激活、预测和损失；反向传播向后应用链式法则，求出损失的导数；优化器再利用梯度更新参数。反向传播本身是求导过程，不等于梯度下降，也不保证下一次更新改善泛化表现。
-
-@@ M249 | x06-networks | worked | XCNN:4-5
-Q_EN: For $f=(x+y)z$ at x=-2, y=5, z=-4, compute f and all three partial derivatives.
-Q_ZH: 对 $f=(x+y)z$，取 x=-2、y=5、z=-4，求 f 和三个偏导数。
-A_EN: Let q=x+y=3, giving f=-12. Since $\partial f/\partial q=z=-4$ and q has derivative 1 with respect to x and y, both $\partial f/\partial x$ and $\partial f/\partial y$ are -4. Also $\partial f/\partial z=q=3$. Multiply local derivatives along each path.
-A_ZH: 先令 q=x+y=3，所以 f=-12。由于 $\partial f/\partial q=z=-4$，而 q 对 x、y 的导数均为 1，因此 f 对 x、y 的偏导数均为 -4。另有 $\partial f/\partial z=q=3$。沿每条路径相乘局部导数即可。
-
-@@ M250 | x06-networks | learn | XCNN:15
-Q_EN: Why do gradient contributions add when a value is reused in a computation graph?
-Q_ZH: 计算图中同一数值被多次使用时，为什么梯度贡献要相加？
-A_EN: The total derivative includes every path from that value to the loss. For $f=x^2+3x$, the two branches contribute 2x and 3, so the result is $2x+3$. Replacing a gradient with the newest branch contribution loses information. This same accumulation principle applies when a parameter is shared across convolution positions or repeated uses.
-A_ZH: 总导数必须包含从该数值到损失的全部路径。例如 $f=x^2+3x$ 的两条支路分别贡献 2x 和 3，总梯度是 $2x+3$。只保留最新一条支路会丢失信息。同样的累加原则也适用于卷积位置之间或多次使用之间共享的参数。
-
-@@ M251 | x06-networks | learn | XCNN:3-15
-Q_EN: For a batch layer $Z=XW+b$, rows of X are samples and the row-vector bias b is added to every row. Given upstream gradient $G=\partial L/\partial Z$, find gradients with respect to X, W and b.
-Q_ZH: 批量层为 $Z=XW+b$，X 逐行存样本，行向量偏置 b 加到每一行。已知上游梯度 $G=\partial L/\partial Z$，求对 X、W、b 的梯度。
-A_EN: The gradients are $\nabla_W L=X^TG$, $\nabla_X L=GW^T$, and $\nabla_b L=\sum_i G_{i,:}$. Check their shapes against W, X and b. If an activation follows Z, G must already include that activation's local derivative. A mean-loss reduction must be reflected consistently in G.
-A_ZH: 梯度为 $\nabla_W L=X^TG$、$\nabla_X L=GW^T$，偏置梯度为 $\nabla_b L=\sum_i G_{i,:}$。形状应分别与 W、X、b 对应。若 Z 后还有激活函数，G 必须已包含其局部导数；损失取平均时，相应缩放也应体现在 G 中。
-
-@@ M252 | x06-networks | learn | XNN:33,35; XOPT:4-5
-Q_EN: How should the output layer and loss match a neural-network task?
-Q_ZH: 神经网络的输出层与损失应如何匹配任务？
-A_EN: Single-label K-class: K logits, softmax probabilities, categorical cross-entropy. Binary: one logit, sigmoid probability, binary cross-entropy. Multi-label: one logit per separate yes/no target, per-label sigmoid and binary cross-entropy; probabilities need not sum to one. Unbounded real regression: linear output and, for example, squared error. A loss that expects logits already applies its probability transformation; do not apply it twice.
-A_ZH: 单标签K分类：K个logit，经softmax成为类别概率，配多类交叉熵。二分类：一个logit、sigmoid概率、二元交叉熵。多标签：每个“是/否”目标一个logit，逐标签sigmoid与二元交叉熵，概率无需合计为一。无界实数回归：线性输出，可配平方误差。若损失接口要求logits，它已内含相应变换，不要重复处理。
-
-@@ M253 | x06-networks | check | XNN:40
-Q_EN: What does the universal approximation theorem guarantee, and what does it leave open?
-Q_ZH: 通用逼近定理保证什么，又没有保证什么？
-A_EN: For example, a network with biases, one sufficiently wide sigmoid hidden layer and a linear output can uniformly approximate any continuous real-valued function on a compact input set (closed and bounded in finite dimensions) to any chosen positive tolerance. This asserts existence of a finite network for that tolerance. It does not guarantee a small network, successful training or generalization from limited samples.
-A_ZH: 例如，含偏置、单个足够宽的sigmoid隐藏层与线性输出层的网络，可在紧致输入集（有限维中闭且有界）上，把任意连续实值函数一致逼近到指定正误差内。它保证该容差下存在有限网络，不保证网络很小、训练成功，也不保证有限样本下的泛化。
-
 @@ M254 | x06-networks | check | XNN:38-39; XREG:39-48
 Q_EN: Why is fitting a tiny training subset useful for debugging a neural network?
 Q_ZH: 为什么让神经网络拟合一个很小的训练子集，有助于调试？
@@ -378,30 +310,6 @@ Q_ZH: 输入 CNN 前为什么必须检查通道顺序和数据形状？
 A_EN: A batch may use (B,C,H,W) or (B,H,W,C). Confusing them can treat spatial positions as channels or trigger shape errors. Grayscale still has a channel dimension. Normalization must also match training. Flattening is appropriate only at a layer expecting vectors, not as an automatic preprocessing step for convolution.
 A_ZH: 图像批次可能按 (B,C,H,W) 或 (B,H,W,C) 排列，混淆后会把空间位置当成通道，或引起形状错误。灰度图同样需要通道维度，归一化也必须与训练一致。只有期望向量输入的层才应展平，不能默认在卷积前先把图像展开。
 
-@@ M265 | x08-training | learn | XOPT:4-8; XREG:33
-Q_EN: How do batch gradient descent, mini-batch SGD, an iteration and an epoch differ?
-Q_ZH: 批量梯度下降、小批量 SGD、迭代和 epoch 有何区别？
-A_EN: Full-batch descent uses all training examples for one gradient; mini-batch SGD uses a subset. An optimizer step changes parameters; an epoch processes the dataset once. “Iteration” often means one step, but check the program’s convention. For n=1000, batch size 100, one update per batch and no gradient accumulation, an epoch has ten updates. Accumulating several batches changes update count without changing the data-pass definition.
-A_ZH: 全批量下降用全部训练样本求一次梯度，小批量SGD用子集。优化器步更新参数，epoch遍历一次数据；“iteration”常指一步，但应看代码约定。n=1000、batch=100、每批更新一次且无梯度累积时，一个epoch有十次更新。多批累积再更新会改变步数，不改变遍历次数定义。
-
-@@ M266 | x08-training | learn | XOPT:9-17
-Q_EN: What does momentum add to SGD?
-Q_ZH: Momentum 为 SGD 增加了什么？
-A_EN: Maintain velocity $v_{t+1}=\rho v_t-\eta g_t$ and update $\theta_{t+1}=\theta_t+v_{t+1}$. Past gradients influence the direction, which can reduce zigzagging and accelerate motion along persistent directions. The sign convention for v must be consistent. Momentum can still overshoot if the learning rate or velocity is too large.
-A_ZH: 保存速度 $v_{t+1}=\rho v_t-\eta g_t$，再更新 $\theta_{t+1}=\theta_t+v_{t+1}$。过去梯度会影响方向，有助于减轻来回振荡，并沿持续方向加速。速度的符号约定必须一致；学习率或速度过大时，动量仍可能导致越过最优区域。
-
-@@ M267 | x08-training | learn | XOPT:18-22
-Q_EN: How do AdaGrad and RMSProp adapt coordinatewise step sizes?
-Q_ZH: AdaGrad 和 RMSProp 怎样调整每个坐标的步长？
-A_EN: For coordinate gradient g, AdaGrad uses $s_t=s_{t-1}+g_t^2$; RMSProp uses $s_t=\rho s_{t-1}+(1-\rho)g_t^2$, $0\le\rho<1$. Starting from zero, update each coordinate by $-\eta g_t/(\sqrt{s_t}+\epsilon)$ with $\epsilon>0$. AdaGrad remembers every squared gradient; RMSProp gradually forgets old ones. Both still require a global learning rate eta.
-A_ZH: 对每坐标梯度g，AdaGrad累积 $s_t=s_{t-1}+g_t^2$；RMSProp用 $s_t=\rho s_{t-1}+(1-\rho)g_t^2$，$0\le\rho<1$。从零初始化，逐坐标更新 $-\eta g_t/(\sqrt{s_t}+\epsilon)$，其中 $\epsilon>0$。AdaGrad保留全部历史平方梯度，RMSProp逐渐遗忘旧值；两者仍需全局学习率eta。
-
-@@ M268 | x08-training | learn | XOPT:23-24
-Q_EN: What are Adam's two moment estimates and bias corrections?
-Q_ZH: Adam 的两个矩估计及偏差修正是什么？
-A_EN: Adam tracks a gradient mean $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ and raw second moment $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$ elementwise, starting at zero. This pulls early estimates toward zero. For t starting at 1, correct with $\hat m_t=m_t/(1-\beta_1^t)$ and $\hat v_t=v_t/(1-\beta_2^t)$. Apply $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$. Here $0\le\beta_1,\beta_2<1$, $\epsilon>0$; v is not centered variance.
-A_ZH: Adam逐元素维护梯度均值 $m_t=\beta_1m_{t-1}+(1-\beta_1)g_t$ 与非中心二阶矩 $v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2$。零初始化使早期估计偏向零。t从1起，修正为 $\hat m_t=m_t/(1-\beta_1^t)$、$\hat v_t=v_t/(1-\beta_2^t)$，更新 $-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon)$。其中 $0\le\beta_1,\beta_2<1$、$\epsilon>0$；v不是中心化方差。
-
 @@ M269 | x08-training | check | XOPT:25-26
 Q_EN: Why is AdamW's decoupled weight decay different from simply adding L2 loss to Adam?
 Q_ZH: 为什么 AdamW 的解耦权重衰减不同于直接给 Adam 加 L2 损失？
@@ -437,12 +345,6 @@ Q_EN: What makes a data augmentation valid for a learning task?
 Q_ZH: 怎样判断一种数据增强是否适合当前任务？
 A_EN: It should preserve the intended label, or transform the label consistently. A crop may remove the only target object; flipping an image may require updating boxes or keypoints. Mixing samples may require mixing targets. Augmentation expresses assumptions about valid variation and should be checked against the task, rather than copied blindly from another dataset.
 A_ZH: 增强应保留目标标签，或相应地正确变换标签。裁剪可能移除唯一目标物体，翻转可能需要同步修改框或关键点；混合样本也可能需要混合目标。增强表达了对合理变化的假设，应结合任务检查，而不能机械照搬其他数据集的做法。
-
-@@ M275 | x08-training | learn | XREG:12-14,35-36
-Q_EN: How do early stopping and a learning-rate schedule differ?
-Q_ZH: 提前停止与学习率计划有什么区别？
-A_EN: A schedule changes update step sizes during training. Early stopping selects when to stop, often restoring the checkpoint with the best validation metric. Both affect the resulting fit but act through different mechanisms. Keep the test set outside these choices, and do not confuse the last checkpoint with the best validated one.
-A_ZH: 学习率计划改变训练过程中的更新步长，提前停止则选择何时结束，通常恢复验证指标最好的检查点。两者都影响最终拟合，但机制不同。测试集不应参与这些选择，也不能把最后保存的检查点直接当作验证效果最好的一个。
 
 @@ M276 | x08-training | learn | XREG:37-44
 Q_EN: How does feature extraction with a pretrained network differ from fine-tuning?

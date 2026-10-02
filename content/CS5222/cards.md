@@ -6,6 +6,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 @@ N001 | 01-foundations | learn | N1:4-7
 Q_EN: What is the Internet, viewed as infrastructure and as a service?
 Q_ZH: 从基础设施和服务两个角度看，互联网是什么？
@@ -912,7 +922,7 @@ Q_ZH: 主机到本地 DNS 的交互耗时 RTTL，未缓存查询还需依次进�
 A_EN: Uncached delay is RTTL + 3RTTr; cached delay is RTTL, ignoring processing and transmission costs. The three upstream exchanges are sequential in this question, so add them. A DNS cache removes particular lookup steps; it does not remove the later TCP or HTTP exchanges needed to fetch the page.
 A_ZH: 忽略处理与传输耗时，未缓存为 RTTL + 3RTTr，已缓存为 RTTL。本题三次上游交互依次发生，因此相加。DNS 缓存省掉的是特定查询步骤，后续获取网页需要的 TCP 或 HTTP 交互仍存在。
 
-@@ N233 | 14-tutorial3 | classroom | NT3:3; XNT3:3
+@@ N233 | 14-tutorial3 | classroom | NT3:3; NT3S:11-13; XNT3:3
 Q_EN: After DNS, fetch one tiny HTML page, then its eight tiny objects from one server (RTT R). Start with no connections or caches; ignore transmission time, TLS, losses and processing. Compare serial nonpersistent HTTP, at most five parallel nonpersistent connections, and one nonpipelined persistent connection.
 Q_ZH: DNS完成后，从同一服务器（RTT为R）先取很小的HTML，再取其八个很小的对象。初始无连接或缓存，忽略传输、TLS、丢包及处理耗时。比较串行非持久、最多五条并行非持久，以及一条无流水线持久连接。
 A_EN: Serial nonpersistent: nine connection/request pairs cost 9×2R=18R. Five-way parallel: HTML costs 2R; eight objects need two batches of at most five, each costing 2R, so total 6R. Persistent without pipelining: setup+HTML cost 2R, then eight sequential requests cost 8R, totaling 10R. These times start after DNS; add DNS time only when measuring from before lookup. Pipelining or HTTP/2 changes the model.
@@ -941,3 +951,171 @@ Q_EN: A student claims: “Video conferencing using UDP has no error detection, 
 Q_ZH: 有人声称：“视频会议用 UDP，所以没有差错检测，而且媒体分组一定直接发往老师的电脑。”这两句话哪里有问题？还需要什么部署证据？
 A_EN: Answer in three parts: (1) Detection: UDP defines a checksum, although IPv4 can disable it; inspect the packet. Detecting damage is not redelivering a lost parcel: UDP has no built-in retransmission or ordering. (2) Destination: a media relay may receive the packets instead of the teacher's host. (3) Evidence: inspect the trace's transport protocol and endpoints, plus dated official documentation for that client and call type. A video-call label alone does not establish P2P.
 A_ZH: 分三点回答：(1) 检错：UDP 定义校验和，IPv4 可禁用，需看实际分组。发现包裹损坏，不等于替你补寄；UDP 没有内建重传或排序。(2) 目的地：包可能先到媒体中继，而非教师主机。(3) 证据：检查抓包中的传输协议和端点，并结合对应客户端、通话模式的有日期官方说明。仅凭“视频会议”不能断定是 P2P。
+
+@@ N149 | 16-transport | learn | N3A:9-15; XN3:4-15
+Q_EN: What do transport multiplexing and demultiplexing mean?
+Q_ZH: 传输层的复用与解复用是什么意思？
+A_EN: Multiplexing combines data from several application sockets for network transmission. Demultiplexing uses transport-header and address information to deliver arriving data to the appropriate socket. IP delivery to a host and transport delivery to a process are separate steps. Port numbers are part of this mapping, not physical network connectors.
+A_ZH: 复用把多个应用 socket 的数据交给网络传输；解复用利用传输层首部和地址信息，把到达数据交给相应 socket。IP 将数据送到主机，与传输层将数据交给进程，是不同步骤。端口号是这种映射的一部分，不是物理插口。
+
+@@ N150 | 16-transport | learn | N3A:11-15; XN3:11-15; XNT5:1
+Q_EN: How do the lecture's UDP and established TCP demultiplexing keys differ?
+Q_ZH: 课件中 UDP 与已建立 TCP 连接的解复用标识有何区别？
+A_EN: In the basic model, a UDP receive socket is selected by local destination IP and port, so datagrams from several senders can arrive at it. An established TCP connection is identified by source IP/port and destination IP/port together. Socket API options and connected UDP can add filtering, so the basic model is not a complete specification of every OS socket behavior.
+A_ZH: 基础模型中，UDP 接收 socket 由本地目的 IP 和端口选择，因此多个发送者的数据报可进入同一 socket。已建立 TCP 连接则由源 IP/端口与目的 IP/端口共同标识。API 选项及连接式 UDP 还可增加过滤，因此基础模型并非所有操作系统 socket 行为的完整规范。
+
+@@ N151 | 16-transport | learn | N3A:17-18; XN3:17-18; XUDP:Format-Fields
+Q_EN: What fields are in the UDP header, and does UDP length include that header?
+Q_ZH: UDP 首部有哪些字段？UDP length 是否包含首部？
+A_EN: Source port, destination port, length and checksum are each 16 bits, giving an 8-byte header. The UDP length counts header plus payload, not the enclosing IP header. Therefore a 100-byte payload has UDP length 108 bytes. Length must be interpreted at the protocol layer to which the field belongs.
+A_ZH: 源端口、目的端口、长度和校验和各占 16 bit，首部共 8 byte。UDP length 包含首部与载荷，但不含外层 IP 首部，因此 100 byte 载荷对应 UDP length 108 byte。读取长度时必须明确字段所属协议层。
+
+@@ N152 | 16-transport | learn | N3A:17; XN3:17-19
+Q_EN: Which services does UDP itself not guarantee?
+Q_ZH: UDP 本身不保证哪些服务？
+A_EN: UDP does not itself guarantee delivery, ordering, duplicate suppression, retransmission or congestion control. An application can implement additional mechanisms above UDP, so “uses UDP” does not imply that the entire application must be unreliable. Likewise, no handshake does not imply every UDP application will have lower total latency.
+A_ZH: UDP 本身不保证交付、顺序、去重、重传或拥塞控制。应用可在 UDP 之上加入额外机制，因此“使用 UDP”不代表整个应用一定不可靠。同样，没有握手也不意味着所有 UDP 应用的总体时延都更低。
+
+@@ N153 | 16-transport | learn | N3A:19-20; XN3:19-20; XUDP:Fields
+Q_EN: How is the Internet checksum formed, and what does UDP additionally cover through its pseudo-header?
+Q_ZH: 互联网校验和如何形成？UDP 伪首部额外保护什么信息？
+A_EN: Recall three checks. (1) Calculate: zero the UDP checksum field; form 16-bit words from pseudo-header, UDP header and data; pad an odd byte count with one zero byte for calculation only; add with end-around carry, then invert all bits. (2) Scope: the pseudo-header covers IP source/destination, protocol and UDP length; it is not an extra transmitted UDP header. (3) Interpret: send a computed zero as all ones. In IPv4, a transmitted zero means no UDP checksum. A passing checksum does not authenticate the sender.
+A_ZH: 记住三点。(1) 怎么算：UDP 校验字段先置零；把伪首部、UDP 首部和数据组成 16 位字，字节数为奇数时仅为计算补一个零字节；相加并回卷进位，最后逐位取反。(2) 覆盖什么：伪首部含 IP 源/目的地址、协议及 UDP 长度，但不额外作为 UDP 首部发送。(3) 怎么读：算得零要传全一；IPv4 中实际传零表示不用 UDP 校验和。通过校验也不等于认证了发送者。
+
+@@ N154 | 16-transport | worked | N3A:19-20; XN3:19-20
+Q_EN: Using 16-bit one's-complement addition, find the checksum of 0xFFFF (65535) and 0x0001 (1). The prefix 0x means hexadecimal.
+Q_ZH: 用 16 位反码加法求 0xFFFF（65535）与 0x0001（1）的校验和；0x 表示十六进制。
+A_EN: The ordinary sum is 65536=0x10000: low 16 bits are zero, with carry 1. Add that carry back to get 0x0001; invert its 16 bits to obtain 0xFFFE (65534). Adding all three words with the same carry rule gives 0xFFFF, the all-one check result. Ordinary arithmetic addition without carry wrap would give the wrong checksum.
+A_ZH: 普通和为 65536=0x10000：低 16 位为零，进位为 1。把进位加回得 0x0001，再将其 16 位逐位取反，得到 0xFFFE（65534）。用同一回卷规则把两个原字与校验和相加，结果为全一的 0xFFFF。漏掉回卷步骤会算错。
+
+@@ N155 | 16-transport | check | N3A:19-20; XN3:19-20; XN6:11-13
+Q_EN: Can a checksum detect every possible corruption?
+Q_ZH: 校验和能检测所有可能的数据损坏吗？
+A_EN: No. Different bit patterns can share the same checksum, and compensating changes can leave the sum unchanged. Error-detection strength depends on the code and error pattern. A checksum is useful for accidental corruption, but it is not a collision-resistant cryptographic integrity mechanism or a proof that the receiver obtained the original data.
+A_ZH: 不能，不同位模式可能具有相同校验和，互相抵消的变化也可能使和不变。检错能力取决于编码和错误模式。校验和适合处理意外损坏，但不是抗碰撞的密码学完整性机制，也不是接收数据等于原数据的证明。
+
+@@ N156 | 16-transport | learn | N3A:22-34; XN3:22-34
+Q_EN: What extra mechanisms are needed when a channel can corrupt data or acknowledgments?
+Q_ZH: 信道可能损坏数据或确认消息时，需要增加哪些机制？
+A_EN: Detect corruption, send feedback and retransmit when necessary. But a corrupted acknowledgment leaves the sender unsure whether data arrived. Simply retransmitting can deliver duplicates unless the protocol also identifies transmissions. Reliable-transfer design must handle errors on the feedback path as well as on the forward data path.
+A_ZH: 需要检错、反馈和必要时重传。但确认消息损坏时，发送者无法确定数据是否已到达；如果没有传输标识，直接重传可能导致重复交付。因此可靠传输既要处理正向数据路径，也要处理反向反馈路径的错误。
+
+@@ N157 | 16-transport | learn | N3A:35-39; XN3:34-39
+Q_EN: Why does alternating-bit stop-and-wait use sequence numbers 0 and 1?
+Q_ZH: 停等式交替位协议为什么使用 0 和 1 两个序号？
+A_EN: The receiver tracks which sequence number is expected. A retransmitted copy of the previous packet can be acknowledged again without delivering its payload twice. The sequence bit distinguishes the current new packet from a duplicate within the protocol's assumptions. It does not make arbitrary old packets harmless over unlimited lifetimes and wraps.
+A_ZH: 接收者记录当前期望的序号。上一分组的重传副本可以再次确认，但不重复向上交付载荷。序号位在协议假设下区分当前新分组与重复副本，并不保证任意长寿命、反复回绕的旧分组都不会造成混淆。
+
+@@ N158 | 16-transport | learn | N3A:40-44; XN3:40-44
+Q_EN: Why does rdt3.0 add a timer?
+Q_ZH: rdt3.0 为什么需要增加定时器？
+A_EN: If either data or its acknowledgment disappears, the sender may otherwise wait forever. A timeout triggers retransmission. A slow packet can be mistaken for a lost one, so sequence numbers and duplicate handling are still needed. The timer trades waiting delay against unnecessary retransmission; a timeout is evidence of delay or loss, not proof of which occurred.
+A_ZH: 数据或确认消息丢失后，发送者可能无限等待；超时会触发重传。慢分组也可能被误判为丢失，所以仍需序号和去重机制。定时器在等待时间与多余重传之间取舍；超时说明发生了延迟或丢失，不能直接证明是哪一种。
+
+@@ N159 | 16-transport | learn | N3B:1-2; XN3:45-46
+Q_EN: What is ideal stop-and-wait sender utilization?
+Q_ZH: 理想停等协议的发送端利用率是多少？
+A_EN: Let L be packet bits, R link rate in bit/s, and RTT round-trip propagation time. Assume no loss, negligible ACK serialization/processing, and immediate ACK after a complete packet. Each cycle is data transmission L/R plus RTT. Thus $U=(L/R)/(RTT+L/R)$ and throughput is $L/(RTT+L/R)$ bit/s. U is the fraction of the cycle spent sending data. Do not add L/R again if a differently defined RTT already includes it.
+A_ZH: 令 L 为分组比特数、R 为链路 bit/s 速率、RTT 为往返传播时间。假设无丢包，ACK 发送/处理可忽略，完整收包后立即确认。每周期为数据发送 L/R 加 RTT，因此 $U=(L/R)/(RTT+L/R)$，吞吐量为 $L/(RTT+L/R)$ bit/s。U 表示周期中发数据的时间比例；若别题 RTT 已含发送时间，不能重复加 L/R。
+
+@@ N160 | 16-transport | worked | N3B:1-2; XN3:45-46
+Q_EN: In a loss-free stop-and-wait model, link rate R=1 Gbps, packet length L=8,000 bits, and round-trip propagation RTT=30 ms. Ignore ACK transmission and processing time. Find the fraction of a send–ACK cycle spent transmitting data and the resulting throughput.
+Q_ZH: 无丢包停等模型中，链路速率 R=1 Gbps，分组长度 L=8000 比特，往返传播时延 RTT=30 毫秒。忽略 ACK 传输与处理时间。求一个发送—确认周期中发送数据所占比例，以及吞吐量。
+A_EN: Serialization takes 8 microseconds. Utilization is $8/30008\approx0.0002666$, or 0.02666%. Throughput is about 266.6 kbit/s, despite a 1 Gbit/s link. Use consistent time units and distinguish the dimensionless fraction from its percentage.
+A_ZH: 发送时间为 8 微秒，利用率为 $8/30008\approx0.0002666$，即 0.02666%。吞吐量约为 266.6 kbit/s，远低于链路的 1 Gbit/s。计算时统一时间单位，并区分无量纲比例与百分数。
+
+@@ N161 | 16-transport | learn | N3B:3-6; XN3:47-50
+Q_EN: How does pipelining improve utilization in the ideal reliable-transfer model?
+Q_ZH: 理想可靠传输模型中，流水线怎样提高利用率？
+A_EN: Let N be the packet window, L packet bits, R link rate in bit/s, and RTT round-trip propagation time. With equal packets, no errors, and negligible ACK/processing time, ideal utilization is $U=\min(1,N(L/R)/(RTT+L/R))$. The window lets N packet-transmission times fill a send-to-ACK cycle instead of just one. The cap 1 means the sender cannot exceed link capacity. Loss, receiver limits and congestion can reduce actual performance.
+A_ZH: 令 N 为以包计的窗口、L 为每包比特数、R 为 bit/s 速率、RTT 为往返传播时间。等长分组、无差错且忽略 ACK/处理耗时时，理想利用率为 $U=\min(1,N(L/R)/(RTT+L/R))$。窗口让一个发送—确认周期内可填入 N 个包的发送时间，而非只发一个。上限 1 表示不能超过链路容量；实际还受丢包、接收和拥塞限制。
+
+@@ N162 | 16-transport | learn | N3B:7-11; XN3:50-55
+Q_EN: What does Go-Back-N retransmit after a timeout?
+Q_ZH: Go-Back-N 超时后会重传哪些分组？
+A_EN: In the lecture's GBN sender, a timer tracks the oldest unacknowledged packet. On timeout, retransmit all outstanding packets from the window base through the most recently sent one. Cumulative ACK n confirms packets through n in this packet-number convention. Do not confuse that convention with TCP's next-byte acknowledgment.
+A_ZH: 课件的 GBN 发送者为最早未确认分组计时；超时后，重传从窗口基序号到最近已发送分组之间的全部未确认分组。在该分组编号约定中，累计 ACK n 表示已收到包括 n 在内的所有前序分组，不要与 TCP 的“下一个字节”确认约定混淆。
+
+@@ N163 | 16-transport | learn | N3B:9-11; XN3:53-55
+Q_EN: How does the lecture's GBN receiver handle an out-of-order packet?
+Q_ZH: 课件中的 GBN 接收者怎样处理乱序分组？
+A_EN: It discards the out-of-order payload and repeats the ACK for the latest correctly received in-order packet. It only needs the next expected sequence number, rather than an out-of-order buffer. This keeps the receiver simple but can force retransmission of packets that physically arrived successfully.
+A_ZH: 它丢弃乱序载荷，并重复确认最近正确按序收到的分组。接收者只需记录下一个期望序号，不需要乱序缓冲区。这使接收者简单，但也可能迫使发送者重传物理上已经成功到达过的分组。
+
+@@ N164 | 16-transport | learn | N3B:12-15; XN3:56-59
+Q_EN: How does Selective Repeat differ from GBN?
+Q_ZH: Selective Repeat 与 GBN 有何区别？
+A_EN: SR individually acknowledges correctly received packets, can buffer in-window out-of-order data, and retransmits specific unacknowledged packets when their timers expire. This saves retransmissions but needs more receiver state and careful window management. Delivery to the application remains ordered when that is the protocol's promised service.
+A_ZH: SR 单独确认正确收到的分组，可缓存窗口内乱序数据，并在对应定时器超时后重传特定未确认分组。它减少重复发送，却需要更多接收状态和更谨慎的窗口管理。若协议承诺有序服务，向应用交付时仍需保持顺序。
+
+@@ N166 | 16-transport | worked | N3B:11-15; XN3:55-59
+Q_EN: Packets 0,1,2,3 are sent and packet 1 is lost. Contrast the basic GBN and SR reactions.
+Q_ZH: 发送了 0、1、2、3，分组 1 丢失，基础 GBN 和 SR 的处理有何不同？
+A_EN: GBN accepts 0, discards later out-of-order 2 and 3, and eventually retransmits the outstanding sequence starting at 1. SR can acknowledge and buffer 2 and 3, then retransmit only 1 when needed. This comparison assumes no further loss and valid windows; actual timers and ACK arrival order determine the precise event timeline.
+A_ZH: GBN 接收 0，丢弃随后乱序到达的 2、3，之后从 1 起重传未确认序列。SR 则可确认并缓存 2、3，在需要时只重传 1。这里假设没有额外丢包且窗口有效，实际定时器和 ACK 到达顺序决定精确事件时间线。
+
+@@ N167 | 17-tcp | learn | N3B:19-23; XN3:61-64
+Q_EN: What do TCP sequence and acknowledgment numbers count?
+Q_ZH: TCP 的序号和确认号统计的是什么？
+A_EN: A data segment's sequence number identifies its first stream byte. Its ACK number is the next byte expected in the opposite direction, cumulatively confirming earlier bytes. These count byte positions, not packets. SYN and FIN each consume one sequence number. A pure ACK with no payload, SYN or FIN consumes none. Thus acknowledging data does not itself advance the sender's own data sequence.
+A_ZH: 数据段序号标识本方向第一个字节；ACK 号是反方向下一个期望字节，累计确认此前字节。它们按字节位置计，不按包数计。SYN 与 FIN 各占一个序号；没有载荷、SYN 或 FIN 的纯 ACK 不占序号。因此确认对方数据本身，不会推进自己的数据序号。
+
+@@ N168 | 17-tcp | worked | N3B:19-23; XN3:63-67
+Q_EN: A segment starts at sequence 1,000 and carries 500 bytes. Assuming all earlier bytes arrived, what ACK follows?
+Q_ZH: 数据段序号为 1,000，携带 500 byte，且之前字节均已到达，随后确认号是多少？
+A_EN: The segment covers bytes 1,000 through 1,499, so the next expected byte and ACK number is 1,500. If another contiguous 200 bytes arrive, the ACK advances to 1,700. Do not add an extra one for ordinary payload beyond the payload byte count; the SYN/FIN rule is separate.
+A_ZH: 该段覆盖 1,000 至 1,499 号字节，下一个期望字节、也就是 ACK 号为 1,500。若随后连续收到 200 byte，则 ACK 前进到 1,700。普通载荷按字节数累计，不要额外再加一；SYN/FIN 的规则另算。
+
+@@ N169 | 17-tcp | worked | N3B:20-21; XN3:64,76-79
+Q_EN: Bytes 0–535 and 900–1,000 have arrived, but the gap is missing. What is the cumulative TCP ACK?
+Q_ZH: 已收到字节 0–535 和 900–1,000，中间缺口尚未补齐，TCP 累计 ACK 是多少？
+A_EN: It remains 536, the first missing byte. Receiving a later segment does not make the gap disappear. A receiver may retain out-of-order data, and optional selective acknowledgments can describe additional received ranges, but the cumulative ACK still reports the first missing byte.
+A_ZH: 仍为 536，即第一个缺失字节。收到后面的数据段不会让缺口消失。接收者可保留乱序数据，可选的选择性确认也可描述额外收到的范围，但累计 ACK 仍指出第一个缺失字节。
+
+@@ N170 | 17-tcp | check | N3B:17,20; XN3:61,72-79
+Q_EN: Can TCP deliver later application bytes while an earlier byte is still missing?
+Q_ZH: TCP 的前面字节还缺失时，能先向应用交付后面的字节吗？
+A_EN: The ordered stream service waits for the gap before delivering the later bytes as contiguous stream data. They may already be buffered at the receiver. This is transport-level head-of-line blocking. It differs from an input-queue packet blocking another router output, although both use the same broad phrase.
+A_ZH: 有序字节流服务需要等待缺口补齐，才能把后续字节作为连续数据交给应用；这些字节可能已经缓存于接收端。这是传输层的队头阻塞，与路由器输入队列中一个分组挡住其他输出方向分组的情况不同，虽然两者使用类似名称。
+
+@@ N171 | 17-tcp | learn | N3B:24-26; XN3:68-70
+Q_EN: Why does a TCP retransmission timeout account for RTT variation as well as its average?
+Q_ZH: TCP 重传超时为什么既要考虑平均 RTT，也要考虑波动？
+A_EN: A timeout close to the mean can expire prematurely when delay fluctuates. The lecture model smooths samples into EstimatedRTT and adds a safety margin: RTO=EstimatedRTT+4 DevRTT. A longer timeout avoids some spurious retransmissions but slows recovery from actual loss. State the update order when computing both estimates from a new sample.
+A_ZH: 延迟波动时，接近均值的超时值容易提前触发。课件模型平滑样本得到 EstimatedRTT，并加安全余量：RTO=EstimatedRTT+4 DevRTT。较长超时可减少误重传，却延缓真正丢包后的恢复。用新样本同时更新两个估计时，应说明更新顺序。
+
+@@ N172 | 17-tcp | worked | N3B:25-26; XN3:69-70
+Q_EN: TCP smooths RTT by new E=(1−alpha)old E+alpha×sample. With old E=100 ms, sample=140 ms and alpha=0.125, find new E. For this exercise keep DevRTT=10 ms fixed and use RTO=E+4DevRTT; find RTO.
+Q_ZH: TCP 按新 E=(1−alpha)旧 E+alpha×样本平滑 RTT。旧 E=100 ms、样本 140 ms、alpha=0.125，求新 E。本题固定 DevRTT=10 ms，不再更新，按 RTO=E+4DevRTT 求 RTO。
+A_EN: The estimate becomes $0.875(100)+0.125(140)=105$ ms. Using the separately given DevRTT=10 ms, RTO is $105+4(10)=145$ ms. This question holds DevRTT fixed at the supplied value; computing a new deviation estimate would require an additional formula and an update-order convention.
+A_ZH: 新估计为 $0.875(100)+0.125(140)=105$ ms。使用题中另给的 DevRTT=10 ms，得到 RTO=$105+4(10)=145$ ms。本题直接使用给定偏差值；若要更新偏差，还需额外公式及更新顺序约定。
+
+@@ N234 | 18-tutorial4 | classroom | NT4:1; XNT4:1
+Q_EN: An initially sole server (upload us bit/s) sends an F-bit file to N empty clients; dmin is their minimum download rate. With continuous divisible traffic, simultaneous sends and no other bottlenecks, why is max(NF/us,F/dmin) achievable?
+Q_ZH: 初始唯一服务器上传速率为us bit/s，向N个空客户端分发F bit文件，dmin为最慢下载速率。流量连续可分、可同时发送且无其他瓶颈时，为什么max(NF/us,F/dmin)可达到？
+A_EN: Give every client rate min(us/N, dmin). Total server upload then does not exceed us, and no client's download limit is exceeded because every limit is at least dmin. Every client receives F bits in F/min(us/N,dmin), equal to the bound. This assumes divisible continuous traffic, no other bottlenecks, and simultaneous transmissions; it is not a guarantee for real TCP transfers.
+A_ZH: 给每个客户端分配 min(us/N, dmin) 的速率，总上传不超过 us，而且各客户端下行上限均不小于 dmin。每个客户端接收 F 位所需时间为 F/min(us/N,dmin)，正好等于该下界。这里假设流量连续可分、无其他瓶颈且可同时发送，并非实际 TCP 传输保证。
+
+@@ N235 | 18-tutorial4 | classroom | NT4:1; XNT4:1
+Q_EN: Distribute F=15 Gbit to N=100 peers. Server upload is 30 Mbps, each peer downloads at 2 Mbps and uploads at 0.7 Mbps. Compute the ideal client-server and P2P lower bounds.
+Q_ZH: 将 15 Gbit 文件分发给 100 个节点，服务器上传 30 Mbps，每个节点下载 2 Mbps、上传 0.7 Mbps。求理想客户端—服务器与 P2P 分发下界。
+A_EN: Client-server: max(100×15000/30,15000/2)=50000 s. P2P: max(15000/30,15000/2,100×15000/(30+100×0.7))=max(500,7500,15000)=15000 s. Use decimal units consistently. Peer upload improves aggregate supply but cannot eliminate the server's first-copy or slowest-download constraints.
+A_ZH: 客户端—服务器：max(100×15000/30,15000/2)=50000 秒。P2P：max(15000/30,15000/2,100×15000/(30+100×0.7))=max(500,7500,15000)=15000 秒。统一使用十进制单位。节点上传可提高总供给，但不能消除服务器提供首份文件、最慢节点接收文件的限制。
+
+@@ N236 | 18-tutorial4 | classroom | NT4:2; NT4S:14-15; XNT4:2
+Q_EN: A DASH exercise has N video qualities and N audio qualities. How many files are required if every audio-video pair is precombined, if only equal-level pairs are allowed, or if tracks are separate?
+Q_ZH: DASH 题目有 N 种视频质量和 N 种音频质量。若预先合并所有音视频组合、只允许同等级配对，或分开存储音视频，分别要多少文件？
+A_EN: All combinations require N² combined representations. Equal-level-only pairing requires N. Separate tracks require N+N=2N and the client combines them. These counts refer to representation choices, ignoring segmentation. Current Tutorial 4 and its v2 solution use the one-to-one condition for part a, so answer N there; N² is the all-pairs extension.
+A_ZH: 所有组合需 N² 份合并版本；只允许同等级配对需 N 份；音视频分开存储则为 N+N=2N，客户端自行组合。这里统计版本选择，忽略分段数量。当前Tutorial4及v2解答的a问采用一一配对条件，答N；N²对应任意组合的补充变式。
+
+@@ N237 | 19-tutorial5 | classroom | NT5:1; XNT5:1
+Q_EN: In the toy 8-bit Internet-checksum exercise, add 00100011, 01001110 and 01010100. What checksum is sent, and can all two-bit errors be detected?
+Q_ZH: 在简化的 8 位 Internet checksum 题中，将 00100011、01001110、01010100 相加。发送的校验和是多少？能检测所有两位错误吗？
+A_EN: The values are 35+78+84=197=11000101, with no carry beyond eight bits. Complement to get 00111010. Adding it back gives 11111111. Single-bit corruption is detected, but two changes with cancelling weighted effects can be missed. Actual UDP/TCP checksums use 16-bit words; eight bits is this exercise's simplification.
+A_ZH: 三个数为 35+78+84=197=11000101，没有超过八位的进位，按位取反得到 00111010。加回后为 11111111。单比特错误可被检测，但权重影响相互抵消的两个变化可能漏检。实际 UDP/TCP 校验和使用 16 位字，八位只是本题简化。
+
+@@ N238 | 19-tutorial5 | classroom | NT5:2; XNT5:2
+Q_EN: Why can an alternating-bit protocol fail if the channel permits arbitrarily delayed duplicates and reordering?
+Q_ZH: 如果信道允许重复包任意延迟和乱序，交替比特协议为什么可能失效？
+A_EN: Receive data numbered 0, then 1, so the receiver expects 0 again. A very old duplicate 0 can now arrive and be mistaken for new data. A sequence number is useful only with bounds or rules that prevent old packets from surviving until that number is reused. This illustrates why the channel assumptions matter in reliability proofs.
+A_ZH: 接收编号 0、再接收 1 后，接收方重新期待 0。此时很久以前的重复 0 若到达，就可能被误认为新数据。序号机制必须配合限制，避免旧包存活到序号再次使用时。这个例子说明可靠性证明必须明确信道假设。

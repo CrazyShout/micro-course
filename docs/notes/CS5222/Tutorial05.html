@@ -1,0 +1,92 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 5 · Demultiplexing, Checksums and Reliable Transfer · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="tutorial-5-demultiplexing-checksums-and-reliable-transfer">Tutorial 5 · Demultiplexing, Checksums and Reliable Transfer</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=76">A4 打印版 · 第 76–80 页</a>　图可点击放大。</p>
+<h2 id="_1">写清端点，算清位，再用反例检查协议假设</h2>
+<p><a href="Chapter03.html">Chapter 3（已下载部分）</a> · <a href="index.html">课程目录</a> · <a href="Tutorial04.html">上一份：Tutorial 4</a></p>
+<p>依据<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">当前原题2页</span>，共四题；当前未下载教师解答。以下为对照Chapter3的整理推导，历史同题只用于核对，不标成当前教师标准答案。</p>
+<p>基础薄弱时先补<a href="../foundations/NetworkBasics.html#binary">二进制与字节</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。Q1–3为核心必会、中等难度，检查端点方向与反码；Q4也是核心必会，但难度较高，需要构造“旧包被当新包”的具体事件顺序。优先级直接来自当前原题。</p>
+<p><a id="endpoints"></a></p>
+<h2 id="q1-how-is-a-socket-identified">Q1. How is a socket identified?</h2>
+<p><strong>题目 / Question：</strong> UDP socket怎样完整标识？TCP呢？区别是什么？ / Compare identification in the instructor's UDP and established-TCP demultiplexing models.</p>
+<p>按Chapter3 A11/A13的普通模型：UDP接收socket看目的IP、目的端口；已建立TCP连接看源IP、源端口、目的IP、目的端口。同一个UDP接收socket可以接收多个来源的数据报，TCP按不同四元组区分连接。</p>
+<p>术语“完整标识”这里按课件抽象回答；监听socket和已建立连接不同，真实系统也允许connected UDP。先答本题模型，再说明边界，不用API例外把课堂问题变成无法回答。</p>
+<p><strong>English answer:</strong> The classroom UDP model uses the destination IP and destination port. An established TCP connection is identified by a four-tuple containing both endpoints. Different TCP clients can therefore share the same server port without sharing a connection.</p>
+<p><a id="ports"></a></p>
+<h2 id="q2-server-replies">Q2. Server replies｜回程要把两端一起交换</h2>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5f55209697f9b64e.png" rel="noopener" target="_blank"><img alt="Original topology and port labels" decoding="async" height="1684" loading="lazy" src="../assets/5f55209697f9b64e.png" width="1190"/></a></p>
+<p><strong>完整条件 / Conditions：</strong> 原图有服务器B:80；客户端C两条连接分别从7532和26145发起，客户端A一条连接从26145发起。问服务器回程segment的源/目的端口及外层IP源/目的地址。 / Read all three return paths from the server to the client processes.</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>对应请求</th>
+<th style="text-align: right;">回程源端口</th>
+<th style="text-align: right;">回程目的端口</th>
+<th>IP源→目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C:7532→B:80</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">7532</td>
+<td>B→C</td>
+</tr>
+<tr>
+<td>C:26145→B:80</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">26145</td>
+<td>B→C</td>
+</tr>
+<tr>
+<td>A:26145→B:80</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">26145</td>
+<td>B→A</td>
+</tr>
+</tbody>
+</table></div>
+<p>端口写在传输层首部，IP地址写在网络层首部。图中的A/B/C是主机IP的符号，题目没有给数字IP，不应凭空填写一个地址。</p>
+<p><strong>English answer:</strong> The server's source port is 80 on all three replies. Destination ports are 7532, 26145 and 26145, with IP destinations C, C and A. The last two connections differ in client IP.</p>
+<p><strong>变式 / Transfer：</strong> 服务器改为8443，客户端C的7532仍不变，回程端口怎样写？ / Change only the server port to 8443.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>8443→7532；IP仍B→C。 / Source 8443, destination 7532; IP endpoints remain B and C.</p>
+</details>
+<p><a id="checksum"></a></p>
+<h2 id="q3-ones-complement-checksum">Q3. One's-complement checksum｜八位是题目的简化</h2>
+<p>原题给三个8bit字节：00100011、01001110、01010100，要求逐步求和、取反，说明接收端检查及1bit/2bit错误检测。真实UDP/TCP使用16bit字；此处按8bit演算。</p>
+<pre><code class="language-text">  00100011   = 35
++ 01001110   = 78
+-----------
+  01110001   = 113
++ 01010100   = 84
+-----------
+  11000101   = 197
+</code></pre>
+<p>没有最高位进位，按位取反得到checksum <strong>00111010</strong>（58）。接收端对数据与checksum采用同样反码加法：197+58=255，即11111111。若有超出8bit的进位，必须先卷回低位，再继续检查；本题恰好没有，不代表一般情况下可以省略。</p>
+<p>一个bit翻转会改变加权和而被检测。两个bit可能相消：把第一个字的最低位从1改0（35变34），第二个字的最低位从0改1（78变79），总和仍197，checksum不变，错误可能漏检。这是具体反例，不是“两个bit一定漏检”。</p>
+<p><strong>English answer:</strong> Sum 35+78+84=197 (11000101), then complement to 00111010. The receiver expects an all-one one's-complement sum including the checksum. Single-bit corruption is detected; two compensating changes can be missed.</p>
+<p><strong>独立题 / Transfer：</strong> 数据只有11111111和00000010，8bit校验和是什么？ / Include the end-around carry.</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>普通和257=1 00000001，卷回后00000010，再取反11111101。 / Fold the carry to get 2, then complement to 253.</p>
+</details>
+<p><a id="reordering"></a></p>
+<h2 id="q4-alternating-bit00">Q4. Alternating bit｜编号又回到0，旧包也可能叫0</h2>
+<p><strong>原任务 / Task：</strong> rdt3.0的信道允许消息重排时，只有0/1序号的交替比特协议是否总能正确？若不能，画发送者左、接收者右、时间向下的数据/ACK交换，标明序号。 / Give a reordering counterexample with explicit packet and ACK numbers.</p>
+<p>只说“乱序会出错”不够，需要让接收端在错误时刻恰好期待旧包的编号。构造如下：</p>
+<ol>
+<li>发送数据A，编号0；它在网络中很慢，暂未到。</li>
+<li>发送端超时，重传A(0)。重传先到，接收端交付A并回ACK0。</li>
+<li>发送端收到ACK0，发送B(1)。接收端交付B、回ACK1，重新等待0。</li>
+<li>最早那份A(0)此时才到。接收方期望0且校验通过，于是误把A当下一条新数据，再次交付。</li>
+</ol>
+<p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/c8b1a53b1a27cab2.png" rel="noopener" target="_blank"><img alt="Complete alternating-bit counterexample" decoding="async" height="936" loading="lazy" src="../assets/c8b1a53b1a27cab2.png" width="1259"/></a></p>
+<p>此例只用超时造成的重传和允许的重排，不要求把随机损坏伪装成有效包。收到第三个数据时接收方没法仅凭“0”知道它是老A还是新C。说明可靠性结论依赖对信道和旧副本寿命的假设。</p>
+<p><strong>English answer:</strong> A delayed original packet 0 can arrive after its retransmission and packet 1 have already been accepted. The receiver expects 0 again and can deliver the stale data as new. Thus alternating-bit correctness does not extend to arbitrary reordering and delayed duplicates without additional assumptions.</p>
+<p><strong>迁移 / Transfer：</strong> 只把序号从2种改为4种，是否能无条件解决“任意长延迟”？ / Does a larger finite sequence space eliminate arbitrarily delayed old duplicates?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>不能无条件保证；编号最终仍会重用，还需要寿命、窗口或其他协议约束。更多序号可以扩大安全范围，但不替代假设。 / No finite sequence space alone prevents a sufficiently old duplicate from surviving until number reuse.</p>
+</details>
+<h2 id="_2">来源与复习</h2>
+<p>原题p1为Q1–3及完整端点图，p2为Q4。Chapter3 A9–15对应端点，A19–20对应校验，A35–44对应编号、超时与重复处理；Q4反例为按原条件整理的推导。</p>
+<p>沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5222-N150">N150</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5222-N237">N237</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5222-N238">N238</a>。Q2先在表格里换一组端口自行写回程，暂不把每条箭头做成一张卡。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

@@ -12,9 +12,9 @@ These 280 bilingual cards and 20 micro-lessons connect networking mechanisms thr
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-150 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 全文、Tutorial 1–3、Assignment 1、课堂 Q&A 和研究报告方法，现含 P2P、视频/CDN 和 socket 编程。130 张 Extra Resources 卡保留可靠传输、TCP、IP、路由、链路层及尚未匹配的往年题；原题合集里已匹配的个别卡按当前资料标注。后续仍以 Canvas 确认范围。
+178张Canvas/配套卡覆盖Chapter1–2、Chapter3当前part1–2、Tutorial1–5与Assignment1相关任务。102张历史卡保留传输后续、网络/链路等预习；TCP完整连接管理和拥塞控制仍待新材料。
 
-The 150 Canvas/support cards cover Chapters 1 and 2, Tutorials 1–3, Assignment 1, Q&A and report methodology, now including P2P, video/CDNs and sockets. Another 130 historical cards retain reliability, TCP, IP, routing, link-layer topics and unmatched historical exercises. Individually matched cards in old problem banks are marked current. Further scope follows Canvas.
+178 Canvas/support cards cover Chapters 1–2, available Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1 tasks. 102 historical cards retain later transport, network and link material. Complete connection management and congestion-control coverage remains unconfirmed.
 
 ## 怎样使用题目与图示 / How to use problems and diagrams
 

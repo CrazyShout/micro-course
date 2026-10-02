@@ -234,6 +234,7 @@ TRANSFER_A: 三个限制为 10、20、10000/(100+900)=10 s，最大值 20 s。�
 BRIDGE: 应用想要可靠消息，先看传输层怎样处理损坏、丢失和重复。
 
 @@ net13 | 可靠传输：为什么 ACK、序号、定时器缺一不可 | Reliability and sliding windows
+CHAPTER: chapter-3
 CARDS: N149,N150,N151,N152,N153,N154,N155,N156,N157,N158,N159,N160,N161,N162,N163,N164,N165,N166
 PREREQ: net03,net05,net06
 GOAL: 能用丢包事件逐步追踪基础 GBN 与 SR 的接收、确认与重传差别。
@@ -253,6 +254,7 @@ TRANSFER_A: 收 2 后连续前缀到 2。GBN 丢弃 4 并重复 ACK2，超时重
 BRIDGE: TCP 将这些思想用于可靠有序字节流，并加入连接与流量状态。
 
 @@ net14 | TCP：用字节编号描述接收进度 | TCP sequence space and flow control
+CHAPTER: chapter-3
 CARDS: N167,N168,N169,N170,N171,N172,N173,N174,N175,N176,N177
 PREREQ: net13
 GOAL: 能从字节范围和缺口推累计 ACK；接收与拥塞窗口限额见补充单元。

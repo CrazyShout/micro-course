@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "一个文件分段到达：前面收到字节0–535，后面又收到900–1000，中间还空着。接收者应该说“我已收到1000”，还是“我还等536”？本节按往年TCP课件追踪这笔字节账。",
-    "en": "A receiver has bytes 0–535 and 900–1000, leaving a gap. Follow the historical TCP lesson to distinguish the highest byte seen from the next byte expected."
+    "zh": "一个文件分段到达：前面收到字节0–535，后面又收到900–1000，中间还空着。接收者应该说“我已收到1000”，还是“我还等536”？本节按往年TCP课件追踪这笔字节账。\n\n当前part2到RTT与超时。本节字节编号和超时已对应当前材料；完整流控、握手与连接关闭暂保留为后续预习，不能把整篇都算作本学期已发正文。",
+    "en": "A receiver has bytes 0–535 and 900–1000, leaving a gap. Follow the historical TCP lesson to distinguish the highest byte seen from the next byte expected.\n\nCurrent part 2 reaches RTT and timeout estimation. Detailed flow control, handshakes and closure remain preview material."
   },
   "sections": [
     {
@@ -60,10 +60,10 @@
     {
       "id": "two-window-limits",
       "title": {
-        "zh": "收到得下，也要送得动",
-        "en": "Respect receiver and network limits"
+        "zh": "后续预习：收到得下，也要送得动",
+        "en": "Preview: Respect receiver and network limits"
       },
-      "optional": false,
+      "optional": true,
       "blocks": [
         {
           "type": "prose",
@@ -94,10 +94,10 @@
     {
       "id": "state-has-a-lifetime",
       "title": {
-        "zh": "字节账从建立连接开始，到关闭后才收尾",
-        "en": "Connection state has a lifecycle"
+        "zh": "后续预习：字节账从建立连接开始，到关闭后才收尾",
+        "en": "Preview: Connection state has a lifecycle"
       },
-      "optional": false,
+      "optional": true,
       "blocks": [
         {
           "type": "prose",
@@ -121,6 +121,12 @@
       "locator": "net14 worked/practice/transfer",
       "kind": "derived",
       "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+    },
+    {
+      "name": "Chapter3 part1/part2",
+      "locator": "Current downloaded Canvas, file-local unit numbering; 2026-10-03",
+      "kind": "course",
+      "note": "范围和推导按新原件核对。 / Scope checked against current originals."
     }
   ],
   "objective_map": [
@@ -167,6 +173,16 @@
       "practice": "card:CS5222-N175",
       "cards": [
         "CS5222-N175"
+      ]
+    },
+    {
+      "goal": "Explain RTT estimation and timeout margins",
+      "sections": [
+        "when-to-retry"
+      ],
+      "practice": "card:CS5222-N171",
+      "cards": [
+        "CS5222-N171"
       ]
     }
   ]

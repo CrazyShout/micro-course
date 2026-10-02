@@ -1,6 +1,25 @@
 # 当前下载材料与课堂结构
 
-整理：2026-09-22。以下对应由当前文件位置、目录及已核对任务内容确定；文件清单不是新增 Canvas 完整性或 QE 范围认证。原文件保留在 Course，网页仅发布整理后的学习内容。
+更新：2026-10-03（下方旧文件表保留9月22日基线）。以下对应由当前文件位置、目录及已核对任务内容确定；文件清单不是新增 Canvas 完整性或 QE 范围认证。原文件保留在 Course，网页仅发布整理后的学习内容。
+
+## 10月新增材料的课堂位置
+
+| 原文件 | 归属与学习文件 |
+|---|---|
+| `CS5489/Lecture5/Lecture5/Lecture5a.ipynb` | Lecture5 / Lecture05.md |
+| `CS5489/Lecture5/Lecture5/Lecture5b.ipynb` | Lecture5 / Lecture05.md |
+| `CS5489/Lecture4/Tutorial/Tutorial4.ipynb` | Lecture4 / Tutorial04.ipynb |
+| `CS5489/Lecture5/Assignment2/Assignment2.ipynb` | Lecture5 / Assignment02.md |
+| `CS5222/Cha.3/cs5222_cha3_2026_student_part1.pptx` | Chapter3 / Chapter03.md（part1–2） |
+| `CS5222/Cha.3/cs5222_cha3_2026_student_part2.pptx` | Chapter3 / Chapter03.md（part1–2） |
+| `CS5222/Tutorial4/Tutorial-4_semA2026.pdf` | Chapter2 / Tutorial04.md |
+| `CS5222/Tutorial4/Tutorial-4-solution_semA2026v2.pptx` | Tutorial4 / 教师v2解答核对 |
+| `CS5222/Tutorial5/tutorial-5_semA2026.pdf` | Chapter3 / Tutorial05.md（整理推导） |
+| `CS5222/Tutorial3/tutorial-3-solution_semA2026.pptx` | Tutorial03.md / 教师解答核对 |
+| `CS5222/Cha.2/Q&A_cha2_2026_student.pptx` | Chapter02.md / 六道课堂Q&A（学生版） |
+| `CS5489/Lecture5/Assignment2/Section1_MLP_Primer.pdf` | Assignment2 / Assignment02.md |
+
+HTML、ZIP与解压的同源Notebook去重；MNIST、Wine、Bike Sharing数据属于相关任务。当前ML没有Tutorial5，网络Chapter3后续正文待下载。
 
 ## CS5489
 

@@ -508,6 +508,7 @@ TRANSFER_A: 第二特征乘 1000，方差乘 1000²，得到 diag(9,1000000)。�
 BRIDGE: PCA 通过线性投影提取特征；神经网络通过多层可学习变换得到更丰富的表示。
 
 @@ ml24 | 反向传播：沿计算图分配责任 | Backpropagation through a computation graph
+CHAPTER: lecture-5
 CARDS: M241,M242,M243,M244,M245,M246,M247,M248,M249,M250,M251,M252,M253,M254
 PREREQ: ml03,ml10
 GOAL: 能区分前向、反向、更新，并手算局部导数如何相乘与相加。
@@ -546,8 +547,9 @@ TRANSFER_A: 每轴 floor((16+2−3)/2)+1=floor(7.5)+1=8，输出 8×8×4。权�
 BRIDGE: 网络结构定义能表示什么；优化与训练模式决定如何学到参数。
 
 @@ ml26 | 训练网络：梯度、状态和正则化分别做什么 | Optimization and training state
+CHAPTER: lecture-5
 CARDS: M265,M266,M267,M268,M269,M270,M271,M272,M273,M274,M275,M276
-PREREQ: ml24,ml25
+PREREQ: ml24
 GOAL: 能计算 inverted dropout 的保留值与期望，并区分训练模式和评估模式。
 EXPLAIN: mini-batch SGD 每步用一部分样本估计梯度；一个 epoch 表示看完一遍训练集，不等于一次更新。Momentum 累积方向，Adam 还维护梯度及平方梯度的移动平均，并做初期偏差修正。它们改变更新规则，不会自动消除数据泄漏或错误标签。
 

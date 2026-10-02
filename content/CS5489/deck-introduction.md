@@ -12,9 +12,9 @@ These 333 cards connect to 31 micro-lessons for understanding, retrieval practic
 
 ## 当前内容与往年预习 / Current scope and historical preview
 
-209 张 Canvas/配套卡覆盖 Lecture 1–4、Tutorial 1–3、Assignment 1 和方法补充：程序、数组、概率与分类，以及回归、正则、OMP、树与集成。124 张 Extra Resources 卡保留近邻、部分概率深化、聚类、EM、PCA、神经网络、视觉、生成模型及 Transformer 等预习。匹配的新资料复用原卡；历史范围与 QE 尚待确认。
+227张Canvas/配套卡覆盖Lecture1–5、Tutorial1–4及Assignment1–2相关方法。106张历史预习保留未到位主题和明确的延伸内容；CNN等不因目录中有图片就算当前完整教学。复用原卡身份，不把历史题作为QE考纲。
 
-The 209 Canvas/support cards cover Lectures 1–4, Tutorials 1–3, Assignment 1 and methodological support, now including regression, regularization, OMP and tree ensembles. Another 124 historical cards retain neighbors, selected probabilistic extensions, clustering, EM, PCA, neural networks, vision, generative models and transformers. Matching releases reuse existing cards; historical and QE scope remains unconfirmed.
+227 Canvas/support cards now cover Lectures 1–5, Tutorials 1–4 and methods for Assignments 1–2. 106 historical cards retain unavailable or extended topics, including the full CNN material. Reused cards preserve identity; this is not an official QE syllabus.
 
 ## 怎样学才不会割裂 / How to learn coherently
 

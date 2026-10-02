@@ -1,0 +1,1078 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 4 · Predicting Bike Sharing Usage · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
+<h1 id="tutorial-4-predicting-bike-sharing-usage">Tutorial 4 · Predicting Bike Sharing Usage</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=125">A4 打印版 · 第 125–137 页</a>　图可点击放大。</p>
+<h2 id="_1">去年的规律，今年还管用吗？</h2>
+<p><a href="Lecture04.html">Lecture 4</a> · <a href="index.html">课程目录</a> · <a href="../foundations/MathForML.html#rank-pseudoinverse">矩阵与回归基础</a></p>
+<p>老师给出两年的共享单车日记录，希望根据天气、日期类别等信息预测每日租车总量。这份学习笔记按<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial4.ipynb</span>的77个单元展开，T表示原文件从1开始的单元号。数据直接从<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原ZIP</span>读取，无需改动原文件。</p>
+<p>前半练回归与特征解释，后半的关键问题是：第二年用户变多，旧模型可能系统性低估。给它补上第二年一季度的记录，怎样公平判断调整有没有帮助？这是原任务，不是额外编的故事。</p>
+<p><strong>基础入口（可跳过）：</strong> 不熟数组形状先回<a href="Lecture01.html#arrays">Lecture 1</a>；不熟平方误差、正则项，先读<a href="Lecture04.html">Lecture 4</a>。先理解“输入的一行是一天，输出是当天总量”。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原任务</th>
+<th>优先级</th>
+<th>难度／卡点</th>
+<th>掌握要求与依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T4–28 数据、one-hot、年份划分</td>
+<td>核心必会</td>
+<td>中，特征与目标泄漏</td>
+<td>能保留原2011/2012划分，解释删除计数列</td>
+</tr>
+<tr>
+<td>T29–47 基线、OLS、Ridge</td>
+<td>核心必会</td>
+<td>中，CV与误差单位</td>
+<td>能用训练内部验证选参数并读散点图</td>
+</tr>
+<tr>
+<td>T48–58 LASSO、OMP</td>
+<td>常规掌握</td>
+<td>中，相关特征与系数含义</td>
+<td>能比较选择结果，不把权重当因果</td>
+</tr>
+<tr>
+<td>T59–64 非线性回归</td>
+<td>核心必会</td>
+<td>中，公平模型比较</td>
+<td>能固定划分、报告CV和测试各自用途</td>
+</tr>
+<tr>
+<td>T65–76 新年份与三种适应方法</td>
+<td>核心必会</td>
+<td>高，数据角色变化</td>
+<td>能在同一剩余测试集比较四条流程</td>
+</tr>
+</tbody>
+</table></div>
+<p>优先级依据当前任务与Lecture4，不是考频统计。代码和答案是整理者的参考实现。会完整运行；独立尝试题不放进阻断执行的空代码。</p>
+</section>
+<section id="cell-2">
+<h2 id="1-setup">1. Setup｜先固定实验条件</h2>
+<p>原题未指定随机搜索范围。本参考使用固定种子42，2011年内的五折扩展窗口验证（TimeSeriesSplit），并让验证日期始终晚于对应训练日期。原全年2011训练、2012测试保持。模型参数只看2011验证误差选择；第二年成绩用于教学分析。</p>
+<p>English: Hyperparameters are chosen within 2011 using forward chronological validation. The original year-based outer split is preserved. No model is selected using its 2012 test score.</p>
+</section>
+<section id="cell-3">
+<div class="code-input"><div class="cell-label">In [1]</div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">zipfile</span><span class="o">,</span><span class="w"> </span><span class="nn">hashlib</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.dummy</span><span class="w"> </span><span class="kn">import</span> <span class="n">DummyRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">OrthogonalMatchingPursuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.kernel_ridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">KernelRidge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeriesSplit</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
+<span class="n">COURSE</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">]</span>
+               <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">/</span><span class="s1">'CS5489/Lecture4/Tutorial/Bike-Sharing-Dataset.zip'</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">COURSE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">'Set COURSE to the directory containing the original Bike-Sharing-Dataset.zip.'</span><span class="p">)</span>
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">COURSE</span><span class="o">/</span><span class="s1">'CS5489/Lecture4/Tutorial/Bike-Sharing-Dataset.zip'</span>
+<span class="n">NOTES</span> <span class="o">=</span> <span class="n">COURSE</span><span class="o">/</span><span class="s1">'codexing/CS5489/course-notes'</span>
+<span class="n">OUTPUT</span> <span class="o">=</span> <span class="n">NOTES</span><span class="o">/</span><span class="s1">'execution/Tutorial04'</span><span class="p">;</span> <span class="n">OUTPUT</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.figsize'</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">'font.size'</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+                     <span class="s1">'axes.spines.top'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'axes.spines.right'</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Dataset SHA256:'</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">DATA</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="output"><pre>Dataset SHA256: b70182d0d0508e9abbb79306ce5c0cec34869000f8220175ac83d11dbe845401
+</pre></div>
+</section>
+<section id="cell-4">
+<h2 id="2-load-and-inspectt428">2. Load and inspect｜不要把答案偷偷塞进输入（T4–28）</h2>
+<p><strong>任务 / Task：</strong> 读取日数据，查看字段与分布，把season、mnth、weekday、weathersit做one-hot，预测cnt，按yr划分。 / Load daily records, inspect features, encode four categorical fields, predict cnt, and split by year.</p>
+<p>ZIP同时有hour.csv和day.csv，本题用day.csv。<code>cnt=casual+registered</code>：若把后两列放入X，模型已经看到了答案的两个加数。删除它们不是嫌数据多，是因为预测当天总量时不能先知道当天两类人的完整数量。</p>
+<p>原说明把weekday写成1–7，实际数据是0–6；代码以数据为准。<code>instant</code>仅是记录号；原题删除日期列，但日期仍用于核验顺序。我们不把“日期永远没用”当普遍结论。</p>
+</section>
+<section id="cell-5">
+<div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">DATA</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">archive</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'day.csv'</span><span class="p">)))</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'dteday'</span><span class="p">])</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">731</span> <span class="ow">and</span> <span class="n">dates</span><span class="o">.</span><span class="n">is_monotonic_increasing</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'cnt'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="s1">'casual'</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">'registered'</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'weekday'</span><span class="p">])</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Daily shape:'</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">'temp'</span><span class="p">,</span> <span class="s1">'atemp'</span><span class="p">,</span> <span class="s1">'hum'</span><span class="p">,</span> <span class="s1">'windspeed'</span><span class="p">,</span> <span class="s1">'cnt'</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'instant'</span><span class="p">,</span> <span class="s1">'dteday'</span><span class="p">,</span> <span class="s1">'casual'</span><span class="p">,</span> <span class="s1">'registered'</span><span class="p">,</span> <span class="s1">'cnt'</span><span class="p">])</span>
+<span class="c1"># Categories here are fixed calendar/weather codes, not selected from test outcomes.</span>
+<span class="n">category_levels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'season'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="s1">'mnth'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span>
+                   <span class="s1">'weekday'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="s1">'weathersit'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)}</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">levels</span> <span class="ow">in</span> <span class="n">category_levels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">features</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">levels</span><span class="p">))</span>
+<span class="n">encoded</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">category_levels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">encoded</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">);</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'cnt'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">train_mask</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'yr'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="n">trainX</span><span class="p">,</span> <span class="n">testX</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_mask</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="o">~</span><span class="n">train_mask</span><span class="p">]</span>
+<span class="n">trainY</span><span class="p">,</span> <span class="n">testY</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">~</span><span class="n">train_mask</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainY</span><span class="p">)</span> <span class="o">==</span> <span class="mi">365</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">testY</span><span class="p">)</span> <span class="o">==</span> <span class="mi">366</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">{</span><span class="s1">'casual'</span><span class="p">,</span> <span class="s1">'registered'</span><span class="p">,</span> <span class="s1">'cnt'</span><span class="p">}</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">encoded</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'X columns:'</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">encoded</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'train/test:'</span><span class="p">,</span> <span class="n">trainX</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">testX</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="s1">'temp'</span><span class="p">,</span><span class="s1">'hum'</span><span class="p">,</span><span class="s1">'cnt'</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">col</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Days'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><pre>Daily shape: (731, 16)
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>instant</th>
+<th>dteday</th>
+<th>season</th>
+<th>yr</th>
+<th>mnth</th>
+<th>holiday</th>
+<th>weekday</th>
+<th>workingday</th>
+<th>weathersit</th>
+<th>temp</th>
+<th>atemp</th>
+<th>hum</th>
+<th>windspeed</th>
+<th>casual</th>
+<th>registered</th>
+<th>cnt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>2011-01-01</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>6</td>
+<td>0</td>
+<td>2</td>
+<td>0.344167</td>
+<td>0.363625</td>
+<td>0.805833</td>
+<td>0.160446</td>
+<td>331</td>
+<td>654</td>
+<td>985</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>2011-01-02</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0.363478</td>
+<td>0.353739</td>
+<td>0.696087</td>
+<td>0.248539</td>
+<td>131</td>
+<td>670</td>
+<td>801</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>2011-01-03</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0.196364</td>
+<td>0.189405</td>
+<td>0.437273</td>
+<td>0.248309</td>
+<td>120</td>
+<td>1229</td>
+<td>1349</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>temp</th>
+<th>atemp</th>
+<th>hum</th>
+<th>windspeed</th>
+<th>cnt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>count</th>
+<td>731.00</td>
+<td>731.00</td>
+<td>731.00</td>
+<td>731.00</td>
+<td>731.00</td>
+</tr>
+<tr>
+<th>mean</th>
+<td>0.50</td>
+<td>0.47</td>
+<td>0.63</td>
+<td>0.19</td>
+<td>4504.35</td>
+</tr>
+<tr>
+<th>std</th>
+<td>0.18</td>
+<td>0.16</td>
+<td>0.14</td>
+<td>0.08</td>
+<td>1937.21</td>
+</tr>
+<tr>
+<th>min</th>
+<td>0.06</td>
+<td>0.08</td>
+<td>0.00</td>
+<td>0.02</td>
+<td>22.00</td>
+</tr>
+<tr>
+<th>25%</th>
+<td>0.34</td>
+<td>0.34</td>
+<td>0.52</td>
+<td>0.13</td>
+<td>3152.00</td>
+</tr>
+<tr>
+<th>50%</th>
+<td>0.50</td>
+<td>0.49</td>
+<td>0.63</td>
+<td>0.18</td>
+<td>4548.00</td>
+</tr>
+<tr>
+<th>75%</th>
+<td>0.66</td>
+<td>0.61</td>
+<td>0.73</td>
+<td>0.23</td>
+<td>5956.00</td>
+</tr>
+<tr>
+<th>max</th>
+<td>0.86</td>
+<td>0.84</td>
+<td>0.97</td>
+<td>0.51</td>
+<td>8714.00</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>X columns: ['yr', 'holiday', 'workingday', 'temp', 'atemp', 'hum', 'windspeed', 'season_1', 'season_2', 'season_3', 'season_4', 'mnth_1', 'mnth_2', 'mnth_3', 'mnth_4', 'mnth_5', 'mnth_6', 'mnth_7', 'mnth_8', 'mnth_9', 'mnth_10', 'mnth_11', 'mnth_12', 'weekday_0', 'weekday_1', 'weekday_2', 'weekday_3', 'weekday_4', 'weekday_5', 'weekday_6', 'weathersit_1', 'weathersit_2', 'weathersit_3', 'weathersit_4']
+train/test: (365, 34) (366, 34)
+</pre></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/663548ece0579da1.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 5" decoding="async" height="287" loading="lazy" src="../assets/663548ece0579da1.png" width="987"/></a></div>
+</section>
+<section id="cell-6">
+<p><code>yr</code>保留，因为后面合并新旧年份训练要用；只在2011训练时它全为0，模型无法凭空学出新年份效应。固定天气编码中值4在日数据里没有出现，对应列全0；这让列名稳定，不代表观察到了暴雪样本。天气值、连续特征已按数据说明缩放，不再从全部数据估计新的缩放参数。</p>
+<p><strong>自测 / Check：</strong> 保留registered会造成什么？ / What happens if registered remains an input?</p>
+<p>答案 / Answer：它是当天总量的一部分，构成目标泄漏，测试成绩不再代表根据事前信息预测需求。 / It leaks part of the target and invalidates the intended advance-demand prediction.</p>
+</section>
+<section id="cell-7">
+<h2 id="3-a-baseline-and-interpretable-errorst2947">3. A baseline and interpretable errors｜先问模型有没有赢过“每天报同一个数”（T29–47）</h2>
+<p>DummyRegressor只记训练目标的均值或中位数。它很笨，但笨得稳定，可以当对照。MSE单位是“租车次数的平方”；RMSE开方后回到次数，MAE也是次数。原T31文字写MSE，T32实际代码计算RMSE；本笔记同时列出MSE、RMSE、MAE，避免把平方误差与开方后误差混用。</p>
+<p><strong>任务 / Task：</strong> 拟合基线、OLS、训练内选alpha的Ridge，并比较误差及预测散点。 / Fit dummy, OLS and CV-selected ridge models, then compare errors and scatter plots.</p>
+</section>
+<section id="cell-8">
+<div class="code-input"><div class="cell-label">In [3]</div><div class="highlight"><pre><span></span><span class="n">cv</span> <span class="o">=</span> <span class="n">TimeSeriesSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tr</span><span class="p">,</span> <span class="n">va</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">trainX</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">tr</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">va</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scores</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">'MSE'</span><span class="p">:</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">pred</span><span class="p">),</span>
+            <span class="s1">'RMSE'</span><span class="p">:</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+            <span class="s1">'MAE'</span><span class="p">:</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">pred</span><span class="p">)}</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Dummy mean'</span><span class="p">:</span> <span class="n">DummyRegressor</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">),</span>
+          <span class="s1">'Dummy median'</span><span class="p">:</span> <span class="n">DummyRegressor</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">'median'</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">),</span>
+          <span class="s1">'OLS'</span><span class="p">:</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">)}</span>
+<span class="n">searches</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                          <span class="n">scoring</span><span class="o">=</span><span class="s1">'neg_mean_squared_error'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">)</span>
+    <span class="n">searches</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span> <span class="n">models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="s1">'CV RMSE:'</span><span class="p">,</span> <span class="nb">round</span><span class="p">((</span><span class="o">-</span><span class="n">search</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">tune</span><span class="p">(</span><span class="s1">'Ridge'</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">(),</span> <span class="p">{</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">comparison</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">'model'</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">'split'</span><span class="p">:</span> <span class="n">split</span><span class="p">,</span> <span class="o">**</span><span class="n">scores</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)}</span>
+                         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">for</span> <span class="n">split</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span>
+                         <span class="p">[(</span><span class="s1">'train 2011'</span><span class="p">,</span> <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">),</span> <span class="p">(</span><span class="s1">'test 2012'</span><span class="p">,</span> <span class="n">testX</span><span class="p">,</span> <span class="n">testY</span><span class="p">)]])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><pre>Ridge {'alpha': 0.01} CV RMSE: 922.02
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>split</th>
+<th>MSE</th>
+<th>RMSE</th>
+<th>MAE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Dummy mean</td>
+<td>train 2011</td>
+<td>1895753.56</td>
+<td>1376.86</td>
+<td>1197.75</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Dummy mean</td>
+<td>test 2012</td>
+<td>8004985.59</td>
+<td>2829.31</td>
+<td>2488.67</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Dummy median</td>
+<td>train 2011</td>
+<td>2007468.84</td>
+<td>1416.85</td>
+<td>1172.88</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Dummy median</td>
+<td>test 2012</td>
+<td>6649947.46</td>
+<td>2578.75</td>
+<td>2260.84</td>
+</tr>
+<tr>
+<th>4</th>
+<td>OLS</td>
+<td>train 2011</td>
+<td>301709.73</td>
+<td>549.28</td>
+<td>407.40</td>
+</tr>
+<tr>
+<th>5</th>
+<td>OLS</td>
+<td>test 2012</td>
+<td>5285090.49</td>
+<td>2298.93</td>
+<td>2121.76</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Ridge</td>
+<td>train 2011</td>
+<td>301755.25</td>
+<td>549.32</td>
+<td>407.39</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Ridge</td>
+<td>test 2012</td>
+<td>5287279.32</td>
+<td>2299.41</td>
+<td>2122.63</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-9">
+<div class="code-input"><div class="cell-label">In [4]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">scatter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">truth</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">truth</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">truth</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">prediction</span><span class="o">.</span><span class="n">min</span><span class="p">());</span> <span class="n">high</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">truth</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">prediction</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">],</span> <span class="p">[</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">],</span> <span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Truth (rentals/day)'</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">'Prediction (rentals/day)'</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">scatter</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trainY</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="s1">'Ridge'</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">trainX</span><span class="p">),</span> <span class="s1">'Ridge: 2011 training'</span><span class="p">)</span>
+<span class="n">scatter</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">testY</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="s1">'Ridge'</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">testX</span><span class="p">),</span> <span class="s1">'Ridge: 2012 test'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'2012 mean residual, truth minus prediction:'</span><span class="p">,</span>
+      <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">testY</span><span class="o">-</span><span class="n">models</span><span class="p">[</span><span class="s1">'Ridge'</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">testX</span><span class="p">))),</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b65d1289107ae4ae.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 9" decoding="async" height="387" loading="lazy" src="../assets/b65d1289107ae4ae.png" width="987"/></a></div>
+<div class="output"><pre>2012 mean residual, truth minus prediction: 2059.93
+</pre></div>
+</section>
+<section id="cell-10">
+<p>读图先确认横轴！这里沿用老师T32的代码：横轴truth，纵轴prediction。因此低估在对角线<strong>下方</strong>，与T66一致。T34对基线的“x-value predictions”是文字简写，实际横轴仍是真值；读图以轴标签和代码为准。残差定义为真实值减预测值，正均值说明整体低估。</p>
+<p>English: With truth on the horizontal axis and prediction on the vertical axis, underprediction lies below the diagonal. A positive mean residual (truth minus prediction) indicates underprediction. Ridge shrinks coefficients; its test advantage is an empirical question, not a guarantee.</p>
+<p>本次测试RMSE：OLS 2298.93、Ridge 2299.41，二者很接近，OLS略低；不能宣称正则化总会提高测试成绩。与均值基线2829.31相比两者均改善，但第二年的整体低估仍明显。 / OLS slightly outperforms ridge in this run; both improve over the mean baseline, yet year-shift bias remains.</p>
+</section>
+<section id="cell-11">
+<h2 id="4-lasso-and-ompt4858">4. LASSO and OMP｜“重要特征”不是一份永久排行榜（T48–58）</h2>
+<p>LASSO让一些权重恰为0；OMP逐次选择能改善残差的方向，再联合拟合已选特征。原题要求试10个特征，这里照做。<code>temp</code>与<code>atemp</code>、月份与季节可能相关，两种方法不必选同一批。</p>
+<p><strong>任务 / Task：</strong> 训练LASSO，按绝对系数排序并解释；用OMP选择10个特征，比较两组选择。 / Fit LASSO, interpret the largest absolute coefficients, and compare its selection with 10-feature OMP.</p>
+</section>
+<section id="cell-12">
+<div class="code-input"><div class="cell-label">In [5]</div><div class="highlight"><pre><span></span><span class="n">tune</span><span class="p">(</span><span class="s1">'LASSO'</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> <span class="p">{</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">]})</span>
+<span class="n">models</span><span class="p">[</span><span class="s1">'OMP (10)'</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrthogonalMatchingPursuit</span><span class="p">(</span><span class="n">n_nonzero_coefs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'feature'</span><span class="p">:</span> <span class="n">encoded</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="s1">'LASSO'</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="s1">'LASSO'</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s1">'OMP'</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="s1">'OMP (10)'</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span><span class="p">})</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="s1">'LASSO'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">display</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">selected_lasso</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">weights</span><span class="p">[</span><span class="s1">'LASSO'</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">&gt;</span><span class="mf">1e-8</span><span class="p">,</span><span class="s1">'feature'</span><span class="p">])</span>
+<span class="n">selected_omp</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">weights</span><span class="p">[</span><span class="s1">'OMP'</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">&gt;</span><span class="mf">1e-8</span><span class="p">,</span><span class="s1">'feature'</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'LASSO count:'</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_lasso</span><span class="p">),</span><span class="s1">'OMP count:'</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_omp</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Shared selections:'</span><span class="p">,</span><span class="nb">sorted</span><span class="p">(</span><span class="n">selected_lasso</span> <span class="o">&amp;</span> <span class="n">selected_omp</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">([</span><span class="s1">'LASSO'</span><span class="p">,</span><span class="s1">'OMP (10)'</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="output"><pre>LASSO {'alpha': 0.1} CV RMSE: 880.14
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>feature</th>
+<th>LASSO</th>
+<th>OMP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>3</th>
+<td>temp</td>
+<td>3091.82</td>
+<td>3214.27</td>
+</tr>
+<tr>
+<th>6</th>
+<td>windspeed</td>
+<td>-1977.51</td>
+<td>0.00</td>
+</tr>
+<tr>
+<th>32</th>
+<td>weathersit_3</td>
+<td>-1325.85</td>
+<td>-1544.45</td>
+</tr>
+<tr>
+<th>5</th>
+<td>hum</td>
+<td>-1281.77</td>
+<td>0.00</td>
+</tr>
+<tr>
+<th>15</th>
+<td>mnth_5</td>
+<td>934.80</td>
+<td>855.33</td>
+</tr>
+<tr>
+<th>7</th>
+<td>season_1</td>
+<td>-858.67</td>
+<td>-780.26</td>
+</tr>
+<tr>
+<th>11</th>
+<td>mnth_1</td>
+<td>-673.79</td>
+<td>-212.36</td>
+</tr>
+<tr>
+<th>16</th>
+<td>mnth_6</td>
+<td>639.52</td>
+<td>718.33</td>
+</tr>
+<tr>
+<th>12</th>
+<td>mnth_2</td>
+<td>-493.06</td>
+<td>0.00</td>
+</tr>
+<tr>
+<th>19</th>
+<td>mnth_9</td>
+<td>428.88</td>
+<td>412.04</td>
+</tr>
+<tr>
+<th>8</th>
+<td>season_2</td>
+<td>-418.00</td>
+<td>0.00</td>
+</tr>
+<tr>
+<th>13</th>
+<td>mnth_3</td>
+<td>-328.40</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>LASSO count: 28 OMP count: 10
+Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_3', 'season_4', 'temp', 'weathersit_1', 'weathersit_3']
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>split</th>
+<th>MSE</th>
+<th>RMSE</th>
+<th>MAE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>LASSO</td>
+<td>train 2011</td>
+<td>301761.36</td>
+<td>549.33</td>
+<td>407.36</td>
+</tr>
+<tr>
+<th>1</th>
+<td>LASSO</td>
+<td>test 2012</td>
+<td>5286640.86</td>
+<td>2299.27</td>
+<td>2122.48</td>
+</tr>
+<tr>
+<th>2</th>
+<td>OMP (10)</td>
+<td>train 2011</td>
+<td>348800.84</td>
+<td>590.59</td>
+<td>439.74</td>
+</tr>
+<tr>
+<th>3</th>
+<td>OMP (10)</td>
+<td>test 2012</td>
+<td>5522244.40</td>
+<td>2349.95</td>
+<td>2148.43</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+</section>
+<section id="cell-13">
+<p>比如温度权重为w，温度的归一化值增加0.1、其他输入不变时，预测变化为0.1w；不是增加1°C就变化w。One-hot权重的解释受基线、截距及同组其他类别影响，尤其完整one-hot加截距存在冗余。模型系数描述条件关联，不能说“让星期一变成星期二就必然多骑几辆”。</p>
+<p>English: Interpret a coefficient in the feature's encoded units, holding other inputs fixed. Correlated predictors can share or exchange weight; selection does not establish causation.</p>
+<p>本次LASSO选alpha=0.1，有28个非零系数；OMP按题设选10个。温度系数约3091.82、风速−1977.51、湿度−1281.77（均按原缩放单位）。选择不同并不自动说明谁算错，因为目标与稀疏约束不同。 / The fitted LASSO and ten-feature OMP use different sparsity objectives.</p>
+</section>
+<section id="cell-14">
+<h2 id="5-nonlinear-regressiont5964">5. Nonlinear regression｜让比较只改变模型（T59–64）</h2>
+<p>这里选原Lecture4中的RBF核岭回归与随机森林作两条参考路线。参数网格是整理者给出的有限示范，不声称穷尽所有方法。每条路线用同一2011时间验证折，选定模型后才汇报2012。</p>
+<p><strong>独立尝试 / Try：</strong> 另加一种Lecture4模型，保持划分与误差单位，比较训练验证RMSE。 / Add another Lecture4 model while preserving splits and evaluation units.</p>
+</section>
+<section id="cell-15">
+<div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="n">tune</span><span class="p">(</span><span class="s1">'RBF kernel ridge'</span><span class="p">,</span> <span class="n">KernelRidge</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">),</span>
+     <span class="p">{</span><span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">'gamma'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+<span class="n">tune</span><span class="p">(</span><span class="s1">'Random forest'</span><span class="p">,</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+     <span class="p">{</span><span class="s1">'max_depth'</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="s1">'min_samples_leaf'</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">]})</span>
+<span class="n">cv_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">'model'</span><span class="p">:</span><span class="n">name</span><span class="p">,</span><span class="s1">'CV_RMSE'</span><span class="p">:(</span><span class="o">-</span><span class="n">search</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+                          <span class="s1">'parameters'</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)}</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">search</span> <span class="ow">in</span> <span class="n">searches</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'CV_RMSE'</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">cv_table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">chosen</span> <span class="o">=</span> <span class="n">cv_table</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'model'</span><span class="p">];</span> <span class="n">bestr</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">chosen</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Selected before the adaptation comparison, by 2011 CV:'</span><span class="p">,</span><span class="n">chosen</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">scatter</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">trainY</span><span class="p">,</span><span class="n">bestr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">trainX</span><span class="p">),</span><span class="n">chosen</span><span class="o">+</span><span class="s1">': train'</span><span class="p">)</span>
+<span class="n">scatter</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">testY</span><span class="p">,</span><span class="n">bestr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">testX</span><span class="p">),</span><span class="n">chosen</span><span class="o">+</span><span class="s1">': test'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><pre>RBF kernel ridge {'alpha': 0.1, 'gamma': 0.01} CV RMSE: 1209.35
+</pre></div>
+<div class="output"><pre>Random forest {'max_depth': None, 'min_samples_leaf': 2} CV RMSE: 917.85
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>CV_RMSE</th>
+<th>parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+<td>LASSO</td>
+<td>880.14</td>
+<td>{'alpha': 0.1}</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Random forest</td>
+<td>917.85</td>
+<td>{'max_depth': None, 'min_samples_leaf': 2}</td>
+</tr>
+<tr>
+<th>0</th>
+<td>Ridge</td>
+<td>922.02</td>
+<td>{'alpha': 0.01}</td>
+</tr>
+<tr>
+<th>2</th>
+<td>RBF kernel ridge</td>
+<td>1209.35</td>
+<td>{'alpha': 0.1, 'gamma': 0.01}</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><pre>Selected before the adaptation comparison, by 2011 CV: LASSO
+</pre></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model</th>
+<th>split</th>
+<th>MSE</th>
+<th>RMSE</th>
+<th>MAE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Dummy mean</td>
+<td>train 2011</td>
+<td>1895753.56</td>
+<td>1376.86</td>
+<td>1197.75</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Dummy mean</td>
+<td>test 2012</td>
+<td>8004985.59</td>
+<td>2829.31</td>
+<td>2488.67</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Dummy median</td>
+<td>train 2011</td>
+<td>2007468.84</td>
+<td>1416.85</td>
+<td>1172.88</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Dummy median</td>
+<td>test 2012</td>
+<td>6649947.46</td>
+<td>2578.75</td>
+<td>2260.84</td>
+</tr>
+<tr>
+<th>4</th>
+<td>OLS</td>
+<td>train 2011</td>
+<td>301709.73</td>
+<td>549.28</td>
+<td>407.40</td>
+</tr>
+<tr>
+<th>5</th>
+<td>OLS</td>
+<td>test 2012</td>
+<td>5285090.49</td>
+<td>2298.93</td>
+<td>2121.76</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Ridge</td>
+<td>train 2011</td>
+<td>301755.25</td>
+<td>549.32</td>
+<td>407.39</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Ridge</td>
+<td>test 2012</td>
+<td>5287279.32</td>
+<td>2299.41</td>
+<td>2122.63</td>
+</tr>
+<tr>
+<th>8</th>
+<td>LASSO</td>
+<td>train 2011</td>
+<td>301761.36</td>
+<td>549.33</td>
+<td>407.36</td>
+</tr>
+<tr>
+<th>9</th>
+<td>LASSO</td>
+<td>test 2012</td>
+<td>5286640.86</td>
+<td>2299.27</td>
+<td>2122.48</td>
+</tr>
+<tr>
+<th>10</th>
+<td>OMP (10)</td>
+<td>train 2011</td>
+<td>348800.84</td>
+<td>590.59</td>
+<td>439.74</td>
+</tr>
+<tr>
+<th>11</th>
+<td>OMP (10)</td>
+<td>test 2012</td>
+<td>5522244.40</td>
+<td>2349.95</td>
+<td>2148.43</td>
+</tr>
+<tr>
+<th>12</th>
+<td>RBF kernel ridge</td>
+<td>train 2011</td>
+<td>320780.15</td>
+<td>566.37</td>
+<td>428.24</td>
+</tr>
+<tr>
+<th>13</th>
+<td>RBF kernel ridge</td>
+<td>test 2012</td>
+<td>5778581.75</td>
+<td>2403.87</td>
+<td>2212.43</td>
+</tr>
+<tr>
+<th>14</th>
+<td>Random forest</td>
+<td>train 2011</td>
+<td>67835.44</td>
+<td>260.45</td>
+<td>177.31</td>
+</tr>
+<tr>
+<th>15</th>
+<td>Random forest</td>
+<td>test 2012</td>
+<td>4863441.39</td>
+<td>2205.32</td>
+<td>2050.72</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b799a176bb25e6ac.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 15" decoding="async" height="387" loading="lazy" src="../assets/b799a176bb25e6ac.png" width="987"/></a></div>
+</section>
+<section id="cell-16">
+<p>训练得最好不等于跨年最好。树擅长分区间，RBF依靠与训练样本的相似性；面对整体需求变化，两者都可能失效。以当前打印表中的实际结果回答“谁更好”，并区分CV选中的方法与事后测试表里最高的方法。后者不可再冒充从未看过测试集的选择。</p>
+<p>English: Compare the printed scores, and distinguish the CV-selected model from the model that happens to score best on the test table. Flexible functions alone do not solve temporal distribution shift.</p>
+<p>2011时间验证选出LASSO，故后续适应实验固定它。事后2012表中随机森林RMSE最低（2205.32），但不能据此回头换成“事先选定”的方法。非线性候选没有赢得本次训练内选择。 / LASSO wins the training-only selection; the test-table winner is not used to revise that choice.</p>
+</section>
+<section id="cell-17">
+<h2 id="6-test-set-biast6576">6. Test set bias｜先把新增数据的角色划清楚（T65–76）</h2>
+<p>画总量随日期变化，再模拟老师给定的情境：2012年1–3月已经结束，其标签现在可用；把它当新训练数据，4–12月仍只作评估。不能一边用一季度调模型，一边把它算进最终测试成绩。</p>
+<p>原T69用第11–13列取月份，容易因编码列顺序改变而选错。这里直接用原表的mnth取相同记录：91天新训练，275天剩余测试。特征本身仍按同一列顺序。</p>
+<p><strong>任务 / Task：</strong> 固定一种已选回归方法，比较旧模型、新数据单独重训、合并重训、学习旧模型残差；全部在同一个4–12月测试集评估。 / Compare the original model, new-only retraining, pooled retraining, and residual adaptation on the same April–December holdout.</p>
+</section>
+<section id="cell-18">
+<div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="n">new_mask</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'yr'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'mnth'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">&lt;=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">holdout_mask</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'yr'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'mnth'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">&gt;=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">newX</span><span class="p">,</span><span class="n">newY</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">new_mask</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">new_mask</span><span class="p">];</span><span class="n">holdX</span><span class="p">,</span><span class="n">holdY</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">holdout_mask</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">holdout_mask</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">newY</span><span class="p">)</span><span class="o">==</span><span class="mi">91</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">holdY</span><span class="p">)</span><span class="o">==</span><span class="mi">275</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">train_mask</span> <span class="o">&amp;</span> <span class="n">new_mask</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">new_mask</span> <span class="o">&amp;</span> <span class="n">holdout_mask</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">3.6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Daily count'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">'2012-01-01'</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'New year'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">'2012-01-01'</span><span class="p">),</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">'2012-04-01'</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'New training only'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Rentals/day'</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">);</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">new_only</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">bestr</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">newX</span><span class="p">,</span><span class="n">newY</span><span class="p">)</span>
+<span class="n">pooled</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">bestr</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">trainX</span><span class="p">,</span><span class="n">newX</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">trainY</span><span class="p">,</span><span class="n">newY</span><span class="p">])</span>
+<span class="c1"># Correct a truth-minus-prediction residual by ADDING the learned residual.</span>
+<span class="n">residual_model</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">bestr</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">newX</span><span class="p">,</span><span class="n">newY</span><span class="o">-</span><span class="n">bestr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">newX</span><span class="p">))</span>
+<span class="n">predictions</span><span class="o">=</span><span class="p">{</span><span class="s1">'Original 2011 model'</span><span class="p">:</span><span class="n">bestr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">holdX</span><span class="p">),</span>
+             <span class="s1">'New Jan-Mar only'</span><span class="p">:</span><span class="n">new_only</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">holdX</span><span class="p">),</span>
+             <span class="s1">'Pooled 2011 + Jan-Mar'</span><span class="p">:</span><span class="n">pooled</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">holdX</span><span class="p">),</span>
+             <span class="s1">'Residual correction'</span><span class="p">:</span><span class="n">bestr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">holdX</span><span class="p">)</span><span class="o">+</span><span class="n">residual_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">holdX</span><span class="p">)}</span>
+<span class="n">adaptation</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">'approach'</span><span class="p">:</span><span class="n">name</span><span class="p">,</span><span class="s1">'RMSE'</span><span class="p">:</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">holdY</span><span class="p">,</span><span class="n">pred</span><span class="p">)</span><span class="o">**</span><span class="mf">.5</span><span class="p">,</span>
+                          <span class="s1">'MAE'</span><span class="p">:</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">holdY</span><span class="p">,</span><span class="n">pred</span><span class="p">),</span>
+                          <span class="s1">'mean residual'</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">holdY</span><span class="o">-</span><span class="n">pred</span><span class="p">))}</span>
+                         <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">pred</span> <span class="ow">in</span> <span class="n">predictions</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">adaptation</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">adaptation</span><span class="p">[</span><span class="s1">'approach'</span><span class="p">],</span><span class="n">adaptation</span><span class="p">[</span><span class="s1">'RMSE'</span><span class="p">]);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'April-Dec RMSE (rentals/day)'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/38a5c9666edf97c0.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 18" decoding="async" height="347" loading="lazy" src="../assets/38a5c9666edf97c0.png" width="987"/></a></div>
+<div class="output"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>approach</th>
+<th>RMSE</th>
+<th>MAE</th>
+<th>mean residual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Original 2011 model</td>
+<td>2311.86</td>
+<td>2139.80</td>
+<td>2056.39</td>
+</tr>
+<tr>
+<th>1</th>
+<td>New Jan-Mar only</td>
+<td>1281.87</td>
+<td>1023.65</td>
+<td>-231.20</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Pooled 2011 + Jan-Mar</td>
+<td>1042.12</td>
+<td>817.28</td>
+<td>124.93</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Residual correction</td>
+<td>1832.61</td>
+<td>1420.41</td>
+<td>-1362.37</td>
+</tr>
+</tbody>
+</table></div>
+</div></div>
+<div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/cbdd2343dff37b54.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 18" decoding="async" height="387" loading="lazy" src="../assets/cbdd2343dff37b54.png" width="887"/></a></div>
+</section>
+<section id="cell-19">
+<p>残差方法像给旧地图贴修订便签：旧模型负责已有规律，新模型学“还差多少”。约定<span class="arithmatex">\(r=y-f_{old}(x)\)</span>时，加上<span class="arithmatex">\(hat r\)</span>；若把残差反过来定义为<span class="arithmatex">\(f_{old}(x)-y\)</span>，修正时必须减。原题文字没有把这个符号约定讲透，实施时不能前后混用。</p>
+<p>三种方法都不保证最好。新数据只有冬末春初，单独训练可能看不到夏季；合并数据覆盖更广，但旧年份占比大；残差法保留旧季节形状，却也依赖“差值规律能迁移到后九个月”的假设。解释应回到上表结果，而不是给某一种方法颁永久冠军。</p>
+<p><strong>迁移题 / Transfer：</strong> 若现在只到2012年2月底，可以拿3月数据选参数吗？为什么？ / If it is only the end of February 2012, may March observations be used for tuning an operational predictor?</p>
+<details>
+<summary>答案 / Answer</summary>
+<p>不能，3月结果尚不可得；应把可用日期以前的数据进一步按时间拆分。离线已下载全年数据不代表当时可见。 / No. March outcomes are not yet available. Validation must reflect the information available at the prediction date.</p>
+</details>
+<p>本次相同275天测试集上，旧模型、新数据单独、合并、残差修正RMSE分别为2311.86、1281.87、1042.12、1832.61。合并方案最好；残差修正仍有明显过预测，平均真值减预测为−1362.37，提示早春的偏差规律未充分代表其余季节。 / Pooled retraining is best in this run; residual adaptation overpredicts the held-out months.</p>
+</section>
+<section id="cell-20">
+<h2 id="7-return-to-the-lecture">7. Return to the lecture｜把结果变成能解释的结论</h2>
+<p>英文自测：Why were the count components removed? Why split by year? Why does a constant year feature fail to teach the next year's offset? Why must all adaptation methods share the same holdout?</p>
+<p>关键答案 / Key answers：避免目标泄漏；评估向未来迁移；训练中无变化的特征无法识别变化效应；同一测试集才有可比较的误差。 / Prevent target leakage; evaluate future transfer; a constant feature cannot identify a changing effect; compare errors on identical held-out records.</p>
+<p>首轮复习沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M187">回归 M187</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M194">Ridge M194</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M198">LASSO M198</a>，再回<a href="https://crazyshout.github.io/micro-course/?lesson=ml19">ML19</a>串起目标、约束与验证。</p>
+<div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>原课单元</th>
+<th>本笔记位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1–3 姓名/任务/初始化</td>
+<td>开头与§1，个人身份不填入公共学习稿</td>
+</tr>
+<tr>
+<td>T4–28 原数据、分布、统计、编码、提取与年份划分</td>
+<td>§2</td>
+</tr>
+<tr>
+<td>T29–35 Dummy与误差/散点</td>
+<td>§3</td>
+</tr>
+<tr>
+<td>T36–47 OLS/Ridge与解释</td>
+<td>§3</td>
+</tr>
+<tr>
+<td>T48–58 LASSO/OMP与系数</td>
+<td>§4</td>
+</tr>
+<tr>
+<td>T59–64 非线性模型</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>T65–76 趋势及三种再训练</td>
+<td>§6</td>
+</tr>
+<tr>
+<td>T77 空单元</td>
+<td>无教学内容</td>
+</tr>
+</tbody>
+</table></div>
+<p>全部本次结果由以上代码实际运行产生；没有使用历史学生完成稿的成绩替代。</p>
+</section>
+<section id="cell-21">
+<div class="code-input"><div class="cell-label">In [8]</div><div class="highlight"><pre><span></span><span class="n">report</span><span class="o">=</span><span class="p">{</span><span class="s1">'dataset_sha256'</span><span class="p">:</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">DATA</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+        <span class="s1">'shape'</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="s1">'train_rows'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">trainY</span><span class="p">),</span><span class="s1">'test_rows'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">testY</span><span class="p">),</span>
+        <span class="s1">'new_rows'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">newY</span><span class="p">),</span><span class="s1">'holdout_rows'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">holdY</span><span class="p">),</span><span class="s1">'selected_model'</span><span class="p">:</span><span class="n">chosen</span><span class="p">,</span>
+        <span class="s1">'cv'</span><span class="p">:</span><span class="n">cv_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">'records'</span><span class="p">),</span>
+        <span class="s1">'scores'</span><span class="p">:</span><span class="n">comparison</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="p">))</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">'records'</span><span class="p">),</span>
+        <span class="s1">'adaptation'</span><span class="p">:</span><span class="n">adaptation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">'records'</span><span class="p">)}</span>
+<span class="p">(</span><span class="n">OUTPUT</span><span class="o">/</span><span class="s1">'results.json'</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">report</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="c1"># Save predictions for independent recomputation; this is not a submission file.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">OUTPUT</span><span class="o">/</span><span class="s1">'verification-arrays.npz'</span><span class="p">,</span><span class="n">truth</span><span class="o">=</span><span class="n">holdY</span><span class="p">,</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s1">'pred_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">values</span><span class="p">())})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Learning-run results saved; original materials unchanged.'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output"><pre>Learning-run results saved; original materials unchanged.
+</pre></div>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

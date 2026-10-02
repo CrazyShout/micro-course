@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22",
+  "updated": "2026-10-03",
   "courses": {
     "CS5489": {
       "title_zh": "CS5489 · 机器学习双语学习卡",
@@ -17,8 +17,8 @@
         {
           "title_zh": "当前内容与往年预习",
           "title_en": "Current scope and historical preview",
-          "body_zh": "209 张 Canvas/配套卡覆盖 Lecture 1–4、Tutorial 1–3、Assignment 1 和方法补充：程序、数组、概率与分类，以及回归、正则、OMP、树与集成。124 张 Extra Resources 卡保留近邻、部分概率深化、聚类、EM、PCA、神经网络、视觉、生成模型及 Transformer 等预习。匹配的新资料复用原卡；历史范围与 QE 尚待确认。",
-          "body_en": "The 209 Canvas/support cards cover Lectures 1–4, Tutorials 1–3, Assignment 1 and methodological support, now including regression, regularization, OMP and tree ensembles. Another 124 historical cards retain neighbors, selected probabilistic extensions, clustering, EM, PCA, neural networks, vision, generative models and transformers. Matching releases reuse existing cards; historical and QE scope remains unconfirmed."
+          "body_zh": "227张Canvas/配套卡覆盖Lecture1–5、Tutorial1–4及Assignment1–2相关方法。106张历史预习保留未到位主题和明确的延伸内容；CNN等不因目录中有图片就算当前完整教学。复用原卡身份，不把历史题作为QE考纲。",
+          "body_en": "227 Canvas/support cards now cover Lectures 1–5, Tutorials 1–4 and methods for Assignments 1–2. 106 historical cards retain unavailable or extended topics, including the full CNN material. Reused cards preserve identity; this is not an official QE syllabus."
         },
         {
           "title_zh": "怎样学才不会割裂",
@@ -41,8 +41,8 @@
       ],
       "counts": {
         "total": 333,
-        "current_support": 209,
-        "historical_preview": 124,
+        "current_support": 227,
+        "historical_preview": 106,
         "lessons": 31
       }
     },
@@ -62,8 +62,8 @@
         {
           "title_zh": "当前内容与往年预习",
           "title_en": "Current scope and historical preview",
-          "body_zh": "150 张 Canvas/配套卡覆盖 Chapter 1、Chapter 2 全文、Tutorial 1–3、Assignment 1、课堂 Q&A 和研究报告方法，现含 P2P、视频/CDN 和 socket 编程。130 张 Extra Resources 卡保留可靠传输、TCP、IP、路由、链路层及尚未匹配的往年题；原题合集里已匹配的个别卡按当前资料标注。后续仍以 Canvas 确认范围。",
-          "body_en": "The 150 Canvas/support cards cover Chapters 1 and 2, Tutorials 1–3, Assignment 1, Q&A and report methodology, now including P2P, video/CDNs and sockets. Another 130 historical cards retain reliability, TCP, IP, routing, link-layer topics and unmatched historical exercises. Individually matched cards in old problem banks are marked current. Further scope follows Canvas."
+          "body_zh": "178张Canvas/配套卡覆盖Chapter1–2、Chapter3当前part1–2、Tutorial1–5与Assignment1相关任务。102张历史卡保留传输后续、网络/链路等预习；TCP完整连接管理和拥塞控制仍待新材料。",
+          "body_en": "178 Canvas/support cards cover Chapters 1–2, available Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1 tasks. 102 historical cards retain later transport, network and link material. Complete connection management and congestion-control coverage remains unconfirmed."
         },
         {
           "title_zh": "怎样使用题目与图示",
@@ -86,8 +86,8 @@
       ],
       "counts": {
         "total": 280,
-        "current_support": 150,
-        "historical_preview": 130,
+        "current_support": 178,
+        "historical_preview": 102,
         "lessons": 20
       }
     }

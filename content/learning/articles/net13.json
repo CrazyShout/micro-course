@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "发送者交出一份数据后没有等到确认。可能数据没到，也可能数据到了但确认丢了；盲目重发会不会让接收者处理两遍？先为每种故障补一种机制。",
-    "en": "After data is sent, no acknowledgment arrives. Data or feedback may have been lost. Build the mechanisms needed to retry without delivering duplicates, following the historical transport material."
+    "zh": "发送者交出一份数据后没有等到确认。可能数据没到，也可能数据到了但确认丢了；盲目重发会不会让接收者处理两遍？先为每种故障补一种机制。\n\n当前Chapter3 part1–2已覆盖这些可靠传输机制；Tutorial5要求给出允许乱序时交替比特协议的具体反例。原文件part页码各自从1开始。",
+    "en": "After data is sent, no acknowledgment arrives. Data or feedback may have been lost. Build the mechanisms needed to retry without delivering duplicates, following the historical transport material.\n\nCurrent Chapter 3 parts 1–2 support these mechanisms. Tutorial 5 asks for an explicit reordering counterexample."
   },
   "sections": [
     {
@@ -119,6 +119,12 @@
       "locator": "net13 worked/practice/transfer",
       "kind": "derived",
       "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+    },
+    {
+      "name": "Chapter3 part1/part2",
+      "locator": "Current downloaded Canvas, file-local unit numbering; 2026-10-03",
+      "kind": "course",
+      "note": "范围和推导按新原件核对。 / Scope checked against current originals."
     }
   ],
   "objective_map": [

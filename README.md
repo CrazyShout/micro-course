@@ -6,11 +6,11 @@
 
 ML07 从课堂鸢尾花辨认任务逐步引出高斯分类；NET02 从多人上传文件解释共享链路。现有微课均采用连续文章；各篇围绕自己的任务展开，不套同一个故事。题目与实验按真实编号和任务讲解，图与双语答案就近展开。活动里的原卡预览不是新卡。
 
-材料更新于2026-09-22：CS5489新增Lecture 4及Tutorial 3，CS5222补齐Chapter 2并增加Tutorial 3、Assignment 1。优先复用41张旧卡，仅新增4张核心卡。当前数量见[发布清单](docs/publication.json)，Markji章节/新卡同步进度见[课程信息](https://crazyshout.github.io/micro-course/notices.html)。历史Extra Resources仍单列，不冒充本学期或QE范围。
+材料更新于2026-10-03：CS5489新增Lecture5、Tutorial4与Assignment2学习指南；CS5222新增Chapter3 part1–2、Tutorial4–5，并核对Chapter2 Q&A与Tutorial3教师解答。复用已有卡，原卡已在Markji归入对应章节；本轮没有新增知识卡。当前数量见[发布清单](docs/publication.json)，范围与任务提醒见[课程信息](https://crazyshout.github.io/micro-course/notices.html)。历史预习仍单列，不等于已确认QE范围。
 
 ## 整讲讲义
 
-[讲义目录](https://crazyshout.github.io/micro-course/notes/)按课程与 Lecture / Chapter 排列，包含 15 份主要学习文档、数学与网络基础、来源说明，以及三册 A4 PDF。Tutorial 显示代码和已经执行的结果；在线阅读不运行代码。基础专题保留往返入口，每篇链接到 PDF 对应页码。
+[讲义目录](https://crazyshout.github.io/micro-course/notes/)按课程与 Lecture / Chapter 排列，包含 21 份主要学习文档、数学与网络基础、来源说明，以及三册 A4 PDF。Tutorial 显示代码和已经执行的结果；在线阅读不运行代码。基础专题保留往返入口，每篇链接到 PDF 对应页码。
 
 公开 HTML 从相同 Markdown / Notebook 主稿生成。三册 PDF 保留已验证的内容和分页，公开版移除本机文件链接，已发布讲义与跨册链接改为在线地址。完整 Canvas 课件、教材、原始数据、个人作业和本地验证记录不上传。
 

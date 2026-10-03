@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Chapter 1 · Introduction｜一条消息怎样穿过互联网 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="chapter-1-introduction">Chapter 1 · Introduction｜一条消息怎样穿过互联网</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=2">A4 打印版 · 第 2–18 页</a>　图可点击放大。</p>
 <p><a href="index.html">课程目录</a> · <a href="Tutorial01.html">Tutorial 1</a> · <a href="Tutorial02.html">Tutorial 2</a> · <a href="Assignment01.html">Assignment 1</a> · <a href="Chapter02.html">下一章</a></p>
 <p>你在宿舍点开课程网页，屏幕很快显示内容。中间不是一条从电脑直达学校服务器的专属电线，而是许多设备、链路和网络共同协作。本章先建立这幅全景：谁负责收发、数据怎样共享道路、为什么会等待或丢失、复杂系统如何分工。后面每章会放大其中一部分。</p>
-<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整PPT（78页）</span>及<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">课堂Q&amp;A（6页）</span>。保留老师Chapter命名与顺序。原PPT说明其改编自 Kurose/Ross 教材课件、由 Man Hon Cheung 修改；原图版权属于原作者。本地学习解释与补充算例不冒充教师逐字讲稿。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整PPT（78页）</span>及<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">课堂Q&amp;A（6页）</span>。保留老师Chapter命名与顺序。原PPT说明其改编自 Kurose/Ross 教材课件、由 Man Hon Cheung 修改；原图版权属于原作者。补充算例在正文中标注。</p>
 <p><strong>基础复习（可跳过）：</strong> 先自查1500 B÷2 Mbps会不会算；若卡住读<a href="../foundations/NetworkBasics.html">单位与时间轴</a>。多人同时活跃的概率看<a href="../foundations/MathForML.html#combinations">组合概率</a>。</p>
 <div class="toc">
 <ul>
@@ -68,7 +68,7 @@
 <td>安全概念与历史</td>
 <td>常规掌握</td>
 <td>低；定义/时代背景</td>
-<td>识别威胁、解释演进；P66–78；未找到可据此判断“不考”的证据</td>
+<td>识别威胁、解释演进；P66–78；当前课件内容</td>
 </tr>
 </tbody>
 </table></div>
@@ -142,12 +142,12 @@
 <h3 id="_1">共享带来的容量收益，有什么条件？</h3>
 <p>P29原例：1Mbps链路，每用户活跃时100kbps、活跃概率0.1。电路交换最多固定支持10人；35人做分组共享时，假设用户独立，活跃人数K服从Binomial(35,0.1)。</p>
 <div class="arithmatex">\[P(K&gt;10)=\sum_{k=11}^{35}\binom{35}{k}0.1^k0.9^{35-k}\approx0.0004243.\]</div>
-<p><strong>原页写“less than .0004”不够精确</strong>；独立模型重算约0.0004243，约0.04243%，是略大于0.0004。不能为了吻合课件四舍五入成一个方向错误的不等式。P30只有Binomial标题，补课给出从列举到公式的台阶。</p>
+<p><strong>原页写“less than .0004”不够精确</strong>；独立模型重算约0.0004243，约0.04243%，是略大于0.0004。P30只有Binomial标题，补课给出从列举到公式的台阶。</p>
 <p>这说明超额需求较少，不是保证零排队、零丢包或人人始终满速；短时到达突发、包调度和缓冲也影响等待。用户相关性改变时需要重新建模。分组交换适合突发需求，电路预留则提供更可预测资源，选择取决于服务需求。</p>
 <h2 id="5-forwarding-routing-and-a-network-of-networks">5. Forwarding, routing and a network of networks｜路口动作与整条路线</h2>
 <p>P28的forwarding是当前设备查表，把到来的包从合适出口送走；routing是确定路径并形成所需转发信息的过程。导航规划与开到路口选出口的类比有帮助，但真实路由可能分布式更新，不必有一个中央导航员。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b704cfe7ac42a7de.png" rel="noopener" target="_blank"><img alt="Original forwarding table and routing diagram" decoding="async" height="1088" loading="lazy" src="../assets/b704cfe7ac42a7de.png" width="1450"/></a></p>
-<p>P33–42一步步构造互联网：若N个接入ISP两两直连，需N(N−1)/2条连接，扩展困难；可购买上游transit，也可用peering直接互联，经IXP交换流量，再加regional networks与content-provider networks。内容提供商将服务放近用户、建立自有网络，会减少对某些上游路径的依赖，并不是“绕过物理互联网瞬间送达”。原公司的例名保留为图中时代背景。</p>
+<p>P33–42一步步构造互联网：若N个接入ISP两两直连，需N(N−1)/2条连接，扩展困难；可购买上游transit，也可用peering直接互联，经IXP交换流量，再加regional networks与content-provider networks。内容提供商将服务放近用户、建立自有网络，会减少对某些上游路径的依赖，从而可能缩短传输路径。原公司的例名保留为图中时代背景。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/71720687f11aae45.png" rel="noopener" target="_blank"><img alt="Original network-of-networks diagram" decoding="async" height="1088" loading="lazy" src="../assets/71720687f11aae45.png" width="1450"/></a></p>
 <p><strong>English:</strong> Forwarding is a local per-packet action; routing determines paths. The Internet consists of interconnected networks with both technical and economic relationships.</p>
 <p><a id="delay"></a></p>
@@ -186,7 +186,7 @@
 </tbody>
 </table></div>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/be40dae68d44de71.png" rel="noopener" target="_blank"><img alt="Original four-delay diagram" decoding="async" height="1088" loading="lazy" src="../assets/be40dae68d44de71.png" width="1450"/></a></p>
-<p>不要把发送和传播都叫“上网速度”。把水管出口加粗让整桶水更快倒完，不会按相同比例改变每个水分子沿长管移动的时间；类比到此为止，真实介质传播不是受排队的汽车行驶。</p>
+<p>发送时延看一整包需要多久进入链路，传播时延看已经出发的信号多久走到另一端。下面用老师的车队例子，把这两个计时起点分开。</p>
 <p>P47的车队原例：10辆车，每辆收费12秒，最后一辆过第一个收费亭需120秒；100km以100km/h行驶需1小时，全部在第二亭前到齐需62分钟。P48改为每车1分钟、车速1000km/h；首车1分钟后出发，再走6分钟，t=7分钟到第二亭，早于第10辆t=10分钟离开第一亭。两题都从第一辆开始服务计时，没让第二亭再处理一遍。</p>
 <p>队列的traffic intensity为 <span class="arithmatex">\(\rho=La/R\)</span>，a为平均包到达率（packets/s），L为本模型固定包长。rho接近1时在常见随机排队模型中等待显著增长；rho&gt;1长期输入超过服务能力，无限缓冲理想模型不稳定，现实有限缓冲会丢包。仅平均rho&lt;1不能保证任意流量下没有大突发或所有等待性质都良好，课件曲线是模型直觉。</p>
 <p><strong>独立变式 / Transfer:</strong> 一个包1000B，R=4Mbps，d=3000km，s=2×10⁸m/s，处理1ms、排队3ms，整包单跳耗时？ / Find the one-hop complete-packet delay under these conditions.</p>
@@ -248,7 +248,7 @@
 <p>沿原图看：端系统走完整协议栈；典型转发路由器处理到网络层，以太交换机主要处理链路层。不要由这个教学模型推断所有现实设备绝不检查更高层。每跳链路帧可更换，应用消息不因此被每个路由器当成网页程序执行。</p>
 <p><strong>English:</strong> Each layer offers services to the layer above and uses services below. Encapsulation adds the information needed by the current layer.</p>
 <h2 id="9-security-and-history">9. Security and history｜知道威胁，也知道哪些数字属于当年</h2>
-<p>P67–71介绍恶意软件、DoS、嗅探与地址伪造。病毒常依附宿主内容并需执行，蠕虫可自动传播；并非“被动收到任意包就必然感染”，通常还需漏洞或执行机制。Botnet由受控设备组成，DDoS是分布式资源耗尽；packet sniffing能看到可访问的流量，但加密与网络结构限制能读到的明文。伪造源IP不等于已经能接收发回那个源地址的响应。这里学习机制与防护意识，不做攻击实验。</p>
+<p>P67–71介绍恶意软件、DoS、嗅探与地址伪造。病毒常依附宿主内容并需执行，蠕虫可自动传播；并非“被动收到任意包就必然感染”，通常还需漏洞或执行机制。Botnet由受控设备组成，DDoS是分布式资源耗尽；packet sniffing能看到可访问的流量，但加密与网络结构限制能读到的明文。伪造源IP不等于已经能接收发回那个源地址的响应。</p>
 <p>P73–77按时间讲分组交换研究、ARPANET、互联思想、TCP/IP与DNS、Web商业化、移动与云。应记住问题如何推动结构演变：让不同网络自治互联、尽力而为、分散控制；“stateless routers”在这里指不为每个端到端连接预留电路状态，不是路由器没有路由表或任何状态。</p>
 <p>保留原页历史顺序，同时澄清两处可核查的简写：P74将ALOHAnet标为1970卫星网络；夏威夷大学记录其岛际packet-radio服务于1971年6月开始，卫星连接属于后续发展。<a href="https://manoa.hawaii.edu/engineering/about-us/history/alohanet.php">UH项目史</a> P76的Mosaic年份应注意版本语境，NCSA记录其最早普及阶段在1993年。<a href="https://www.ncsa.illinois.edu/about/history/">NCSA历史</a> 两处查阅于2026-09-23。</p>
 <p>P77的2016设备数量、早期社交网络用户数只作为课件当时背景，不称当前规模；“instantaneous”是宣传式简写，跨网络通信仍有非零时延。</p>
@@ -345,4 +345,4 @@
 </tr>
 </tbody>
 </table></div>
-<p>part1的49页对应完整1–49；part2的29页对应完整50–78，页码重编不算新增教学内容。逐页文本与内嵌图内容核对记录见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">本轮材料清单</span>。源图与数字复算分别保留，不以截图代替解释。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>part1的49页对应完整1–49；part2的29页对应完整50–78，页码重编不算新增教学内容。逐页文本与内嵌图内容核对记录见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">本轮材料清单</span>。原图在相关段落展示，计算步骤见正文。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

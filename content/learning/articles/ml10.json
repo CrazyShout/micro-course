@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml10",
   "title": {
-    "zh": "辨花时，能不能直接学会怎样划分？",
-    "en": "Can we learn the flower boundary directly?"
+    "zh": "逻辑回归：从分类分数到概率，再到梯度更新",
+    "en": "Logistic regression: from scores to probabilities and gradient updates"
   },
   "minutes": "15–20",
   "lede": {
@@ -34,7 +34,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "sigmoid 函数定义 $p=\\sigma(z)=1/(1+e^{-z})$，作为正类的预测概率。z=0 时 p=0.5；z 越大，p 越靠近 1；负类概率是 1−p。反过来，$\\log[p/(1-p)]=z$，所以分数也叫 logit。优势比 p/(1−p) 不是概率本身。\n\n这里用标签 t∈{0,1}；课堂也用 y∈{−1,+1}，二者可用 t=(y+1)/2 对应。比较不同公式时先查编码，别把同一个正类换了记号后算成另一个问题。下面图示连接分数、sigmoid 与类别概率；概率模型的输出不自动保证现实校准完美。"
+          "text": "sigmoid 函数定义 $p=\\sigma(z)=1/(1+e^{-z})$，作为正类的预测概率。z=0 时 p=0.5；z 越大，p 越靠近 1；负类概率是 1−p。反过来，$\\log[p/(1-p)]=z$，所以分数也叫 logit。优势比 p/(1−p) 不是概率本身。\n\n这里用标签 t∈{0,1}；课堂也用 y∈{−1,+1}，二者可用 t=(y+1)/2 对应。比较不同公式时，先将标签转换成同一种编码。下面图示连接分数、sigmoid 与类别概率；概率模型的输出不自动保证现实校准完美。"
         },
         {
           "type": "figure",
@@ -52,7 +52,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "一条真实标签为 t 的样本，模型给它的概率可合写为 $p^t(1-p)^{1-t}$：t=1 留下 p，t=0 留下 1−p。取负对数得到二元交叉熵 $\\ell=-t\\log p-(1-t)\\log(1-p)$。真实类概率小，损失大；它在要求模型对真实标签给更多概率。\n\n要调整 w，需要知道损失怎样随它变化。链式法则沿 $w\\to z\\to p\\to\\ell$ 把局部变化率相乘。先对 p 求导得 $-t/p+(1-t)/(1-p)$，乘 sigmoid 导数 p(1−p)，化简为 p−t。再乘 z 对 w 的导数 x，得到 $\\nabla_w\\ell=(p-t)x$；对 b 的导数则是 p−t。每一步都围绕同一条样本，梯度不是另一个凭空背下的规则。"
+          "text": "一条真实标签为 t 的样本，模型给它的概率可合写为 $p^t(1-p)^{1-t}$：t=1 留下 p，t=0 留下 1−p。取负对数得到二元交叉熵 $\\ell=-t\\log p-(1-t)\\log(1-p)$。真实类概率小，损失大；它在要求模型对真实标签给更多概率。\n\n要调整 w，需要知道损失怎样随它变化。链式法则沿 $w\\to z\\to p\\to\\ell$ 把局部变化率相乘。先对 p 求导得 $-t/p+(1-t)/(1-p)$，乘 sigmoid 导数 p(1−p)，化简为 p−t。再乘 z 对 w 的导数 x，得到 $\\nabla_w\\ell=(p-t)x$；对 b 的导数则是 p−t。这就把交叉熵、sigmoid和线性分数的导数连成了一条链。"
         },
         {
           "type": "foundation",
@@ -74,7 +74,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "梯度指向局部损失增加最快的方向，所以更新为 $w_{new}=w-\\eta\\nabla_w\\ell$，学习率 $\\eta>0$ 控制步幅。先用一维教学样本并固定 b=0，把前面的链完整走一遍；这不是原 iris 的拟合参数。"
+          "text": "梯度指向局部损失增加最快的方向，所以更新为 $w_{new}=w-\\eta\\nabla_w\\ell$，学习率 $\\eta>0$ 控制步幅。下面用一维教学样本并固定b=0，把这条计算链完整走一遍。"
         },
         {
           "type": "exercise",
@@ -151,7 +151,7 @@
       "name": "推理桥接与手算 / Teaching derivation and hand calculation",
       "locator": "ml10",
       "kind": "derived",
-      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+      "note": "根据原课补充的链式法则推导与单样本更新算例。 / Supplementary chain-rule derivations and single-sample update examples based on the lecture."
     }
   ],
   "objective_map": [

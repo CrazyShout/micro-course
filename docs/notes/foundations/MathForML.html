@@ -1,8 +1,8 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Math for Machine Learning｜看懂公式，再回到课堂 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a></nav><h1 id="math-for-machine-learning">Math for Machine Learning｜看懂公式，再回到课堂</h1><p class="document-tools"><a href="../pdf/Foundations-A4.pdf#page=2">A4 打印版 · 第 2–36 页</a>　图可点击放大。</p>
 <p><strong>可选基础补课 · 从四则运算和简单方程开始 · 扩展于2026-09-23</strong></p>
 <p><a href="../CS5489/Lecture02.html#intro">回到 Lecture 2 开头</a> · <a href="../CS5489/index.html">使用与运行说明</a></p>
-<p>看到一长串公式时，困难有时并不是“机器学习太难”，而是同时遇到了五个不认识的符号。这份补课把这些台阶拆开：先知道符号在说什么，再用小数字算一次，最后回到老师的公式。水箱、邮件计数和小矩阵都是<strong>教学补充例子</strong>，不是老师布置的新任务或实验成绩。</p>
-<p>只默认你会加减乘除、分数和简单方程。不必一次读完：可以从下面选择卡住的专题；小节末尾有返回具体课程的入口。原五个专题及 Lecture 2 链接保留，后四节按当前新增课程需要补充。正文中的英文术语帮助对照课堂，English takeaway 是整理后的表达，练习题答中英对齐。</p>
+<p>看到一长串公式时，困难有时并不是“机器学习太难”，而是同时遇到了五个不认识的符号。这份补课把这些台阶拆开：先知道符号在说什么，再用小数字算一次，最后回到老师的公式。水箱、邮件计数和小矩阵均为<strong>教学补充例子</strong>。</p>
+<p>只默认你会加减乘除、分数和简单方程。不必一次读完：可以从下面选择卡住的专题；小节末尾有返回具体课程的入口。各专题末尾有返回相关Lecture或Tutorial的链接。正文中的英文术语帮助对照课堂，English takeaway 是整理后的表达，练习题答中英对齐。</p>
 <p><a id="foundation-nav"></a>
 新增按需入口：<a href="#batch-gradients">反向传播里的矩阵、广播与批量梯度</a>，用于Lecture5和Assignment2；原有专题仍可独立跳读。</p>
 <h2 id="_1">先找到自己缺的那一级台阶</h2>
@@ -62,7 +62,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>不确定从哪开始，可以先看这五道自查。<strong>会解释理由就可以跳过相应入门段；卡住时再点专题。</strong> 它们只帮助选阅读入口，不是考试、评分或新的刷卡任务。</p>
+<p>不确定从哪开始，可以先看这五道自查。<strong>会解释理由就可以跳过相应入门段；卡住时再点专题。</strong> 用它们判断从哪一节读起即可。</p>
 <p><strong>自查1 / Check 1</strong></p>
 <p><strong>中文题：</strong> 水箱原有1 L，以2 L/min匀速注水且不漏水、不溢出。3分钟后有多少水？图像的斜率是什么？<br/>
 <strong>English question:</strong> A tank starts with 1 L and receives 2 L/min, with no leakage or overflow. What is its volume after 3 minutes, and what is the graph's slope?</p>
@@ -146,7 +146,7 @@
 <p>把每一行相同的计算压缩成一句话，就是</p>
 <div class="arithmatex">\[V(t)=2t+1.\]</div>
 <p>这里t是 <strong>variable（变量）</strong>，V(t)读作“时间t对应的水量”。括号表示把t送入规则，<strong>V(t)不是V乘以t</strong>。2t才表示2×t；2的单位是L/min，乘以分钟后得到L，才能与原有1 L相加。</p>
-<p>这样的输入—输出规则叫 <strong>function（函数）</strong>。在我们规定的条件下，同一个t对应一个确定的V。模型适用的输入范围叫 <strong>domain（定义域）</strong>；这里t≥0，而且必须在水箱尚未溢出的阶段。“公式写得很漂亮”不能阻止真实水箱溢出。</p>
+<p>这样的输入—输出规则叫 <strong>function（函数）</strong>。在我们规定的条件下，同一个t对应一个确定的V。模型适用的输入范围叫 <strong>domain（定义域）</strong>；这里t≥0，而且必须在水箱尚未溢出的阶段。</p>
 <p><a id="coordinates"></a></p>
 <h3 id="12">1.2 图像就是把账本放到坐标上</h3>
 <p>横轴记t，纵轴记V。点(2,5)表示“过了2分钟，共有5升水”；先读横坐标，再读纵坐标。允许半分钟之类的连续时间，所以这里可以连接成线；如果横轴是班级名称，就不能照搬这种连续解释。</p>
@@ -168,7 +168,7 @@ English question: Under the same tank assumptions, find the volume after 2.5 min
 <p>平方也要看括号：</p>
 <div class="arithmatex">\[\sum_{i=1}^{3}x_i^2=1^2+2^2+4^2=21,
 \qquad\left(\sum_{i=1}^{3}x_i\right)^2=7^2=49.\]</div>
-<p>前者“各自平方再相加”，后者“先合计再平方”。括号不是装饰，它决定先做哪一步。在实数范围内，a≥0时，符号√a表示平方后得到a的非负数，例如√9=3；它稍后用于从方差回到标准差。</p>
+<p>前者“各自平方再相加”，后者“先合计再平方”。括号决定先做哪一步。在实数范围内，a≥0时，符号√a表示平方后得到a的非负数，例如√9=3；它稍后用于从方差回到标准差。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -255,7 +255,7 @@ English question: Select one message uniformly from the table. What is the proba
 <div class="arithmatex">\[P(F\mid S)=\frac{18}{30}=0.6.\]</div>
 <p>第二问先缩到“含free”那一列：25封里18封是垃圾邮件，得到</p>
 <div class="arithmatex">\[P(S\mid F)=\frac{18}{25}=0.72.\]</div>
-<p>竖线“|”读作 <strong>given（已知、给定）</strong>。两问用了同一个18，却有不同分母；“已知是猫，有胡子的比例”和“已知有胡子，是猫的比例”也有这个区别。胡子并不会主动把分母告诉你。</p>
+<p>竖线“|”读作 <strong>given（已知、给定）</strong>。两问用了同一个18，却有不同分母；“已知是猫，有胡子的比例”和“已知有胡子，是猫的比例”也有这个区别。</p>
 <p><strong>English answer:</strong> P(F|S)=18/30=0.6; P(S|F)=18/25=0.72. The conditioning event changes the reference group, so reversing the condition changes the question.</p>
 <p>两个条件同时满足叫交集，写成F∩S；本例概率是18/100=0.18。由计数关系可归纳出</p>
 <div class="arithmatex">\[P(F\mid S)=\frac{P(F\cap S)}{P(S)},\qquad
@@ -307,7 +307,7 @@ English question: Using the 100-message table, find P(spam | no free). In the sa
 <h3 id="32-eln">3.2 e和ln：认识名字，再认识图像</h3>
 <p><strong>Natural logarithm（自然对数）</strong>以特殊常数e≈2.71828为底，写成ln(x)。对应的指数函数eˣ也写成exp(x)。它们互相反解：</p>
 <div class="arithmatex">\[\ln(e^u)=u,\qquad e^{\ln x}=x\quad(x&gt;0).\]</div>
-<p>e不是机器学习新发明的参数。它的方便之处是：eˣ的局部变化率恰好等于当前高度，而ln(x)的变化率恰好为1/x。专题4会解释“变化率”怎样变成导数；此处先会读函数即可。Lecture 2中的log默认按自然对数理解。</p>
+<p>以e为底有一个方便的性质：eˣ的局部变化率恰好等于当前高度，而ln(x)的变化率恰好为1/x。专题4会解释“变化率”怎样变成导数；此处先会读函数即可。Lecture 2中的log默认按自然对数理解。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/3339c929c2df6ba7.png" rel="noopener" target="_blank"><img alt="上下两幅图分别显示指数函数和自然对数，标出互换的输入输出点" decoding="async" height="1316" loading="lazy" src="../assets/3339c929c2df6ba7.png" width="1137"/></a></p>
 <p><em>上图的(0,1)与(1,e)，在下图变成(1,0)与(e,1)。ln(x)只接收正数；当0&lt;x&lt;1时，它位于横轴下方，因为e的负次幂才得到这样的数。两幅图的输入输出角色不同，纵轴范围也不同。</em></p>
 <p>例如e⁰=1，所以ln1=0；0.1小于1，所以ln0.1是负数，约−2.3026。负数并不代表“负概率”：对数已经把概率换到了另一条数轴。</p>
@@ -318,7 +318,7 @@ English question: Using the 100-message table, find P(spam | no free). In the sa
 <p>同样，正数a有ln(aᵏ)=k ln(a)。例如ln(0.2×0.5)=ln0.2+ln0.5；多个因子时，把这个规则重复使用：</p>
 <div class="arithmatex">\[\ln\left(\prod_{i=1}^{N}p_i\right)=\sum_{i=1}^{N}\ln p_i,
 \qquad p_i&gt;0.\]</div>
-<p>这不是任意“把括号拆开”。<strong>加法没有同样的规则</strong>：ln(2+4)=ln6，而ln2+ln4=ln8，两者不同。看到加号时，不能把乘法的通行证借过去用。</p>
+<p>这不是任意“把括号拆开”。<strong>加法没有同样的规则</strong>：ln(2+4)=ln6，而ln2+ln4=ln8，两者不同。</p>
 <p>回到Lecture 2：<a href="../CS5489/Lecture02.html#prior-mle">继续先验MLE中的对数之和</a> · <a href="../CS5489/Lecture02.html#log-scores">继续比较log分数</a>。</p>
 <h3 id="34">3.4 为什么最大值的位置没有变？</h3>
 <p>从图上看，ln(x)对正输入一直递增：a&gt;b&gt;0时，ln(a)&gt;ln(b)。我们只改变了分数的刻度，没有交换谁大谁小。所以最大化正似然L(θ)，与最大化ln L(θ)，会选到同样的参数θ。</p>
@@ -460,7 +460,7 @@ English question: Let z=3x+1 and y=z². At x=1, find dy/dx and explain what is m
 <div class="arithmatex">\[L(p)=p^4(1-p)^6,\qquad 0\le p\le1.\]</div>
 <p>这里没有乘二项式组合系数，因为我们写的是一个固定序列的概率；若只统计总数，组合系数不依赖p，也不改变获胜的p。L(p)不是“p本身的概率密度”，不要求它沿p的面积为1。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/d17514b2d55294db.png" rel="noopener" target="_blank"><img alt="固定标签序列的似然和自然对数似然，最大值位置都在p等于0.4" decoding="async" height="1298" loading="lazy" src="../assets/d17514b2d55294db.png" width="1136"/></a></p>
-<p><em>上下图纵轴刻度不同，但金色线都穿过最高处p=0.4。上图纵轴的×10⁻³表示刻度还要乘0.001；图下半部的负数是对数值。没有把两条曲线的高度当成同一单位下的大小比较。</em></p>
+<p><em>上下图纵轴刻度不同，但金色线都穿过最高处p=0.4。上图纵轴的×10⁻³表示刻度还要乘0.001；图下半部的负数是对数值。读图时比较峰值的位置，而不是两图的纵轴高度。</em></p>
 <p><strong>完整例题 / Worked example</strong><br/>
 中文题：对上述4个类1、6个类2的固定序列，求最大化似然的p，并说明它为什么是最大值。<br/>
 English question: For the fixed independent label sequence with four class-1 and six class-2 outcomes, find the likelihood-maximizing p and justify that it is a maximum.</p>
@@ -499,7 +499,7 @@ English question: (1) Find the derivative of y=(2x−1)² at x=3. (2) Find both 
 <div class="arithmatex">\[\mathbf{u}\mathbf{u}^T=
 \begin{pmatrix}2\times2&amp;2\times3\\3\times2&amp;3\times3\end{pmatrix}
 =\begin{pmatrix}4&amp;6\\6&amp;9\end{pmatrix}.\]</div>
-<p>顺序变了，结果类型都变了。不要把转置当成可以随手擦掉的装饰。</p>
+<p>交换乘法顺序，结果从一个数变成了一个矩阵。</p>
 <p>对一般矩阵，(m×n)乘(n×k)得到(m×k)；中间的n必须相同。输出第i行第j列，是左矩阵第i行与右矩阵第j列的点积。</p>
 <p><strong>完整例题 / Worked example</strong><br/>
 中文题：A=[[2,1],[0,1]]，x=(2,3)ᵀ。求Ax，说明每个输出来自哪里。<br/>
@@ -573,7 +573,7 @@ v=\frac1N\sum_{i=1}^N(x_i-\bar x)^2.\]</div>
 <p>回到Lecture 2：<a href="../CS5489/Lecture02.html#full-gaussian">继续理解完整协方差</a>。</p>
 <h3 id="55">5.5 从共同变化到椭圆</h3>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/414e4e8415f5302b.png" rel="noopener" target="_blank"><img alt="复用老师四个协方差矩阵的等密度轮廓图" decoding="async" height="947" loading="lazy" src="../assets/414e4e8415f5302b.png" width="1002"/></a></p>
-<p><em>复用已核查的Lecture2b cell36矩阵图：均值零、两维方差都为1，非对角元分别0、0.5、0.9、−0.9。正值让椭圆朝一起增大的方向倾斜，负值让它朝一增一减的方向倾斜。轮廓对应马氏距离平方4，不标成“包含95%概率”。</em></p>
+<p><em>复用已核查的Lecture2b cell36矩阵图：均值零、两维方差都为1，非对角元分别0、0.5、0.9、−0.9。正值让椭圆朝一起增大的方向倾斜，负值让它朝一增一减的方向倾斜。轮廓对应马氏距离平方4。</em></p>
 <p>这张图不要求你先会计算椭圆。先看同样的横纵波动范围，如何因为“是否一起变化”而形成不同形状。课堂中需要在每个类别内部估计这个形状，不能把所有类别混起来算一次，就当作每个类别的关系。</p>
 <p><a id="inverse-determinant"></a></p>
 <h3 id="56">5.6 逆矩阵与行列式：能否倒回去，面积怎样变？</h3>
@@ -703,7 +703,7 @@ w, residuals, rank, singular_values = np.linalg.lstsq(A, y, rcond=None)
 <a id="batch-gradients"></a></p>
 <h2 id="10-batch-gradients">10. Batch gradients｜两行数据，为什么只更新一个偏置？</h2>
 <p><a href="../CS5489/Lecture05.html#batch-backprop">回到Lecture5反向传播</a> · <a href="../CS5489/Assignment02.html#interfaces">回到Assignment2</a></p>
-<p>这一节只补看懂网络推导所需的数学，不另起一门微积分课。先想两天的温度都要加同一个校准值b。第一天结果对b的影响记为g₁，第二天记为g₂。调整b会同时影响两天，所以总影响是g₁+g₂；不能只留一天，也不能给每一天偷偷创建一个新的b。</p>
+<p>这一节解释反向传播中的批量求导与共享参数。先想两天的温度都要加同一个校准值b。第一天结果对b的影响记为g₁，第二天记为g₂。调整b会同时影响两天，所以总影响是g₁+g₂；不能只留一天，也不能给每一天偷偷创建一个新的b。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/56540ef1ca54badb.png" rel="noopener" target="_blank"><img alt="A shared bias collects sample contributions" decoding="async" height="523" loading="lazy" src="../assets/56540ef1ca54badb.png" width="1099"/></a></p>
 <p>图中两条箭头是两条导数贡献，不是两个偏置参数。连续经过两步计算时，局部影响相乘；一个量被多处使用时，各条路径的影响相加。这是链式法则在计算图中的两条基本规则。</p>
 <h3 id="101">10.1 从一行扩到两行</h3>
@@ -715,7 +715,7 @@ G=\frac{\partial L}{\partial U}=\begin{bmatrix}1&amp;-1\\2&amp;0\end{bmatrix}.\]
 <p>四格分别为1×1+3×2=7，1×(−1)+3×0=−1，2×1+4×2=10，2×(−1)+4×0=−2。把这些求和排成矩阵，就是</p>
 <div class="arithmatex">\[\nabla_A L=X^TG=\begin{bmatrix}7&amp;-1\\10&amp;-2\end{bmatrix},\qquad
 \nabla_b L=\sum_iG_{i,:}=(3,-1).\]</div>
-<p>不需要把转置当咒语背：X的每一列是某个输入特征，把它变成一行，才能与某输出的逐样本梯度作点积。若X为B×d，G为B×h，结果就是d×h，和A同形。</p>
+<p>这里的转置有具体作用：X的每一列是某个输入特征，把它变成一行，才能与某输出的逐样本梯度作点积。若X为B×d，G为B×h，结果就是d×h，和A同形。</p>
 <h3 id="102-jacobian">10.2 Jacobian是“一张影响关系表”</h3>
 <p>输入有两个分量、输出也有两个分量，Jacobian第j行第k列记<span class="arithmatex">\(\partial f_j/\partial x_k\)</span>。例如<span class="arithmatex">\(f(x_1,x_2)=(2x_1,x_1+x_2)\)</span>，表为</p>
 <div class="arithmatex">\[J=\begin{bmatrix}2&amp;0\\1&amp;1\end{bmatrix}.\]</div>
@@ -735,7 +735,7 @@ G=\frac{\partial L}{\partial U}=\begin{bmatrix}1&amp;-1\\2&amp;0\end{bmatrix}.\]
 <p><strong>English takeaway:</strong> Match every derivative to its parameter shape. Multiply derivatives along a path, add them across branches or shared uses, and account for loss averaging exactly once.</p>
 <p><a href="../CS5489/Lecture05.html#batch-backprop">回到Lecture5：完整反传</a> · <a href="../CS5489/Assignment02.html#learnable-activation">回到作业：可学习指数</a></p>
 <h2 id="_2">这些补课从哪里来，学到哪里为止？</h2>
-<p>这是本地基础讲义的作者源，HTML为生成阅读版。原五个专题服务Lecture 2，新增四节服务当前其余Lecture/Tutorial；例子和推导属于整理后的补充，不是教师额外公布的考核范围。没有新增记忆卡。</p>
+<p>这些专题按当前课程需要组织：前五节衔接Lecture2，组合概率用于网络课，投影、伪逆和优化衔接后续Lecture/Tutorial，批量梯度用于Lecture5与Assignment2。例子和推导为教学补充，按需要选读。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -794,5 +794,5 @@ G=\frac{\partial L}{\partial U}=\begin{bmatrix}1&amp;-1\\2&amp;0\end{bmatrix}.\]
 </table></div>
 <p>原件：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2a</span>、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture2b</span>。复用来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">既有基础主稿</span>。所有单元号从原Notebook第1个单元起算，不是In[n]执行编号。</p>
 <p>绘图的输入、参数与来源在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">figure-data.json</span>，可复现脚本为<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">build_figures.py</span>。本轮数学复核与显示证据见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">检查记录</span>。图中英文坐标保持与课堂术语一致，中文读图说明在图旁。</p>
-<p>新增四节的图与独立复算见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extend_figures.py</span> 和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extra-figure-data.json</span>，旧图与上一轮证据保留。学习网络单位和报文读法请用<a href="NetworkBasics.html">Network Basics</a>。</p>
+<p>新增四节的图与独立复算见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extend_figures.py</span> 和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">extra-figure-data.json</span>，各图的参数与计算过程可在这些文件中回查。学习网络单位和报文读法请用<a href="NetworkBasics.html">Network Basics</a>。</p>
 <p>掌握需要的基础后，回到相应课程完成老师的模型、推导和任务。更完整的微积分、线性代数证明与优化方法，等后续课程真正用到时再补。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

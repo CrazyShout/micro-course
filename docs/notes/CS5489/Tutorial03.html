@@ -1,9 +1,9 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 3 · Linear classifiers, cropping and an L1 kernel · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
-<h1 id="tutorial-3-linear-classifiers-cropping-and-an-l1-kernel">Tutorial 3 · Linear classifiers, cropping and an L1 kernel</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=98">A4 打印版 · 第 98–112 页</a>　图可点击放大。</p>
+<h1 id="tutorial-3-linear-classifiers-cropping-and-an-l1-kernel">Tutorial 3 · Linear classifiers, cropping and an L1 kernel</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=97">A4 打印版 · 第 97–111 页</a>　图可点击放大。</p>
 <h2 id="_1">从同一份数据比较模型，别让实验条件悄悄换了</h2>
 <p><a href="Lecture03.html">Lecture 3</a> · <a href="Lecture01.html#arrays">Python/NumPy</a> · <a href="index.html">课程目录</a></p>
 <p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial3.ipynb</span> 的 68 个单元，按原顺序展开。原标题为 <em>Gender Classification from Face Images</em>。本笔记只把文件名提供的 0/1 当成给定基准标签，分析模型是否重现这些标注；标签与模型结果不能确立照片中人物的真实身份。参考代码和答案为整理者实现，不是教师解答。</p>
-<p>真正要学会的是：45×40 图像怎样变为向量，怎样在训练内部选 C，怎样读线性权重，怎样公平比较裁剪与自定义核。本数据很小，单次测试10张，错一张就变10个百分点，结论必须与这个限制一起读。</p>
+<p>本次练习包括：45×40 图像怎样变为向量，怎样在训练内部选 C，怎样读线性权重，怎样公平比较裁剪与自定义核。本数据很小，单次测试10张，错一张就变10个百分点，结论必须与这个限制一起读。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -40,11 +40,11 @@
 </tr>
 </tbody>
 </table></div>
-<p>依据均为当前原任务，不是历史考试频率。数学卡点可选读<a href="../foundations/MathForML.html#vectors-covariance">矩阵</a>和<a href="../foundations/MathForML.html#projection">长度与距离</a>。</p>
+<p>优先级依据当前原任务。数学卡点可选读<a href="../foundations/MathForML.html#vectors-covariance">矩阵</a>和<a href="../foundations/MathForML.html#projection">长度与距离</a>。</p>
 </section>
 <section id="cell-2">
 <h2 id="0-parameters-and-provenance">0. Parameters and provenance｜将实验约定写在最前面</h2>
-<p>保留原 <code>np.random.seed(100)</code> 和 80/20、<code>random_state=4487</code> 划分；ZIP顺序不擅自排序。原任务未规定候选网格，本参考实现选择 C=10^-3,…,10^3（7个值），α=0.001/0.01/0.1/1，5折分层CV、shuffle=True、seed42。所有模型使用相同折划分。不把这些候选值冒充老师给出的标准答案。</p>
+<p>保留原 <code>np.random.seed(100)</code> 和 80/20、<code>random_state=4487</code> 划分；图像沿用ZIP中的顺序。原任务未规定候选网格，本参考实现选择 C=10^-3,…,10^3（7个值），α=0.001/0.01/0.1/1，5折分层CV、shuffle=True、seed42。所有模型使用相同折划分。候选网格由本参考实现选定。</p>
 <p>English: Preserve the instructor's data order and train/test split. Candidate grids and shuffled stratified CV are explicit reference-implementation choices.</p>
 </section>
 <section id="cell-3">
@@ -405,7 +405,7 @@
 <section id="cell-15">
 <h2 id="5-crop-the-same-images">5. Crop the same images｜先查尺寸，再解释性能</h2>
 <p><strong>原任务 T41–63 / Task:</strong> 使用掩码、同一划分，重训LR/SVM并解释变化。 / Crop with the given mask, preserve the split, and repeat LR/SVM experiments.</p>
-<p>当前实际代码是 <code>[18:40,11:29]</code>，Python右端不含：高22、宽18，共396维。原T44仍说24×24、576维，对应被注释掉的旧掩码，不是本次实际输入。裁剪减少外围信息也可能丢掉有用信号，不预先写“必然更好”。</p>
+<p>当前实际代码是 <code>[18:40,11:29]</code>，Python右端不含：高22、宽18，共396维。原T44仍说24×24、576维，对应被注释掉的旧掩码，不是本次实际输入。裁剪既减少外围信息，也可能丢掉有用信号，效果由后面的比较检验。</p>
 </section>
 <section id="cell-16">
 <div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="n">mask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">45</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">);</span><span class="n">mask</span><span class="p">[</span><span class="mi">18</span><span class="p">:</span><span class="mi">40</span><span class="p">,</span><span class="mi">11</span><span class="p">:</span><span class="mi">29</span><span class="p">]</span><span class="o">=</span><span class="kc">True</span>
@@ -707,7 +707,7 @@ Interpret only this provided benchmark and split; one test image changes accurac
 <p>完整图像的LR与线性SVM在10张测试图上均为0.80（2张与给定标签不一致），两组系数方向余弦约0.944，说明规则相似但并不相同。外围被裁掉部分占完整图系数平方和约95.2%/96.3%；它只描述当前权重分布，不是因果重要性比例。</p>
 <p>裁剪后LR测试仍0.80、SVM为0.90，但其CV分别从0.90降到0.85/0.825。这个不一致提醒我们：单个10张测试划分波动很大，不能只凭多分对一张就宣布裁剪普遍更优。L1核选择α=0.01、C=10，CV=0.875、测试0.90，与裁剪线性SVM测试相同；没有在这份测试上进一步提高。</p>
 <p><strong>English:</strong> Full-image LR and linear SVM both scored 0.80 on the ten-image split. Cropped LR scored 0.80 and cropped linear SVM 0.90, despite lower CV scores. The selected L1 kernel (alpha=0.01, C=10) scored 0.875 in CV and 0.90 on the held-out split, tying the cropped linear SVM. These small-sample results do not establish a universally better representation or a causal explanation for errors.</p>
-<p>这些数值对应本次数据哈希、固定划分与候选网格。以后改参数并重跑，必须重新核对这段解释与输出，不能保留旧结论。</p>
+<p>这些数值对应上述固定数据、划分和候选网格。</p>
 </section>
 <section id="cell-24">
 <h2 id="7-independent-explanation-and-source-coverage">7. Independent explanation and source coverage｜合上代码，说清实验</h2>
@@ -760,5 +760,5 @@ Interpret only this provided benchmark and split; one test image changes accurac
 </tr>
 </tbody>
 </table></div>
-<p>本参考笔记的结果来自本轮执行。原课没有给出一套已完成的最佳参数答案，不能将这里的结果称为教师标准答案。原始文件、数据和卡片没有被改写。</p>
+<p>上述结果来自本参考实现，参数和划分见§0。原题未指定唯一的最优参数。</p>
 </section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

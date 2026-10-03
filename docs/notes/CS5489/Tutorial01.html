@@ -2,7 +2,7 @@
 <h1 id="tutorial-1-from-python-loops-to-orthonormal-vectors">Tutorial 1 · From Python loops to orthonormal vectors</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=14">A4 打印版 · 第 14–24 页</a>　图可点击放大。</p>
 <h2 id="_1">从变量变化，走到能验证的程序</h2>
 <p><a href="Lecture01.html">Lecture 1</a> · <a href="../foundations/MathForML.html#projection">数学补课</a> · <a href="index.html">课程目录</a></p>
-<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial1</span>的47个单元编写；单元号从1起算，不是In[n]。本文件是可运行参考讲解，例题答案是整理者实现。原课Colab挂盘在本机由显式路径替代；不运行会改写原材料的示范。</p>
+<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial1</span>的47个单元编写；单元号从1起算，不是In[n]。本文件是可运行参考讲解，例题答案是整理者实现。原课的Colab挂盘改为本地文件路径，练习输出写入独立目录。</p>
 <p>原任务顺序：认识Notebook状态 → 数非平凡因子 → 折线图和直方图 → 读取数据 → Gram–Schmidt。先完整运行，再合上答案自己写一次。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -46,7 +46,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>以上来自当前任务，不是历史试卷频率。</p>
+<p>优先级依据上列原任务。</p>
 </section>
 <section id="cell-2">
 <h2 id="0-setup">0. Setup｜本地路径与输出位置</h2>
@@ -78,7 +78,7 @@ English: Configure paths here; generated files go to the learning-note output di
 <section id="cell-4">
 <h2 id="1-notebook-state">1. Notebook state｜屏幕顺序不等于执行顺序</h2>
 <p><strong>原任务T3–13 / Task:</strong> 运行单元、重复更新变量、重启内核观察状态。 / Run cells, repeat an update, and understand kernel restart.</p>
-<p><code>x=x+1</code>先读取旧x，再算右侧，最后把新值赋给x。以下把三次运行展开，保存清楚的状态轨迹。不要为了演示NameError让全篇运行中断。</p>
+<p><code>x=x+1</code>先读取旧x，再算右侧，最后把新值赋给x。以下把三次运行展开，保存清楚的状态轨迹。示例捕获NameError，便于继续观察后续单元。</p>
 </section>
 <section id="cell-5">
 <div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
@@ -145,7 +145,7 @@ English: Configure paths here; generated files go to the learning-note output di
 </section>
 <section id="cell-6">
 <p><strong>独立题 / Try:</strong> 初始x=10，把<code>x=x*2</code>执行两次，得到多少？重启内核后直接运行这一行会怎样？ / Starting at x=10, execute x=x*2 twice. What happens if you restart the kernel and run only that line?</p>
-<p><strong>答 / Answer:</strong> 40；重启清除了变量，需重新定义x。 / 40; after restart x must be initialized again. 保存的旧输出不证明当前内核仍有这个值。</p>
+<p><strong>答 / Answer:</strong> 40；重启清除了变量，需重新定义x。 / 40; after restart x must be initialized again.</p>
 </section>
 <section id="cell-7">
 <h2 id="2-count-factors">2. Count factors｜先写人能逐行跟上的版本</h2>
@@ -315,7 +315,7 @@ English: The zero bin contains the 25 primes in this range. Histogram counts tot
 <div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b9ef3e181752d182.png" rel="noopener" target="_blank"><img alt="Executed Tutorial01 figure, cell 14" decoding="async" height="431" loading="lazy" src="../assets/b9ef3e181752d182.png" width="651"/></a></div>
 </section>
 <section id="cell-15">
-<p><code>mydata[:,0]</code>选所有行的第0列，不是第一行。原文字说120×2，以下最终结果以实际shape为准；散点图不自动给这些点增加类别标签或物理单位。
+<p><code>mydata[:,0]</code>选所有行的第0列，不是第一行。数据形状为120×2；原文件未给出类别标签或坐标的物理单位。
 <strong>自查 / Check:</strong> <code>mydata[:3,:]</code>取什么？ / What does mydata[:3,:] select?
 <strong>答 / Answer:</strong> 前三条样本的全部特征，形状(3,2)。 / All features of the first three samples, shape (3,2).</p>
 </section>
@@ -324,7 +324,7 @@ English: The zero bin contains the 25 primes in this range. Histogram counts tot
 <h2 id="4-gramschmidt">4. Gram–Schmidt｜拿走已有方向，剩下才是新信息</h2>
 <p><strong>原任务T35–45 / Task:</strong> 输入矩阵V每列是一个向量，返回同一张成空间的正交归一列E。 / Return orthonormal columns spanning the same column space as V.</p>
 <p>先补<a href="../foundations/MathForML.html#projection">长度、投影与张成空间</a>。例如v=(2,1)、u=(1,0)，投影到u方向是(2,0)，相减余下(0,1)。不是把所有向量分别除以长度就能让它们互相垂直。</p>
-<p>对非零u，<span class="arithmatex">\(P_u(v)=(v^Tu)/(u^Tu)\,u\)</span>。原步骤是从第k列减去已有各方向的投影，再归一化。下面存储单位方向q，因此投影简化为<span class="arithmatex">\((q^Tv)q\)</span>。这对应原课的classical Gram–Schmidt；严重病态数据宜使用QR等稳健方法，不宣称这段小实现适合所有数值问题。</p>
+<p>对非零u，<span class="arithmatex">\(P_u(v)=(v^Tu)/(u^Tu)\,u\)</span>。原步骤是从第k列减去已有各方向的投影，再归一化。下面存储单位方向q，因此投影简化为<span class="arithmatex">\((q^Tv)q\)</span>。这对应原课的classical Gram–Schmidt；严重病态的数据更适合用Householder QR等数值稳定的方法处理。</p>
 </section>
 <section id="cell-17">
 <div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">myGS</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>

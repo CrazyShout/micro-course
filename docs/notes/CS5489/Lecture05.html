@@ -1,9 +1,9 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 5 · Neural Networks · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-5-neural-networks">Lecture 5 · Neural Networks</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=138">A4 打印版 · 第 138–145 页</a>　图可点击放大。</p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 5 · Neural Networks · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-5-neural-networks">Lecture 5 · Neural Networks</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=137">A4 打印版 · 第 137–144 页</a>　图可点击放大。</p>
 <h2 id="_1">从一条分类线，到能自己学特征的网络</h2>
 <p><a href="index.html">课程目录</a> · <a href="Lecture04.html">上一讲：回归</a> · <a href="Assignment02.html">Assignment 2 学习指南</a></p>
 <p>假设我们仍在辨认鸢尾花。每朵花是一行测量，标签是已知品种；给一朵新花，我们希望输出它属于各品种的概率。前几讲已经会手工挑特征、拟合线性边界。现在老师追问：能不能让模型自己学出对分类有帮助的中间特征？本讲先从最简单的感知机开始，经过多分类逻辑回归，再把可训练的特征层接到分类器前面。</p>
-<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture5a</span>（A，66单元）和<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture5b</span>（B，96单元）。单元从1起算，包括文字与代码。HTML是同源阅读导出，ZIP中的Notebook与解压件相同，不重复算一讲。本讲正文还没有完整CNN课程；文件夹中有CNN图片不等于那些内容已经讲授。</p>
-<p><strong>基础复习（可跳过）：</strong> 不熟指数、求导，读<a href="../foundations/MathForML.html#derivatives">对数与导数</a>；看见矩阵求导就紧张，读<a href="../foundations/MathForML.html#batch-gradients">批量梯度与计算图</a>。这里会保留即时解释，不需要先把整个数学册读完。</p>
+<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture5a</span>（A，66单元）和<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture5b</span>（B，96单元）。单元从1起算，包括文字与代码。本讲覆盖感知机、MLP与训练方法；完整CNN内容仍待后续课件。</p>
+<p><strong>基础复习（可跳过）：</strong> 不熟指数、求导，读<a href="../foundations/MathForML.html#derivatives">对数与导数</a>；不熟悉矩阵求导，读<a href="../foundations/MathForML.html#batch-gradients">批量梯度与计算图</a>。这里会保留即时解释，不需要先把整个数学册读完。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -58,7 +58,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>这些标注由当前教学与作业决定，不是历史题的出现频率。本讲没有新到的Tutorial5，不把往年同编号文件冒充当前任务。</p>
+<p>优先级依据当前课件与Assignment2。本讲暂未提供当前Tutorial5。</p>
 <div class="toc">
 <ul>
 <li><a href="#lecture-5-neural-networks">Lecture 5 · Neural Networks</a><ul>
@@ -69,7 +69,7 @@
 <li><a href="#4-chain-rule">4. Chain rule｜先走完一个只有输出层的反向传播</a></li>
 <li><a href="#5-multi-layer-perceptron">5. Multi-layer perceptron｜把特征也变成可训练的</a></li>
 <li><a href="#6">6. 把一层的梯度推给上一层</a></li>
-<li><a href="#7-sgd">7. SGD、监控与早停｜网络不是按一下按钮就“开悟”</a></li>
+<li><a href="#7-sgd">7. SGD、监控与早停｜从一次更新到选择训练时刻</a></li>
 <li><a href="#8-universal-approximation">8. Universal approximation｜能表示，不等于容易学会</a></li>
 <li><a href="#9-mnist">9. MNIST｜看懂老师完整示范的每个接口</a></li>
 <li><a href="#10">10. 回顾与英文自测</a></li>
@@ -115,7 +115,7 @@
 <p>A49–51把标签表示成one-hot向量，正确类别位置为1，其余为0。单样本负对数似然为</p>
 <div class="arithmatex">\[L_i=-\sum_j y_{ij}\log p_{ij}=-\log p_{i,y_i}.\]</div>
 <p>上一例若真类是第三类，损失为 <span class="arithmatex">\(-\log0.5\approx0.6931\)</span>；若真类是第一类，则约1.6094。模型把真类概率压得越低，惩罚越大。取自然对数时单位可理解为nats，不是百分比错误率。</p>
-<p>A51的排版把argmin结果与损失求和直接连等。应分清“目标函数” <span class="arithmatex">\(E(\mathbf W)=\sum_iL_i\)</span> 与“最优参数” <span class="arithmatex">\(\mathbf W^*=\arg\min_{\mathbf W}E(\mathbf W)\)</span>；两者类型不同。本讲其余推导沿用老师符号，不保留这个类型混写。</p>
+<p>A51的排版把argmin结果与损失求和直接连等。应分清“目标函数” <span class="arithmatex">\(E(\mathbf W)=\sum_iL_i\)</span> 与“最优参数” <span class="arithmatex">\(\mathbf W^*=\arg\min_{\mathbf W}E(\mathbf W)\)</span>；两者类型不同。下文用E表示目标、W*表示最优参数。</p>
 <p><a id="backprop"></a></p>
 <h2 id="4-chain-rule">4. Chain rule｜先走完一个只有输出层的反向传播</h2>
 <p>A52–58的计算链是权重影响分数，分数影响概率，概率影响损失。要问某个权重该怎么改，必须把这些影响接起来。不是把损失数值从最后一层原样“传回去”，传的是导数。</p>
@@ -160,11 +160,12 @@
 <div class="arithmatex">\[\nabla_A L=X^TG_U+\lambda A,\quad
 \nabla_c L=\sum_i(G_U)_{i,:},\quad G_X=G_UA^T.\]</div>
 <p>每一步都有形状检查。比如<span class="arithmatex">\(H^TG_Z\)</span>是<span class="arithmatex">\((h\times B)(B\times C)=h\times C\)</span>，恰与W同形。偏置影响所有样本，所以把每行贡献加起来；不是每行各学一个独立偏置。平均因子只需要进入链条一次，不能每经过一层再除B。</p>
-<p><strong>一层手算 / Worked：</strong> <span class="arithmatex">\(X=\begin{bmatrix}1&amp;2\\3&amp;4\end{bmatrix}\)</span>，上游梯度 <span class="arithmatex">\(G=\begin{bmatrix}1&amp;-1\\2&amp;0\end{bmatrix}\)</span>，无正则。对<span class="arithmatex">\(U=XA+c\)</span>，<span class="arithmatex">\(\nabla_A L=X^TG=\begin{bmatrix}7&amp;-1\\10&amp;-2\end{bmatrix}\)</span>，<span class="arithmatex">\(\nabla_cL=(3,-1)\)</span>。G若已来自平均损失，此处不要再除2。这个小例子由脚本独立复算。</p>
-<p>分支也有一条规则：同一中间量同时流向两个下游，返回的梯度要相加。链条上的影响相乘，分支汇合的影响相加。原课提到的自动微分框架分类属于教学历史说明；本讲学习的是计算图与链式法则，不把旧框架标签当永久的产品划分。</p>
+<p><strong>一层手算 / Worked：</strong> <span class="arithmatex">\(X=\begin{bmatrix}1&amp;2\\3&amp;4\end{bmatrix}\)</span>，上游梯度 <span class="arithmatex">\(G=\begin{bmatrix}1&amp;-1\\2&amp;0\end{bmatrix}\)</span>，无正则。对<span class="arithmatex">\(U=XA+c\)</span>，<span class="arithmatex">\(\nabla_A L=X^TG=\begin{bmatrix}7&amp;-1\\10&amp;-2\end{bmatrix}\)</span>，<span class="arithmatex">\(\nabla_cL=(3,-1)\)</span>。G若已来自平均损失，此处不要再除2。</p>
+<p>分支也有一条规则：同一中间量同时流向两个下游，返回的梯度要相加。链条上的影响相乘，分支汇合的影响相加。原课还介绍了自动微分框架的历史分类；读这部分时，重点理解计算图如何组织链式法则。</p>
 <p><strong>English takeaway:</strong> Backpropagation composes local derivatives and sums contributions from all children. A gradient must match its parameter's shape, and loss averaging must be applied consistently.</p>
-<p><a id="training"></a></p>
-<h2 id="7-sgd">7. SGD、监控与早停｜网络不是按一下按钮就“开悟”</h2>
+<p><a id="training"></a>
+<a id="7-sgd"></a></p>
+<h2 id="7-sgd-2">7. SGD、监控与早停｜从一次更新到选择训练时刻</h2>
 <p>B22–47用小批量SGD与PyTorch演示训练。<code>nn.Linear</code>保存权重和偏置，激活逐元素处理，DataLoader分批提供数据；每批典型顺序是清梯度、前向、算损失、<code>backward()</code>、<code>step()</code>。不清梯度会累积，这是可用功能，但不能在不知道时意外累积。</p>
 <p>一次optimizer step是一次参数更新，一个epoch通常是一遍训练数据。例如1000样本、batch=100、无累积，每epoch10次更新。Momentum为更新方向保存历史状态，公式与Assignment2一致性见<a href="Assignment02.html#optimizers">作业指南</a>。</p>
 <p>训练集参与更新参数；验证集用于观察曲线、选学习率、选择早停时刻。早停要保存验证表现较好的参数，而不只是退出循环时的最后一次参数。若使用验证准确率，阈值与方向应按准确率定义；若使用验证损失，按越低越好。测试集用于冻结选择后的最后评价。</p>
@@ -221,12 +222,12 @@
 </tbody>
 </table></div>
 <p><strong>这些准确率是老师文件已有结果，本轮没有重新训练这五种MNIST模型。</strong> 参数数则按各层输入、输出、偏置独立复算。单次表格显示更宽/更深不一定持续提高该设置下的准确率，不能据此建立普遍排名。</p>
-<p>B93–96总结容量、过拟合、初始化、学习率与梯度传播。数据归一化能改善数值尺度，但不保证训练稳定；GPU加速不改变损失定义。当前PyTorch示范依赖torch，讲义的小型数值核验只用NumPy；不要把小例子检查通过说成完整MNIST训练复现。</p>
+<p>B93–96总结容量、过拟合、初始化、学习率与梯度传播。数据归一化能改善数值尺度，但不保证训练稳定；GPU加速不改变损失定义。原PyTorch示范需要torch；本讲的小型手算与梯度核验使用NumPy。</p>
 <h2 id="10">10. 回顾与英文自测</h2>
 <p>这一讲的联系是：感知机先纠正分类方向；Softmax把多个分数转成概率；交叉熵给出训练目标；隐藏层学习特征；反向传播计算梯度；优化器更新参数；验证集帮助决定怎么训练。每个环节的职责应分别说清。</p>
 <p>英文自测：What changes when a hidden layer is added? Why does softmax cross-entropy yield p−y? Where does the batch-size factor enter? What does early stopping select? What does universal approximation not guarantee?</p>
 <p>关键要点 / Key points：隐藏层学习非线性表示；p−y包含分子分母共同求导；平均损失只缩放一次；早停选参数时刻；逼近定理不保证训练或泛化。 / Learned nonlinear features; full softmax derivative; one averaging factor; a selected checkpoint; no training or generalization guarantee.</p>
-<p>首轮卡沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M241">M241</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M243">M243</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M248">M248</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M251">M251</a>。先手算§4与§6，再刷卡；不是把公式截图看熟就算会反传。</p>
+<p>首轮卡沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M241">M241</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M243">M243</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M248">M248</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M251">M251</a>。先手算§4与§6，再用卡片回忆各步的作用和梯度形状。</p>
 <h2 id="_2">来源覆盖索引</h2>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -290,4 +291,4 @@
 </tr>
 </tbody>
 </table></div>
-<p>新增图、手算与梯度检查见同目录<code>tools/verify_october_examples.py</code>。补充讲解不冒充老师原题或公布的考试重点。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>新增图、手算与梯度检查见同目录<code>tools/verify_october_examples.py</code>。这些图与手算为配套教学补充。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

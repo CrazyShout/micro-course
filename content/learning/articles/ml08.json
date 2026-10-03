@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml08",
   "title": {
-    "zh": "一封邮件进来，电脑到底应该数什么？",
-    "en": "What should the computer count in an email?"
+    "zh": "文本朴素贝叶斯：记录词的出现，还是出现次数？",
+    "en": "Text naive Bayes: word presence or word counts?"
   },
   "minutes": "12–18",
   "lede": {
@@ -96,7 +96,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "独立题把词表缩到两个词，让你从平滑概率走到一条新文档的似然。条件已经给齐，不需要找原邮件。做完以后说出为什么一个模型要计算缺词、另一个模型用零次数项；这才说明你知道公式在记录什么。"
+          "text": "独立题把词表缩到两个词，让你从平滑概率走到一条新文档的似然。算完后，比较两个模型怎样处理没有出现的词：Bernoulli使用缺词概率，Multinomial的零次幂项为1。"
         },
         {
           "type": "exercise",
@@ -144,7 +144,7 @@
       "name": "串讲与教学小例 / Teaching synthesis",
       "locator": "ml08",
       "kind": "derived",
-      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+      "note": "根据原课整理的词袋表示、平滑讲解与教学算例。 / Bag-of-words and smoothing explanations with teaching examples based on the course materials."
     }
   ],
   "objective_map": [

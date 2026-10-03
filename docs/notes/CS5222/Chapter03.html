@@ -2,8 +2,8 @@
 <h2 id="_1">数据到了电脑，还要交对进程、补齐缺口</h2>
 <p><a href="index.html">课程目录</a> · <a href="Chapter02.html">上一章：应用层</a> · <a href="Tutorial05.html">Tutorial 5</a></p>
 <p>同一台电脑可以同时开浏览器、邮件和游戏。网络把数据送到这台电脑之后，还要知道交给哪一个程序。即使地址写对，途中也可能损坏、丢失或重复；收到半段文件不能直接说“差不多齐了”。这一章从进程寻址开始，逐步增加可靠传输需要的机制。</p>
-<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">part1</span>的44页和<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">part2</span>的26页。下文A/B各自从第一页起算，<strong>B1不冒充原件第45页</strong>。目前正文到TCP的RTT与超时；目录虽列出后续流控、连接管理与拥塞控制，尚不能据此算作这些内容已完整提供。</p>
-<p><strong>基础补课（可跳过）：</strong> <a href="../foundations/NetworkBasics.html#units">bit、byte与速率</a>、<a href="../foundations/NetworkBasics.html#binary">二进制</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。只要先分清“第几个包”和“第几个字节”，后面的很多题会容易一半。</p>
+<p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">part1</span>的44页和<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">part2</span>的26页。下文A、B分别表示这两份课件，页码各自从1开始。目前整理至TCP的RTT与超时；流控、连接管理及拥塞控制待后续材料补充。</p>
+<p><strong>基础补课（可跳过）：</strong> <a href="../foundations/NetworkBasics.html#units">bit、byte与速率</a>、<a href="../foundations/NetworkBasics.html#binary">二进制</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。阅读时留意“第几个包”和“第几个字节”的区别，§9会具体比较。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -89,7 +89,7 @@
 </details>
 <p><a id="demux"></a></p>
 <h2 id="2-multiplexing-and-demultiplexing">2. Multiplexing and demultiplexing｜同一栋楼有许多门</h2>
-<p>发送端复用，把多个socket的数据交给网络；接收端解复用，看首部把数据送到相应socket。端口不是“一个网站永久的身份证”，而是端点标识的一部分。</p>
+<p>发送端复用，把多个socket的数据交给网络；接收端解复用，看首部把数据送到相应socket。端口是传输端点标识的一部分，要与IP地址和协议一起理解。</p>
 <p>A11采用课堂的普通未连接UDP模型：目的IP与目的端口标识接收socket，不同来源的数据报可以到同一个UDP socket。A13的已建立TCP连接按四元组区分：源IP、源端口、目的IP、目的端口。因此服务器端同一个80端口可同时服务多个连接，只要四元组不同。</p>
 <p><strong>跟做 / Worked：</strong> C:7532→B:80、C:26145→B:80、A:26145→B:80是三条不同TCP连接。回程分别B:80→C:7532、B:80→C:26145、B:80→A:26145。后两者客户端端口相同，客户端IP仍区分连接。 / Reverse both address-port pairs for the return direction.</p>
 <p>这里是老师的解复用抽象。真实API还涉及监听socket、已接受连接和可连接UDP等细节；不要由课堂二元组/四元组模型推断所有操作系统API只允许一种使用方式。</p>
@@ -176,7 +176,7 @@
 <summary>答案 / Answer</summary>
 <p>GBN：0,1,2,3,4,5,5。SR：0,1,2,3,4,5,7。总共7个，因为丢失包没到达，不产生ACK。 / Seven ACKs in each case; their final value differs.</p>
 </details>
-<p>序号空间必须足够，避免旧包与新包混淆；一般SR窗口限制的完整论证属于补充，可回现有微课。当前原件B13–15的重点是窗口、缓存与逐包确认，不把后续历史题都算成这次教师已经布置。</p>
+<p>序号空间必须足够，避免旧包与新包混淆；一般SR窗口限制的完整论证属于补充，可回现有微课。当前B13–15侧重窗口、缓存与逐包确认。</p>
 <p><a id="tcp"></a></p>
 <h2 id="9-tcp">9. TCP序号｜从“第几个包”切换到“下一个字节”</h2>
 <p>B17–23给TCP概览和首部：源/目的端口、序号、确认号、接收窗口、校验和、控制标志等。MSS是每段可携带的数据上限，不包含所有协议首部。</p>
@@ -254,4 +254,4 @@
 </tr>
 </tbody>
 </table></div>
-<p>原页序保留，示意图与数值算例标为补充；后续part尚未提供的细节留在历史预习，不声称完整Chapter3或QE范围已覆盖。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>原页序保留，示意图与数值算例标为补充；后续part未提供的内容可在历史预习中选读。当前范围见开头说明。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

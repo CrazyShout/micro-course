@@ -10,7 +10,7 @@ BODY_ZH: 想做一个“识别危险场景”的模型，先别急着挑算法�
 书中的“收集→准备→分析→训练→测试→使用”适合搭骨架；实际评估还要把划分提前。例如同一次行车的视频帧很相似，随机拆帧可能让训练和测试共享近重复场景。按行程或时间划分，才更接近对新行程的检验。这是将书中流程应用到研究场景的例子。
 BODY_EN: Before selecting an algorithm, specify the input, target, prediction time, and error measure. A scene label, risk score, and future trajectory define different tasks.
 
-The book's collect–prepare–analyze–train–test–use workflow is a useful skeleton. Add an explicit split protocol: adjacent frames from one drive may be near duplicates, so splitting by drive or time can better test transfer to unseen trips. This is an original application of the workflow, not a reported experiment.
+The book's collect–prepare–analyze–train–test–use workflow is a useful skeleton. Add an explicit split protocol: adjacent frames from one drive may be near duplicates, so splitting by drive or time can better test transfer to unseen trips. This example applies the workflow to driving data.
 CHECK_Q: 为什么“测试集没有参与梯度更新”还不足以证明评估独立？ || Why is excluding test data from gradient updates insufficient to establish independent evaluation?
 CHECK_A: 测试数据仍可能影响词表、归一化、调参，或与训练样本近重复。需检查整条数据与选择流程。 || Test data can still influence vocabulary, scaling, tuning, or appear as near duplicates. Audit the full data and selection procedure.
 
@@ -123,7 +123,7 @@ CHECK_A: 不会，所有距离同乘该常数；不同特征用不同倍率才�
 REFS: mla@§8.3.1，印刷页 164–166 / PDF 191–193
 BODY_ZH: 设两列特征完全相同。OLS 只知道两列权重的和应是多少，却分不清功劳属于谁，所以可能有无穷多个权重给出同样预测。L2 惩罚会在这些方案中偏爱较小的平方范数：固定 w₁+w₂=2 时，(1,1) 的范数平方是 2，(2,0) 则是 4。
 
-Ridge 不是免费消除错误，而是用偏差换稳定性。λ 太大可能把真实信号也压小；用验证选择 λ，最终测试留到方案选定后。书中 ridgeTest 将特征除以方差，这是该实现的缩放约定；常用 z-score 除以标准差，两者并不相同。
+Ridge通过引入偏差来提高估计的稳定性。λ 太大可能把真实信号也压小；用验证选择 λ，最终测试留到方案选定后。书中 ridgeTest 将特征除以方差，这是该实现的缩放约定；常用 z-score 除以标准差，两者并不相同。
 BODY_EN: With identical feature columns, OLS identifies their weight sum but not the individual contributions. Among coefficients summing to two, (1,1) has squared norm two, versus four for (2,0), illustrating the preference induced by L2 regularization.
 
 Ridge trades bias for stability; excessive λ can suppress real signal. Select λ with validation and reserve the final test. The book's ridgeTest divides by variance, whereas z-score scaling divides by standard deviation. Do not silently equate these conventions.
@@ -174,7 +174,7 @@ BODY_ZH: 设每包发送需 1 ms，队列初始为空。四个包在 0、2、4�
 BODY_EN: Suppose each packet takes 1 ms to serialize and the queue starts empty. Arrivals at 0,2,4,6 ms incur zero waiting. Four arrivals at time zero wait 0,1,2,3 ms, averaging 1.5 ms. Repeating either pattern every 8 ms gives the same mean load, ρ=0.5.
 
 Arrival timing differs despite equal average work. Mean load alone omits burstiness, length distribution, and buffer size, so it does not uniquely determine average queueing delay.
-CHECK_Q: 同时到达的 n 个等长包，每包发送需 s 秒，平均排队时间是多少？ || For n equal packets arriving simultaneously at an idle link, each taking s seconds to transmit, what is mean queueing delay?
+CHECK_Q: n个等长包同时到达一条空闲链路，每包发送需s秒，平均排队时间是多少？ || For n equal packets arriving simultaneously at an idle link, each taking s seconds to transmit, what is mean queueing delay?
 CHECK_A: 等待为 0,s,…,(n-1)s，平均为 (n-1)s/2；不含自身发送时间。 || Waiting times are 0,s,…,(n-1)s, averaging (n-1)s/2, excluding each packet's own serialization.
 
 @@ net05 | HTTPS 保护什么，又不证明什么 | What HTTPS protects
@@ -238,7 +238,7 @@ REFS: kuro@§3.4.2–3.4.4，印刷页 211–223 / PDF 222–234
 FIGURE: net-recovery
 BODY_ZH: 停等的问题是“发完后还没等到反馈”。沿用正文 1 Gbps、8000 bit、传播 RTT=30 ms，每包发送 8 μs，第一次 ACK 在 30.008 ms 返回。要让发送方连续工作到该时刻，窗口至少为 ceil(30.008/0.008)=3751 包。带宽时延积 R×RTT 约为 30 Mbit，说明高速长路径需要较多在途数据。
 
-图中 0、1、2、3 已发，1 丢失。若 ACK 正常到达、2 和 3 已被接收，基础 GBN 仍丢弃这两包，超时后重发 1、2、3；SR 缓存并分别确认 2、3，只需补 1。节省重传的代价是更多接收状态与序号管理；TCP 的具体行为不能简单等同基础 GBN。
+图中 0、1、2、3 已发，1 丢失。若ACK正常到达、2和3已到达接收方，基础GBN仍丢弃这两包，超时后重发 1、2、3；SR 缓存并分别确认 2、3，只需补 1。节省重传的代价是更多接收状态与序号管理；TCP 的具体行为不能简单等同基础 GBN。
 BODY_EN: At 1 Gbps with 8000-bit packets and 30 ms propagation RTT, serialization takes 8 μs and the first ACK returns after 30.008 ms. Continuous sending until that feedback needs at least ceil(30.008/0.008)=3751 packets. The bandwidth-delay product is about 30 Mbit.
 
 For packets 0–3 with packet 1 lost, basic GBN discards 2 and 3 and retransmits 1–3 on timeout. With successful ACK delivery, SR buffers and acknowledges 2 and 3, retransmitting only 1. Saving transmissions requires extra receiver state; TCP is not simply basic GBN.
@@ -285,7 +285,7 @@ CHECK_A: A-C-D，代价 1+1=2，下一跳为 C。 || A-C-D at cost two, with nex
 REFS: kuro@§6.2.3，印刷页 459–461 / PDF 470–472
 BODY_ZH: 合法码字 C 可被生成多项式 G 整除。若传输翻转形成错误模式 E，接收串为 C XOR E。由于模二运算的线性关系，若 E 也可被 G 整除，接收串仍会通过检查。这解释了“余数为零”表示没有检出的错误，而不是已经证明没有任何错误。
 
-沿用正文码字 1101001、生成式 1011。在其上 XOR 错误模式 0001011，收到 1100010。该错误模式恰好就是 G 的对齐副本，因此仍可整除。不要由这一反例推断 CRC 无用：具体生成式可保证检出指定类别的错误，但检测并不等于纠错或恶意篡改认证。
+沿用正文码字 1101001、生成式 1011。在其上 XOR 错误模式 0001011，收到 1100010。该错误模式恰好就是 G 的对齐副本，因此仍可整除。具体生成式可保证检出指定类别的错误；这类检测与纠错、恶意篡改认证各有不同作用。
 BODY_EN: A valid codeword C is divisible by generator G. After an error pattern E, the received word is C XOR E. If E is also divisible by G, the received word still passes the modulo-two check.
 
 Using codeword 1101001 and generator 1011, XOR with 0001011 yields 1100010, which also passes. This shows that zero remainder means no detected error, not proof of perfect delivery. A specified generator detects important error classes; CRC is neither arbitrary error correction nor cryptographic authentication.

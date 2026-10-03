@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "一份8 Mbit（8×10⁶比特）的文件要依次经过三条2 Mbps链路，中间设备收齐一个分组后才能向下一跳发送。忽略传播、处理、排队和首部开销：整份作为一个报文转发，或拆成800个10000比特的包连续发送，最后一比特分别何时到齐？这也正是新下载 Assignment 1 的 P31；算清后再迁移到 Tutorial 的相邻题型。",
-    "en": "An 8 Mbit file (8×10⁶ bits) crosses three 2 Mbps links. Each intermediate device receives a complete packet before forwarding it. Ignore propagation, processing, queueing and header overhead. When does the final bit arrive if the file is one whole message, versus 800 back-to-back packets of 10000 bits? This also matches P31 in the newly downloaded Assignment 1; then transfer the method to related tutorial tasks."
+    "zh": "一份8 Mbit（8×10⁶比特）的文件要依次经过三条2 Mbps链路，中间设备收齐一个分组后才能向下一跳发送。忽略传播、处理、排队和首部开销：整份作为一个报文转发，或拆成800个10000比特的包连续发送，最后一比特分别何时到齐？这也正是当前Assignment 1 的 P31；算清后再迁移到 Tutorial 的相邻题型。",
+    "en": "An 8 Mbit file (8×10⁶ bits) crosses three 2 Mbps links. Each intermediate device receives a complete packet before forwarding it. Ignore propagation, processing, queueing and header overhead. When does the final bit arrive if the file is one whole message, versus 800 back-to-back packets of 10000 bits? This also matches P31 in the current Assignment 1; then transfer the method to related tutorial tasks."
   },
   "sections": [
     {
@@ -92,14 +92,14 @@
     {
       "id": "return-to-the-sheet",
       "title": {
-        "zh": "带着方法回原题，而不是用样例代替原题",
-        "en": "Return to the original activities"
+        "zh": "将方法用于Tutorial的其他题型",
+        "en": "Apply the method to the other tutorial problems"
       },
       "optional": false,
       "blocks": [
         {
           "type": "prose",
-          "text": "Tutorial 1还包括方环资源分配与恰好活跃人数，分别回NET02；Tutorial 2还有理想逐比特转发、FIFO排队和traceroute，分别回NET03、NET04。它们不是同一种公式题，“先写对象、事件、单位、假设”才是通用部分。\n\ntraceroute的每行是独立探测的往返观测；星号可能只是没有及时收到回复，不能凭一个符号证明普通数据在该跳丢失。实践入口可以检验时间轴实现，但必须自己执行和解释结果；本页推导不替代实做。首轮先做五张对应基础题，再按原活动逐题推进。"
+          "text": "Tutorial 1还包括方环资源分配与恰好活跃人数，分别回NET02；Tutorial 2还有理想逐比特转发、FIFO排队和traceroute，分别回NET03、NET04。它们不是同一种公式题，“先写对象、事件、单位、假设”才是通用部分。\n\ntraceroute的每行是独立探测的往返观测；星号可能只是没有及时收到回复，不能凭一个符号证明普通数据在该跳丢失。实践入口提供时间轴实现练习，可用手算结果核对程序的开始、结束和到达时刻。首轮先做五张对应基础题，再按原活动逐题推进。"
         },
         {
           "type": "recap"
@@ -124,13 +124,13 @@
       "name": "tutorial-2_semA2026.pdf",
       "locator": "pages 1–3",
       "kind": "course",
-      "note": "当前题干；网页推导不是声称存在的教师solution。"
+      "note": "组包、逐跳时延、FIFO与traceroute原题。"
     },
     {
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net10 worked/practice/transfer",
       "kind": "derived",
-      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+      "note": "首部开销等变式为补充教学题，与当前原题分别标注。"
     }
   ],
   "objective_map": [

@@ -1,7 +1,7 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 4 · Regression｜从“分到哪一类”走向“预测多少” · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-4-regression">Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=113">A4 打印版 · 第 113–124 页</a>　图可点击放大。</p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Lecture 4 · Regression｜从“分到哪一类”走向“预测多少” · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="lecture-4-regression">Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=112">A4 打印版 · 第 112–123 页</a>　图可点击放大。</p>
 <p><a href="index.html">课程目录</a> · <a href="Lecture03.html">上一讲：分类</a> · <a href="../foundations/MathForML.html#rank-pseudoinverse">数学补课：秩与伪逆</a></p>
-<p>上一讲给一朵花贴类别标签。这一讲老师换成房价：已知房屋面积、售出时的年龄等信息，希望预测一个数值。输出不再是有限几个标签，而是实数。我们沿着 <strong>线性回归 → 特征选择 → 异常值 → 非线性回归 → 集成模型</strong> 走一遍。房价只是用于理解模型的课程数据，系数不是购房建议，也不证明因果关系。</p>
-<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4a</span>（A，88单元）和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4b</span>（B，104单元），单元号从1起算。当前已提供<a href="Tutorial04.html">Tutorial4共享单车回归</a>，按年份划分、特征选择与需求变化对应本讲方法。<a href="Assignment02.html">Assignment2</a>主要衔接下一讲神经网络，不混作本讲回归原题。本文末尾的小题仍标为补充学习题。</p>
+<p>上一讲给一朵花贴类别标签。这一讲老师换成房价：已知房屋面积、售出时的年龄等信息，希望预测一个数值。输出不再是有限几个标签，而是实数。我们沿着 <strong>线性回归 → 特征选择 → 异常值 → 非线性回归 → 集成模型</strong> 走一遍。下面用房价数据观察这些方法怎样拟合数值。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4a</span>（A，88单元）和 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Lecture4b</span>（B，104单元），单元号从1起算。当前已提供<a href="Tutorial04.html">Tutorial4共享单车回归</a>，按年份划分、特征选择与需求变化对应本讲方法。<a href="Assignment02.html">Assignment2</a>主要衔接下一讲神经网络。本文末尾的小题仍标为补充学习题。</p>
 <p>基础复习可跳过：不熟悉函数和斜率，读<a href="../foundations/MathForML.html#symbols-functions">函数图像</a>；矩阵不满秩、不能直接求逆，读<a href="../foundations/MathForML.html#rank-pseudoinverse">秩与伪逆</a>；不熟悉向量导数，读<a href="../foundations/MathForML.html#optimization">梯度</a>。Python与数组回到<a href="Lecture01.html#arrays">Lecture1</a>。</p>
 <div class="toc">
 <ul>
@@ -70,15 +70,15 @@
 <td>大规模网格与一般核理论</td>
 <td>二读拓展</td>
 <td>高；计算规模</td>
-<td>能读流程和适用条件；未把原保存输出当本轮复现</td>
+<td>能读流程和适用条件；A/B中的搜索示范</td>
 </tr>
 </tbody>
 </table></div>
-<p>判断来自本学期原课的教学位置与代码；当前缺少该讲独立作业/教程佐证，不用历史预习填成“老师已经布置”。复杂程度和考试重要性分别记录。</p>
+<p>优先级依据当前课件及Tutorial4的回归任务。难度反映理解所需的步骤，考核范围仍以教师公布的要求为准。</p>
 <p><a id="data"></a></p>
 <h2 id="1-regression-and-the-housing-example">1. Regression and the housing example｜先弄清横纵轴的单位</h2>
-<p>输入 <span class="arithmatex">\(\mathbf x\in\mathbb R^d\)</span>，输出 <span class="arithmatex">\(y\in\mathbb R\)</span>；希望学到 <span class="arithmatex">\(\hat y=f(\mathbf x)\)</span>。误差 <span class="arithmatex">\(r_i=y_i-\hat y_i\)</span> 叫 residual（残差）。图上的点是观测，线/曲面是预测，二者不应混成“模型知道了真实价格”。</p>
-<p>A5先用 <code>make_regression</code> 生成100个一维点，<code>bias=30, noise=10, random_state=4487</code>，帮助辨认斜率、截距和噪声。接着 A7 引入 OpenML <code>house_prices</code>。本轮固定为 <strong>data ID 42165、version 1</strong>，原始取得表及字段、哈希保存到 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">数据记录</span>，读取副本为 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">CSV</span>。原课下载材料未改动。</p>
+<p>输入 <span class="arithmatex">\(\mathbf x\in\mathbb R^d\)</span>，输出 <span class="arithmatex">\(y\in\mathbb R\)</span>；希望学到 <span class="arithmatex">\(\hat y=f(\mathbf x)\)</span>。误差 <span class="arithmatex">\(r_i=y_i-\hat y_i\)</span> 叫 residual（残差）。图上的点表示实际观测，线或曲面表示模型预测；两者的距离就是残差。</p>
+<p>A5先用 <code>make_regression</code> 生成100个一维点，<code>bias=30, noise=10, random_state=4487</code>，帮助辨认斜率、截距和噪声。接着 A7 引入 OpenML <code>house_prices</code>。本讲使用的数据固定为 <strong>data ID 42165、version 1</strong>，原始取得表及字段、哈希保存到 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">数据记录</span>，读取副本为 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">CSV</span>。</p>
 <p>老师 mode1 的处理必须连同单位一起保留：</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -121,7 +121,7 @@
 <p>为什么平方？正负残差不能相互抵消，偏离越远罚得越多，也形成方便求导的目标。代价是极端点的影响可能很大。MSE=E/N，RMSE=<span class="arithmatex">\(\sqrt{E/N}\)</span>：MSE的单位是价格单位的平方，RMSE才回到价格单位。</p>
 <p><strong>完整补算</strong>：三点 <span class="arithmatex">\((0,1),(1,2),(2,2)\)</span>。<span class="arithmatex">\(\bar x=1,\bar y=5/3\)</span>，斜率</p>
 <div class="arithmatex">\[w=\frac{\sum_i(x_i-\bar x)(y_i-\bar y)}{\sum_i(x_i-\bar x)^2}=\frac1{2},\qquad b=\bar y-w\bar x=7/6.\]</div>
-<p>预测为 <span class="arithmatex">\(7/6,5/3,13/6\)</span>，残差为 <span class="arithmatex">\(-1/6,1/3,-1/6\)</span>，SSE=1/6，MSE=1/18。不是随便画一条“看起来差不多”的线，而是在明确目标下可复算的解。</p>
+<p>预测为 <span class="arithmatex">\(7/6,5/3,13/6\)</span>，残差为 <span class="arithmatex">\(-1/6,1/3,-1/6\)</span>，SSE=1/6，MSE=1/18。将这些残差逐项平方相加，就能核对这条线的拟合误差。</p>
 <p><a id="ols"></a></p>
 <h2 id="3-matrix-solution">3. Matrix solution｜先摆好矩阵，再求导</h2>
 <p>老师 A20 <strong>把样本放在列上</strong>。吸收偏置后，每个 <span class="arithmatex">\(\tilde x_i=(x_i^T,1)^T\in\mathbb R^{d+1}\)</span>，<span class="arithmatex">\(X=[\tilde x_1,\ldots,\tilde x_N]\in\mathbb R^{(d+1)\times N}\)</span>，<span class="arithmatex">\(w\in\mathbb R^{d+1}\)</span>，<span class="arithmatex">\(y\in\mathbb R^N\)</span>。预测为 <span class="arithmatex">\(X^Tw\)</span>，形状恰是N。NumPy/sklearn通常样本放行，使用 <span class="arithmatex">\(A=X^T\)</span>，不要背公式却忘记转置。</p>
@@ -136,7 +136,7 @@
 <p>w仍1/2，b变13/6，残差与MSE不变。 / The slope remains 0.5, the intercept becomes 13/6, and MSE remains 1/18. 整条线向上平移1。</p>
 </details>
 <h2 id="4-housing-coefficients-and-feature-selection">4. Housing coefficients and feature selection｜大权重必须配着单位读</h2>
-<p>A25–34 分别用面积、年龄，以及两者共同拟合。原 A34 保存的文字系数“每100平方英尺增加8874、每年减少1048、截距82709”是<strong>原课结果</strong>。本轮记录另见 <code>lecture-examples-results.json</code>，不能为迎合旧数字改数据或声称完全一致。</p>
+<p>A25–34 分别用面积、年龄，以及两者共同拟合。原 A34 保存的文字系数“每100平方英尺增加8874、每年减少1048、截距82709”是<strong>原课结果</strong>。本讲复算记录见 <code>lecture-examples-results.json</code>；复现时应同时核对数据版本、采样和单位。</p>
 <p>A35–41 看12个特征的散点/成对图。一个特征单独相关不代表加入其他特征后仍有同样贡献；面积、房间数可能彼此相关。想比较系数大小，先在训练数据上标准化，否则“美元/平方英尺”和“美元/年”不在同一尺度。标准化后系数对应输入改变一个训练标准差的预测差异。</p>
 <h2 id="5-ridge-regression">5. Ridge regression｜给不稳定方向加一条“别太夸张”的限制</h2>
 <p>Ridge目标为 <span class="arithmatex">\(\alpha\|w\|^2+\sum_i(y_i-f(x_i))^2\)</span>，<span class="arithmatex">\(\alpha\ge0\)</span>。与分类C相反，<strong>alpha越大，正则越强</strong>。若所有参数都惩罚，矩阵解为 <span class="arithmatex">\((XX^T+\alpha I)^{-1}Xy\)</span>。若偏置不惩罚（常用实现），要中心化后解特征权重并恢复截距，或将惩罚矩阵最后对角设0；不能无声把偏置也缩小。</p>
@@ -181,7 +181,7 @@
 <p>SVR在曲线两侧各留epsilon，<strong>总带宽2epsilon</strong>。残差的epsilon-insensitive loss为 <span class="arithmatex">\(\max(0,|y-f(x)|-\epsilon)\)</span>。残差0.3、epsilon0.5时损失0；残差−1.2时损失0.7。这里是超出带的<strong>绝对误差</strong>，不是普通平方误差；原总结B101的“squared error”不对应前面讲的标准epsilon-SVR。</p>
 <p>通常目标为 <span class="arithmatex">\(\frac12\|w\|^2+C\sum_i\max(0,|r_i|-\epsilon)\)</span>。原B57使用 <span class="arithmatex">\(1/C\)</span>正则写法时需对齐因子约定。带外和边界上的支持样本可能参与预测，退化情况不能把“在边界”与“非零系数”写成双向必然。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/654c74fc068e1f92.png" rel="noopener" target="_blank"><img alt="Epsilon-insensitive loss and regression tube" decoding="async" height="626" loading="lazy" src="../assets/654c74fc068e1f92.png" width="1458"/></a></p>
-<p>图左先看容忍带，图右看损失的平底。C决定违约代价，epsilon决定忽略多大误差，gamma决定RBF核尺度。B70同时搜索三者：10×10×10候选、5折，共5000次候选拟合。讲义解释完整流程，本轮不把它称为已重跑的大型搜索。</p>
+<p>图左先看容忍带，图右看损失的平底。C决定违约代价，epsilon决定忽略多大误差，gamma决定RBF核尺度。B70同时搜索三者：10×10×10候选、5折，共5000次候选拟合。这里讲解原搜索流程，未重跑这5000次候选拟合。</p>
 <h2 id="12-trees-and-random-forests">12. Trees and random forests｜多位意见不同的“专家”怎样投票</h2>
 <p>回归树按阈值逐层分支，每个叶子输出其中训练目标的平均值（平方损失情形），所以形成台阶。单棵深树容易记住训练噪声。Random Forest通过bootstrap抽样，并在节点分裂时按设置随机选特征，让多棵树产生不同规则；最终预测是<strong>各树预测的平均</strong>，不是只找其中一棵树的叶子。</p>
 <p>例如三棵树对同一房屋输出180、210、210（千元），森林输出200。增加树通常稳定随机波动，但不保证每增加一棵测试误差就降低。原B91画的是训练MSE随树数变化，不能读成测试泛化曲线。B94再用5折选树深度，这才把复杂度选择和验证联系起来。</p>
@@ -191,7 +191,7 @@
 <p>Bagging让多棵树主要并行学习不同抽样，boosting让后一个模型针对当前组合的不足继续学习。平方损失的负梯度与残差方向一致，因此可拟合 <span class="arithmatex">\(y-f_{t-1}(x)\)</span>，再作 <span class="arithmatex">\(f_t=f_{t-1}+\eta h_t\)</span>。若h拟合的是正梯度，则用减号。B97采用正梯度/减号约定，不要同时翻两个号。</p>
 <p>补算：当前预测(2,2)，真实值(3,1)，残差(1,−1)。若新弱学习器恰拟合残差，学习率0.5，新预测(2.5,1.5)，平方误差和从2降为0.5。这只验证一步机制，不表示每个实际弱学习器都能精确拟合。</p>
 <p>XGBoost在梯度提升树中还使用正则化及二阶信息。B98搜索列采样、分裂gamma、树深、行采样、学习率、树数；这里的<code>gamma</code>是最小分裂损失收益，<strong>不是RBF gamma</strong>。<code>RandomizedSearchCV(n_iter=200,cv=5,random_state=4487)</code>共1000次候选拟合。学习率是每轮贡献，不是某种“准确率参数”。</p>
-<p>按 <a href="https://xgboost.readthedocs.io/en/stable/parameter.html#learning-task-parameters">XGBoost官方参数说明</a>（查阅2026-09-23），<code>reg:squarederror</code>为平方误差目标，<code>reg:gamma</code>使用Gamma回归且目标须为正；不应将任意含0的非负目标直接套进去。原课仅导入而未用于教学计算的torch不列入环境需求。本轮以手算梯度步骤解释机制，没有执行原200候选XGBoost搜索，也不复述旧输出为新结果。</p>
+<p>按 <a href="https://xgboost.readthedocs.io/en/stable/parameter.html#learning-task-parameters">XGBoost官方参数说明</a>（查阅2026-09-23），<code>reg:squarederror</code>为平方误差目标，<code>reg:gamma</code>使用Gamma回归且目标须为正；不应将任意含0的非负目标直接套进去。上面的手算展示了一次提升步骤；原200候选XGBoost搜索未在本讲重新执行。</p>
 <h2 id="14-comparing-regression-methods">14. Comparing regression methods｜模型、目标、假设一起记</h2>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -244,7 +244,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>B103提到目标取log：只有正目标能直接log；改变后最小化的是log空间误差，更看重相对比例。简单exp回转一般对应log预测的反变换，不自动等于原空间条件均值；最终评价需回到任务要求的单位/指标。原文“see tutorial”不能视为我们已经下载了该Tutorial。</p>
+<p>B103提到目标取log：只有正目标能直接log；改变后最小化的是log空间误差，更看重相对比例。简单exp回转一般对应log预测的反变换，不自动等于原空间条件均值；最终评价需回到任务要求的单位/指标。相关回归练习见<a href="Tutorial04.html">Tutorial4</a>。</p>
 <h2 id="15-english-self-test-and-review">15. English self-test and review｜解释清楚再复习</h2>
 <ol>
 <li><strong>Why does ridge help with collinear features? / 为什么ridge能缓解共线性？</strong> 答：给正则化方向增加正对角项，限制不稳定大系数。 / It stabilizes penalized directions and discourages large unstable coefficients.</li>
@@ -252,9 +252,9 @@
 <li><strong>What does OMP refit after selecting a feature? / OMP新选特征后重拟合什么？</strong> 答：全部已选特征的联合系数。 / All active coefficients jointly.</li>
 <li><strong>Does lower training MSE imply better prediction? / 训练MSE更低就一定更好？</strong> 答：不，需验证新数据表现与假设。 / No; assess generalization on appropriate validation data.</li>
 </ol>
-<p>首轮可选<a href="../../cards.html#CS5489-M187">现有回归卡</a> <strong>M187（OLS与残差）、M189（截距与设计矩阵）、M194（ridge）、M207（非线性输入与线性参数）</strong>，按卡号进入Markji；其他模型按实际遗忘情况再补，不新增整批卡片。参见<a href="https://crazyshout.github.io/micro-course/?lesson=ml16">回归微课</a>。</p>
+<p>首轮可选<a href="../../cards.html#CS5489-M187">现有回归卡</a> <strong>M187（OLS与残差）、M189（截距与设计矩阵）、M194（ridge）、M207（非线性输入与线性参数）</strong>，按卡号进入Markji；其他模型按需要分次复习。参见<a href="https://crazyshout.github.io/micro-course/?lesson=ml19">最小二乘微课</a>。</p>
 <h2 id="16-source-coverage-and-execution-boundary">16. Source coverage and execution boundary｜能回查，也能知道哪些跑过</h2>
-<p>关键手算、矩阵解、原种子合成数据、固定房价OLS及训练内部ridge选择由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">脚本</span> 实际运行，结果在 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">JSON</span>。大型kernel/SVR/XGBoost搜索只讲原流程；原结果引用在文字中明确标注。未生成作业提交预测文件。</p>
+<p>关键手算、矩阵解、原种子合成数据、固定房价OLS及训练内部ridge选择由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">脚本</span> 实际运行，结果在 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">JSON</span>。大型kernel/SVR/XGBoost搜索只讲原流程；原结果引用在文字中明确标注。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>

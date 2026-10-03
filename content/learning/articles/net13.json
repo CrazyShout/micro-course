@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "发送者交出一份数据后没有等到确认。可能数据没到，也可能数据到了但确认丢了；盲目重发会不会让接收者处理两遍？先为每种故障补一种机制。\n\n当前Chapter3 part1–2已覆盖这些可靠传输机制；Tutorial5要求给出允许乱序时交替比特协议的具体反例。原文件part页码各自从1开始。",
-    "en": "After data is sent, no acknowledgment arrives. Data or feedback may have been lost. Build the mechanisms needed to retry without delivering duplicates, following the historical transport material.\n\nCurrent Chapter 3 parts 1–2 support these mechanisms. Tutorial 5 asks for an explicit reordering counterexample."
+    "zh": "发送者交出一份数据后没有等到确认。可能数据没到，也可能数据到了但确认丢了；盲目重发会不会让接收者处理两遍？先为每种故障补一种机制。\n\nChapter3 part1–2讲解这些可靠传输机制；Tutorial5进一步要求构造允许乱序时交替比特协议的反例。",
+    "en": "After data is sent, no acknowledgment arrives. Data or feedback may have been lost. Build the mechanisms needed to retry without delivering duplicates, as developed in Chapter 3.\n\nCurrent Chapter 3 parts 1–2 support these mechanisms. Tutorial 5 asks for an explicit reordering counterexample."
   },
   "sections": [
     {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "往年Chapter 3第22张从不可靠信道引入可靠传输。最朴素的办法是发完就认为成功，但位可能翻转、数据可能丢失。检错码先帮助判断内容是否损坏；它不是保证发现所有错误的魔法，也不会自己触发一套重传流程。\n\n于是接收者需要反馈，正确收到时可发ACK。可ACK本身也会损坏或丢失，发送者的“没听见”不能区分哪一条路失败。重传有用，却可能把已经交付过的数据再送一次；可靠协议还得记住消息身份和当前状态。"
+          "text": "往年Chapter 3第22张从不可靠信道引入可靠传输。最朴素的办法是发完就认为成功，但位可能翻转、数据可能丢失。检错码先帮助判断内容是否损坏；检错码能检测特定类型的错误；是否重传还需要协议的反馈与状态规则。\n\n于是接收者需要反馈，正确收到时可发ACK。可ACK本身也会损坏或丢失，发送者的“没听见”不能区分哪一条路失败。重传有用，却可能把已经交付过的数据再送一次；可靠协议还得记住消息身份和当前状态。"
         }
       ]
     },
@@ -34,7 +34,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "停等交替位协议让每次新分组的序号在0和1之间交替。接收者知道目前等哪一个；收到旧分组的重传可以再次确认，但不重复向上交付。这只在协议对旧副本寿命等假设下成立，不能用一位数字区分无限久以前、反复回绕后的所有包。\n\n如果数据或ACK完全消失，没有新消息再触发动作，发送者可能永远等下去。rdt3.0加定时器：超时就重试。超时说明等待太久，不证明一定丢了；慢包也会触发多余重传，所以序号去重仍必须保留。每种机制对应一种困难，而不是越多按钮越可靠。"
+          "text": "停等交替位协议让每次新分组的序号在0和1之间交替。接收者知道目前等哪一个；收到旧分组的重传可以再次确认，但不重复向上交付。这只在协议对旧副本寿命等假设下成立，不能用一位数字区分无限久以前、反复回绕后的所有包。\n\n如果数据或ACK完全消失，没有新消息再触发动作，发送者可能永远等下去。rdt3.0加定时器：超时就重试。超时说明等待太久，不证明一定丢了；慢包也会触发多余重传，所以序号去重仍必须保留。因此，定时器触发重试，序号负责识别重试带来的重复。"
         }
       ]
     },
@@ -118,7 +118,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net13 worked/practice/transfer",
       "kind": "derived",
-      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+      "note": "GBN/SR事件与重传集合为补充教学练习，题中明确ACK编号约定。"
     },
     {
       "name": "Chapter3 part1/part2",

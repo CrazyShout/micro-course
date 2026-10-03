@@ -5,8 +5,8 @@
     "en": "CS5489 | Follow the lectures, practice, and recall"
   },
   "introduction": {
-    "zh": "一封新邮件该进收件箱还是垃圾箱？一朵没见过的花属于哪个品种？这些判断很难靠人逐条写死规则；机器学习尝试从已有例子中找规律，再对新数据作判断。\n\n这门课先准备处理数据的工具，再学习不同的分类方法，最后通过实验比较它们的选择与局限。下面按老师的 Lecture 组织：每讲有知识微课、配套原任务和回顾，学到哪里就可以复习到哪里。",
-    "en": "Should a new email go to the inbox or spam folder? Which species is an unfamiliar flower? Rather than hand-writing a rule for every case, machine learning looks for patterns in examples and uses them to judge new data.\n\nThe course first prepares tools for handling data, then develops classification methods and compares their choices and limitations through experiments. Follow the lecturer’s units below, each with concept lessons, original activities and a review."
+    "zh": "一封新邮件该进收件箱还是垃圾箱？一朵没见过的花属于哪个品种？这些判断很难靠人逐条写死规则；机器学习尝试从已有例子中找规律，再对新数据作判断。\n\n这门课先准备处理数据的工具，再学习分类、回归与神经网络，通过实验比较不同方法的选择与局限。下面按老师的 Lecture 组织：每讲有知识微课、配套原任务和回顾，学到哪里就可以复习到哪里。",
+    "en": "Should a new email go to the inbox or spam folder? Which species is an unfamiliar flower? Rather than hand-writing a rule for every case, machine learning looks for patterns in examples and uses them to judge new data.\n\nThe course first prepares tools for handling data, then develops classification, regression and neural networks, comparing their choices and limitations through experiments. Follow the lecturer’s units below, each with concept lessons, original activities and a review."
   },
   "units": [
     {
@@ -140,8 +140,8 @@
         "cs5489-assignment-1"
       ],
       "review": {
-        "zh": "回看 Lecture2a 单元 48 与 Lecture2b 单元 98：训练时估计类别先验及类条件模型；预测时比较后验。模型是否合适要结合数据与未见样本表现，不是把公式背熟就算完成实验。",
-        "en": "Return to Lecture2a cell 48 and Lecture2b cell 98: estimate priors/class-conditionals during training, then compare posteriors for prediction. Suitability depends on data and held-out behavior, not formula recall alone."
+        "zh": "回看 Lecture2a 单元 48 与 Lecture2b 单元 98：训练时估计类别先验及类条件模型；预测时比较后验。模型是否合适要结合数据与未见样本表现。",
+        "en": "Return to Lecture2a cell 48 and Lecture2b cell 98: estimate priors/class-conditionals during training, then compare posteriors for prediction. Suitability depends on data and held-out behavior."
       },
       "sources": [
         {
@@ -257,12 +257,7 @@
           "note": "特征、不平衡与综合比较 / Features, imbalance and synthesis."
         }
       ],
-      "missing": [
-        {
-          "zh": "当前下载目录未见独立 Tutorial 3；这里不虚构原题。可先做 Lecture3 Notebook 的课堂示例，并在 Assignment 1 中应用相关方法。",
-          "en": "No separate Tutorial 3 is present in the current downloads. Use the Lecture3 notebook examples and Assignment 1 without inventing missing tutorial questions."
-        }
-      ]
+      "missing": []
     },
     {
       "id": "lecture-4",
@@ -271,8 +266,8 @@
         "en": "Lecture 4 | Regression, robustness and ensembles"
       },
       "intro": {
-        "zh": "前一讲预测类别，这一讲预测一个数。老师用居住面积与房龄估售价：先拟合直线，观察特征相关和不稳定，再处理异常点、弯曲关系与模型组合。下面复用已做过的回归预习，把它接回当前房价代码。",
-        "en": "After predicting categories, this lecture predicts a number. The housing example connects a linear fit to correlated features, outliers, nonlinear representations and ensembles. Existing regression previews are reused and aligned with current code."
+        "zh": "前一讲预测类别，这一讲预测一个数。老师用居住面积与房龄估售价：先拟合直线，观察特征相关和不稳定，再处理异常点、弯曲关系与模型组合。微课沿这些问题解释模型，再对照课堂房价代码。",
+        "en": "After predicting categories, this lecture predicts a number. The housing example connects a linear fit to correlated features, outliers, nonlinear representations and ensembles. The lessons explain these models through the housing problem and connect them to the lecture code."
       },
       "outcomes": [
         {
@@ -638,7 +633,7 @@
               "name": "dataAG.json",
               "locator": "train/test list lengths",
               "kind": "course",
-              "note": "本地本轮只读盘点，实际计数为 2000/1000 / Local read-only count: 2000/1000."
+              "note": "当前数据文件包含2000篇训练文章、1000篇测试文章。 / The data file contains 2000 training and 1000 test articles."
             }
           ]
         },
@@ -781,8 +776,8 @@
             "en": "Compare direct and vectorized scores/posteriors on a small case, check posterior row sums, label mapping and shapes, then run on the news data. Report only measured results."
           },
           "pitfall": {
-            "zh": "不能遗漏负均值项；零率须显式处理或定义平滑。模板未定义 alpha 的唯一公式，不应把补充方法冒充老师标准答案；TF-IDF 不是这里的整数计数。",
-            "en": "Do not omit negative-rate terms. Handle zero rates explicitly or define smoothing. The template does not prescribe one alpha formula, and TF-IDF is not a literal integer count here."
+            "zh": "不能遗漏负均值项；零率须显式处理或定义平滑。模板未指定alpha的使用公式，采用平滑时需写明估计方法；TF-IDF 不是这里的整数计数。",
+            "en": "Do not omit negative-rate terms. Handle zero rates explicitly or define smoothing. The template does not prescribe an alpha formula; specify any smoothing convention. Also, TF-IDF is not a literal integer count here."
           },
           "lesson_ids": [
             "ml09",
@@ -1025,8 +1020,8 @@
             "en": "Restart and Run All should generate the result reproducibly under the stated environment and seed. Investigate state, files or randomness rather than changing evaluation labels."
           },
           "pitfall": {
-            "zh": "只提交一份旧输出不能证明代码可复现；页面不替你制造运行成绩。文件交付细节去信息栏核对。",
-            "en": "Saved output alone does not prove reproducibility; this page does not supply fabricated results. Check delivery details in course notices."
+            "zh": "保存的输出与当前代码应一致，可通过干净内核运行检查。文件交付细节去信息栏核对。",
+            "en": "Check that saved outputs match the current code by running from a clean kernel. Check delivery details in course notices."
           },
           "lesson_ids": [
             "ml16",
@@ -1093,7 +1088,7 @@
         {
           "name": "Tutorial3.ipynb",
           "locator": "cells 2–67",
-          "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+          "note": "当前Tutorial3的数组、模型对照与裁剪任务。 / Current Tutorial 3 tasks on arrays, model comparisons and cropping.",
           "kind": "course"
         }
       ],
@@ -1133,7 +1128,7 @@
             {
               "name": "Tutorial3.ipynb",
               "locator": "cells 4–16",
-              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "note": "当前Tutorial3的数组、模型对照与裁剪任务。 / Current Tutorial 3 tasks on arrays, model comparisons and cropping.",
               "kind": "course"
             }
           ]
@@ -1153,8 +1148,8 @@
             "en": "Use identical splits, a common metric and comparable search budgets; refit learned preprocessing inside each fold. Weight signs depend on class coding, scale and other coordinates."
           },
           "check": {
-            "zh": "能指出验证分数用于选择，留出分数用于固定方案后的评估；不能从一张权重图推出可靠性或因果。10条留出记录时，一条错分改变10个百分点，结论应保留样本量限制。这里未填写实验准确率。",
-            "en": "Validation selects the procedure; held-out data evaluate the fixed choice. A weight map does not prove reliability or causation. With ten held-out records, one changed prediction shifts accuracy by ten percentage points. No measured accuracy is supplied here."
+            "zh": "能指出验证分数用于选择，留出分数用于固定方案后的评估；不能从一张权重图推出可靠性或因果。10条留出记录时，一条错分改变10个百分点，结论应保留样本量限制。",
+            "en": "Validation selects the procedure; held-out data evaluate the fixed choice. A weight map does not prove reliability or causation. With ten held-out records, one changed prediction shifts accuracy by ten percentage points."
           },
           "pitfall": {
             "zh": "课堂观察过错分后再设计新方案，原留出集已提供开发反馈；不把反复试出的最好值称作独立测试。",
@@ -1174,7 +1169,7 @@
             {
               "name": "Tutorial3.ipynb",
               "locator": "cells 17–40",
-              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "note": "当前Tutorial3的数组、模型对照与裁剪任务。 / Current Tutorial 3 tasks on arrays, model comparisons and cropping.",
               "kind": "course"
             }
           ]
@@ -1194,8 +1189,8 @@
             "en": "Python excludes the stop: subtract starts from stops. Compare representations with the same split indices so a split change is not mistaken for a representation effect."
           },
           "check": {
-            "zh": "22×18=396项，Xm为(50,396)，与masksize=(22,18)一致；576维属于注释掉的旧切片[17:41,8:32]。保留原文件，在学习说明中指出这个差异。",
-            "en": "The crop is 22×18=396, so Xm is (50,396), matching masksize=(22,18). The 576-dimensional description matches the commented older crop [17:41,8:32]. Preserve the source file and explain the discrepancy."
+            "zh": "22×18=396项，Xm为(50,396)，与masksize=(22,18)一致；576维属于注释掉的旧切片[17:41,8:32]。",
+            "en": "The crop is 22×18=396, so Xm is (50,396), matching masksize=(22,18). The 576-dimensional description matches the commented older crop [17:41,8:32]."
           },
           "pitfall": {
             "zh": "先看实际执行的索引与shape，不能只相信紧邻Markdown；减少输入信息未必使泛化更好或更差。",
@@ -1214,7 +1209,7 @@
             {
               "name": "Tutorial3.ipynb",
               "locator": "cells 41–63",
-              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "note": "当前Tutorial3的数组、模型对照与裁剪任务。 / Current Tutorial 3 tasks on arrays, model comparisons and cropping.",
               "kind": "course"
             }
           ]
@@ -1254,7 +1249,7 @@
             {
               "name": "Tutorial3.ipynb",
               "locator": "cells 64–67",
-              "note": "当前Notebook；形状由给定数组/切片检查，未生成真实分类成绩。",
+              "note": "当前Tutorial3的数组、模型对照与裁剪任务。 / Current Tutorial 3 tasks on arrays, model comparisons and cropping.",
               "kind": "course"
             }
           ]
@@ -1288,8 +1283,8 @@
             "en": "Data and years"
           },
           "task": {
-            "zh": "删除三列计数，one-hot四类字段，2011训练2012测试。",
-            "en": "Remove target components, encode four categories, and use the year split."
+            "zh": "以cnt为预测目标，从输入中删除cnt、casual、registered三列；对四类字段作one-hot编码，按2011训练、2012测试划分。",
+            "en": "Use cnt as the target and remove cnt, casual and registered from the predictors. One-hot encode the four categorical fields; train on 2011 and test on 2012."
           },
           "approach": {
             "zh": "检查cnt=casual+registered，按列名识别月份。",
@@ -1333,8 +1328,8 @@
             "en": "Use identical temporal folds and distinguish error units."
           },
           "check": {
-            "zh": "新Notebook保存真实比较表及散点。",
-            "en": "Inspect actual tables and scatter plots."
+            "zh": "在Tutorial4的比较表中核对误差，在散点图中查看高估与低估。",
+            "en": "Check the errors in Tutorial 4’s comparison table and locate over- and underpredictions in the scatter plots."
           },
           "pitfall": {
             "zh": "原T32横轴真值、纵轴预测；低估在下方。",
@@ -1523,8 +1518,8 @@
         "en": "Assignment 2 · Backpropagation and optimizers"
       },
       "intro": {
-        "zh": "保留原任务边界，完整数学解释与原文核对见独立Assignment2讲义；不把指南写成已训练的提交作业。",
-        "en": "Use the separate guide for derivations and source caveats; it is not a completed submission."
+        "zh": "Assignment2要求实现逐层反向传播与五种优化器。独立讲义给出数学推导、接口说明和小型检查方法。",
+        "en": "Assignment 2 asks you to implement layer backpropagation and five optimizers. The separate guide provides derivations, interface explanations and small diagnostic examples."
       },
       "units": [
         "lecture-5"
@@ -1627,8 +1622,8 @@
             "en": "Report only executed training and test accuracies."
           },
           "pitfall": {
-            "zh": "公共指南不代填成绩或个人提交物。",
-            "en": "The public guide does not invent results or submissions."
+            "zh": "全体数据拟合的缩放会让测试信息进入训练；按训练部分估计后，再应用于测试。",
+            "en": "Scaling fitted on the entire dataset leaks test information. Fit it on the training portion and apply the same transform to the test portion."
           },
           "lesson_ids": [
             "ml24",

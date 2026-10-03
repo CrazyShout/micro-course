@@ -6,7 +6,7 @@
 <h2 id="problem-1-read-an-http-request">Problem 1. Read an HTTP request｜不知道的就明确说不知道</h2>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/362a908017ad4524.png" rel="noopener" target="_blank"><img alt="Original request and all five questions" decoding="async" height="1450" loading="lazy" src="../assets/362a908017ad4524.png" width="1025"/></a></p>
 <p><strong>任务 / Task:</strong> 原题给出Wireshark看到的一段HTTP GET的ASCII内容，<code>&lt;cr&gt;&lt;lf&gt;</code>代表实际单字节CR、LF。指出URL、HTTP版本、是否持久、浏览器主机IP、浏览器类型及该字段的用途。 / From the supplied HTTP GET bytes, identify the URL, version, connection preference, client IP, and user-agent type and purpose, citing the relevant fields.</p>
-<p>为便于定位，下面仅摘录与答案直接相关的原字段；完整报文（包括Accept各项及原拼写）保留在上图，不擅自修成另一道题：</p>
+<p>为便于定位，下面仅摘录与答案直接相关的原字段；完整报文（包括Accept各项及原拼写）见上图：</p>
 <pre><code class="language-text">GET /cs453/index.html HTTP/1.1&lt;cr&gt;&lt;lf&gt;
 Host:gaia.cs.umass.edu&lt;cr&gt;&lt;lf&gt;
 User-Agent: Mozilla/5.0 ( Windows;U; Windows NT 5.1; en-US; rv:1.7.2)
@@ -42,7 +42,7 @@ Connection:keepalive&lt;cr&gt;&lt;lf&gt;&lt;cr&gt;&lt;lf&gt;
 <p><strong>条件 / Conditions:</strong> 域名未缓存，顺序DNS查找代价 <span class="arithmatex">\(D=\sum_{i=1}^n RTT_i\)</span>。base HTML引用同一服务器的8个很小对象；client-server RTT为RTT₀，忽略发送时间。先得到HTML才能知道对象地址。 / Sequential DNS costs D=ΣRTTᵢ. One base HTML file references eight small objects on the same server; server RTT is RTT₀ and transmission times are negligible. Object requests start after the base HTML is received.</p>
 <p>a <strong>Non-persistent, serial / 非持久且无并行：</strong> 共9个对象，每个1RTT握手+1RTT请求返回，所以 <strong>D+18RTT₀，选D</strong>。</p>
 <p>b <strong>Non-persistent, five parallel connections / 非持久最多5并行：</strong> HTML先用2RTT；8对象分两批（5+3），每批各2RTT，合计 <strong>D+6RTT₀，选C</strong>。不能把HTML也塞入尚未解析出来的8对象同一批。</p>
-<p>c <strong>Persistent / 持久：</strong> 原题未明说是否pipelining；新到教师S13明确按逐个请求计算，确认采用单连接<strong>无流水线</strong>。结合给出的选项，一次握手+HTML一次往返+8对象各一次，共 <strong>D+10RTT₀，选B</strong>。若另加“拿到HTML后流水线一次发完8请求”的理想条件，则D+3RTT₀；这不在原选项中。必须在答案边写清约定，而不是说持久连接的唯一公式永远是10RTT。</p>
+<p>c <strong>Persistent / 持久：</strong> 原题未明说是否pipelining；新到教师S13明确按逐个请求计算，确认采用单连接<strong>无流水线</strong>。结合给出的选项，一次握手+HTML一次往返+8对象各一次，共 <strong>D+10RTT₀，选B</strong>。若另加“拿到HTML后流水线一次发完8请求”的理想条件，则D+3RTT₀；这不在原选项中。因此，答案需注明采用单连接、无流水线的约定。</p>
 <p><strong>English answer:</strong> (a)D+18RTT₀; (b)D+6RTT₀; (c)D+10RTT₀ for non-pipelined persistent HTTP. Pipelining would change part c to D+3RTT₀ under the idealized model.</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/64bf6201e3d4501d.png" rel="noopener" target="_blank"><img alt="Calculated object request rounds" decoding="async" height="750" loading="lazy" src="../assets/64bf6201e3d4501d.png" width="1209"/></a></p>
 <p>图按握手/请求轮次计算，仅表示题目简化模型；不包括TLS、服务器思考时间、连接拥塞控制与大文件传输。</p>
@@ -55,8 +55,8 @@ Connection:keepalive&lt;cr&gt;&lt;lf&gt;&lt;cr&gt;&lt;lf&gt;
 <h2 id="problem-4-nslookup-and-direct-ip-browsingip">Problem 4. Nslookup and direct-IP browsing｜解析成功，不保证IP网址等于原站</h2>
 <p><strong>原任务 / Task:</strong> 用<code>nslookup cityu.edu.hk</code>找地址，再判断把IP直接输入浏览器能否得到网页。 / Resolve cityu.edu.hk and investigate whether navigating directly to its IP retrieves the site.</p>
 <p>本机macOS于 <strong>2026-09-23 01:19（UTC+8）</strong> 实际查询，解析器223.5.5.5返回non-authoritative answer，两个A地址为 <strong>45.60.199.218、45.60.197.218</strong>。<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整输出</span> 非权威表示答案来自递归/缓存服务器，不等于错误；多地址也不是异常。地点、时间、DNS策略变化可返回不同集合，不能把这两个IP当永久常量背下来。</p>
-<p>直接输入IP可能打开默认页面、错误页、重定向，也可能某些服务可用；<strong>不保证与域名访问相同</strong>。HTTP虚拟主机依赖Host，HTTPS还涉及TLS服务器名SNI和证书名称，CDN/WAF可能按域名路由。不能从“DNS返回IP”推断“浏览器写这个IP必定显示该站”。本轮仅对公开入口作读取观察，结果单列在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">浏览观察记录</span>；若访问失败，保留失败，不绕过证书检查。</p>
+<p>直接输入IP可能打开默认页面、错误页、重定向，也可能某些服务可用；<strong>不保证与域名访问相同</strong>。HTTP虚拟主机依赖Host，HTTPS还涉及TLS服务器名SNI和证书名称，CDN/WAF可能按域名路由。不能从“DNS返回IP”推断“浏览器写这个IP必定显示该站”。本次直接IP访问的浏览器检查未完成，记录见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">浏览观察记录</span>。</p>
 <p><strong>English answer:</strong> The dated lookup returned two A records. Direct-IP navigation is not guaranteed to reproduce the hostname-based website because virtual hosting, TLS name validation and routing can depend on the hostname.</p>
 <h2 id="_1">来源与复习</h2>
 <p>原题p1=Problem1全部五问，p2=Problem2原图及两问，p3=Problem3三种连接模型与Problem4实际查询。理论对应Chapter2 p19–31（HTTP）、p53–67（DNS）；教师解答与本稿DNS/HTTP时间计算一致；未给出的实际网络测量与协议边界仍标为整理补充。HTTP补充标准查阅于2026-09-23。</p>
-<p>复算脚本见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span>。关联<a href="../../cards.html#CS5222-N231">现有原题卡N231、N232、N233</a>时，先能解释字段证据和计时条件，再用Markji巩固；不新增卡组和复习系统。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>复算脚本见<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span>。关联<a href="../../cards.html#CS5222-N231">现有原题卡N231、N232、N233</a>时，先能解释字段证据和计时条件，再用Markji巩固。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

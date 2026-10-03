@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml13",
   "title": {
-    "zh": "最宽间隔已经写成约束，怎样把它解出来？",
-    "en": "How can the margin constraints lead to a solvable dual?"
+    "zh": "SVM对偶与KKT：从间隔约束求出分类器",
+    "en": "The SVM dual and KKT conditions: solve the margin-constrained problem"
   },
   "minutes": "18–25",
   "lede": {
@@ -130,7 +130,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "若所有乘子都在 0 或 C，不能随便取一点套等号公式。用 KKT 给 b 求区间：α=0 的正类要求 $b\\ge1-w^Tx$，负类要求 $b\\le-1-w^Tx$；α=C 时方向反过来。取同时满足上下界的 b；若数值结果冲突，先检查优化结果和容差。\n\n例如 w=0.5，两点 (x,y)=(1,1)、(−1,−1)，乘子都为 C=0.25，则 −0.5≤b≤0.5，b=0 可用。这是既有主稿的边界补充。参考书中的 SMO 进一步解释为什么常一起调整两个乘子：必须保留 $\\sum_i\\alpha_i y_i=0$。"
+          "text": "若所有乘子都在 0 或 C，不能随便取一点套等号公式。用 KKT 给 b 求区间：α=0 的正类要求 $b\\ge1-w^Tx$，负类要求 $b\\le-1-w^Tx$；α=C 时方向反过来。取同时满足上下界的 b；若数值结果冲突，先检查优化结果和容差。\n\n例如 w=0.5，两点 (x,y)=(1,1)、(−1,−1)，乘子都为 C=0.25，则 −0.5≤b≤0.5，b=0 可用。这个例子说明：没有自由支持向量时，b仍可由不等式确定一个可行区间。参考书中的 SMO 进一步解释为什么常一起调整两个乘子：必须保留 $\\sum_i\\alpha_i y_i=0$。"
         },
         {
           "type": "reading"
@@ -149,7 +149,7 @@
       "name": "推理桥接与手算 / Teaching derivation and hand calculation",
       "locator": "ml13",
       "kind": "derived",
-      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+      "note": "根据原课补充的驻点推导、两点算例与KKT边界讨论。 / Supplementary stationarity derivations, two-point examples and KKT boundary cases based on the lecture."
     }
   ],
   "objective_map": [

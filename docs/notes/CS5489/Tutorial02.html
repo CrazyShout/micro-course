@@ -2,9 +2,9 @@
 <h1 id="tutorial-2-text-document-classification-with-naive-bayes">Tutorial 2 · Text Document Classification with Naive Bayes</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=47">A4 打印版 · 第 47–73 页</a>　图可点击放大。</p>
 <h2 id="_1">按老师原任务，跑通新闻分类并解释结果</h2>
 <p><a href="Lecture02.html">先读 Lecture 2</a> · <a href="Assignment01.html">Assignment 1 指南</a> · <a href="index.html">运行说明</a></p>
-<p>本地学习样板，2026-09-22。主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial2v2.ipynb</span>（下文T，cell从1开始，不是In[n]）；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">dataAG.json</span>。这是我们按原任务编写的可运行参考讲解，不是教师发布的标准答案。</p>
+<p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial2v2.ipynb</span>（下文T，cell从1开始，不是In[n]）；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">dataAG.json</span>。以下代码与解答为按原任务编写的参考实现。</p>
 <p>老师的顺序是：认识AGNews → 建词向量 → Bernoulli NB → Multinomial NB → 看错分 → 改平滑/词表 → 实现Poisson NB。每步先解释要解决什么，再看代码与输出。默认从头运行全部代码，独立尝试题写在Markdown中，不影响运行。</p>
-<p><strong>结果口径 / Result scope：</strong> 本教程遵循课堂任务，多次查看同一份给定test的表现，用于练习与探索。它已参与模型/参数比较，不能被称为最终独立泛化估计。所有数值由下方代码计算，固定种子42；这里不报告短信作业的成绩。</p>
+<p><strong>结果口径 / Result scope：</strong> 本教程遵循课堂任务，多次查看同一份给定test的表现，用于练习与探索。它已参与模型/参数比较，不能被称为最终独立泛化估计。下方结果由代码计算，固定种子42。</p>
 </section>
 <section id="cell-2">
 <h2 id="goal">学习地图 / Goal</h2>
@@ -70,11 +70,11 @@
 </tr>
 </tbody>
 </table></div>
-<p>优先级是基于当前任务的学习建议；没有把历史样题当成本学期考试频率。英文题意为忠实整理，中文解释补足必要条件；代码、类别名称和原文件名不翻译。</p>
+<p>优先级依据当前任务。英文题意为忠实整理，中文解释补足必要条件；代码、类别名称和原文件名不翻译。</p>
 </section>
 <section id="cell-3">
 <h2 id="0-setup">0. Setup｜只在这里改实验设置</h2>
-<p>在README所述独立环境中运行。AGNEWS_PATH默认指向项目保留的Canvas数据副本，可在下一格改成自己的文件路径。缺文件会报告准确路径，不会悄悄换成网上另一份AGNews。</p>
+<p>在README所述独立环境中运行。AGNEWS_PATH默认指向项目保留的Canvas数据副本，可在下一格改成自己的文件路径。若提示文件缺失，请检查报错中的路径。</p>
 <p><strong>English:</strong> Configure parameters and the data path here. All following experiments use the provided local data and explicit settings.</p>
 </section>
 <section id="cell-4">
@@ -223,7 +223,7 @@ Blank text rows: 0
 </pre></div>
 </section>
 <section id="cell-7">
-<p><strong>怎样检查 / Check：</strong> 两个计数列分别加到2000和1000；标签与四个英文名称按原顺序对应。训练集与测试集分开，不能在载入后合并再重新“方便地”切分。</p>
+<p><strong>怎样检查 / Check：</strong> 两个计数列分别加到2000和1000；标签与四个英文名称按原顺序对应。保留文件给定的训练／测试划分。</p>
 <p><strong>独立检查题：</strong> 2000篇新闻、实际词表1000词，特征矩阵和标签数组各是什么形状？<br/>
 <strong>English question:</strong> For 2000 documents and an actual vocabulary of 1000 terms, what are the shapes of the feature matrix and label array?<br/>
 <strong>答案：</strong> X为(2000,1000)，y为(2000,)；每篇文档一行，每个词一列。若1000只是词表上限，实际列数仍应读取vectorizer。<br/>
@@ -233,7 +233,7 @@ Blank text rows: 0
 <h2 id="2-build-document-vectors">2. Build document vectors｜把词表当成一把固定的尺子</h2>
 <p><strong>原任务 / Task（T10–12）：</strong> 从训练文本建词表，再转换两份数据，自己选择词表大小。<br/>
 <strong>English:</strong> Build a vocabulary from training documents and transform both splits using that vocabulary.</p>
-<p>默认最多1000词，沿课堂例子使用英文停用词、默认小写化。fit_transform只作用于train；test只transform。test中独有的词不会偷偷加入词表。下面先保留原始整数计数：Bernoulli会二值化，Poisson也需要这些计数；不要稍后用TF-IDF覆盖count_train这个变量。</p>
+<p>默认最多1000词，沿课堂例子使用英文停用词、默认小写化。fit_transform只作用于train；test只transform。test中独有的词会被忽略。下面先保留原始整数计数：Bernoulli会二值化，Poisson也需要这些计数；不要稍后用TF-IDF覆盖count_train这个变量。</p>
 </section>
 <section id="cell-9">
 <div class="code-input"><div class="cell-label">In [3]</div><div class="highlight"><pre><span></span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">"english"</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">DEFAULT_MAX_FEATURES</span><span class="p">)</span>
@@ -624,7 +624,7 @@ One posterior vector: [4.800e-03 9.817e-01 1.000e-04 1.340e-02]
 </table></div></details></div>
 </section>
 <section id="cell-13">
-<p><strong>解释 / Interpretation：</strong> 每行的概率参数是“该类文档含这个词”的概率，排序不是因果重要性，也不是整份文档的后验。几类都常见的词可能排得很前，却不擅长区分类别。</p>
+<p><strong>解释 / Interpretation：</strong> 每行的概率参数是“该类文档含这个词”的概率，这个排序反映类内出现率。几类都常见的词可能排得很前，却不擅长区分类别。</p>
 <p><strong>自查：</strong> 同一文档中market从1次变10次，保持已训练模型、词表和其他词不变，这个Bernoulli预测会改变吗？<br/>
 <strong>English question:</strong> In one document, change the count of market from 1 to 10 while keeping the fitted model, vocabulary and other word counts fixed. Does this Bernoulli prediction change?<br/>
 <strong>答案：</strong> 不会，二值化后输入相同。<br/>
@@ -1206,14 +1206,14 @@ Retained words: designed, launch, launched, million, press, pressure, set, year
 </pre></div>
 </section>
 <section id="cell-23">
-<p><strong>怎样写答案 / How to explain:</strong> “这条新闻被预测为Business，我在原文看到商业词汇”是观察；“如果保留某个短语就一定能修正”是待验证假设。先查词表是否保留该词，再设计一次只改变表示的验证，不凭一条故事证明因果。</p>
+<p><strong>怎样写答案 / How to explain:</strong> “这条新闻被预测为Business，我在原文看到商业词汇”是观察；“如果保留某个短语就一定能修正”是待验证假设。可以先查词表是否保留该词，再用只改变表示的对照实验检验解释。</p>
 <p>改变预处理若使用了这些test错分作为灵感，这份test已提供开发反馈。还可以查看准确率分母和类间错误分布，避免只背一个总分。</p>
 <p><strong>English takeaway:</strong> Describe the observed error first, then separate plausible explanations from verified causes. Inspecting held-out errors to redesign a model makes those data part of development.</p>
 <p><strong>本次固定样本的读法 / Reading the current examples：</strong>
 - Index 1描述飓风造成的保险损失，原标签Business、预测World，仅保留4个词。灾害事件与经济损失共用同一短文，可以提出“主题边界与词表截断影响判断”的假设；尚未用受控实验验证。
 - Index 3讨论消费者信心和就业，原标签World、预测Business。经济主题词使这个预测值得理解，但不能只凭主题印象把原标签改掉。
-- Index 14讨论太阳帆航天器及项目资助，原标签Sci/Tech、预测Business；两个模型后验接近。先查看保留词，再考虑是表示损失、主题重叠还是模型限制，不把某个金额直接宣判为错误原因。</p>
-<p>English: Index 1 combines disaster and insurance-loss language; index 3 discusses economic confidence despite its World label; index 14 combines a spacecraft project and funding. These observations motivate hypotheses, not proven causes or permission to relabel evaluation data. The retained-word output lets you inspect the representation.</p>
+- Index 14讨论太阳帆航天器及项目资助，原标签Sci/Tech、预测Business；两个模型后验接近。查看保留词可以帮助区分表示损失、主题重叠和模型限制这几种解释。</p>
+<p>English: Index 1 combines disaster and insurance-loss language; index 3 discusses economic confidence despite its World label; index 14 combines a spacecraft project and funding. These observations suggest explanations to test; retain the supplied evaluation labels. The retained-word output lets you inspect the representation.</p>
 </section>
 <section id="cell-24">
 <h2 id="6-effect-of-smoothingalpha">6. Effect of smoothing｜只改alpha，画一条能解释的曲线</h2>
@@ -1576,7 +1576,7 @@ All tiny numerical, normalization and label checks passed.
 <h3 id="84-test-the-count-model">8.4 在原始新闻计数上运行 / Test the count model</h3>
 <p><strong>原任务 / Task（T33–35）：</strong> 在数据集上测试Poisson NB，比较它是否适合文档。<br/>
 <strong>English:</strong> Test Poisson NB on the dataset, compare the pipelines and discuss its suitability for documents.</p>
-<p>仍使用默认1000词的原始count_train/count_test，alpha=1；不拿TF-IDF冒充Poisson计数。各类词率无需和为1，因为它们是每文档的计数均值。</p>
+<p>这里使用默认1000词的原始count_train/count_test，alpha=1；Poisson模型需要整数计数。各类词率无需和为1，因为它们是每文档的计数均值。</p>
 </section>
 <section id="cell-35">
 <div class="code-input"><div class="cell-label">In [13]</div><div class="highlight"><pre><span></span><span class="n">pnb</span> <span class="o">=</span> <span class="n">PoissonNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">DEFAULT_ALPHA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">count_train</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
@@ -1702,7 +1702,7 @@ All tiny numerical, normalization and label checks passed.
 </section>
 <section id="cell-38">
 <h2 id="9-a-separate-evaluation-protocol">9. 如果要严格评价泛化，流程怎样改？ / A separate evaluation protocol</h2>
-<p>这是<strong>方法补充</strong>，不是假装原题已经要求了另一个数据划分：</p>
+<p><strong>方法补充：</strong> 若目标是评价选定流程的泛化能力，可采用以下设计：</p>
 <ol>
 <li>从给定train内部再划训练/验证，或做内层CV。</li>
 <li>每折分别拟合词表、IDF和模型；把这些步骤放在同一Pipeline中。</li>

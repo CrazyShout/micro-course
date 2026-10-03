@@ -79,8 +79,8 @@ A_ZH: 三个重复 ACK 表明可能有三个后续数据段已离开网络并到
 @@ N182 | x03-tcp | worked | XN3:114
 Q_EN: In an ideal AIMD model, the congestion window rises linearly from W/2 to maximum W, with constant RTT and no timeout periods. If W=64 kB and RTT=0.1 s, estimate the mean throughput using decimal units.
 Q_ZH: 理想 AIMD 模型中，拥塞窗口从 W/2 线性增加到最大 W，RTT 固定且忽略超时阶段。若 W=64 kB、RTT=0.1 s，按十进制单位估计平均吞吐量。
-A_EN: Average window is $(3/4)W=48$ kB, so throughput is 480 kB/s, or 3.84 Mbit/s with decimal units. This model assumes a roughly linear sawtooth between W/2 and W, fixed RTT, continuous data and negligible slow-start time. Variable delay, timeouts or application limits can invalidate the estimate.
-A_ZH: 平均窗口为 $(3/4)W=48$ kB，因此吞吐量为 480 kB/s，按十进制单位即 3.84 Mbit/s。模型假设窗口在 W/2 与 W 之间近似线性变化、RTT 固定、数据持续可用且忽略慢启动时间。变动时延、超时或应用限制都可能使估计失效。
+A_EN: Average window is $(3/4)W=48$ kB, so throughput is 480 kB/s, or 3.84 Mbit/s with decimal units. Assume continuous data and negligible slow-start time.
+A_ZH: 平均窗口为 $(3/4)W=48$ kB，因此吞吐量为 480 kB/s，按十进制单位即 3.84 Mbit/s。 另假设始终有数据可发，且忽略慢启动耗时。
 
 @@ N183 | x03-tcp | check | XN3:115-117
 Q_EN: Why is per-connection TCP fairness not automatically per-user fairness?
@@ -97,8 +97,8 @@ A_ZH: 端点协商使用 ECN 后，发送端将适当的 IP 包标为支持 ECN�
 @@ N185 | x04-ip | learn | XN4:5-8,13-14
 Q_EN: How do forwarding, routing, the data plane and control plane relate?
 Q_ZH: 转发、路由、数据平面与控制平面之间是什么关系？
-A_EN: Forwarding applies local rules to an arriving packet, such as choosing an output port. Routing determines paths and the information used to build those rules. Forwarding is a data-plane action; route computation and rule distribution belong to the control plane. A logically centralized SDN controller can still have a distributed physical implementation.
-A_ZH: 转发对到达分组应用本地规则，例如选择输出端口；路由决定路径以及构建规则所需的信息。转发属于数据平面，路由计算和规则分发属于控制平面。SDN 控制器在逻辑上集中，并不意味着物理上只能用一台机器实现。
+A_EN: Forwarding applies local rules to an arriving packet, such as choosing an output port. Routing determines paths and the information used to build those rules. Forwarding is a data-plane action; route computation and rule distribution belong to the control plane.
+A_ZH: 转发对到达分组应用本地规则，例如选择输出端口；路由决定路径以及构建规则所需的信息。转发属于数据平面，路由计算和规则分发属于控制平面。
 
 @@ N186 | x04-ip | learn | XN4:15-16,48
 Q_EN: Why does IP forwarding use longest-prefix matching?
@@ -187,8 +187,8 @@ A_ZH: 网关维护内部地址/端口与外部使用的地址/端口信息之间
 @@ N200 | x04-ip | check | XN4:53-55
 Q_EN: Why should the slide's “about 60,000 NAT connections” not be treated as a universal capacity guarantee?
 Q_ZH: 为什么不能把课件中“约 60,000 条 NAT 连接”当作通用容量保证？
-A_EN: A 16-bit port field offers a finite identifier space, but actual mappings depend on transport protocol, destination tuples, port-reuse rules, timeouts and device resources. NAT can also complicate unsolicited inbound connections and peer-to-peer reachability. Counting port values alone does not fully characterize a gateway's usable connection capacity.
-A_ZH: 16 bit 端口提供有限标识空间，但实际映射取决于传输协议、目的端元组、端口复用规则、超时及设备资源。NAT 还可能增加主动入站连接与 P2P 可达性的复杂度，仅数端口值不能完整描述网关可用连接容量。
+A_EN: A 16-bit port field offers a finite identifier space, but actual mappings depend on transport protocol, destination tuples, port-reuse rules, timeouts and device resources.  Counting port values alone does not fully characterize a gateway's usable connection capacity.
+A_ZH: 16 bit 端口提供有限标识空间，但实际映射取决于传输协议、目的端元组、端口复用规则、超时及设备资源。仅数端口值不能完整描述网关可用连接容量。
 
 @@ N201 | x04-ip | learn | XN4:57-60; XIP6:3-5
 Q_EN: What major IPv6 changes matter when comparing packet headers and fragmentation?
@@ -205,8 +205,8 @@ A_ZH: 隧道入口把 IPv6 包封装进 IPv4 包，IPv4 路由器根据外层首
 @@ N203 | x05-routing | learn | XN5:9-13,19-23
 Q_EN: How do link-state and distance-vector routing differ in the information exchanged?
 Q_ZH: 链路状态与距离向量路由，交换的信息有什么区别？
-A_EN: Link-state routers distribute information about links and build a topology view for path computation. Distance-vector routers exchange current distance estimates with neighbors and improve routes using those estimates. The distinction is about available information and update procedures, not simply “one is centralized and one never communicates.”
-A_ZH: 链路状态路由传播链路信息，建立拓扑视图后计算路径；距离向量路由与邻居交换当前距离估计，并利用这些估计改善路由。区别在于掌握的信息和更新过程，不应简单理解为“一种集中，另一种不通信”。
+A_EN: Link-state routers distribute information about links and build a topology view for path computation. Distance-vector routers exchange current distance estimates with neighbors and improve routes using those estimates.
+A_ZH: 链路状态路由传播链路信息，建立拓扑视图后计算路径；距离向量路由与邻居交换当前距离估计，并利用这些估计改善路由。
 
 @@ N204 | x05-routing | learn | XN5:13-17; XND:1-7
 Q_EN: What is the main invariant behind Dijkstra's shortest-path algorithm?
@@ -235,14 +235,14 @@ A_ZH: 方程为 $D_x(y)=\min_v\{c(x,v)+D_v(y)\}$，其中 v 遍历邻居。路�
 @@ N208 | x05-routing | worked | XN5:19-20
 Q_EN: Neighbor A costs 2 to reach and advertises distance 6 to Z; neighbor B costs 5 and advertises 1. Which route is cheaper?
 Q_ZH: 到邻居 A 的代价为 2，A 通告到 Z 距离为 6；到 B 的代价为 5，B 通告为 1，应选哪条路线？
-A_EN: Via A costs 2+6=8; via B costs 5+1=6. Choose B with total distance 6. Choosing A merely because its first link is cheaper ignores the remainder of the path. If advertisements become stale after a failure, the calculation may temporarily use incorrect information.
-A_ZH: 经 A 的总代价为 2+6=8，经 B 为 5+1=6，因此选 B，总距离为 6。仅因第一条链路便宜而选 A，会忽略剩余路径。若故障后通告过期，该计算可能暂时使用错误信息。
+A_EN: Via A costs 2+6=8; via B costs 5+1=6. Choose B with total distance 6. Choosing A merely because its first link is cheaper ignores the remainder of the path.
+A_ZH: 经 A 的总代价为 2+6=8，经 B 为 5+1=6，因此选 B，总距离为 6。仅因第一条链路便宜而选 A，会忽略剩余路径。
 
 @@ N209 | x05-routing | learn | XN5:26-28
 Q_EN: What is the distance-vector count-to-infinity problem?
 Q_ZH: 距离向量路由中的计数到无穷问题是什么？
-A_EN: After a route fails, neighbors may incorrectly believe that each other still has a path, repeatedly increasing their advertised distances through a loop. Good news about a shorter path can propagate quickly, while bad news may converge slowly. Loop-mitigation techniques help in particular settings, but do not make all asynchronous failures disappear.
-A_ZH: 某路由失效后，邻居可能误以为对方仍有路径，在循环依赖中反复提高通告距离。较短路径的好消息可能传播很快，坏消息却可能缓慢收敛。避免环路的技术可改善特定情况，但不会消除所有异步故障。
+A_EN: After a route fails, neighbors may incorrectly believe that each other still has a path, repeatedly increasing their advertised distances through a loop. Good news about a shorter path can propagate quickly, while bad news may converge slowly.
+A_ZH: 某路由失效后，邻居可能误以为对方仍有路径，在循环依赖中反复提高通告距离。较短路径的好消息可能传播很快，坏消息却可能缓慢收敛。
 
 @@ N210 | x05-routing | learn | XN5:30-33
 Q_EN: Why is Internet routing organized into autonomous systems?
@@ -325,7 +325,7 @@ A_ZH: 位串给出只取0或1的多项式系数，称为GF(2)。例如1011表示
 @@ N223 | x06-link | learn | XN6:14-16
 Q_EN: What are the CRC encoding and checking steps?
 Q_ZH: CRC 编码与检查的步骤是什么？
-A_EN: Let data be bit string D and generator G have r+1 bits with leading 1, hence degree r. Append r zeros to D, then do XOR long division by G. Pad the remainder R to exactly r bits and append it to the ORIGINAL D, giving $D2^r\oplus R$. At each division step align G's leading 1 with the current remainder's leading 1 and XOR. The receiver divides the complete received word by G: nonzero detects an error, while zero does not rule out every possible corruption.
+A_EN: Let data be bit string D and generator G have r+1 bits with leading 1, hence degree r. Append r zeros to D, then do XOR long division by G. Pad the remainder R to exactly r bits and append it to the original D, giving $D2^r\oplus R$. At each division step align G's leading 1 with the current remainder's leading 1 and XOR. The receiver divides the complete received word by G: nonzero detects an error, while zero does not rule out every possible corruption.
 A_ZH: 令数据为位串D，生成式G有r+1位且首位为一，所以次数为r。先在D后补r个零，再对G做XOR长除法。把余数R补足r位，接在原始D后，得 $D2^r\oplus R$。除法每步把G最高的一对齐当前余串最高的一，再XOR。接收端对完整接收字除以G：非零余数表示检出错误，零余数并不能排除所有损坏。
 
 @@ N224 | x06-link | worked | XN6:14-16
@@ -385,7 +385,7 @@ A_ZH: 第一段覆盖 127–206，因此第二段从 207 开始，端口仍为 3
 @@ N241 | x07-tutorials | historical | XNT6:2; XNT6S:17-20; XRTO:2
 Q_EN: Initially E=100 ms, D=5 ms. For each RTT sample S=106,120,140 ms, update E'=0.875E+0.125S, then D'=0.75D+0.25|S−E'| and RTO=E'+4D'. Carry E',D' to the next sample and ignore timer bounds. Find all three RTOs. Is this the exact RFC 6298 order?
 Q_ZH: 初始E=100 ms、D=5 ms。依次对RTT样本S=106、120、140 ms计算E'=0.875E+0.125S，再算D'=0.75D+0.25|S−E'|、RTO=E'+4D'；新E、D用于下一样本，忽略定时器上下界。求三次RTO；此顺序与RFC6298完全相同吗？
-A_EN: First sample: E'=100.75 and D'=3.75+0.25×5.25=5.0625 ms, so RTO=121 ms. The second gives (E',D')=(103.15625,8.0078125), RTO=135.1875 ms. The third gives (107.76171875,14.0654296875), RTO≈164.0234 ms. This is the tutorial convention: RFC 6298 updates variation using OLD SRTT before updating SRTT, and also includes clock granularity and timer bounds.
+A_EN: First sample: E'=100.75 and D'=3.75+0.25×5.25=5.0625 ms, so RTO=121 ms. The second gives (E',D')=(103.15625,8.0078125), RTO=135.1875 ms. The third gives (107.76171875,14.0654296875), RTO≈164.0234 ms. This is the tutorial convention: RFC 6298 updates variation using the previous SRTT before updating SRTT, and also includes clock granularity and timer bounds.
 A_ZH: 首样本：E'=100.75，D'=3.75+0.25×5.25=5.0625 ms，所以RTO=121 ms。第二次(E',D')=(103.15625,8.0078125)，RTO=135.1875 ms；第三次为(107.76171875,14.0654296875)，RTO约164.0234 ms。这是教程约定：RFC6298先用旧SRTT更新偏差，再更新SRTT，还考虑时钟粒度及定时器界限。
 
 @@ N242 | x07-tutorials | historical | XNT7:1; XNT7S:5
@@ -402,13 +402,13 @@ A_EN: Round18 has ssthresh=42/2=21 MSS. Round24 has floor(29/2)=14 MSS under the
 A_ZH: 第18轮ssthresh=42/2=21 MSS；第24轮按题设取整为floor(29/2)=14 MSS。第26轮后ssthresh=8/2=4 MSS，快速恢复即时cwnd=4+3=7 MSS。多出的三段用于恢复阶段，不表示ssthresh变成七；模型结束恢复时会撤去该临时增量。
 
 @@ N244 | x07-tutorials | historical | XNT7:2; XNT7S:7
-Q_EN: Assume each round sends a full window of NEW segments, with no retransmissions. Windows are 1,2,4,8,16,32 in rounds 1–6 and 33 in round 7. In which round is segment 70 first sent?
+Q_EN: Assume each round sends a full window of new segments, with no retransmissions. Windows are 1,2,4,8,16,32 in rounds 1–6 and 33 in round 7. In which round is segment 70 first sent?
 Q_ZH: 假设每轮发满一窗新数据段，无重传。第1–6轮窗口为1、2、4、8、16、32，第7轮为33。第70个段首次在哪轮发送？
 A_EN: Six rounds send 1+2+4+8+16+32=63 segments. Round seven sends segments 64–96, including 70. Therefore the answer is round seven. Count cumulative transmitted segments; cwnd is the amount allowed within a round, not the cumulative segment number.
 A_ZH: 六轮共发送 1+2+4+8+16+32=63 个段。第七轮发送第 64–96 个段，包含第 70 个。因此答案是第七轮。要累计已发送段数；cwnd 是一轮内允许的数量，不是累计段号。
 
 @@ N245 | x07-tutorials | historical | XNT7:3; XNT7S:14
-Q_EN: An ideal loss-free pipeline has R=1 Gbps, round-trip PROPAGATION time RTT=30 ms and 1200-byte packets. ACK transmission/processing are negligible. What minimum integer packet window gives sender utilization strictly greater than 97%?
+Q_EN: An ideal loss-free pipeline has R=1 Gbps, round-trip propagation time RTT=30 ms and 1200-byte packets. ACK transmission/processing are negligible. What minimum integer packet window gives sender utilization strictly greater than 97%?
 Q_ZH: 理想无丢包流水线中，R=1 Gbps、往返传播时间RTT=30 ms、每包1200字节，忽略ACK发送与处理。使发送利用率严格超过97%的最小整数包窗口是多少？
 A_EN: Serialization takes 1200×8/10^9=9.6 microseconds. Use $U=\min(1,NL/R\,/\,(RTT+L/R))$. Thus N>0.97×(30000+9.6)/9.6=3032.22, so choose 3033 packets. Convert bytes to bits and keep the serialization term; substituting the nearby 8000-bit illustrative figure would solve a different problem.
 A_ZH: 串行化耗时 1200×8/10^9=9.6 微秒。用 $U=\min(1,NL/R\,/\,(RTT+L/R))$，得到 N>0.97×(30000+9.6)/9.6=3032.22，因此选 3033 个包。要把字节转为位并保留串行化项；若代入旁边示意图中的 8000 位，就变成另一道题了。
@@ -486,8 +486,8 @@ A_ZH: A 成功要求它发送且其余 N−1 个节点静默：$S_A=2p(1-p)^{N-1
 @@ N257 | x07-tutorials | historical | XNT11:2; XNT11S:6-10
 Q_EN: If CSMA listens before transmitting, why can collisions still occur? What additional behavior does CSMA/CD provide?
 Q_ZH: CSMA 在发送前监听信道，为什么还会碰撞？CSMA/CD 又增加了什么行为？
-A_EN: Signals need propagation time: B can sense an idle medium before A's earlier signal reaches it, so both start transmitting. CSMA/CD additionally monitors for collisions while transmitting and aborts when one is detected, rather than wasting a full frame's transmission time. Sensing before sending cannot remove the propagation gap. This concerns historical shared half-duplex Ethernet; ordinary full-duplex switched Ethernet does not use this shared collision model.
-A_ZH: 信号传播需要时间：A已开始，但信号未到B时，B仍可能听到空闲，于是双方同时发送。CSMA/CD还会在发送中监测碰撞，检出即中止，而非继续浪费整帧的发送时间。先听后发不能消除传播空档。这针对历史共享半双工以太网，普通全双工交换以太网不使用该共享碰撞模型。
+A_EN: Signals need propagation time: B can sense an idle medium before A's earlier signal reaches it, so both start transmitting. CSMA/CD additionally monitors for collisions while transmitting and aborts when one is detected, rather than wasting a full frame's transmission time.  This concerns historical shared half-duplex Ethernet; ordinary full-duplex switched Ethernet does not use this shared collision model.
+A_ZH: 信号传播需要时间：A已开始，但信号未到B时，B仍可能听到空闲，于是双方同时发送。CSMA/CD还会在发送中监测碰撞，检出即中止，而非继续浪费整帧的发送时间。这针对历史共享半双工以太网，普通全双工交换以太网不使用该共享碰撞模型。
 
 @@ N258 | x07-tutorials | historical | XNT11:2; XNT11S:11
 Q_EN: In the pictured tree, S4 connects S1,S2,S3; A/B/C attach to S1, D/E/F to S2, G/H/I to S3. All switch tables start empty. A sends a frame to G. Which switches learn A, and why does S2 receive a flooded copy?
@@ -518,8 +518,8 @@ A_ZH: 发送基序号可为 k−4 至 k，各窗口包含从该基序号开始�
 @@ N266 | x08-assignments | historical | XNA2:1; XNA2S:2
 Q_EN: A router's table maps destination H3 to interface 3. Can this destination-only table send H1→H3 via interface 3 but H2→H3 via interface 4?
 Q_ZH: 路由器转发表将目的 H3 映射到接口 3。只按目的地址查表时，能让 H1→H3 走接口 3、H2→H3 走接口 4 吗？
-A_EN: No: both packets have the same lookup key H3 and therefore match the same forwarding action. To distinguish them, the rule would need additional information such as source address or another policy field. The answer is about the destination-only model in the question, not a claim that all real routers lack policy routing or multipath features.
-A_ZH: 不能，两种包的查找键都是 H3，因此匹配同一动作。若要区分，规则需要源地址或其他策略字段。这个结论针对题设“仅按目的地址”的模型，并不是说所有实际路由器都没有策略路由或多路径能力。
+A_EN: No: both packets have the same lookup key H3 and therefore match the same forwarding action. To distinguish them, the rule would need additional information such as source address or another policy field.
+A_ZH: 不能，两种包的查找键都是 H3，因此匹配同一动作。若要区分，规则需要源地址或其他策略字段。
 
 @@ N267 | x08-assignments | historical | XNA2:2; XNA2S:3-4; XDETOUR:2-4
 Q_EN: In the 1999 Detour reading, what can make an available route inefficient, and why do measured better alternatives not prove universal improvement after rerouting?
@@ -530,8 +530,8 @@ A_ZH: 论文讨论了性能指标不足、策略限制、人工均衡和替代�
 @@ N268 | x08-assignments | historical | XNA2:2; XNA2S:3-4; XDETOUR:5-9
 Q_EN: What information limitation motivates Detour's “informed transport,” especially for short TCP flows?
 Q_ZH: 哪种信息局限促使 Detour 提出“知情传输”，尤其针对短 TCP 流？
-A_EN: A new flow has little path information; feedback takes RTTs and the flow may finish before learning useful capacity estimates. Detour proposes sharing observations across flows at network edges to inform startup and congestion decisions. This is a design proposal with tradeoffs, not proof that bypassing congestion control improves the network.
-A_ZH: 新流缺少路径信息，反馈需经历 RTT，短流可能在学到有效容量估计前已结束。Detour 提议由网络边缘汇总跨流观测，辅助启动和拥塞决策。这是带权衡的设计提议，并不证明绕过拥塞控制就能改善网络。
+A_EN: A new flow has little path information; feedback takes RTTs and the flow may finish before learning useful capacity estimates. Detour proposes sharing observations across flows at network edges to inform startup and congestion decisions.
+A_ZH: 新流缺少路径信息，反馈需经历 RTT，短流可能在学到有效容量估计前已结束。Detour 提议由网络边缘汇总跨流观测，辅助启动和拥塞决策。
 
 @@ N269 | x08-assignments | historical | XNA3:1; XNA3S:1
 Q_EN: Compute CRC for D=1010101010 and generator G=10011. How many remainder bits are needed and what is the transmitted codeword?
@@ -598,14 +598,14 @@ A_ZH: 连接→读命令→组装发送→收集回复→读下一命令；QUIT�
 @@ N279 | x08-assignments | historical | XPROJ:5-6
 Q_EN: What tests reveal a message-board client's protocol bugs before running it against the course server?
 Q_ZH: 在对接课程服务器前，哪些测试能发现留言板客户端的协议错误？
-A_EN: With a local mock server, split one response across several reads, combine multiple lines in one read, and test empty messages, invalid commands/IDs, unexpected disconnects and QUIT acknowledgement. Verify exact newline/terminator handling and that partial data stays buffered. Handle error replies explicitly; success in one send/one recv example does not establish correct framing. These are AI-added test cases derived from the historical project's error-handling requirements.
-A_ZH: 用本地模拟服务器将一个回复拆成多次读取、把多行合并进一次读取，并测试空消息、非法命令/ID、意外断开和 QUIT 确认。核对换行与终止符，确保不完整数据保留在缓冲中，并显式处理错误回复。一次 send/一次 recv 的演示成功不代表分帧正确。这些是根据历史项目错误处理要求补充的 AI 测试思路。
+A_EN: With a local mock server, split one response across several reads, combine multiple lines in one read, and test empty messages, invalid commands/IDs, unexpected disconnects and QUIT acknowledgement. Verify exact newline/terminator handling and that partial data stays buffered. Handle error replies explicitly; success in one send/one recv example does not establish correct framing.
+A_ZH: 用本地模拟服务器将一个回复拆成多次读取、把多行合并进一次读取，并测试空消息、非法命令/ID、意外断开和 QUIT 确认。核对换行与终止符，确保不完整数据保留在缓冲中，并显式处理错误回复。一次 send/一次 recv 的演示成功不代表分帧正确。
 
 @@ N280 | x01-applications | learn | XW:5; HTTPSEM:15.3.1,15.4.5,15.5.5,15.6.1
 Q_EN: What do HTTP status codes 200, 304, 404 and 500 tell you?
 Q_ZH: HTTP 状态码 200、304、404、500 分别告诉你什么？
-A_EN: 200 indicates success; 304 validates a stored representation after a conditional GET/HEAD without sending its content again; 404 says the server cannot find the target or will not disclose its existence; 500 indicates an unexpected server condition preventing fulfillment. A status describes HTTP processing, not whether the page is scientifically correct or every embedded object loaded successfully.
-A_ZH: 200 表示成功；304 在条件 GET/HEAD 后验证已有副本，无须再次发送其内容；404 表示找不到目标或不愿透露其存在；500 表示服务器遇到意外情况而无法完成请求。状态码描述 HTTP 处理结果，不保证网页知识正确，也不证明其中所有嵌入对象都已成功加载。
+A_EN: 200 indicates success; 304 validates a stored representation after a conditional GET/HEAD without sending its content again; 404 says the server cannot find the target or will not disclose its existence; 500 indicates an unexpected server condition preventing fulfillment. These codes describe the current request. Embedded objects have their own requests and responses.
+A_ZH: 200 表示成功；304 在条件 GET/HEAD 后验证已有副本，无须再次发送其内容；404 表示找不到目标或不愿透露其存在；500 表示服务器遇到意外情况而无法完成请求。这些状态码描述当前请求的处理结果；网页中的嵌入对象还需要各自的请求与响应。
 
 @@ N281 | x01-applications | worked | XW:5; HTTPSEM:13.1.2-13.1.3,15.4.5
 Q_EN: A cached response has ETag "v1". How can a conditional GET avoid downloading unchanged content?

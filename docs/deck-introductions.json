@@ -4,39 +4,39 @@
     "CS5489": {
       "title_zh": "CS5489 · 机器学习双语学习卡",
       "title_en": "CS5489 · Bilingual machine learning cards",
-      "short_description": "CS5489 · Bilingual course cards. 课程知识卡；考核、提交与资料提醒见网页。微课/指南: https://crazyshout.github.io/micro-course/guide.html?course=CS5489",
+      "short_description": "CS5489 · 双语课程卡 / Bilingual course cards. 先读讲义与微课，再用卡片复习。Notes & guide: https://crazyshout.github.io/micro-course/guide.html?course=CS5489",
       "course_url": "https://crazyshout.github.io/micro-course/?course=CS5489",
       "guide_url": "https://crazyshout.github.io/micro-course/guide.html?course=CS5489",
       "sections": [
         {
-          "title_zh": "这套牌组用来做什么",
-          "title_en": "Purpose",
-          "body_zh": "面向希望先理解、再记忆的学习者，为英语授课、英语答题和后续 QE 准备打基础。333 张卡与 31 节连续微课关联，包含概念、公式假设、推导步骤、例题、易错点、课堂练习及明确标注的扩展。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
-          "body_en": "These 333 cards connect to 31 micro-lessons for understanding, retrieval practice, and English explanation. They cover concepts, assumptions, derivation steps, examples, common mistakes, class exercises, and labeled extensions; they are preparation aids, not an official QE syllabus. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front."
+          "title_zh": "这套牌组怎样配合学习",
+          "title_en": "Learning with this deck",
+          "body_zh": "适合从基础开始学习机器学习、需要用英文答题的学习者。整讲讲义沿老师顺序梳理内容，微课通过例子解释概念之间的联系；学懂后，用这里的双语题答回忆概念、公式条件和解题步骤。",
+          "body_en": "For learners building machine-learning foundations and preparing to answer in English. Course notes follow the instructor’s sequence; micro-lessons explain connections through examples. Use the bilingual cards afterward to recall concepts, formula assumptions and solution steps."
         },
         {
-          "title_zh": "当前内容与往年预习",
-          "title_en": "Current scope and historical preview",
-          "body_zh": "227张Canvas/配套卡覆盖Lecture1–5、Tutorial1–4及Assignment1–2相关方法。106张历史预习保留未到位主题和明确的延伸内容；CNN等不因目录中有图片就算当前完整教学。复用原卡身份，不把历史题作为QE考纲。",
-          "body_en": "227 Canvas/support cards now cover Lectures 1–5, Tutorials 1–4 and methods for Assignments 1–2. 106 historical cards retain unavailable or extended topics, including the full CNN material. Reused cards preserve identity; this is not an official QE syllabus."
+          "title_zh": "当前课程与历史预习",
+          "title_en": "Current material and historical preview",
+          "body_zh": "当前材料包括Lecture1–5、Tutorial1–4及Assignment1–2相关方法。Extra Resources保留后续历史主题及深化内容，供按需预习。CNN完整内容等尚未由当前课件覆盖；QE范围以学校要求为准。",
+          "body_en": "Current materials include Lectures 1–5, Tutorials 1–4 and methods for Assignments 1–2. Extra Resources contains historical topics and extensions for optional preparation. Full CNN coverage is still historical; the school defines the QE scope."
         },
         {
-          "title_zh": "怎样学才不会割裂",
-          "title_en": "How to learn coherently",
-          "body_zh": "初学先看本节“这一遍的重点”，跟着一个完整例题手算，再独立完成变式。先复习列出的少量首轮卡，其余在读过对应补课后分次练。网页卡片用于预览；正式复习在 Markji 按卡号查找，两个地方的记录不互通。开放题先说出核心点，再解释理由；保留中英文对照，但不用逐字背段落。",
-          "body_en": "Start with “This pass”, work through one example, then solve the variation independently. Review the small first-pass set first; use the other cards after their relevant supplements. Web cards are previews; find the IDs in Markji for formal review. Their progress records do not synchronize. For open questions, recall the core points and explain why; bilingual text need not be memorized word for word."
+          "title_zh": "从哪里开始",
+          "title_en": "Getting started",
+          "body_zh": "从对应Lecture的讲义或微课开始，跟着完整例题计算，再独立做一道变式。文末列出少量首轮卡，按卡号在Markji查找；不熟悉的基础可先点补课入口。网页用于阅读与预览，Markji负责正式复习，两边进度独立。",
+          "body_en": "Start with the relevant lecture notes or micro-lesson, work through an example, then solve a variation independently. Find the small first-pass set in Markji by card ID. Use prerequisite links when needed. The website supports reading and previews; Markji handles review, with separate progress."
         },
         {
-          "title_zh": "课程信息移至网页",
-          "title_en": "Course guidance lives on the website",
-          "body_zh": "学习顺序、资料范围、评分、提交文件和运行提醒已集中到微课网站的“课程信息”栏目。牌组用于复习课程概念、公式、推导、技术方法和练习题。",
-          "body_en": "Study sequence, material scope, grading, submission files, and setup notes are collected in the website’s Course information section. This deck is for concepts, formulas, derivations, technical methods, and practice problems."
+          "title_zh": "课程安排在哪里看",
+          "title_en": "Where to find course information",
+          "body_zh": "评分、截止日期和提交清单在网站的“课程信息”栏。牌组中的来源与微课链接可帮助你回查定义、推导和原题。",
+          "body_en": "Find grading, deadlines and submission checklists in Course information. Card sources and lesson links lead back to definitions, derivations and original questions."
         },
         {
-          "title_zh": "按需补基础与独立练习",
-          "title_en": "Optional foundations and practice",
-          "body_zh": "微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。",
-          "body_en": "Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work."
+          "title_zh": "怎样答卡片",
+          "title_en": "Answering the cards",
+          "body_zh": "先遮住答案，说出核心结论，再解释理由。计算题写出关键中间步骤；中文用于理解，随后尝试用英文独立回答。若只记得句子却解释不清，回到对应例题重做；编程题则需要实际运行。",
+          "body_en": "Hide the answer, recall the conclusion and explain why. Show key steps in calculations. Use Chinese to understand, then try an independent English answer. If you remember a sentence but cannot explain it, redo its worked example; programming tasks require running code."
         }
       ],
       "counts": {
@@ -49,39 +49,39 @@
     "CS5222": {
       "title_zh": "CS5222 · 计算机网络双语学习卡",
       "title_en": "CS5222 · Bilingual computer networking cards",
-      "short_description": "CS5222 · Bilingual course cards. 课程知识卡；考核、提交与资料提醒见网页。微课/指南: https://crazyshout.github.io/micro-course/guide.html?course=CS5222",
+      "short_description": "CS5222 · 双语课程卡 / Bilingual course cards. 先读讲义与微课，再用卡片复习。Notes & guide: https://crazyshout.github.io/micro-course/guide.html?course=CS5222",
       "course_url": "https://crazyshout.github.io/micro-course/?course=CS5222",
       "guide_url": "https://crazyshout.github.io/micro-course/guide.html?course=CS5222",
       "sections": [
         {
-          "title_zh": "这套牌组用来做什么",
-          "title_en": "Purpose",
-          "body_zh": "280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。",
-          "body_en": "These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front."
+          "title_zh": "这套牌组怎样配合学习",
+          "title_en": "Learning with this deck",
+          "body_zh": "通过网页访问、文件传输等情境理解网络，再用双语卡片复习术语、计算与机制。整讲讲义按老师Chapter顺序展开，微课跟踪分组、比特、ACK、窗口与路由状态，帮助你把各层联系起来。",
+          "body_en": "Learn networking through web requests and file transfers, then review terminology, calculations and mechanisms with bilingual cards. Notes follow the instructor’s chapters; micro-lessons trace packets, bits, ACKs, windows and routing state to connect the layers."
         },
         {
-          "title_zh": "当前内容与往年预习",
-          "title_en": "Current scope and historical preview",
-          "body_zh": "178张Canvas/配套卡覆盖Chapter1–2、Chapter3当前part1–2、Tutorial1–5与Assignment1相关任务。102张历史卡保留传输后续、网络/链路等预习；TCP完整连接管理和拥塞控制仍待新材料。",
-          "body_en": "178 Canvas/support cards cover Chapters 1–2, available Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1 tasks. 102 historical cards retain later transport, network and link material. Complete connection management and congestion-control coverage remains unconfirmed."
+          "title_zh": "当前课程与历史预习",
+          "title_en": "Current material and historical preview",
+          "body_zh": "当前材料包括Chapter1–2、Chapter3的part1–2、Tutorial1–5和Assignment1。Extra Resources保留后续传输、网络层与链路层等历史预习；完整连接管理与拥塞控制仍待当前课件。QE范围以学校要求为准。",
+          "body_en": "Current materials include Chapters 1–2, Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1. Extra Resources contains historical material on later transport, network and link-layer topics. Full connection management and congestion control await current slides; the school defines QE scope."
         },
         {
-          "title_zh": "怎样使用题目与图示",
-          "title_en": "How to use problems and diagrams",
-          "body_zh": "先看“这一遍的重点”，画路径或事件时间轴，统一单位并定义首位、末位或整批完成。图题先看原图，再独立作答；同节其余卡片可在相应补课后分次练。网页卡片用于预览，正式复习在 Markji 按卡号查找，进度不互通。改变一个条件重算，并用英文解释理由。",
-          "body_en": "Start with “This pass”. Draw the path or event timeline, normalize units and define first-bit, last-bit or batch completion. Read question figures before solving; study the other cards after the relevant supplements. Web cards are previews; use the IDs in Markji for formal review, whose progress is separate. Change one condition, recalculate and explain the reason in English."
+          "title_zh": "从哪里开始",
+          "title_en": "Getting started",
+          "body_zh": "从对应Chapter的讲义或微课开始，画出路径或事件时间轴，再做配套Tutorial。文末列出少量首轮卡，按卡号在Markji查找。网页用于阅读和预览，正式复习在Markji完成，两边进度独立。",
+          "body_en": "Start with the chapter notes or a micro-lesson, draw the path or event timeline, then attempt its tutorial. Find the small first-pass card set in Markji by ID. The website supports reading and previews; formal review happens in Markji, with separate progress."
         },
         {
-          "title_zh": "课程信息移至网页",
-          "title_en": "Course guidance lives on the website",
-          "body_zh": "学习顺序、资料范围、评分、提交文件和运行提醒已集中到微课网站的“课程信息”栏目。牌组用于复习课程概念、公式、推导、技术方法和练习题。",
-          "body_en": "Study sequence, material scope, grading, submission files, and setup notes are collected in the website’s Course information section. This deck is for concepts, formulas, derivations, technical methods, and practice problems."
+          "title_zh": "课程安排在哪里看",
+          "title_en": "Where to find course information",
+          "body_zh": "评分、截止日期、提交清单与研究报告要求在网站的“课程信息”栏。卡片中的来源与微课链接帮助你回查协议约定、原图和计算过程。",
+          "body_en": "Find grading, deadlines, submission checklists and research-report requirements in Course information. Card sources and lesson links help recover protocol assumptions, figures and calculations."
         },
         {
-          "title_zh": "按需补基础与独立练习",
-          "title_en": "Optional foundations and practice",
-          "body_zh": "微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。",
-          "body_en": "Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work."
+          "title_zh": "怎样答计算与机制题",
+          "title_en": "Answering calculation and mechanism questions",
+          "body_zh": "读清图、单位和完成事件，再动笔计算。回答机制题时说明谁发送什么、接收后怎样改变状态。改一个条件重算，并尝试用英文解释；遇到bit/byte、二进制或概率困难，可就近打开基础补课。",
+          "body_en": "Read the figure, units and completion event before calculating. For mechanisms, explain who sends what and how receipt changes state. Recalculate after changing a condition, then explain in English. Use nearby foundation links for bits/bytes, binary or probability."
         }
       ],
       "counts": {

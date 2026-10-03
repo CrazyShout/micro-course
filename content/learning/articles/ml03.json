@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml03",
   "title": {
-    "zh": "一行数据对应谁？先把数组摆对再预测",
-    "en": "Who does each row represent?"
+    "zh": "NumPy数组：一行一个样本，一次算出全部分数",
+    "en": "NumPy arrays: compute sample scores with explicit shapes"
   },
   "minutes": "12–18",
   "lede": {
@@ -42,7 +42,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "假设一条样本有两项特征 $(x_1,x_2)$，权重为 $(w_1,w_2)$，分数就是 $x_1w_1+x_2w_2$。这叫内积：对应位置相乘再相加；$x^Tw$ 中的 $T$ 是转置。向量长度则是 $\\|x\\|_2=\\sqrt{x_1^2+x_2^2}$，例如 (3,4) 的长度是 5，和“有两个元素”不是同一件事。\n\n把 N 行一起计算，写成 $Xw$，数学形状是 $(N\\times d)(d\\times1)=(N\\times1)$；NumPy 若把 w 存成 (d,)，`X @ w` 通常得到 (N,)。这只是重复做 N 次内积，不是另一个神秘公式。\n\n对 ndarray，`*` 逐元素相乘，`@` 才是矩阵乘。`X * w` 可以得到逐列缩放后的二维表，`X @ w` 才把每行压成一个分数。先写预期输出，再选运算符。"
+          "text": "假设一条样本有两项特征 $(x_1,x_2)$，权重为 $(w_1,w_2)$，分数就是 $x_1w_1+x_2w_2$。这叫内积：对应位置相乘再相加；$x^Tw$ 中的 $T$ 是转置。向量长度则是 $\\|x\\|_2=\\sqrt{x_1^2+x_2^2}$，例如 (3,4) 的长度是 5，和“有两个元素”不是同一件事。\n\n把 N 行一起计算，写成 $Xw$，数学形状是 $(N\\times d)(d\\times1)=(N\\times1)$；NumPy 若把 w 存成 (d,)，`X @ w` 通常得到 (N,)。矩阵乘法在这里把N次内积一起写出来。\n\n对 ndarray，`*` 逐元素相乘，`@` 才是矩阵乘。`X * w` 可以得到逐列缩放后的二维表，`X @ w` 才把每行压成一个分数。先写预期输出，再选运算符。"
         },
         {
           "type": "exercise",
@@ -109,7 +109,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "Lecture1b 从索引、形状和逐元素运算走到广播，再讲内积与矩阵乘法；这些知识最后应让你能读懂代码里的数据流。Tutorial 1 的散点图用 `mydata[:,0]` 与 `mydata[:,1]`，同一行的两项必须配成同一个点。\n\n因数图则换了图轴问题：点图的 x 是整数 n，y 是该数的因数个数；直方图的柱高是“有多少个整数落在这个计数箱”。99 个整数各贡献一次，频数之和应为 99。不是所有横轴上的数字都代表同一种东西。旧参考书还可能使用 `matrix` 类型，读代码时可展开下面的 ndarray 对照。"
+          "text": "Lecture1b 从索引、形状和逐元素运算走到广播，再讲内积与矩阵乘法；这些知识最后应让你能读懂代码里的数据流。Tutorial 1 的散点图用 `mydata[:,0]` 与 `mydata[:,1]`，同一行的两项必须配成同一个点。\n\n因数图则换了图轴问题：点图的 x 是整数 n，y 是该数的因数个数；直方图的柱高是“有多少个整数落在这个计数箱”。99 个整数各贡献一次，频数之和应为 99。旧参考书还可能使用 `matrix` 类型，读代码时可展开下面的 ndarray 对照。"
         },
         {
           "type": "reading"
@@ -137,7 +137,7 @@
       "name": "串讲与配套教学例 / Teaching synthesis",
       "locator": "ml03",
       "kind": "derived",
-      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+      "note": "依据所列课件的补充讲解与教学算例。 / Supplementary explanations and teaching examples based on the listed course materials."
     }
   ],
   "objective_map": [

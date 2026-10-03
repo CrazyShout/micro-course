@@ -1,13 +1,13 @@
 {
   "lesson_id": "net03",
   "title": {
-    "zh": "包已经出发了，为什么还没到齐？",
-    "en": "Serialization, propagation, and pipelines"
+    "zh": "网络时延：发完一包、收到一包与流水线",
+    "en": "Network delay: serialization, propagation and packet pipelines"
   },
   "minutes": "12–18",
   "lede": {
     "zh": "把一张 1500 字节的图片数据块送到远端：第一比特先出发，后面的比特还要排着发。我们要算清“开始看见数据”和“整包收齐”为什么是两个时刻。",
-    "en": "Serialization, propagation, and pipelines. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+    "en": "A 1500-byte packet does not leave the sender all at once. Its first bit can already be travelling while later bits are still waiting to be sent. We will calculate when the receiver sees the first bit and when the whole packet arrives."
   },
   "sections": [
     {
@@ -38,7 +38,7 @@
         },
         {
           "type": "prose",
-          "text": "老师第47–48张用收费站与车队解释：通过收费站相当于逐个发出，公路行驶相当于传播。后车还没过站时，前车已经上路，两种过程可以重叠。类比只解释时间，不意味着比特是真车或真实网络有这座收费站。\n\n因此首比特大约在传播时延后到达；末比特先等发送端把整包发完，再走相同距离。字节先乘8变比特，千米先变米；Mbps按每秒一百万比特。本例不额外计算单个比特的有限宽度。"
+          "text": "老师第47–48张用收费站与车队解释：通过收费站相当于逐个发出，公路行驶相当于传播。后车还没过站时，前车已经上路，两种过程可以重叠。\n\n因此首比特大约在传播时延后到达；末比特先等发送端把整包发完，再走相同距离。字节先乘8变比特，千米先变米；Mbps按每秒一百万比特。本例不额外计算单个比特的有限宽度。"
         },
         {
           "type": "exercise",
@@ -75,7 +75,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "当第一包在链路2发送，链路1可以发送第二包。设 $H$ 条链路同速、$P$ 个包等长且连续发送；忽略传播、处理、排队与交叉流量。第一包需 $H$ 个发送时段，之后每包再隔一个时段到达，总计 $(H+P-1)L/R$。这是从时间轴数出来的，不是“任何路径都能套”的口令。"
+          "text": "当第一包在链路2发送，链路1可以发送第二包。设 $H$ 条链路同速、$P$ 个包等长且连续发送；忽略传播、处理、排队与交叉流量。第一包需 $H$ 个发送时段，之后每包再隔一个时段到达，总计 $(H+P-1)L/R$。这个结果依赖刚才的等速、等长和忽略项条件。"
         },
         {
           "type": "exercise",
@@ -110,7 +110,7 @@
         },
         {
           "type": "prose",
-          "text": "这对应 Chapter 1 第25–26、44–48张的关键区别，也为 Tutorial 1 Q1、Tutorial 2 Q1–3提供方法。先会说完成事件，再回忆公式。更复杂的题和编程时间轴检查留在原题活动与实践补充，阅读一遍不等于完成实做。"
+          "text": "这对应 Chapter 1 第25–26、44–48张的关键区别，也为 Tutorial 1 Q1、Tutorial 2 Q1–3提供方法。先会说完成事件，再回忆公式。原题活动与实践补充还有多跳时间轴练习，可继续用“到齐时间与链路空闲时间取较晚者”的方法计算。"
         },
         {
           "type": "recap"
@@ -135,7 +135,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net03 worked/practice/transfer",
       "kind": "derived",
-      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+      "note": "单链路与等速流水线数值题为补充教学练习。"
     }
   ],
   "objective_map": [

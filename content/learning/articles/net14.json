@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "一个文件分段到达：前面收到字节0–535，后面又收到900–1000，中间还空着。接收者应该说“我已收到1000”，还是“我还等536”？本节按往年TCP课件追踪这笔字节账。\n\n当前part2到RTT与超时。本节字节编号和超时已对应当前材料；完整流控、握手与连接关闭暂保留为后续预习，不能把整篇都算作本学期已发正文。",
-    "en": "A receiver has bytes 0–535 and 900–1000, leaving a gap. Follow the historical TCP lesson to distinguish the highest byte seen from the next byte expected.\n\nCurrent part 2 reaches RTT and timeout estimation. Detailed flow control, handshakes and closure remain preview material."
+    "zh": "一个文件分段到达：前面收到字节0–535，后面又收到900–1000，中间还空着。接收者应该说“我已收到1000”，还是“我还等536”？本节追踪TCP的字节编号与累计确认。\n\n当前Chapter3 part2讲到RTT与超时估计；完整流控、握手与连接关闭放在选读部分，供后续预习。",
+    "en": "A receiver has bytes 0–535 and 900–1000, leaving a gap. Distinguish the highest byte seen from the next byte expected.\n\nCurrent part 2 reaches RTT and timeout estimation. Detailed flow control, handshakes and closure remain preview material."
   },
   "sections": [
     {
@@ -87,7 +87,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "重传超时太短容易误重传，太长又让真丢失恢复慢。课件用平滑EstimatedRTT描述常见往返时间，再用DevRTT表示波动余量，教学式为RTO=EstimatedRTT+4DevRTT。若新旧样本加权更新，权重和先后顺序应按题明确；重传后的确认还可能无法唯一对应哪次发送。\n\n单独给旧估计100 ms、样本140 ms、样本权重0.125时，新估计是105 ms；若题设固定DevRTT=10 ms而不更新，RTO才是145 ms。这不授权把同一数字套进另一种更新顺序。重复ACK还可在定时器前触发快速重传，但乱序也会产生重复ACK，并非丢包的绝对证明。"
+          "text": "重传超时太短容易误重传，太长又让真丢失恢复慢。课件用平滑EstimatedRTT描述常见往返时间，再用DevRTT表示波动余量，教学式为RTO=EstimatedRTT+4DevRTT。若新旧样本加权更新，权重和先后顺序应按题明确；重传后的确认还可能无法唯一对应哪次发送。\n\n单独给旧估计100 ms、样本140 ms、样本权重0.125时，新估计是105 ms；若题设固定DevRTT=10 ms而不更新，RTO才是145 ms。更新DevRTT时若采用另一种顺序，RTO也需相应重算。重复ACK还可在定时器前触发快速重传，但乱序也会产生重复ACK，并非丢包的绝对证明。"
         }
       ]
     },
@@ -101,7 +101,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "握手交换两个方向的初始序号并确认参与连接：SYN各消耗一个序号。FIN表示一个方向不再发送，也消耗一个；纯ACK若没有载荷及这些标志，不额外推进自己的数据序号。确认对方的进度与发送自己的数据必须分开记。\n\n两个方向可以分别关闭，TIME_WAIT帮助处理最后ACK丢失后重来的FIN，并降低旧段混入复用连接的风险。这些概念来自往年材料，细节按具体协议与版本确认，不能把握手说成人类身份认证。\n\n首轮先掌握字节范围、缺口和双窗口；后续卡再细查RTO与连接事件。每次都画“已连续收到／缓存但未接上／仍缺失”，比看到新段就把ACK跳到最大编号可靠。"
+          "text": "握手交换两个方向的初始序号并确认参与连接：SYN各消耗一个序号。FIN表示一个方向不再发送，也消耗一个；纯ACK若没有载荷及这些标志，不额外推进自己的数据序号。确认对方的进度与发送自己的数据必须分开记。\n\n两个方向可以分别关闭，TIME_WAIT帮助处理最后ACK丢失后重来的FIN，并降低旧段混入复用连接的风险。这些概念来自往年材料，细节按具体协议与版本确认，不能把握手说成人类身份认证。\n\n首轮掌握字节范围、缺口与当前课程的RTO计算；双窗口和连接事件可在选读时继续学习。每次都画“已连续收到／缓存但未接上／仍缺失”，比看到新段就把ACK跳到最大编号可靠。"
         },
         {
           "type": "recap"
@@ -120,7 +120,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net14 worked/practice/transfer",
       "kind": "derived",
-      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+      "note": "字节区间与累计ACK题为补充教学练习；连接与流控按历史来源列为选读。"
     },
     {
       "name": "Chapter3 part1/part2",

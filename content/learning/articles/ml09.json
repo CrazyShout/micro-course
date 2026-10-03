@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml09",
   "title": {
-    "zh": "给新闻里的词计数，怎样接上 Poisson NB？",
-    "en": "Build Poisson NB from word counts"
+    "zh": "Poisson朴素贝叶斯：用每篇文档的词计数分类",
+    "en": "Poisson naive Bayes: classify documents from word counts"
   },
   "minutes": "12–18",
   "lede": {
@@ -52,7 +52,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "对单个词取 log 得 $x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)$；逐词相加，再加入 $\\log\\pi_c$。于是 $s_c=\\log\\pi_c+\\sum_j[x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)]$。\n\n同一篇待分类文档的阶乘项在各类完全一样，比较类别时可以省掉；$-\\lambda_{cj}$ 却依赖类别，不能顺手也扔掉。它让“预期本应频繁出现，却一次没有”的词仍影响判断。下面教学例只用两类、两个词练分数，不是 AGNews 的真实实验结果。"
+          "text": "对单个词取 log 得 $x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)$；逐词相加，再加入 $\\log\\pi_c$。于是 $s_c=\\log\\pi_c+\\sum_j[x_j\\log\\lambda_{cj}-\\lambda_{cj}-\\log(x_j!)]$。\n\n同一篇待分类文档的阶乘项在各类完全一样，比较类别时可以省掉；$-\\lambda_{cj}$ 却依赖类别，不能顺手也扔掉。它让“预期本应频繁出现，却一次没有”的词仍影响判断。下面用两类、两个词的教学例练习计算分数。"
         },
         {
           "type": "foundation",
@@ -103,7 +103,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "Tutorial2v2 单元 31 要求参考课堂 GaussianBayes：fit 改为估计逐类词均值，compute_logccd 改为 Poisson 对数概率和；先验、joint score、后验归一化与预测接口继续沿用。先在小数据上比对逐项和向量化计算，再检查后验每行和为 1、标签与输出列对应，最后才跑新闻数据。\n\n若某个估计均值为 0，新文档该词出现正次数时概率为 0；数值程序还可能踩到 0×log0。可以定义正平滑率，或显式处理边界，但原模板没规定 alpha 唯一怎样使用，不能把某种补充平滑说成老师指定答案。TF-IDF 的小数权重也不该冒充这里的整数计数。"
+          "text": "Tutorial2v2 单元 31 要求参考课堂 GaussianBayes：fit 改为估计逐类词均值，compute_logccd 改为 Poisson 对数概率和；先验、joint score、后验归一化与预测接口继续沿用。先在小数据上比对逐项和向量化计算，再检查后验每行和为 1、标签与输出列对应，最后才跑新闻数据。\n\n若某个估计均值为 0，新文档该词出现正次数时概率为 0；数值程序还可能踩到 0×log0。可以定义正平滑率，或显式处理边界，原模板没有指定alpha的使用公式，因此采用平滑时需写明估计方法。这里的Poisson模型使用非负整数计数，TF-IDF权重不符合这一数据类型。"
         }
       ]
     },
@@ -117,7 +117,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "真实新闻里有词语搭配、重复突发与文档长度差异，可能违反独立性和“均值等于方差”的简单假设。但指出假设不完美，不足以证明 Poisson 一定输给另外两种 NB。原单元 35 要的是比较结果与理由：同一协议下的实测分数、真实错分文章、哪些假设可能解释现象。\n\n首轮回忆抓住均值如何估、分数哪些项能省、零次数为何有信息。Gamma–Poisson 先验只是后续可选扩展，不是完成原模板的必经步骤；没有自己的运行记录，就不填写想象中的准确率。"
+          "text": "真实新闻里有词语搭配、重复突发与文档长度差异，可能违反独立性和“均值等于方差”的简单假设。但指出假设不完美，不足以证明 Poisson 一定输给另外两种 NB。原单元 35 要的是比较结果与理由：同一协议下的实测分数、真实错分文章、哪些假设可能解释现象。\n\n首轮回忆抓住均值如何估、分数哪些项能省、零次数为何有信息。Gamma–Poisson 先验只是后续可选扩展，不是完成原模板的必经步骤。"
         },
         {
           "type": "recap"
@@ -142,7 +142,7 @@
       "name": "串讲与教学小例 / Teaching synthesis",
       "locator": "ml09",
       "kind": "derived",
-      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+      "note": "根据原任务整理的Poisson分数推导与教学算例。 / Poisson-score derivations and teaching examples based on the tutorial task."
     }
   ],
   "objective_map": [

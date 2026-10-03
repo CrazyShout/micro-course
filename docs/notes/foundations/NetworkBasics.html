@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Network Basics｜把单位、字节和时间轴读明白 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a></nav><h1 id="network-basics">Network Basics｜把单位、字节和时间轴读明白</h1><p class="document-tools"><a href="../pdf/Foundations-A4.pdf#page=37">A4 打印版 · 第 37–41 页</a>　图可点击放大。</p>
 <p><strong>可选基础补课 · 2026-09-23</strong></p>
 <p><a href="../CS5222/index.html">CS5222目录</a> · <a href="MathForML.html#foundation-nav">数学补课</a></p>
-<p>网络计算最常见的绊脚石，不是公式复杂，而是把字节当比特、把距离当速率、把“第一个到”当“整个都到了”。这份补课只拆这些台阶，协议机制仍在 Chapter 正文讲。所有小算例为教学补充，不是新增课堂原题。</p>
+<p>网络计算最常见的绊脚石，不是公式复杂，而是把字节当比特、把距离当速率、把“第一个到”当“整个都到了”。这份补课只拆这些台阶，协议机制仍在 Chapter 正文讲。小算例均为教学补充。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -112,7 +112,7 @@ Connection: close\r\n
 <h2 id="4-timelines-and-pipelines">4. Timelines and pipelines｜先问“谁到哪了”，再问“用了多久”</h2>
 <p>规定t=0为发送第一位的起点。一整包需要T=2ms送入链路，单个位在链路中传播P=8ms。连续流体近似下：第一位t=0开始走，t=8ms到；最后一位t=2ms离开发送端，t=10ms到。整包到齐需T+P，而不是只看首位到达。</p>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/5f9999d2c9f3653c.png" rel="noopener" target="_blank"><img alt="First-bit and last-bit trajectories across one link" decoding="async" height="699" loading="lazy" src="../assets/5f9999d2c9f3653c.png" width="1209"/></a></p>
-<p>沿图横轴读时间，纵轴区分发送端与接收端。两条斜线是首/末位轨迹，间距是发送时长；线路延伸不是说明“设备同时处于两个地方”。如果P&lt;T，首位可以在末位离开发送端之前到达，对网络并无矛盾。</p>
+<p>沿图横轴读时间，纵轴区分发送端与接收端。两条斜线是首/末位轨迹，间距是发送时长；线上的位置表示比特在该时刻到达哪里。如果P&lt;T，首位可以在末位离开发送端之前到达，对网络并无矛盾。</p>
 <p>存储转发（store-and-forward）要求中间节点收到整包再转下一条链路。若忽略传播/排队/处理，两条相同速率链路、3个相同长度包，每包发送时间T：</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -154,4 +154,4 @@ Connection: close\r\n
 <p><strong>English:</strong> Name the event before calculating its time. Pipelining overlaps work on different links; store-and-forward still requires each individual packet to arrive completely.</p>
 <p>返回：<a href="../CS5222/Chapter01.html#switching">Chapter1：存储转发</a> · <a href="../CS5222/Tutorial01.html#q1">Tutorial1 Q1</a> · <a href="../CS5222/Assignment01.html#p31">Assignment1 P31</a></p>
 <h2 id="_1">来源与复算</h2>
-<p>这些先修概念直接服务当前Chapter1 pp25–26、45–48、63–65，Chapter2进程、HTTP与socket，以及当前Tutorial/Assignment。不是历史预习或额外考核要求。示意图与数值由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 生成，结果在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">复算记录</span>。组合概率另见<a href="MathForML.html#combinations">MathForML §6</a>。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>这些先修概念直接服务当前Chapter1 pp25–26、45–48、63–65，Chapter2进程、HTTP与socket，以及当前Tutorial/Assignment。可按对应课程中的需要选读。示意图与数值由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 生成，结果在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">复算记录</span>。组合概率另见<a href="MathForML.html#combinations">MathForML §6</a>。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

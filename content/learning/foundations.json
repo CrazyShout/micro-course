@@ -7,7 +7,7 @@
         "en": "Python: trace values one line at a time"
       },
       "body": {
-        "zh": "程序按顺序执行。变量是当前值的名字：`total = 0` 把 0 赋给 `total`；`total = total + n` 先算右边，再更新左边。`=` 是赋值，`==` 才是比较是否相等。\n\n`for n in values:` 依次取出列表中的元素；`if n > 0:` 只在条件为真时执行缩进部分。缩进表示“属于谁”，不是装饰。`def` 定义可重复调用的函数，定义时不会执行函数体；调用时把实参交给形参。`return` 把结果交回调用处并立即结束本次函数调用，`print` 则把值显示出来。\n\n读代码时在纸上保留一列“当前 n”和一列“当前 total”。列表索引从 0 开始；`range(1,4)` 产生 1、2、3，不包含 4。",
+        "zh": "程序按顺序执行。变量是当前值的名字：`total = 0` 把 0 赋给 `total`；`total = total + n` 先算右边，再更新左边。`=` 是赋值，`==` 才是比较是否相等。\n\n`for n in values:` 依次取出列表中的元素；`if n > 0:` 只在条件为真时执行缩进部分。缩进表示一行代码属于哪个代码块。`def` 定义可重复调用的函数，定义时不会执行函数体；调用时把实参交给形参。`return` 把结果交回调用处并立即结束本次函数调用，`print` 则把值显示出来。\n\n读代码时在纸上保留一列“当前 n”和一列“当前 total”。列表索引从 0 开始；`range(1,4)` 产生 1、2、3，不包含 4。",
         "en": "A program executes in order. A variable names its current value: `total = 0` assigns zero to `total`; `total = total + n` evaluates the right side before updating the left. `=` assigns a value; `==` compares values for equality.\n\n`for n in values:` visits the list's elements in order. `if n > 0:` runs its indented block only when the condition is true. Indentation defines which block a line belongs to. `def` defines a reusable function without running its body yet; a call supplies arguments to its parameters. `return` sends a result back and immediately ends that call, whereas `print` displays a value.\n\nTrace code with columns for “current n” and “current total.” List indexing starts at zero; `range(1,4)` produces 1, 2, 3, excluding 4."
       },
       "worked_q": {
@@ -37,7 +37,7 @@
           "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
           "locator": "本补课单元 / This foundation unit",
           "kind": "derived",
-          "note": "本例用于追踪控制流，不是课堂作业的参考答案。 / This example teaches control-flow tracing; it is not an assignment solution."
+          "note": "用正数求和示范变量变化与控制流。 / A positive-sum example illustrates variable updates and control flow."
         }
       ]
     },
@@ -111,8 +111,8 @@
         "en": "In the same ten-message population, are S and F independent? Compare the joint probability with the product of their probabilities."
       },
       "check_a": {
-        "zh": "不独立：$P(S\\cap F)=2/10=0.2$，而 $P(S)P(F)=(3/10)(4/10)=0.12$。二者不相等。这个判断只针对题设的固定总体，不自动证明所有短信的生成机制。",
-        "en": "No. $P(S\\cap F)=2/10=0.2$, but $P(S)P(F)=(3/10)(4/10)=0.12$. They differ. This conclusion concerns the specified finite population; it does not establish how all messages are generated."
+        "zh": "不独立：$P(S\\cap F)=2/10=0.2$，而 $P(S)P(F)=(3/10)(4/10)=0.12$。二者不相等。",
+        "en": "No. $P(S\\cap F)=2/10=0.2$, but $P(S)P(F)=(3/10)(4/10)=0.12$. They differ."
       },
       "sources": [
         {
@@ -185,8 +185,8 @@
         "en": "For $E(u,v)=(u-1)^2+(v-2)^2$, start at $(u,v)=(0,0)$ and take one gradient-descent step with $\\eta=0.1$. Find both partial derivatives, the new point, and the objective before and after the step."
       },
       "worked_a": {
-        "zh": "$\\partial E/\\partial u=2(u-1)$，$\\partial E/\\partial v=2(v-2)$。旧点的梯度为 $(-2,-4)$；减去 $0.1(-2,-4)$，得到 $(0.2,0.4)$。旧损失为 $1+4=5$，新损失为 $(-0.8)^2+(-1.6)^2=3.2$。本例下降了，不代表任何函数或任意步长都保证下降。",
-        "en": "$\\partial E/\\partial u=2(u-1)$ and $\\partial E/\\partial v=2(v-2)$. The old-point gradient is $(-2,-4)$. Subtracting $0.1(-2,-4)$ gives $(0.2,0.4)$. The old loss is $1+4=5$; the new loss is $(-0.8)^2+(-1.6)^2=3.2$. It decreases here; arbitrary functions and step sizes do not have that guarantee."
+        "zh": "$\\partial E/\\partial u=2(u-1)$，$\\partial E/\\partial v=2(v-2)$。旧点的梯度为 $(-2,-4)$；减去 $0.1(-2,-4)$，得到 $(0.2,0.4)$。旧损失为 $1+4=5$，新损失为 $(-0.8)^2+(-1.6)^2=3.2$。",
+        "en": "$\\partial E/\\partial u=2(u-1)$ and $\\partial E/\\partial v=2(v-2)$. The old-point gradient is $(-2,-4)$. Subtracting $0.1(-2,-4)$ gives $(0.2,0.4)$. The old loss is $1+4=5$; the new loss is $(-0.8)^2+(-1.6)^2=3.2$."
       },
       "check_q": {
         "zh": "令 $z=3x+1$、$y=z^2$。当 $x=1$ 时，$dy/dx$ 是多少？为什么不能只写 $2z$？",
@@ -207,7 +207,7 @@
           "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
           "locator": "本补课单元 / This foundation unit",
           "kind": "derived",
-          "note": "用差商展开、解析偏导和有限差分验证；不把导数为零误当作全局最优充分条件。 / Checked through difference quotients, analytic partials, and finite differences; a zero derivative is not claimed to guarantee a global optimum."
+          "note": "差商、偏导与链式法则的补充算例。 / Supplementary difference-quotient, partial-derivative and chain-rule examples."
         }
       ]
     },
@@ -248,7 +248,7 @@
           "name": "Kurose & Ross, Computer Networking: A Top-Down Approach, 8th ed.",
           "locator": "§1.4.1，印刷页 / printed pp.36–38；PDF pp.47–49",
           "kind": "historical",
-          "note": "教材时延定义；只使用定义，不照背旧速率示例。 / Textbook delay definitions; historical example speeds are not treated as current measurements."
+          "note": "教材中的发送时延与传播时延定义。 / Textbook definitions of transmission and propagation delay."
         },
         {
           "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
@@ -295,7 +295,7 @@
           "name": "原创基础讲解与手算例题 / Original foundation explanation and worked example",
           "locator": "本补课单元 / This foundation unit",
           "kind": "derived",
-          "note": "二进制展开与 /26、/27 地址块为自拟教学例子；不是本学期 Tutorial 的原题。 / Binary expansions and /26-/27 blocks are original teaching examples, not current tutorial questions."
+          "note": "二进制展开与/26、/27地址块为补充教学例。 / Supplementary binary-expansion and /26–/27 address-block examples."
         }
       ]
     },

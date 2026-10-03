@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml31",
   "title": {
-    "zh": "一个估价师容易摇摆，多棵树怎样一起估价格？",
-    "en": "How can several trees estimate a price together?"
+    "zh": "回归树与集成：分组估价、森林平均和逐轮修正",
+    "en": "Regression trees and ensembles: leaf estimates, forest averages and boosting"
   },
   "minutes": "15–20",
   "lede": {
@@ -143,7 +143,7 @@
         },
         {
           "type": "prose",
-          "text": "先用下面三张卡巩固叶均值、森林平均和一次梯度修正。原课堂房价实验仍需实际运行才能报告成绩，手算示范没有替你完成它。"
+          "text": "先用下面三张卡巩固叶均值、森林平均和一次梯度修正。运行课堂房价实验时，可用这些计算检查叶预测、平均和更新方向，再记录验证误差。"
         },
         {
           "type": "recap"

@@ -1,12 +1,12 @@
 {
   "lesson_id": "ml24",
   "title": {
-    "zh": "预测错了，怎样知道该改哪一个数？",
-    "en": "Trace a prediction error back to the parameters"
+    "zh": "反向传播：沿计算图求导，再更新参数",
+    "en": "Backpropagation: differentiate through the graph, then update parameters"
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "给定输入 x=2，希望程序输出 3。先用最小的模型 q=wx；当 w=1 时它只输出 2。我们要知道把 w 往哪边改、改多少有帮助。若计算经过很多层，靠一个参数一个参数试太慢，反向传播便用每一步的局部导数，把最终误差有次序地传回来。\n\nLecture5现从感知机、多分类概率逐步走到反向传播。本节先讲计算图，再回整讲的批量矩阵推导；Assignment2中的可学习指数见独立作业指南。",
+    "zh": "给定输入 x=2，希望程序输出 3。先用最小的模型 q=wx；当 w=1 时它只输出 2。我们要知道把 w 往哪边改、改多少有帮助。若计算经过很多层，靠一个参数一个参数试太慢，反向传播便用每一步的局部导数，把最终误差有次序地传回来。\n\nLecture5从感知机、多分类概率逐步走到反向传播。本节先讲计算图，再回整讲的批量矩阵推导；Assignment2中的可学习指数见独立作业指南。",
     "en": "For input x=2, a program should output 3. Start with q=wx: at w=1 it predicts only 2. Which way should w move? When a calculation contains many layers, testing every parameter separately becomes expensive. Backpropagation applies local derivatives in a systematic reverse order.\n\nCurrent Lecture 5 connects perceptrons and multiclass probabilities to backpropagation; the full notes and Assignment 2 guide supply batch derivatives and the learnable exponent."
   },
   "sections": [
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "神经网络的一层通常先加权求和，再经过激活函数。含偏置的“线性层”严格说是仿射变换。若两层之间没有非线性，$W_2(W_1x+b_1)+b_2=(W_2W_1)x+W_2b_1+b_2$，仍能合并成一层；只是多开了工位，并没有增加新的函数形状。\n\n例如 ReLU 把负数截成零、正数保留，即 $\\max(0,z)$，这才改变可表达的关系。历史 Lecture9.1 第 23、26、28 页依次谈隐藏层和激活函数。激活、输出与损失要服务任务：分类常用交叉熵，连续量预测可用平方误差。不要把所有网络的末尾都机械塞进同一个概率函数。"
+          "text": "神经网络的一层通常先加权求和，再经过激活函数。含偏置的“线性层”严格说是仿射变换。若两层之间没有非线性，$W_2(W_1x+b_1)+b_2=(W_2W_1)x+W_2b_1+b_2$，仍能合并成一层，所能表示的函数形状仍然是仿射的。\n\n例如 ReLU 把负数截成零、正数保留，即 $\\max(0,z)$，这才改变可表达的关系。历史 Lecture9.1 第 23、26、28 页依次谈隐藏层和激活函数。激活、输出与损失要服务任务：分类常用交叉熵，连续量预测可用平方误差。不要把所有网络的末尾都机械塞进同一个概率函数。"
         }
       ]
     },
@@ -95,7 +95,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "把样本放在 X 的行里，层输出为 $Y=XW+b$。设回传梯度 $G=\\partial L/\\partial Y$，则 $dW=X^TG$、$dX=GW^T$，偏置梯度按样本行相加。若 X 为 n×d、W 为 d×h，Y 与 G 都是 n×h，dW 应回到 d×h；形状检查能抓住不少转置错误。\n\n损失是对样本求和还是取均值，会改变梯度尺度，G 应已经包含该系数。这里解释批量层的记账，不要求第一遍记住所有框架接口；能从标量链式法则解释矩阵结果，比照抄一个恰好不报错的张量运算更可靠。"
+          "text": "把样本放在 X 的行里，层输出为 $Y=XW+b$。设回传梯度 $G=\\partial L/\\partial Y$，则 $dW=X^TG$、$dX=GW^T$，偏置梯度按样本行相加。若 X 为 n×d、W 为 d×h，Y 与 G 都是 n×h，dW 应回到 d×h；形状检查能抓住不少转置错误。\n\n损失是对样本求和还是取均值，会改变梯度尺度，G 应已经包含该系数。可以逐元素使用链式法则，再将各样本的贡献合并，检查这些矩阵式。"
         }
       ]
     },
@@ -180,7 +180,7 @@
       "name": "原创串讲与已有教学练习 / Authored explanation and existing exercises",
       "locator": "ml24 · worked / practice / transfer",
       "kind": "derived",
-      "note": "补充情境和数值例子帮助解释原课，不是教师原题或真实实验记录；保留既有题答引用。"
+      "note": "计算图与单样本更新为补充教学练习。"
     },
     {
       "name": "Lecture5a/b and Assignment2",

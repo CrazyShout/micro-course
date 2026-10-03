@@ -1,13 +1,13 @@
 {
   "lesson_id": "net04",
   "title": {
-    "zh": "带宽明明够，包为什么还在排队？",
-    "en": "Capacity, throughput, and queueing"
+    "zh": "吞吐量与排队：平均负载相同，等待为何不同？",
+    "en": "Throughput and queueing: why equal average loads can produce different waits"
   },
   "minutes": "12–18",
   "lede": {
     "zh": "一条链路每毫秒能发完一个包。一种流量慢慢来，另一种突然一口气来四个包；两者长期发送量相同，用户等待也会一样吗？先把到达时刻写出来。",
-    "en": "Capacity, throughput, and queueing. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+    "en": "A link can transmit one packet per millisecond. One traffic pattern spreads four packets out; another sends all four at once. Their long-run loads are equal, but do they produce the same waiting time? Write down the arrivals to find out."
   },
   "sections": [
     {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "想象路由器的输出链路是正在处理任务的服务台：一个包正在发送时，新到的包通常要等。这里借用服务台只为解释“先后”，网络里的数据仍由比特和缓冲区组成。若包间隔足够长，队列可能每次都来得及清空；若一起到达，就有包等在别人后面。\n\n我们关心的是开始发送前等了多久，不包括这个包自身的发送时间。FIFO表示先到先服务。其他优先级规则会改变顺序，因此没有交代服务规则的题，不应凭一个平均速率就猜出所有等待。"
+          "text": "想象路由器的输出链路是正在处理任务的服务台：一个包正在发送时，新到的包通常要等。若包间隔足够长，队列可能每次都来得及清空；若一起到达，就有包等在别人后面。\n\n我们关心的是开始发送前等了多久，不包括这个包自身的发送时间。FIFO表示先到先服务。其他优先级规则会改变顺序，因此没有交代服务规则的题，不应凭一个平均速率就猜出所有等待。"
         }
       ]
     },
@@ -34,7 +34,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "容量是链路能提供的传输上限；吞吐量是某段时间实际交付了多少数据除以时间；时延是一个指定事件等多久。大文件持续传得很多，不代表一条短请求不用久等。\n\n老师 Chapter 1 第53–55张串联快慢链路：理想单流不受其他限制时，持续吞吐量受最小链路速率约束。两段分别10和2 Mbps，并不会合成12 Mbps。若第二段已经是瓶颈，给第一段升级就像给等餐的人换更快的鞋——厨房出餐速度没有变。这个比喻只说明非瓶颈升级的限制。\n\n共享时还要问哪些流共用哪段容量。协议首部、重传和窗口也可降低应用有效吞吐量。具体分流计算保留在“共享瓶颈”补充单元，不把所有链路一律除以总用户数。"
+          "text": "容量是链路能提供的传输上限；吞吐量是某段时间实际交付了多少数据除以时间；时延是一个指定事件等多久。大文件持续传得很多，不代表一条短请求不用久等。\n\n老师 Chapter 1 第53–55张串联快慢链路：理想单流不受其他限制时，持续吞吐量受最小链路速率约束。两段分别10和2 Mbps，并不会合成12 Mbps。若第二段已经是瓶颈，给第一段升级就像给等餐的人换更快的鞋——厨房出餐速度没有变。\n\n共享时还要问哪些流共用哪段容量。协议首部、重传和窗口也可降低应用有效吞吐量。具体分流计算保留在“共享瓶颈”补充单元，不把所有链路一律除以总用户数。"
         }
       ]
     },
@@ -88,7 +88,7 @@
         },
         {
           "type": "prose",
-          "text": "你应能从自己的四行时间表说明：平均负载相同并不决定平均等待。书本图是另一种看法，不是新做的一次真实网络实验。"
+          "text": "你应能从自己的四行时间表说明：平均负载相同并不决定平均等待。书本补充用图示展示这些等待。"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net04 worked/practice/transfer",
       "kind": "derived",
-      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+      "note": "负载计算与确定到达时间表为补充教学练习。"
     }
   ],
   "objective_map": [

@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml29",
   "title": {
-    "zh": "把图像切成小块，它们怎样互相取信息？",
-    "en": "How do image patches exchange information?"
+    "zh": "ViT与注意力：图像块怎样交换信息",
+    "en": "ViT and attention: how image patches exchange information"
   },
   "minutes": "15–20",
   "lede": {
@@ -176,7 +176,7 @@
       "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
       "locator": "ml29 · worked / practice / transfer",
       "kind": "derived",
-      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+      "note": "patch计数、注意力加权与维度检查为补充教学练习。"
     }
   ]
 }

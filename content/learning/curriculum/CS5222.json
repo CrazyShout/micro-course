@@ -81,8 +81,8 @@
         "cs5222-assignment-1"
       ],
       "review": {
-        "zh": "先做与刚学概念相配的Tutorial题，再回到该微课的少量首轮卡主动回忆。原题和图在活动内引用现有卡，不另造一份卡组；复习排程由Markji负责。",
-        "en": "Attempt tutorial questions tied to the concept just learned, then actively recall the lesson’s small first-pass card set. Activities reuse existing question cards and figures; Markji handles review scheduling."
+        "zh": "做完相应Tutorial题，再用微课列出的少量首轮卡回忆概念与步骤。题干、必要图片和双语答案可在活动页查阅，后续复习由Markji安排。",
+        "en": "After the relevant tutorial questions, use the lesson’s small first-pass card set to recall concepts and steps. Activities provide questions, figures and bilingual answers; Markji schedules later reviews."
       },
       "sources": [
         {
@@ -107,7 +107,7 @@
           "name": "tutorial-2_semA2026.pdf",
           "locator": "pages 1–3",
           "kind": "course",
-          "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+          "note": "当前2026–27 Tutorial2原题；教师解答另列。"
         }
       ],
       "missing": [
@@ -116,8 +116,8 @@
           "en": "The directory maps downloaded materials, not confirmed classroom completion or the official QE scope."
         },
         {
-          "zh": "概览列有三个普通作业和一次Wireshark作业，但当前任务文件未下载；它们的章级对应尚不能确认，不用历史题单补成当前任务。",
-          "en": "The overview lists three regular assignments and one Wireshark assignment, but their current task documents are missing. Chapter correspondence is unconfirmed; historical sheets do not stand in for current tasks."
+          "zh": "当前已提供Assignment1，内容关联Chapter1与2；概览中的后续普通作业与Wireshark作业仍待相应任务文件。",
+          "en": "Assignment 1 is available and relates to Chapters 1 and 2. The remaining regular and Wireshark assignments listed in the overview still await their task files."
         }
       ]
     },
@@ -189,8 +189,8 @@
         "cs5222-chapter-2-check"
       ],
       "review": {
-        "zh": "使用对应微课已有题答与首轮卡巩固；目前Tutorial 1–2都属于Chapter 1，不把它们挪来充当应用层练习。",
-        "en": "Use existing lesson exercises and first-pass cards. Tutorials 1–2 support Chapter 1 and are not relabelled as application-layer practice."
+        "zh": "Tutorial3练HTTP与DNS，Tutorial4练文件分发和DASH；Assignment1进一步结合时延、邮件与产品协议分析。做完后用相应微课和卡片核对关键步骤。",
+        "en": "Tutorial 3 practices HTTP and DNS; Tutorial 4 covers file distribution and DASH. Assignment 1 combines timing, mail and product-protocol analysis. Use the related lessons and cards to check your reasoning."
       },
       "sources": [
         {
@@ -220,8 +220,8 @@
       ],
       "missing": [
         {
-          "zh": "完整Chapter2已下载；后续章节是否属于当前教学仍待Canvas材料。",
-          "en": "Full Chapter 2 is available; later chapters still require current Canvas confirmation."
+          "zh": "Chapter2完整材料已提供；Chapter3目前提供part1–2，后续部分仍待Canvas更新。",
+          "en": "The full Chapter 2 materials are available. Chapter 3 currently includes parts 1–2; later parts await Canvas updates."
         }
       ]
     },
@@ -293,8 +293,8 @@
         "en": "Tutorial 1 · Switching, resources and pipelines"
       },
       "intro": {
-        "zh": "这份 Tutorial 配套 Chapter 1。按 Q1–Q4 保留老师的题目顺序，每题先确认对象和完成事件，再看必要补课。题干/图和双语答案引用已有卡，以下方法是帮助你独立做题的教学整理；不把自拟的 800 包例子当作本表原题。",
-        "en": "This tutorial supports Chapter 1. Keep the original Q1–Q4 order: identify objects and completion events before using the linked explanation. Existing cards supply the questions, necessary figures and bilingual answers; the approaches below are teaching guidance, not additional instructor questions. The separate 800-packet example is not an original question on this sheet."
+        "zh": "这份Tutorial配套Chapter1，按Q1–Q4依次练习存储转发、电路资源、文件时间和用户活跃概率。题干、图与双语答案见下方关联卡片；方法说明帮助你逐步列出条件并完成计算。",
+        "en": "This Chapter 1 tutorial follows Q1–Q4: store-and-forward, circuit resources, file-transfer time and user-activity probabilities. Linked cards provide the questions, figures and bilingual answers; the guidance develops the calculations from their assumptions."
       },
       "units": [
         "chapter-1"
@@ -511,8 +511,8 @@
         "en": "Tutorial 2 · Packetization, delay, queues and measurement"
       },
       "intro": {
-        "zh": "虽然题目出现语音通话与traceroute，这份Tutorial考查的是Chapter 1的网络性能。按Q1–Q5练习“从哪个事件开始、到哪个事件结束”。当前只有题目文件；网页解答是已有卡片的教学推导，不称教师标准答案。",
-        "en": "Although the questions mention voice calls and traceroute, they assess Chapter 1 performance concepts. Work through Q1–Q5 by identifying the starting and finishing events. Only the question sheet is currently available; web explanations are teaching derivations from existing cards, not a claimed instructor solution."
+        "zh": "这份Tutorial练习Chapter1的网络性能：从组包和逐跳时延，到FIFO等待与traceroute观测。按Q1–Q5先确定计时起终点，再对照题目和已下载的教师解答。",
+        "en": "This Chapter 1 tutorial covers packetization, per-hop delay, FIFO waiting and traceroute observations. For Q1–Q5, define the starting and finishing events, then compare with the question sheet and the available instructor solutions."
       },
       "units": [
         "chapter-1"
@@ -557,12 +557,12 @@
               "name": "tutorial-2_semA2026.pdf",
               "locator": "page 1, Q1",
               "kind": "course",
-              "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+              "note": "当前2026–27 Tutorial2原题；教师解答另列。"
             },
             {
               "name": "tutorial-2-solution_semA2026.pptx",
               "locator": "slides 5–13",
-              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "note": "当前Tutorial2教师解答。",
               "kind": "course"
             }
           ]
@@ -602,12 +602,12 @@
               "name": "tutorial-2_semA2026.pdf",
               "locator": "page 1, Q2(a–b)",
               "kind": "course",
-              "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+              "note": "当前2026–27 Tutorial2原题；教师解答另列。"
             },
             {
               "name": "tutorial-2-solution_semA2026.pptx",
               "locator": "slides 5–13",
-              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "note": "当前Tutorial2教师解答。",
               "kind": "course"
             }
           ]
@@ -646,12 +646,12 @@
               "name": "tutorial-2_semA2026.pdf",
               "locator": "page 2, Q3",
               "kind": "course",
-              "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+              "note": "当前2026–27 Tutorial2原题；教师解答另列。"
             },
             {
               "name": "tutorial-2-solution_semA2026.pptx",
               "locator": "slides 5–13",
-              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "note": "当前Tutorial2教师解答。",
               "kind": "course"
             }
           ]
@@ -691,12 +691,12 @@
               "name": "tutorial-2_semA2026.pdf",
               "locator": "page 2, Q4",
               "kind": "course",
-              "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+              "note": "当前2026–27 Tutorial2原题；教师解答另列。"
             },
             {
               "name": "tutorial-2-solution_semA2026.pptx",
               "locator": "slides 5–13",
-              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "note": "当前Tutorial2教师解答。",
               "kind": "course"
             }
           ]
@@ -736,7 +736,7 @@
               "name": "tutorial-2_semA2026.pdf",
               "locator": "page 3, Q5(a–c)",
               "kind": "course",
-              "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+              "note": "当前2026–27 Tutorial2原题；教师解答另列。"
             },
             {
               "name": "cs5222_cha1_2026_student.pptx",
@@ -747,7 +747,7 @@
             {
               "name": "tutorial-2-solution_semA2026.pptx",
               "locator": "slides 5–13",
-              "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+              "note": "当前Tutorial2教师解答。",
               "kind": "course"
             }
           ]
@@ -758,7 +758,7 @@
           "name": "tutorial-2_semA2026.pdf",
           "locator": "pages 1–3",
           "kind": "course",
-          "note": "当前 2026–27 Tutorial 2 原题；当前教师解答已下载；结合原题与独立计算核验。"
+          "note": "当前2026–27 Tutorial2原题；教师解答另列。"
         },
         {
           "name": "cs5222_cha1_2026_student.pptx",
@@ -769,7 +769,7 @@
         {
           "name": "tutorial-2-solution_semA2026.pptx",
           "locator": "slides 5–13",
-          "note": "本次新增的当期教师解答；按问题条件核对，不把概括当无条件结论。",
+          "note": "当前Tutorial2教师解答。",
           "kind": "course"
         }
       ]
@@ -782,8 +782,8 @@
         "en": "Chapter 1 · Class Q&A and closing overview"
       },
       "intro": {
-        "zh": "先完成概念微课与相关Tutorial，再回看老师Q&A。这里按问题实际依赖的概念提供回链，不因卡片旧归属就把全部检查挤进NET02。安全与历史是本章原课件的概览内容，单列为章末回顾；不代表正式QE范围。",
-        "en": "After the relevant lessons and tutorials, revisit the instructor Q&A. Links follow the concepts each question needs rather than grouping every check under NET02. Security and history are introductory topics in the chapter’s original slides, retained for closing review; this is not a confirmed QE syllabus."
+        "zh": "用老师的课堂Q&A回顾端系统、流水线、排队、瓶颈和分层，再看章末的安全与互联网发展概览。每题旁的微课链接可用于补充相关机制。",
+        "en": "Use the instructor’s Q&A to review endpoints, pipelining, queues, bottlenecks and layers, then revisit the chapter’s security and Internet-history overview. Each question links to the relevant explanation."
       },
       "units": [
         "chapter-1"
@@ -848,8 +848,8 @@
             "en": "Reuse the two-row timeline and check first and subsequent completion times."
           },
           "check": {
-            "zh": "4L/R；用到达时刻2L/R、3L/R、4L/R解释，不必重复创建一张新卡。",
-            "en": "4L/R, explained by arrivals at 2L/R, 3L/R and 4L/R. The existing card serves both sources."
+            "zh": "4L/R；用到达时刻2L/R、3L/R、4L/R解释。",
+            "en": "4L/R, explained by arrivals at 2L/R, 3L/R and 4L/R."
           },
           "pitfall": {
             "zh": "两份资料的选项字母可能不同，记推理而非字母。",
@@ -1053,8 +1053,8 @@
         "en": "Course-level task · Research Report"
       },
       "intro": {
-        "zh": "这是跨章研究任务，选题关联教材Chapters 1–7，不包括Chapter 8安全主题；不预先归到某一个Chapter。现有NET11提供解释、证据和英文表述的方法。以下是依当前任务文件整理的准备路径，实际提交仍由你完成。",
-        "en": "This is a cross-chapter research task tied to textbook Chapters 1–7, excluding Chapter 8 security topics. It is not assigned to one chapter in advance. NET11 supports explanation, evidence and English expression. The steps below organize the current task document; you still perform and submit the work."
+        "zh": "这是跨章研究任务，选题关联教材Chapters 1–7，不包括Chapter 8安全主题；不预先归到某一个Chapter。现有NET11提供解释、证据和英文表述的方法。下面按任务要求安排选题、解释、取证与反思。",
+        "en": "This is a cross-chapter research task tied to textbook Chapters 1–7, excluding Chapter 8 security topics. It is not assigned to one chapter in advance. NET11 supports explanation, evidence and English expression. The steps below cover topic selection, explanation, evidence and reflection."
       },
       "units": [],
       "lesson_ids": [
@@ -1080,8 +1080,8 @@
             "en": "A reader can state what the system does, why and how far the evidence supports the claims. Every reference resolves to a real original source, and figures are accurate and credited."
           },
           "pitfall": {
-            "zh": "不要把教学模型的示例数字写成自己的测量，或把AI输出当作未经核验的一手证据。",
-            "en": "Do not present teaching numbers as your measurements or unverified AI output as primary evidence."
+            "zh": "区分教学例子与实际观察；AI提供的线索需要回到原始资料核查后引用。",
+            "en": "Distinguish teaching examples from observations. Verify AI-suggested claims in their original sources before citing them."
           },
           "lesson_ids": [
             "net11"
@@ -1121,8 +1121,8 @@
             "en": "Check that each key technical claim traces to a source you actually read, figures support the explanation accurately, and facts are distinguished from inferences. Verify that the reflection honestly addresses learning, difficulties, GenAI use, verification and future improvements."
           },
           "pitfall": {
-            "zh": "不要用流畅措辞代替机制解释，不要引用没核验的文献、把自动生成的图当作技术事实，或把未执行的实验写成自己的结果。",
-            "en": "Do not substitute fluent prose for a mechanism, cite unchecked references, treat generated diagrams as technical facts, or report unperformed experiments as your own results."
+            "zh": "图示中的每个关键连接都应有机制依据；反思可用一次具体经历说明发现了什么问题、怎样核验和修正。",
+            "en": "Ground each important connection in a diagram in the mechanism. In the reflection, use a specific experience to explain what went wrong and how you checked and corrected it."
           },
           "lesson_ids": [
             "net11"
@@ -1170,7 +1170,7 @@
         {
           "name": "tutorial-3_semA2026.pdf",
           "locator": "pages 1–3",
-          "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+          "note": "当前2026–27 Tutorial3原题。",
           "kind": "course"
         }
       ],
@@ -1207,7 +1207,7 @@
             {
               "name": "tutorial-3_semA2026.pdf",
               "locator": "page 1, P1",
-              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "note": "当前2026–27 Tutorial3原题。",
               "kind": "course"
             }
           ]
@@ -1244,7 +1244,7 @@
             {
               "name": "tutorial-3_semA2026.pdf",
               "locator": "page 2, P2 and figure",
-              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "note": "当前2026–27 Tutorial3原题。",
               "kind": "course"
             }
           ]
@@ -1282,7 +1282,7 @@
             {
               "name": "tutorial-3_semA2026.pdf",
               "locator": "page 3, P3",
-              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "note": "当前2026–27 Tutorial3原题。",
               "kind": "course"
             }
           ]
@@ -1306,8 +1306,8 @@
             "en": "Use actual output, allowing multiple addresses or aliases over time and location. Direct IP need not work because virtual hosts and HTTPS SNI/certificates can require the domain; do not bypass browser security warnings to claim success."
           },
           "pitfall": {
-            "zh": "本页没有替你运行命令，也没有提供固定的“标准IP”。",
-            "en": "This page has not run the command for you and supplies no fixed expected IP."
+            "zh": "查询结果会随时间、地点和缓存状态变化，应将答案与本次查询条件一起记录。",
+            "en": "Results can vary with time, location and cache state. Record the answer together with the conditions of this lookup."
           },
           "lesson_ids": [
             "net09",
@@ -1318,7 +1318,7 @@
             {
               "name": "tutorial-3_semA2026.pdf",
               "locator": "page 3, P4",
-              "note": "当前2026–27原题，已核对HTTP报文、DNS图和题设数字。",
+              "note": "当前2026–27 Tutorial3原题。",
               "kind": "course"
             }
           ]
@@ -1351,7 +1351,7 @@
         {
           "name": "CS5222 Assignment 1.pdf",
           "locator": "pages 1–4",
-          "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+          "note": "当前作业题目；方法说明与分步推导为整理补充。",
           "kind": "course"
         }
       ],
@@ -1388,7 +1388,7 @@
             {
               "name": "CS5222 Assignment 1.pdf",
               "locator": "page 1, P6(a–g)",
-              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "note": "当前作业题目；方法说明与分步推导为整理补充。",
               "kind": "course"
             }
           ]
@@ -1404,8 +1404,8 @@
             "en": "Use the original three-link path with two store-and-forward switches, each link 2Mbps. Compare one 8×10⁶-bit message with 800 packets of 10000 bits, ignoring propagation, processing, queueing and headers."
           },
           "approach": {
-            "zh": "先画首包跨三跳，再每隔一个包的发送时长放入下一包。可以复用NET10已有算例，现在它也有当前作业出处。",
-            "en": "Trace the first packet over three hops, then add subsequent packets one serialization time apart. The existing NET10 example now also has a current assignment source."
+            "zh": "先画首包跨三跳，再每隔一个包的发送时长放入下一包。NET10提供同一条件下的分步算例。",
+            "en": "Trace the first packet over three hops, then add subsequent packets one serialization time apart. NET10 gives the worked calculation under these same conditions."
           },
           "check": {
             "zh": "整报文到第一交换机4秒、到终点12秒。一个包每跳5ms；首包到第一交换机5ms，第二包10ms；全体到终点(800+3−1)×5ms=4.01秒。分包也降低单次重传量，但增加首部、排序/重组工作与调度开销。",
@@ -1426,7 +1426,7 @@
             {
               "name": "CS5222 Assignment 1.pdf",
               "locator": "page 2, P31(a–e), Figure 1.27",
-              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "note": "当前作业题目；方法说明与分步推导为整理补充。",
               "kind": "course"
             }
           ]
@@ -1463,7 +1463,7 @@
             {
               "name": "CS5222 Assignment 1.pdf",
               "locator": "page 3, P17(a–c) plus current completion note",
-              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "note": "当前作业题目；方法说明与分步推导为整理补充。",
               "kind": "course"
             }
           ]
@@ -1483,8 +1483,8 @@
             "en": "Examples across supported access modes are HTTPS for setup/web services and SIP or H.323 for third-party rooms through Conference Room Connector. The latter are not required of every ordinary client. For a narrower native-client claim, verify its media/control protocol from that version’s documentation; TCP, UDP and IP are not application-layer examples."
           },
           "check": {
-            "zh": "官方资料支持常规云会议经Zoom服务器/多媒体路由器组织；媒体优先UDP并有其他连接方式，信令与Web流量需分开说明。云课堂学生通常连接Zoom服务端，不必先知道老师设备IP；特定P2P或Zoom Mesh配置可能改变局部路径。提交时附文档日期、产品与适用条件，真实抓包是额外证据，不是此页已经测得。",
-            "en": "Official sources describe cloud routing via Zoom infrastructure, UDP-preferred media with other connectivity modes, and distinct web/signaling flows. A cloud-class participant generally need not know the lecturer-device IP first. Specific P2P or Zoom Mesh configurations can change local paths. State dates, products and conditions; a real trace would be additional evidence, not a result produced here."
+            "zh": "官方资料支持常规云会议经Zoom服务器/多媒体路由器组织；媒体优先UDP并有其他连接方式，信令与Web流量需分开说明。云课堂学生通常连接Zoom服务端，不必先知道老师设备IP；特定P2P或Zoom Mesh配置可能改变局部路径。提交时附文档日期、产品与适用条件，如有实际抓包，可补充对应的观测条件和结果。",
+            "en": "Official sources describe cloud routing via Zoom infrastructure, UDP-preferred media with other connectivity modes, and distinct web/signaling flows. A cloud-class participant generally need not know the lecturer-device IP first. Specific P2P or Zoom Mesh configurations can change local paths. State dates, products and conditions; an actual trace can add evidence when its observation conditions and results are recorded."
           },
           "pitfall": {
             "zh": "不要照抄旧解“UDP没有检错”“所有媒体直连老师电脑”。UDP校验与重传是不同问题，Zoom Phone文档也不能不加说明地替代Zoom Meetings。",
@@ -1501,7 +1501,7 @@
             {
               "name": "CS5222 Assignment 1.pdf",
               "locator": "page 4, Zoom question",
-              "note": "当前作业原页，已逐页目视核对；方法与推导为学习辅助。",
+              "note": "当前作业题目；方法说明与分步推导为整理补充。",
               "kind": "course"
             },
             {
@@ -1551,28 +1551,26 @@
             "en": "Fluid allocation"
           },
           "task": {
-            "zh": "流体分配方案",
-            "en": "Fluid allocation"
+            "zh": "服务器将F bit文件分给N个客户端，上传率us，最慢下载率dmin。允许连续可分流量时，构造达到分发时间下界的速率分配方案。",
+            "en": "A server distributes F bits to N clients with upload rate us and slowest download rate dmin. Under divisible fluid traffic, construct an allocation that attains the distribution-time lower bound."
           },
           "approach": {
             "zh": "给每人min(us/N,dmin)，核对总上传和每人下载约束。",
             "en": "Allocate min(us/N,dmin) and verify every constraint."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "每人分配min(us/N,dmin)，同时完成于max(NF/us,F/dmin)；核对总上传不超us、每人速率不超其下载能力。",
+            "en": "Allocate min(us/N,dmin) per client. All finish at max(NF/us,F/dmin); check aggregate upload and each client’s download limit."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "题目要求构造可行方案，仅写一个下界还不够。",
+            "en": "The question asks for a feasible construction, not only a lower bound."
           },
           "lesson_ids": [
             "net12"
           ],
           "card_ids": [
-            "CS5222-N234",
-            "CS5222-N235",
-            "CS5222-N236"
+            "CS5222-N234"
           ],
           "sources": [
             {
@@ -1590,28 +1588,26 @@
             "en": "Distribution time"
           },
           "task": {
-            "zh": "分发时间",
-            "en": "Distribution time"
+            "zh": "F=15 Gbit、N=100、服务器上传30 Mbps；每客户端下载2 Mbps、上传0.7 Mbps。比较client-server与P2P的理想分发时间。",
+            "en": "For F=15 Gbit, N=100, server upload 30 Mbps, and client download/upload rates 2/0.7 Mbps, compare ideal client-server and P2P distribution times."
           },
           "approach": {
-            "zh": "原15Gbit、100人、30Mbps/2Mbps/0.7Mbps，得到50000s与15000s。",
-            "en": "The original values give 50000 s and 15000 s."
+            "zh": "先将文件换成15000 Mbit，分别列服务器总上传、最慢下载和P2P总上传约束。",
+            "en": "Convert the file to 15000 Mbit, then compute server-upload, slowest-download and aggregate P2P-upload constraints."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "client-server为max(50000,7500)=50000秒；P2P为max(500,7500,15000)=15000秒。",
+            "en": "Client-server: max(50000,7500)=50000 s. P2P: max(500,7500,15000)=15000 s."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "这些资源可同时工作，时间取最大值，不将各约束相加。",
+            "en": "The resources operate concurrently; take the maximum rather than adding the bounds."
           },
           "lesson_ids": [
             "net12"
           ],
           "card_ids": [
-            "CS5222-N234",
-            "CS5222-N235",
-            "CS5222-N236"
+            "CS5222-N235"
           ],
           "sources": [
             {
@@ -1629,25 +1625,27 @@
             "en": "BitTorrent free-riding"
           },
           "task": {
-            "zh": "BitTorrent 搭便车",
-            "en": "BitTorrent free-riding"
+            "zh": "Bob加入BitTorrent但不上传，是否仍可能收齐文件？使用多台不同IP电脑，是否可能提高这种做法的效率？",
+            "en": "Can Bob finish a BitTorrent download without uploading? Could multiple computers with different IP addresses improve this possibility?"
           },
           "approach": {
             "zh": "解释optimistic unchoking如何使其可能，保留停留/供给条件。",
             "en": "Explain the possibility using optimistic unchoking, without guaranteeing success."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "两个问题都存在这种可能：乐观解锁提供机会，多主机可能收集不同片段；完成时间仍取决于供给与peer停留。",
+            "en": "Both are possible: optimistic unchoking provides opportunities, and multiple hosts may collect complementary pieces. Availability and peer residence still constrain completion."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "可能下载完成不等于保证完成；多主机也不保证按数量同比提速。",
+            "en": "Possible completion is not guaranteed completion, and more hosts do not guarantee proportional speedup."
           },
           "lesson_ids": [
             "net12"
           ],
-          "card_ids": [],
+          "card_ids": [
+            "CS5222-N140"
+          ],
           "sources": [
             {
               "name": "Tutorial-4_semA2026.pdf",
@@ -1664,27 +1662,25 @@
             "en": "DASH pairing"
           },
           "task": {
-            "zh": "DASH配对",
-            "en": "DASH pairing"
+            "zh": "有N种视频质量和N种音频质量。按题目(a)的同等级一一配对，预合并需几份文件？改为分轨保存需几份？",
+            "en": "There are N video qualities and N audio qualities. How many precombined files are needed under part (a)’s one-to-one quality pairing, and how many if the tracks are stored separately?"
           },
           "approach": {
             "zh": "按v2一一配对答N，分轨2N；N²为任意配对扩展。",
             "en": "Use N for one-to-one pairs and 2N for separate tracks; all pairs need N squared."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "教师v2按一一配对给N；分轨为2N。只有预存全部任意组合时才为N²。",
+            "en": "The instructor’s v2 solution uses N for one-to-one pairing and 2N for separate tracks. N² applies to precombining every possible pair."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "先读(a)括号中的配对限制；任意配对与一一配对是不同条件。",
+            "en": "Read part (a)’s pairing restriction: arbitrary pairing and one-to-one pairing are different assumptions."
           },
           "lesson_ids": [
             "net12"
           ],
           "card_ids": [
-            "CS5222-N234",
-            "CS5222-N235",
             "CS5222-N236"
           ],
           "sources": [
@@ -1731,28 +1727,26 @@
             "en": "Socket identity"
           },
           "task": {
-            "zh": "Socket标识",
-            "en": "Socket identity"
+            "zh": "按课堂模型比较普通UDP接收socket与已建立TCP连接分别由哪些地址、端口标识。",
+            "en": "Under the classroom model, which addresses and ports identify a UDP receive socket and an established TCP connection?"
           },
           "approach": {
             "zh": "按课堂普通UDP二元组、已建立TCP四元组比较。",
             "en": "Compare classroom UDP and established TCP identifiers."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "UDP看目的IP与目的端口；已建立TCP连接看双方IP与端口组成的四元组。",
+            "en": "UDP uses destination IP and port; an established TCP connection uses the four-tuple of both endpoints."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "这里的TCP四元组指已建立连接；监听入口和connected UDP需另作区分。",
+            "en": "The TCP four-tuple refers to an established connection; distinguish listening endpoints and connected UDP."
           },
           "lesson_ids": [
             "net13"
           ],
           "card_ids": [
-            "CS5222-N150",
-            "CS5222-N237",
-            "CS5222-N238"
+            "CS5222-N150"
           ],
           "sources": [
             {
@@ -1770,20 +1764,20 @@
             "en": "Return endpoints"
           },
           "task": {
-            "zh": "回程端点",
-            "en": "Return endpoints"
+            "zh": "服务器B:80接收C:7532、C:26145、A:26145的三条连接。分别写回程源/目的端口及源/目的IP。",
+            "en": "Server B:80 has connections from C:7532, C:26145 and A:26145. Give source/destination ports and IP addresses on each return path."
           },
           "approach": {
             "zh": "交换双方IP和端口；三条返回目的端口为7532/26145/26145。",
             "en": "Reverse both endpoints; return ports are 7532/26145/26145."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "源端口均80，目的端口为7532、26145、26145；IP方向依次B→C、B→C、B→A。",
+            "en": "Source port is 80 in all replies. Destination ports are 7532, 26145 and 26145; IP directions are B→C, B→C and B→A."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "两个客户端可使用同一源端口，客户端IP仍让四元组不同。",
+            "en": "Two clients can use the same source port while differing in client IP, hence in the connection four-tuple."
           },
           "lesson_ids": [
             "net13"
@@ -1805,28 +1799,26 @@
             "en": "Checksum"
           },
           "task": {
-            "zh": "反码校验",
-            "en": "Checksum"
+            "zh": "对00100011、01001110、01010100计算简化8位反码校验和，并说明单bit与双bit错误能否检出。",
+            "en": "Compute the simplified 8-bit one’s-complement checksum of 00100011, 01001110 and 01010100. Discuss detection of single-bit and two-bit errors."
           },
           "approach": {
             "zh": "35+78+84=197，取反00111010；构造相消双bit反例。",
             "en": "Compute 00111010 and a cancelling two-bit-error example."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "和为197=11000101，取反得00111010。数据与校验和相加应全1；35→34且78→79的两处变化相消，可漏检。",
+            "en": "The sum is 197=11000101; complement it to get 00111010. Including the checksum should give all ones. Changes 35→34 and 78→79 cancel and can escape detection."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "有最高位进位时先卷回低位；8位是本题简化，真实UDP/TCP使用16位字。",
+            "en": "Fold any end-around carry before complementing. Eight-bit words simplify this exercise; UDP/TCP use 16-bit words."
           },
           "lesson_ids": [
             "net13"
           ],
           "card_ids": [
-            "CS5222-N150",
-            "CS5222-N237",
-            "CS5222-N238"
+            "CS5222-N237"
           ],
           "sources": [
             {
@@ -1844,27 +1836,25 @@
             "en": "Delayed duplicate"
           },
           "task": {
-            "zh": "旧包与编号重用",
-            "en": "Delayed duplicate"
+            "zh": "允许任意延迟与乱序时，构造rdt3.0交替比特协议将旧数据重复交付的事件序列，标出包与ACK的0/1编号。",
+            "en": "With arbitrary delay and reordering, construct an alternating-bit rdt3.0 sequence that redelivers old data. Label data and ACK sequence numbers."
           },
           "approach": {
             "zh": "旧0延迟，重传0和新1先完成，再让旧0在等待0时到达。",
             "en": "Delay old 0 until retransmitted 0 and new 1 have already completed."
           },
           "check": {
-            "zh": "完整原题、逐步答案与变式见对应整讲Tutorial文档。",
-            "en": "See the full tutorial notes for conditions, steps and variations."
+            "zh": "原A(0)延迟；重传A(0)先被交付，再交付B(1)；接收方重新等0时，原A(0)到达，被误认作新数据。",
+            "en": "Delay original A(0). Deliver its retransmission, then B(1). When the receiver expects 0 again, the original A(0) arrives and is mistaken for new data."
           },
           "pitfall": {
-            "zh": "先写条件与单位，不能仅背选项字母。",
-            "en": "State assumptions and units rather than memorizing letters."
+            "zh": "必须让旧0在编号重用后到达；仅说会乱序，没有构成完整反例。",
+            "en": "The stale 0 must arrive after sequence-number reuse; reordering alone is not a complete counterexample."
           },
           "lesson_ids": [
             "net13"
           ],
           "card_ids": [
-            "CS5222-N150",
-            "CS5222-N237",
             "CS5222-N238"
           ],
           "sources": [
@@ -1894,8 +1884,8 @@
         "en": "Chapter 2 · Six class checks"
       },
       "intro": {
-        "zh": "六题补到整章末尾，每题先答课堂情境，再解释现实边界。",
-        "en": "Six checks are appended to the chapter with scoped answers."
+        "zh": "六道课堂Q&A依次检查UDP服务、HTTP时序、邮件端点、DNS、BitTorrent与socket。学生版未附教师答案，以下按本章机制给出整理解释；完整选项见Chapter2章末。",
+        "en": "Six class questions cover UDP services, HTTP timing, mail endpoints, DNS, BitTorrent and sockets. The student slides have no instructor key; the explanations below follow the chapter mechanisms. Full options appear at the end of the Chapter 2 notes."
       },
       "units": [
         "chapter-2"
@@ -1914,20 +1904,20 @@
             "en": "UDP service selection"
           },
           "task": {
-            "zh": "UDP服务选择",
-            "en": "UDP service selection"
+            "zh": "在文件传输、视频流、邮件和在线游戏中，哪些符合课堂的UDP实时服务模型？",
+            "en": "Which of file transfer, video streaming, email and online games fit the classroom UDP model?"
           },
           "approach": {
             "zh": "课堂实时模型选视频/游戏；协议由实际部署决定。",
             "en": "Choose video/games in the classroom model; deployment can differ."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "课堂选视频流与在线游戏；解释它们的及时性需求。",
+            "en": "The classroom choices are video streaming and online games, based on timeliness requirements."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "实际部署仍取决于应用设计，服务名称不能唯一决定协议。",
+            "en": "Actual transport depends on application design; the service name does not uniquely determine it."
           },
           "lesson_ids": [
             "net06",
@@ -1952,20 +1942,20 @@
             "en": "HTML plus two images"
           },
           "task": {
-            "zh": "HTML与两张图",
-            "en": "HTML plus two images"
+            "zh": "同服务器上一份HTML和两张极小JPEG，串行非持久HTTP需几个RTT？忽略DNS、发送与处理时间。",
+            "en": "How many RTTs fetch one HTML page and two tiny JPEGs serially over nonpersistent HTTP, ignoring DNS, serialization and processing?"
           },
           "approach": {
             "zh": "串行非持久3对象各2RTT，合计6RTT。",
             "en": "Three serial nonpersistent objects cost six RTTs."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "三个对象各需2RTT，共6RTT。",
+            "en": "Three objects each need two RTTs, totaling six."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "并行和持久连接会改变计时，需按题设分别计算。",
+            "en": "Parallelism and persistence change the timing model."
           },
           "lesson_ids": [
             "net06",
@@ -1990,20 +1980,20 @@
             "en": "Mail endpoint"
           },
           "task": {
-            "zh": "邮件服务端点",
-            "en": "Mail endpoint"
+            "zh": "在服务器间SMTP投递中，怎样获得abc.com邮件服务器的IP和服务端口？",
+            "en": "In server-to-server SMTP delivery, how are the abc.com mail server’s IP and service port obtained?"
           },
           "approach": {
             "zh": "SMTP投递情境DNS求IP，服务端口25由协议/配置知道。",
             "en": "For SMTP delivery, resolve the IP and use the configured service port 25."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "地址通过DNS解析，课堂投递端口为25，由协议或配置确定。",
+            "en": "DNS resolves the address; port 25 follows the classroom SMTP-delivery convention or configuration."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "DNS地址查询与服务端口是两个问题；邮件提交和读取的端口另按对应协议。",
+            "en": "Address resolution differs from choosing a service port; mail submission and retrieval have separate conventions."
           },
           "lesson_ids": [
             "net06",
@@ -2028,20 +2018,20 @@
             "en": "DNS load distribution"
           },
           "task": {
-            "zh": "DNS负载分配",
-            "en": "DNS load distribution"
+            "zh": "哪种DNS记录可让同一个网站名对应多个IPv4服务器地址？",
+            "en": "Which DNS record can associate one website name with multiple IPv4 server addresses?"
           },
           "approach": {
             "zh": "多个A记录提供多个地址，不保证精确均衡。",
             "en": "Multiple A records provide addresses, not exact load balance."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "使用多个A记录，可由相应选择机制分配访问。",
+            "en": "Multiple A records provide addresses for an appropriate selection mechanism."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "返回多个地址本身不保证精确均衡，还受缓存和客户端选择影响。",
+            "en": "Multiple addresses alone do not guarantee exact balance; caching and client selection also matter."
           },
           "lesson_ids": [
             "net06",
@@ -2066,20 +2056,20 @@
             "en": "BitTorrent mechanism"
           },
           "task": {
-            "zh": "BitTorrent机制",
-            "en": "BitTorrent mechanism"
+            "zh": "解释BitTorrent是否需要peer地址、是否固定同一组peer，以及为何不是优先下载最大块。",
+            "en": "Explain whether BitTorrent needs peer addresses, fixes its peer set, or prioritizes the largest pieces."
           },
           "approach": {
             "zh": "需peer地址；不是纯client-server或固定peer/最大块优先。",
             "en": "Peers need addresses; peers can change and chunks are not largest-first."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "需要发现peer地址；伙伴可变化，缺块通常按稀有度选择。",
+            "en": "Peers need addresses; partners can change, and missing pieces are commonly selected by rarity."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "选哪个块与给谁上传是两个决策。",
+            "en": "Piece selection and upload-partner selection are different decisions."
           },
           "lesson_ids": [
             "net06",
@@ -2104,20 +2094,20 @@
             "en": "Socket responsibility"
           },
           "task": {
-            "zh": "Socket职责",
-            "en": "Socket responsibility"
+            "zh": "比较课堂TCP服务和UDP sendto接口：是否握手、是否有序可靠，目的端点在哪里指定？",
+            "en": "Compare TCP service and UDP sendto in the classroom model: handshake, ordered reliability and destination specification."
           },
           "approach": {
             "zh": "按课件TCP有序可靠、UDP sendto显式目的端点作答，并说明边界。",
             "en": "Use the taught TCP service and UDP sendto destination model."
           },
           "check": {
-            "zh": "章末保留原选择条件和整理理由。",
-            "en": "The chapter notes retain question conditions and reasoning."
+            "zh": "TCP提供可靠有序字节流；UDP sendto显式给目的地址与端口，UDP自身无需TCP式握手。",
+            "en": "TCP provides a reliable ordered byte stream. UDP sendto specifies a destination address and port without a TCP-style handshake."
           },
           "pitfall": {
-            "zh": "当前student版不冒充带教师答案的版本。",
-            "en": "Do not call authored answers an official key."
+            "zh": "可靠字节流仍需应用消息定界；它也不保证连接永不失败。",
+            "en": "Applications still frame messages on a reliable byte stream, and connections can fail."
           },
           "lesson_ids": [
             "net06",

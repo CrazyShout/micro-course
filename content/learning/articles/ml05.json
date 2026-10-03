@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml05",
   "title": {
-    "zh": "看到 free 就拦？先数清短信来自哪里",
-    "en": "Should every message containing “free” be blocked?"
+    "zh": "Bayes公式：看到free后，垃圾短信有多大可能？",
+    "en": "Bayes’ rule: how likely is spam after observing “free”?"
   },
   "minutes": "12–18",
   "lede": {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "“垃圾短信里有多少含 free”先把人群限定为垃圾，再数 free；“含 free 的短信里有多少是垃圾”先筛出 free，再数垃圾。符号分别是 $P(F\\mid S)$ 与 $P(S\\mid F)$，S 表示垃圾、F 表示含 free，竖线读作“给定”。它不是除号，更不能左右交换。\n\n例如在 100 条固定短信中有 20 条垃圾，其中 10 条含 free，那么 $P(F\\mid S)=10/20$。这里还不知道正常短信中有多少含 free，所以尚不能算 $P(S\\mid F)$。缺少的不是更厉害的公式，而是另一类也会提供这条证据的信息。"
+          "text": "“垃圾短信里有多少含 free”先把人群限定为垃圾，再数 free；“含 free 的短信里有多少是垃圾”先筛出 free，再数垃圾。符号分别是 $P(F\\mid S)$ 与 $P(S\\mid F)$，S 表示垃圾、F 表示含 free，竖线读作“给定”。它不是除号，更不能左右交换。\n\n例如在 100 条固定短信中有 20 条垃圾，其中 10 条含 free，那么 $P(F\\mid S)=10/20$。这里还不知道正常短信中有多少含 free，所以尚不能算 $P(S\\mid F)$。"
         },
         {
           "type": "foundation",
@@ -38,7 +38,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "free 可以筛出中奖广告，也可以筛出导师发来的免费披萨通知；它没有拿到“一票封号”的执照。先把垃圾原本有多少，乘以垃圾通过筛子的比例；再对正常短信同样做一次。两堆加起来，才是所有含 free 的短信。\n\n同时满足“垃圾且含 free”的比例叫联合概率 $P(S\\cap F)$，等于 $P(S)P(F\\mid S)$。不管是不是垃圾、只问含 free 的比例，是边缘概率 $P(F)$，可以把两类的联合概率相加。这两个名字分别对应“看交集”与“忽略另一维汇总”，不是额外增加的数据。"
+          "text": "free 可以筛出中奖广告，也可以筛出导师发来的免费披萨通知。先把垃圾原本有多少，乘以垃圾通过筛子的比例；再对正常短信同样做一次。两堆加起来，才是所有含 free 的短信。\n\n同时满足“垃圾且含 free”的比例叫联合概率 $P(S\\cap F)$，等于 $P(S)P(F\\mid S)$。不管是不是垃圾、只问含 free 的比例，是边缘概率 $P(F)$，可以把两类的联合概率相加。这两个名字分别对应“看交集”与“忽略另一维汇总”。"
         },
         {
           "type": "figure",
@@ -132,7 +132,7 @@
       "name": "串讲与教学小例 / Teaching synthesis",
       "locator": "ml05",
       "kind": "derived",
-      "note": "讲解按所列材料重新组织；现有算例为教学辅助，不是实验成绩。 / Editorial explanation and teaching calculations, not measured results."
+      "note": "根据原课整理的条件计数讲解与教学算例。 / Conditional-count explanations and teaching examples based on the course materials."
     }
   ],
   "objective_map": [

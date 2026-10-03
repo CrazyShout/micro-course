@@ -1,13 +1,13 @@
 {
   "lesson_id": "net01",
   "title": {
-    "zh": "你点开一个网页，请求究竟交给了谁？",
-    "en": "The actors in a web request"
+    "zh": "互联网与协议：一次网页请求经过哪些设备？",
+    "en": "The Internet and protocols: trace a web request"
   },
   "minutes": "12–18",
   "lede": {
     "zh": "手机已经连上 Wi-Fi，你输入一个网站名字，希望看到网页。浏览器在手机里，网页文件却在远处的电脑上：中间是谁接力，哪些规则让两端听得懂？",
-    "en": "The actors in a web request. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+    "en": "Your phone is connected to Wi-Fi and you request a webpage stored on a remote computer. Which devices carry the request, and which rules let the two applications understand each other?"
   },
   "sections": [
     {
@@ -28,7 +28,7 @@
         },
         {
           "type": "prose",
-          "text": "图中箭头表示逻辑路径，不声称知道你此刻访问的真实路线；响应也不一定沿完全相同的路回来。先把“应用在哪运行”和“数据从哪里通过”分清，后面的协议名字才有位置可放。"
+          "text": "图中箭头是一条示意路径；实际路由可能不同，响应也不一定沿原路返回。先把“应用在哪运行”和“数据从哪里通过”分清，后面的协议名字才有位置可放。"
         }
       ]
     },
@@ -122,7 +122,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net01 worked/practice/transfer",
       "kind": "derived",
-      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+      "note": "网页情境与职责判断题为补充教学练习。"
     }
   ],
   "objective_map": [

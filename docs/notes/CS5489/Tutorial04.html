@@ -1,9 +1,9 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 4 · Predicting Bike Sharing Usage · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
-<h1 id="tutorial-4-predicting-bike-sharing-usage">Tutorial 4 · Predicting Bike Sharing Usage</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=125">A4 打印版 · 第 125–137 页</a>　图可点击放大。</p>
+<h1 id="tutorial-4-predicting-bike-sharing-usage">Tutorial 4 · Predicting Bike Sharing Usage</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=124">A4 打印版 · 第 124–136 页</a>　图可点击放大。</p>
 <h2 id="_1">去年的规律，今年还管用吗？</h2>
 <p><a href="Lecture04.html">Lecture 4</a> · <a href="index.html">课程目录</a> · <a href="../foundations/MathForML.html#rank-pseudoinverse">矩阵与回归基础</a></p>
 <p>老师给出两年的共享单车日记录，希望根据天气、日期类别等信息预测每日租车总量。这份学习笔记按<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial4.ipynb</span>的77个单元展开，T表示原文件从1开始的单元号。数据直接从<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原ZIP</span>读取，无需改动原文件。</p>
-<p>前半练回归与特征解释，后半的关键问题是：第二年用户变多，旧模型可能系统性低估。给它补上第二年一季度的记录，怎样公平判断调整有没有帮助？这是原任务，不是额外编的故事。</p>
+<p>前半练回归与特征解释，后半的关键问题是：第二年用户变多，旧模型可能系统性低估。给它补上第二年一季度的记录，怎样公平判断调整有没有帮助？</p>
 <p><strong>基础入口（可跳过）：</strong> 不熟数组形状先回<a href="Lecture01.html#arrays">Lecture 1</a>；不熟平方误差、正则项，先读<a href="Lecture04.html">Lecture 4</a>。先理解“输入的一行是一天，输出是当天总量”。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -47,7 +47,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>优先级依据当前任务与Lecture4，不是考频统计。代码和答案是整理者的参考实现。会完整运行；独立尝试题不放进阻断执行的空代码。</p>
+<p>优先级依据当前任务与Lecture4。代码与答案为参考实现，可从头运行；独立尝试题写在说明中。</p>
 </section>
 <section id="cell-2">
 <h2 id="1-setup">1. Setup｜先固定实验条件</h2>
@@ -88,7 +88,7 @@
 <h2 id="2-load-and-inspectt428">2. Load and inspect｜不要把答案偷偷塞进输入（T4–28）</h2>
 <p><strong>任务 / Task：</strong> 读取日数据，查看字段与分布，把season、mnth、weekday、weathersit做one-hot，预测cnt，按yr划分。 / Load daily records, inspect features, encode four categorical fields, predict cnt, and split by year.</p>
 <p>ZIP同时有hour.csv和day.csv，本题用day.csv。<code>cnt=casual+registered</code>：若把后两列放入X，模型已经看到了答案的两个加数。删除它们不是嫌数据多，是因为预测当天总量时不能先知道当天两类人的完整数量。</p>
-<p>原说明把weekday写成1–7，实际数据是0–6；代码以数据为准。<code>instant</code>仅是记录号；原题删除日期列，但日期仍用于核验顺序。我们不把“日期永远没用”当普遍结论。</p>
+<p>原说明把weekday写成1–7，实际数据是0–6；代码以数据为准。<code>instant</code>仅是记录号；原题删除日期列，但日期仍用于核验顺序。其他预测任务是否使用日期，应根据预测时可获得的信息决定。</p>
 </section>
 <section id="cell-5">
 <div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">DATA</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
@@ -666,7 +666,7 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 </section>
 <section id="cell-14">
 <h2 id="5-nonlinear-regressiont5964">5. Nonlinear regression｜让比较只改变模型（T59–64）</h2>
-<p>这里选原Lecture4中的RBF核岭回归与随机森林作两条参考路线。参数网格是整理者给出的有限示范，不声称穷尽所有方法。每条路线用同一2011时间验证折，选定模型后才汇报2012。</p>
+<p>这里选原Lecture4中的RBF核岭回归与随机森林作两条参考路线。参数网格由本参考实现选定。每条路线用同一2011时间验证折，选定模型后才汇报2012。</p>
 <p><strong>独立尝试 / Try：</strong> 另加一种Lecture4模型，保持划分与误差单位，比较训练验证RMSE。 / Add another Lecture4 model while preserving splits and evaluation units.</p>
 </section>
 <section id="cell-15">
@@ -903,9 +903,9 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 <div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b799a176bb25e6ac.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 15" decoding="async" height="387" loading="lazy" src="../assets/b799a176bb25e6ac.png" width="987"/></a></div>
 </section>
 <section id="cell-16">
-<p>训练得最好不等于跨年最好。树擅长分区间，RBF依靠与训练样本的相似性；面对整体需求变化，两者都可能失效。以当前打印表中的实际结果回答“谁更好”，并区分CV选中的方法与事后测试表里最高的方法。后者不可再冒充从未看过测试集的选择。</p>
+<p>训练得最好不等于跨年最好。树擅长分区间，RBF依靠与训练样本的相似性；面对整体需求变化，两者都可能失效。以当前打印表中的实际结果回答“谁更好”，并区分CV选中的方法与事后测试表里最高的方法。</p>
 <p>English: Compare the printed scores, and distinguish the CV-selected model from the model that happens to score best on the test table. Flexible functions alone do not solve temporal distribution shift.</p>
-<p>2011时间验证选出LASSO，故后续适应实验固定它。事后2012表中随机森林RMSE最低（2205.32），但不能据此回头换成“事先选定”的方法。非线性候选没有赢得本次训练内选择。 / LASSO wins the training-only selection; the test-table winner is not used to revise that choice.</p>
+<p>2011时间验证选出LASSO，故后续适应实验固定它。事后2012表中随机森林RMSE最低（2205.32），这一事后排名不用于改变后续已固定的方法。非线性候选没有赢得本次训练内选择。 / LASSO wins the training-only selection; the test-table winner is not used to revise that choice.</p>
 </section>
 <section id="cell-17">
 <h2 id="6-test-set-biast6576">6. Test set bias｜先把新增数据的角色划清楚（T65–76）</h2>
@@ -1002,8 +1002,8 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 <div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/cbdd2343dff37b54.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 18" decoding="async" height="387" loading="lazy" src="../assets/cbdd2343dff37b54.png" width="887"/></a></div>
 </section>
 <section id="cell-19">
-<p>残差方法像给旧地图贴修订便签：旧模型负责已有规律，新模型学“还差多少”。约定<span class="arithmatex">\(r=y-f_{old}(x)\)</span>时，加上<span class="arithmatex">\(hat r\)</span>；若把残差反过来定义为<span class="arithmatex">\(f_{old}(x)-y\)</span>，修正时必须减。原题文字没有把这个符号约定讲透，实施时不能前后混用。</p>
-<p>三种方法都不保证最好。新数据只有冬末春初，单独训练可能看不到夏季；合并数据覆盖更广，但旧年份占比大；残差法保留旧季节形状，却也依赖“差值规律能迁移到后九个月”的假设。解释应回到上表结果，而不是给某一种方法颁永久冠军。</p>
+<p>残差方法像给旧地图贴修订便签：旧模型负责已有规律，新模型学“还差多少”。约定<span class="arithmatex">\(r=y-f_{old}(x)\)</span>时，加上<span class="arithmatex">\(\hat r\)</span>；若把残差反过来定义为<span class="arithmatex">\(f_{old}(x)-y\)</span>，修正时必须减。原题文字没有把这个符号约定讲透，实施时不能前后混用。</p>
+<p>三种方法都不保证最好。新数据只有冬末春初，单独训练可能看不到夏季；合并数据覆盖更广，但旧年份占比大；残差法保留旧季节形状，却也依赖“差值规律能迁移到后九个月”的假设。比较时结合上表误差和这些假设解释结果。</p>
 <p><strong>迁移题 / Transfer：</strong> 若现在只到2012年2月底，可以拿3月数据选参数吗？为什么？ / If it is only the end of February 2012, may March observations be used for tuning an operational predictor?</p>
 <details>
 <summary>答案 / Answer</summary>
@@ -1015,7 +1015,7 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 <h2 id="7-return-to-the-lecture">7. Return to the lecture｜把结果变成能解释的结论</h2>
 <p>英文自测：Why were the count components removed? Why split by year? Why does a constant year feature fail to teach the next year's offset? Why must all adaptation methods share the same holdout?</p>
 <p>关键答案 / Key answers：避免目标泄漏；评估向未来迁移；训练中无变化的特征无法识别变化效应；同一测试集才有可比较的误差。 / Prevent target leakage; evaluate future transfer; a constant feature cannot identify a changing effect; compare errors on identical held-out records.</p>
-<p>首轮复习沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M187">回归 M187</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M194">Ridge M194</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M198">LASSO M198</a>，再回<a href="https://crazyshout.github.io/micro-course/?lesson=ml19">ML19</a>串起目标、约束与验证。</p>
+<p>首轮复习沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M187">回归 M187</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M194">Ridge M194</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M196">LASSO M196</a>，再回<a href="https://crazyshout.github.io/micro-course/?lesson=ml19">ML19</a>串起目标、约束与验证。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -1058,7 +1058,7 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 </tr>
 </tbody>
 </table></div>
-<p>全部本次结果由以上代码实际运行产生；没有使用历史学生完成稿的成绩替代。</p>
+<p>结果由以上代码产生，采用§1的固定设置。</p>
 </section>
 <section id="cell-21">
 <div class="code-input"><div class="cell-label">In [8]</div><div class="highlight"><pre><span></span><span class="n">report</span><span class="o">=</span><span class="p">{</span><span class="s1">'dataset_sha256'</span><span class="p">:</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">DATA</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>

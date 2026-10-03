@@ -1,8 +1,8 @@
 {
   "lesson_id": "net18",
   "title": {
-    "zh": "收到一串0和1，怎样知道途中有没有变样？",
-    "en": "Error detection and shared-medium access"
+    "zh": "链路层：CRC检错与共享介质接入",
+    "en": "The link layer: CRC error detection and shared-medium access"
   },
   "minutes": "15–20",
   "lede": {
@@ -27,7 +27,7 @@
     {
       "id": "redundancy-is-a-constraint",
       "title": {
-        "zh": "多发的位不是装饰，而是检验条件",
+        "zh": "增加冗余位，让接收者检查约束",
         "en": "Extra bits impose a checkable condition"
       },
       "optional": false,
@@ -98,7 +98,7 @@
         },
         {
           "type": "prose",
-          "text": "没发会空闲，发得太积极又会碰撞；成功、空闲、碰撞三种事件应加成1。纯ALOHA不把开始时刻对齐，易冲突区间更长；其经典效率结论还要指定Poisson尝试模型，不能与时隙模型混用。偶校验和ALOHA各有自己的示范—变式补充，不能用CRC例题冒充已练完两种能力。\n\n局域网地址、ARP和交换机学习见后续原卡及NET19/20。现有历史Chapter 6只有前29张，目录提到的后续内容不等于完整课件已到齐。本页先把检错算法算清，再按主题推进历史练习，不把预习当本学期全覆盖。"
+          "text": "没发会空闲，发得太积极又会碰撞；成功、空闲、碰撞三种事件应加成1。纯ALOHA不把开始时刻对齐，易冲突区间更长；其经典效率结论还要指定Poisson尝试模型，不能与时隙模型混用。偶校验与ALOHA各有配套专题，可分别练习校验位和接入成功概率。\n\n局域网地址、ARP和交换机学习见后续原卡及NET19/20。现有历史Chapter 6只有前29张，目录提到的后续内容不等于完整课件已到齐。本页先把检错算法算清，再按主题推进历史练习，不把预习当本学期全覆盖。"
         },
         {
           "type": "recap"
@@ -123,7 +123,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net18 worked/practice/transfer",
       "kind": "derived",
-      "note": "本文小例是原理练习，历史原题另循原卡/图；不补造缺失题目或实测结果。"
+      "note": "CRC小生成式与数值变式为补充教学练习；历史原题从关联卡片访问。"
     }
   ],
   "objective_map": [

@@ -1,6 +1,6 @@
 {
   "CS5489": {
-    "basis": "当前 Lecture 1 Intro 第 10 页的四项学习目标；以下是学习材料映射，不是全学期或 QE 达成证明。 2026-10-03追加Lecture5/Tutorial4/Assignment2，以整讲来源索引为准。",
+    "basis": "依据Lecture1 Intro第10页的四项学习目标，映射当前Lecture1–5及配套任务；具体材料位置见各讲来源索引。",
     "outcomes": [
       {
         "name": "解释算法 / Explain",
@@ -37,7 +37,7 @@
           "implement-bernoulli-nb",
           "sms-reproducible-baseline"
         ],
-        "evidence": "提供从零实现 Bernoulli NB 的任务和手算验收点；须自己运行，尚未获得你的完成证据。"
+        "evidence": "配有Python因数、Bernoulli NB与短信基线实现任务，可用手算结果、输出形状和干净内核重运行检查。"
       },
       {
         "name": "应用到问题 / Apply",
@@ -55,7 +55,7 @@
         "practical_tasks": [
           "sms-reproducible-baseline"
         ],
-        "evidence": "已有 Tutorial 3 表示/验证方法检查和 Lecture 4 房价手算、KRR及树模型练习；需自己运行实验并交代数据、假设和受控对比，未填入未经运行的成绩。"
+        "evidence": "Tutorial练习数据表示和模型验证，Lecture4提供房价、KRR与树模型算例，Lecture5和Assignment2连接梯度与实现。实验比较需记录数据、假设及验证条件。"
       },
       {
         "name": "评价优缺点 / Evaluate",
@@ -83,7 +83,7 @@
     ]
   },
   "CS5222": {
-    "basis": "当前 Chapter 1–2、Chapter 3 part1–2及配套任务；以下四类是本学习系统的能力分类，不冒充学校正式CILO。Chapter3当前只到RTT/timeout。",
+    "basis": "按解释、计算、观察与迁移四类能力，整理当前Chapter1–2、Chapter3 part1–2及配套任务。这是本站的学习分类；Chapter3当前讲到RTT与超时。",
     "outcomes": [
       {
         "name": "解释协议与分层 / Explain",
@@ -130,7 +130,7 @@
         "practical_tasks": [
           "dns-trace"
         ],
-        "evidence": "提供个人抓包任务及失败排查，不宣称已采集你的运行证据。"
+        "evidence": "DNS实践提供人工报文供字段入门，并说明如何采集、配对和解释自己的查询记录。"
       },
       {
         "name": "迁移与诊断 / Transfer",

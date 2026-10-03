@@ -2,11 +2,11 @@
 <h1 id="_1">从课堂概率模型到一个可解释、可复现的短信分类实验</h1>
 <p>本地方法指南 · 2026-09-22</p>
 <p><a href="Lecture02.html">Lecture 2 整讲讲义</a> · <a href="Tutorial02.html">Tutorial 2 可运行示范</a> · <a href="index.html">运行与文件说明</a></p>
-<p>本文件按“纸笔详解、实验讲方案”编写。下面的手算例子给完整解答；实际短信实验提供拆解、接口、验证和自查，不包含训练好的作业模型或正式预测文件。数字例子明确标为教学数据，文件规模则来自实际输入核对。</p>
+<p>本指南用手算例子解释评价指标，再给出短信实验的数据流程、代码接口和检查方法。实验由你按原任务完成；文中的教学算例和实际文件统计分别标注。</p>
 <p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment1-Doc.ipynb</span>（D，23个cell）、<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment1-Final.ipynb</span>（F，11个cell）。cell从文件第一个单元开始计数。截止日期、评分与提交手续见<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>，本文件集中解释技术工作。</p>
 <h2 id="lecture-2">本作业怎样接上 Lecture 2？</h2>
 <p>Lecture 2教你把文字表示为向量，再估计每类的分布，用Bayes规则分类。Tutorial 2让你在新闻上跑过表示、模型、比较、错分和调参。Assignment 1把目标换成短信，并要求你自己选择一条可靠的流程、解释尝试过程、复现最终预测。</p>
-<p>这里最容易漏掉的不是再找一个更复杂的分类器，而是把几个环节接对：标签是否一致，文本和Id是否对齐，哪份数据允许选参数，使用什么指标，以及最终Notebook能否从干净状态生成同样结果。</p>
+<p>动手前需要接好这几个环节：标签是否一致，文本和Id是否对齐，哪份数据允许选参数，使用什么指标，以及最终Notebook能否从干净状态生成同样结果。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -125,8 +125,8 @@
 </tr>
 </tbody>
 </table></div>
-<p>训练标签数量为 normal 2454、spam 234、smishing 297，说明多数类明显更多。Usage有1493条val和1493条test；当前Id唯一且恰为1到2986。以上是文件结构核对，不是模型训练结果。</p>
-<p><strong>原课核对：</strong> D5文字提到smishing_test.txt，但当前代码D10和实际下载文件使用smishing_val_test.txt。D5又称标签CSV“only contains the SMS text”，也与实际三列表头不符。以当前文件结构及读取代码为准，原文件保留不修改。</p>
+<p>训练标签数量为 normal 2454、spam 234、smishing 297，说明多数类明显更多。Usage有1493条val和1493条test；当前Id唯一且恰为1到2986。</p>
+<p><strong>原课核对：</strong> D5文字提到smishing_test.txt，但当前代码D10和实际下载文件使用smishing_val_test.txt。D5又称标签CSV“only contains the SMS text”，也与实际三列表头不符。读取时以当前文件结构及代码为准。</p>
 <p>Prediction这个列名在元数据中提供类别值，<strong>并不是你刚训练出的模型预测</strong>。当前文件的val和test部分都能读到类别数值；能看到不意味着可以用test标签选参数。保持老师明确区分的Usage含义。</p>
 <p>建议在训练前完成以下检查：</p>
 <pre><code class="language-python"># 接口示意：此处不进行训练或写提交文件。
@@ -152,8 +152,8 @@ assert len(metadata) == len(texts_eval)
 \mathrm{BalancedAccuracy}=\frac13\sum_{c=0}^{2}\mathrm{Recall}_c.\]</div>
 <p>Recall（召回率）问“该类真实样本找回多少”。Accuracy是整体预测正确比例；precision是“预测成该类的记录中有多少是真的”。这三个英文词不能混译为同一种“准确”。</p>
 <h3 id="worked-example">完整手算 / Worked example</h3>
-<p>下面是<strong>人为教学混淆矩阵，不是短信作业成绩</strong>。行是真实标签，列是预测标签：</p>
-<p>English context: This is a synthetic teaching matrix, not an assignment result. Rows are true labels; columns are predicted labels.</p>
+<p>下面用一张<strong>教学混淆矩阵</strong>演示计算。行是真实标签，列是预测标签：</p>
+<p>English context: This synthetic matrix illustrates the calculation. Rows are true labels; columns are predicted labels.</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -197,7 +197,7 @@ English question: Compute ordinary and balanced accuracy, then compare with pred
 <li>全部猜normal时普通accuracy为100/130≈76.92%，反而略高；但三类召回率是1、0、0，balanced accuracy只有1/3≈33.33%。</li>
 </ol>
 <p>English answer: Ordinary accuracy is 99/130≈76.15%, while balanced accuracy is (0.90+0.25+0.40)/3≈51.67%. The always-normal baseline has higher ordinary accuracy, 100/130≈76.92%, but balanced accuracy of only 1/3.</p>
-<p>这说明你必须按老师指定的指标选方案，而不是挑报告里最好看的那个数字。Balanced accuracy给每个类别相同的平均权重；它并不意味着已经显式定义了每一种误报／漏报的现实成本，也不能由此省略混淆矩阵。</p>
+<p>因此，这份作业应按指定的balanced accuracy选择方案。Balanced accuracy给每个类别相同的平均权重；它并不意味着已经显式定义了每一种误报／漏报的现实成本，也不能由此省略混淆矩阵。</p>
 <h3 id="transfer">独立变式 / Transfer</h3>
 <p>中文题：另一模型的三类召回率为0.8、0.5、0.6，真实类别数量仍是100、20、10。求两种accuracy。<br/>
 English question: Another model has recalls 0.8, 0.5 and 0.6 with the same true class counts 100, 20 and 10. Compute both accuracies.</p>
@@ -208,7 +208,7 @@ English answer: There are 96 correct predictions, giving ordinary accuracy≈73.
 <p><a id="baseline"></a></p>
 <h2 id="4-methodology">4. Methodology｜先跑通一条可信的基线</h2>
 <p><strong>原课：D3 Methodology、D17。核心必会；难度中；要求能说明每一步输入输出。</strong></p>
-<p>建议先选一条已经在Lecture 2和Tutorial 2里讲清的流程，而不是同时加入五个还不理解的模型：</p>
+<p>可以从Lecture 2和Tutorial 2的NB流程开始：</p>
 <blockquote>
 <p>原训练短信 → 训练内部划分 → 词表与表示 → NB模型 → 验证预测 → balanced accuracy与混淆矩阵。</p>
 </blockquote>
@@ -228,12 +228,12 @@ def evaluate_on_validation(pipeline, train_text, train_y,
     # 训练、验证预测、指标和混淆矩阵；不使用test标签
     ...
 </code></pre>
-<p>这些是待你实现的接口，不是已经训练好的参考作业。具体NB调用可回看<a href="Tutorial02.html">Tutorial 2</a>，公式含义见<a href="Lecture02.html#comparison">Lecture 2</a>。</p>
+<p>这些接口需要你补充实现。具体NB调用可回看<a href="Tutorial02.html">Tutorial 2</a>，公式含义见<a href="Lecture02.html#comparison">Lecture 2</a>。</p>
 <p><strong>English takeaway：</strong> Establish a reproducible baseline with explicit preprocessing and an aligned metric. Treat the vectorizer and any learned text transformation as part of the fitted model pipeline.</p>
 <p><a id="validation"></a></p>
 <h2 id="5-validation">5. Validation｜每份数据什么时候能用？</h2>
 <p><strong>原课：D3 Evaluation/Methodology及Usage字段。核心必会；难度高；要求能解释选择与最终评价的边界。</strong></p>
-<p>以下是针对原要求的实现建议，不把它说成模板已经替你写好的代码：</p>
+<p>可以按下面的顺序组织实验：</p>
 <ol>
 <li><strong>开发候选：</strong> 在smishing_train内部使用分层划分或分层交叉验证，选少量有理由的配置。样板建议5折、shuffle=True、random_state=42；原模板的全局随机种子为100，两者需明确记录，不混称同一次划分。</li>
 <li><strong>每折独立拟合预处理：</strong> 词表和IDF必须在该折训练部分拟合，不能先对全部2985条fit_transform再做CV。用Pipeline将预处理与分类器一起交给搜索器。</li>
@@ -303,7 +303,7 @@ verify IDs and output schema when preparing the required final artifact
 </tbody>
 </table></div>
 <p>逻辑回归、线性SVM和核方法属于跨讲可选路径：分别回<a href="https://crazyshout.github.io/micro-course/?lesson=ml10">ML10</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml12">ML12</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml14">ML14</a>。原作业允许选择其他算法，不等于必须把所有候选都训练一次。</p>
-<p>每个实验记录一行即可：配置ID、数据协议、表示、模型、关键参数、验证balanced accuracy、三类recall、耗时和解释。未运行的字段留空并写“未运行”，不要把希望得到的效果填成结果。</p>
+<p>每个实验记录一行即可：配置ID、数据协议、表示、模型、关键参数、验证balanced accuracy、三类recall、耗时和解释。尚未运行的配置标为“待运行”。</p>
 <p><strong>English takeaway：</strong> State a hypothesis for each change and compare candidates under the same validation protocol. Record unsuccessful attempts as well as improvements, without treating one score difference as proof of causation.</p>
 <p><a id="errors"></a></p>
 <h2 id="7-error-analysis">7. Error analysis｜把“错了”变成下一步能查的线索</h2>
@@ -311,8 +311,8 @@ verify IDs and output schema when preparing the required final artifact
 <p>先看哪一类召回最低、被错分到哪里，再抽取少量验证集错误。保留原文本、真值、预测、模型使用到的特征及对应分数；展示文本时只取判断所需片段，不把整份数据贴进报告。</p>
 <p>对一条错误按顺序问：文本是否读取完整？列和Id是否对齐？关键信息是否被清洗或词表截断？这两个类别是否在词袋上很像？模型是否只靠一个常见词给出很高置信？若怀疑标签问题，记录证据，不为了提高分数直接改评价标签。</p>
 <p>应把“观察”和“待验证解释”写成两句。例如：“三个smishing验证样本被预测为spam”是观察；“模型没有利用链接结构”是需要查特征和做对照的假设。<strong>开发阶段</strong>使用val或训练内部验证的错误来改进方法，避免反复依据test错误设计新规则。</p>
-<p><strong>回到老师的明确要求：</strong> D3 的 Results and Visualization 还要求展示<strong>测试集中的正确分类与错误分类样本</strong>，并对错分提出解释。因此在方案已经冻结、完成最终测试之后，报告中仍应选取这两类测试样本作描述性分析；不能因为开发阶段避免看test，就把这项报告要求省略。此时解释观察与局限，不再依据这些样本调参后重复声称同一test是独立验收。若据此产生新的改进想法，将它列作后续工作，并用新的未触碰数据检验。</p>
-<p><strong>English takeaway：</strong> Diagnose data alignment and representation before inventing a model story. Use validation errors for development. After freezing the procedure and evaluating it, the assignment also requires examples of both correctly and incorrectly classified test samples. Analyze them descriptively without using those observations to retune and rebrand the same test as an independent evaluation.</p>
+<p><strong>回到老师的明确要求：</strong> D3 的 Results and Visualization 还要求展示<strong>测试集中的正确分类与错误分类样本</strong>，并对错分提出解释。因此，冻结方案并完成最终测试后，再选取这两类样本解释模型的表现与局限；开发阶段的调参则使用val或训练内部验证。若据此产生新的改进想法，将它列作后续工作，并用新的未触碰数据检验。</p>
+<p><strong>English takeaway：</strong> Diagnose data alignment and representation before inventing a model story. Use validation errors for development. After freezing the procedure and evaluating it, the assignment also requires examples of both correctly and incorrectly classified test samples. Analyze them descriptively while reserving model development and tuning for validation data.</p>
 <p><a id="reproducibility"></a></p>
 <h2 id="8-final-submission-notebook">8. Final submission notebook｜换个干净内核，还能生成一样的预测吗？</h2>
 <p><strong>原课：D3、D13–17、F3–8。核心必会；难度中；要求解释并验证可复现性。</strong></p>
@@ -329,7 +329,7 @@ verify IDs and output schema when preparing the required final artifact
 <li>原模板writer按照位置产生i+1；仅在已确认当前位置对应这些Id时使用。</li>
 <li>在相同环境中从头重跑，固定流程给出同样的预测；跨版本变化要重新检查。</li>
 </ul>
-<p>此指南不生成正式预测CSV。正式文件及提交格式要求仍以Canvas和<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>为准。</p>
+<p>预测CSV及提交格式要求见Canvas和<a href="https://crazyshout.github.io/micro-course/notices.html?course=CS5489">课程信息</a>为准。</p>
 <p><strong>English takeaway：</strong> A reproducible final notebook must declare its own imports, data paths, preprocessing, parameters and random seeds. Correct predictions with incorrect ID alignment still produce an invalid output.</p>
 <p><a id="check"></a></p>
 <h2 id="9">9. 合上指南，检查自己能否解释</h2>

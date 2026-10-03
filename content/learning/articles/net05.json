@@ -1,13 +1,13 @@
 {
   "lesson_id": "net05",
   "title": {
-    "zh": "同一份网页数据，为什么一路要加几层“说明”？",
-    "en": "Layering and encapsulation"
+    "zh": "分层与封装：一份应用数据怎样经过网络",
+    "en": "Layering and encapsulation: follow application data through the network"
   },
   "minutes": "12–18",
   "lede": {
     "zh": "浏览器要把一条请求送到服务器。沿途设备既要知道交给哪个程序，又要知道下一段交给谁；这些不同问题如果都塞进一份万能规则，系统会怎样变得难维护？",
-    "en": "Layering and encapsulation. Follow the concrete task, work through the example, then change one condition before reviewing the linked cards."
+    "en": "A browser sends a request to a server. The network must identify the destination application and deliver data across each link on the way. Layering separates these responsibilities; encapsulation carries the information each layer needs."
   },
   "sections": [
     {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "老师在 Chapter 1 第57–60张先问怎样组织复杂网络，再借购票、行李、登机、航路说明分工：一个环节使用另一个环节提供的服务，不必每次重做全部细节。这个类比解释接口，不是说网络封装真的发生在机场柜台。\n\n网络分层也一样。若下层在保留接口含义的情况下换一种实现，上层往往不必整体重写。分层的代价可能是额外开销和重复功能；它是职责组织方式，不要求一层对应一台单独物理设备。"
+          "text": "老师在 Chapter 1 第57–60张先问怎样组织复杂网络，再借购票、行李、登机、航路说明分工：一个环节使用另一个环节提供的服务，不必每次重做全部细节。\n\n网络分层也一样。若下层在保留接口含义的情况下换一种实现，上层往往不必整体重写。分层的代价可能是额外开销和重复功能；它是职责组织方式，不要求一层对应一台单独物理设备。"
         }
       ]
     },
@@ -34,7 +34,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "应用层说明要交换什么消息及怎样解释；传输层把通信交给进程；网络层跨网络送分组；链路层负责相邻接口之间的本段交付；物理层把比特变成可传输的信号。按自上而下顺序可写成应用、传输、网络、链路、物理。\n\n一条网页请求可用HTTP、TCP、IP、以太网成帧和电/光信号作例子。这不是声称所有网页都使用这套具体协议，而是给职责找到可辨认的实例。端口帮助区分程序端点，IP用于跨网目的，本地链路地址用于下一跳；不要让一种地址兼职所有工作。"
+          "text": "应用层说明要交换什么消息及怎样解释；传输层把通信交给进程；网络层跨网络送分组；链路层负责相邻接口之间的本段交付；物理层把比特变成可传输的信号。按自上而下顺序可写成应用、传输、网络、链路、物理。\n\n一条网页请求可用HTTP、TCP、IP、以太网成帧和电/光信号作例子。这是课堂采用的一组具体协议例子；其他实现也可提供相应服务。端口帮助区分程序端点，IP用于跨网目的，本地链路地址用于下一跳；不要让一种地址兼职所有工作。"
         }
       ]
     },
@@ -48,7 +48,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "应用数据向下交付时，某层把上层整体当作载荷，加入自己的控制信息，通常是首部，有些协议还有尾部。这叫封装。接收端按相应规则解释并移除控制信息，再把载荷向上交付。首部不是随手贴的装饰：每层需要的信息决定它为什么存在。"
+          "text": "应用数据向下交付时，某层把上层整体当作载荷，加入自己的控制信息，通常是首部，有些协议还有尾部。这叫封装。接收端按相应规则解释并移除控制信息，再把载荷向上交付。首部字段承载该层处理数据所需的信息。"
         },
         {
           "type": "figure",
@@ -118,7 +118,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net05 worked/practice/transfer",
       "kind": "derived",
-      "note": "正文衔接与指定数值是教学辅助；原课堂/Tutorial内容另标出处，未声称实际测量。"
+      "note": "分层职责、封装开销与转发变式为补充教学练习。"
     }
   ],
   "objective_map": [

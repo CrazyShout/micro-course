@@ -6,7 +6,7 @@
     {
       "path": "CS5489/Lecture01.html",
       "source": "CS5489/course-notes/Lecture01.md",
-      "sha256": "4e2c4bb08d330ff83608a2397ef13c09d645e478276fd066982638f1e8c570b6",
+      "sha256": "340f1f013f4d59e7131ddd5a0ec9cd49a0e540ca45df7df10b6eb61f005fe27a",
       "title": "Lecture 1 · Introduction / Python / NumPy / Probability",
       "major": true,
       "images": 4,
@@ -15,7 +15,7 @@
     {
       "path": "CS5489/Lecture02.html",
       "source": "CS5489/course-notes/Lecture02.md",
-      "sha256": "b2fdae21e7174e009438d515979c884961041fe428dd3a1f9cba0bba6873970d",
+      "sha256": "034d3a29863bdc0638e56129b2652ad78248945e9b0367cb8a34a73df27d1636",
       "title": "Lecture 2 · Bayes Classifier & Naive Bayes Classifier",
       "major": true,
       "images": 8,
@@ -24,7 +24,7 @@
     {
       "path": "CS5489/Lecture03.html",
       "source": "CS5489/course-notes/Lecture03.md",
-      "sha256": "298cfdbe14f3d69b9e15954be3ec0c9d1aecc175c7f60b734535338aabb1a431",
+      "sha256": "b382fbff0fe3f4c96ba949e272ece7492977254841891180dc88066b520f9f93",
       "title": "Lecture 3 · Discriminative Classifiers｜从概率分布走向分类边界",
       "major": true,
       "images": 5,
@@ -33,7 +33,7 @@
     {
       "path": "CS5489/Lecture04.html",
       "source": "CS5489/course-notes/Lecture04.md",
-      "sha256": "e044e762769e8114dc68e6514ee19c846674c7d1aa4a932cc7afaab087fe655f",
+      "sha256": "f5b22dd32fc12b49ac5b8eae95218ab9c79a625364e4c0e51e3799d52743262f",
       "title": "Lecture 4 · Regression｜从“分到哪一类”走向“预测多少”",
       "major": true,
       "images": 6,
@@ -42,7 +42,7 @@
     {
       "path": "CS5489/Tutorial01.html",
       "source": "CS5489/course-notes/Tutorial01.ipynb",
-      "sha256": "7dc8eefed9e5f96445793625da5d606a26ae6098448c24d520d3591aec90127a",
+      "sha256": "82585183c9227599bd111815fc88e82fdd4ec3a8e3881e4c84ec1129498d94b5",
       "title": "Tutorial 1 · From Python loops to orthonormal vectors",
       "major": true,
       "images": 4,
@@ -51,7 +51,7 @@
     {
       "path": "CS5489/Tutorial02.html",
       "source": "CS5489/course-notes/Tutorial02.ipynb",
-      "sha256": "0bd5a61e373a333ec32edde49e24ddbd55eddc18a8d374fe026596ac0ff0a5a6",
+      "sha256": "174dc5c2a963e70fc1c188a2e83d2d48ee95e640dc2adda97f0f8fc476a208a8",
       "title": "Tutorial 2 · Text Document Classification with Naive Bayes",
       "major": true,
       "images": 4,
@@ -60,7 +60,7 @@
     {
       "path": "CS5489/Tutorial03.html",
       "source": "CS5489/course-notes/Tutorial03.ipynb",
-      "sha256": "534c0560feab6e1b90aa4e1041d057fb015239bfa6c2548df50ab64a1045ab05",
+      "sha256": "17384ee1f413ad9fd322dd1684fc1a5d36c1e3c2f337690ef308ac8c71768175",
       "title": "Tutorial 3 · Linear classifiers, cropping and an L1 kernel",
       "major": true,
       "images": 10,
@@ -69,7 +69,7 @@
     {
       "path": "CS5489/Assignment01.html",
       "source": "CS5489/course-notes/Assignment01.md",
-      "sha256": "f1844d36f2f4debffaf97d6cf6ee3d4d2e29ed4bfd871782a33f10ae26309e57",
+      "sha256": "0bb0b055c1016b35b2ee27df0b28fc7d796cb1c728c76469dc41c7388b689d3c",
       "title": "Assignment 1 · SMS Classification",
       "major": true,
       "images": 0,
@@ -78,7 +78,7 @@
     {
       "path": "CS5222/Chapter01.html",
       "source": "CS5222/course-notes/Chapter01.md",
-      "sha256": "75d77d00342c16c9aa876eff89e5bea1615eac874f3d543e6e74063356776d90",
+      "sha256": "7424343db6f813b027e6c1e8df8cc4cd0685603a2c88c988b52d2062ebb653b9",
       "title": "Chapter 1 · Introduction｜一条消息怎样穿过互联网",
       "major": true,
       "images": 15,
@@ -87,7 +87,7 @@
     {
       "path": "CS5222/Chapter02.html",
       "source": "CS5222/course-notes/Chapter02.md",
-      "sha256": "0d42fd865e56326dec6e4c79a8cce100b260777c2978a67007884a8155b4523c",
+      "sha256": "eb621e87714fe094baae7080bfbed6716636cf7d5df291bb74928efdfc433ea4",
       "title": "Chapter 2 · Application Layer｜让两端的程序真正说上话",
       "major": true,
       "images": 5,
@@ -96,7 +96,7 @@
     {
       "path": "CS5222/Tutorial01.html",
       "source": "CS5222/course-notes/Tutorial01.md",
-      "sha256": "9b60c78e63bd2f41a3974a1c76a2d3e700a0793e694d63ed7a41f47b8799932f",
+      "sha256": "3a7fab2b80db6d8642b282788bc18178d70178f5f9bf06cf6a58c5ab932a8fd9",
       "title": "Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚",
       "major": true,
       "images": 3,
@@ -105,7 +105,7 @@
     {
       "path": "CS5222/Tutorial02.html",
       "source": "CS5222/course-notes/Tutorial02.md",
-      "sha256": "f58380a79c1456a86f77b94f6e1832099a4cd7d28361394e1ed30fa6659ae794",
+      "sha256": "ecca1bc6501eddde1ccda94a36079842899cd5c3e2487a8d09cdbad87aea8d8c",
       "title": "Tutorial 2 · Delay and traceroute｜先定义计时事件，再按顺序相加",
       "major": true,
       "images": 2,
@@ -114,7 +114,7 @@
     {
       "path": "CS5222/Tutorial03.html",
       "source": "CS5222/course-notes/Tutorial03.md",
-      "sha256": "9661cabeb7f5cf4e7f5ae33050a805587821fba94b400cc703c38560498b8d4e",
+      "sha256": "969ffd7af89fd9afb9164595d8dbd126e9741e7abcea007f57c075c541d9620e",
       "title": "Tutorial 3 · HTTP and DNS｜从报文证据走到时间计算",
       "major": true,
       "images": 4,
@@ -123,7 +123,7 @@
     {
       "path": "CS5222/Assignment01.html",
       "source": "CS5222/course-notes/Assignment01.md",
-      "sha256": "3beadd39441e1398e9805373c75406e8a8c6ec38905cbcaf064a5d1f2458a1ca",
+      "sha256": "7f97511277178af33638735f9f44a254b3076144913b1851496eb15ea76bff52",
       "title": "Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据",
       "major": true,
       "images": 6,
@@ -132,7 +132,7 @@
     {
       "path": "CS5222/ResearchReportGuide.html",
       "source": "CS5222/course-notes/ResearchReportGuide.md",
-      "sha256": "761f4fa8ea7b01c28b0148a58ebf902285c8f336ffe1ae1884c8a8b3c3e4ebd4",
+      "sha256": "ec109e004930a195f22b68b7f0947b78790ff3a7193319bdc71a4dc4bcffb226",
       "title": "Research Report Guide｜把一个真实问题解释清楚",
       "major": true,
       "images": 0,
@@ -141,7 +141,7 @@
     {
       "path": "foundations/MathForML.html",
       "source": "learning/foundation-notes/MathForML.md",
-      "sha256": "88538236e5dee4736e96b22864122b4d230d1318db6973a7cc4036b3d8201e3e",
+      "sha256": "7c835e2b919b724562830a2da31007652001639dd79d7b846c631df303c05b1b",
       "title": "Math for Machine Learning｜看懂公式，再回到课堂",
       "major": false,
       "images": 15,
@@ -150,7 +150,7 @@
     {
       "path": "foundations/NetworkBasics.html",
       "source": "learning/foundation-notes/NetworkBasics.md",
-      "sha256": "a0005a566081d6f8b20a0a4cf516daff87a8cdb2178c6beffec8c208b5b9ad3b",
+      "sha256": "d954fe0ff0de0347b3c9af6ebb48637580354a25c18e6814b6b371283bb32ab1",
       "title": "Network Basics｜把单位、字节和时间轴读明白",
       "major": false,
       "images": 2,
@@ -159,7 +159,7 @@
     {
       "path": "foundations/SourceEvidence.html",
       "source": "learning/foundation-notes/SourceEvidence.md",
-      "sha256": "66e0cee808299c7f8a4b0095af6eec96074fb7e786697de75b60ce9cc5625804",
+      "sha256": "06d1b7707baee5ce07036f939f3062b3f4599bc34f0a2cb3ea936c486d3ad415",
       "title": "Sources and priorities｜重难点判断凭什么",
       "major": false,
       "images": 0,
@@ -168,7 +168,7 @@
     {
       "path": "CS5489/Lecture05.html",
       "source": "CS5489/course-notes/Lecture05.md",
-      "sha256": "6f90719e6383026e1cfb0df61e3b3d0848f47bc6ad3492c1e98d00683a63a81f",
+      "sha256": "3ad2684a0f4796cdfc6d2016442288df763b3e14a5afbccb90b778755cdcab6b",
       "title": "Lecture 5 · Neural Networks",
       "major": true,
       "images": 2,
@@ -177,7 +177,7 @@
     {
       "path": "CS5489/Tutorial04.html",
       "source": "CS5489/course-notes/Tutorial04.ipynb",
-      "sha256": "1ee72f457694d8562805df155331ec9dd4c8bfb3cef373aca76a058b6a88b42a",
+      "sha256": "1d1da5899783a813dc3eb5613371d8da72fa771884d0c0d9ce754e8cae65ceeb",
       "title": "Tutorial 4 · Predicting Bike Sharing Usage",
       "major": true,
       "images": 5,
@@ -186,7 +186,7 @@
     {
       "path": "CS5489/Assignment02.html",
       "source": "CS5489/course-notes/Assignment02.md",
-      "sha256": "17356ef0bc003c611c4450c4230b44daced0d1f07e65432e03528f1c8d155f42",
+      "sha256": "1a3df9d4d4e0d6dedd6508a70f365200645f13b871806e91e133a81f2ea93c17",
       "title": "Assignment 2 · Backpropagation and Optimization",
       "major": true,
       "images": 0,
@@ -195,7 +195,7 @@
     {
       "path": "CS5222/Chapter03.html",
       "source": "CS5222/course-notes/Chapter03.md",
-      "sha256": "9aad21386d393125935d5d8596d1cdf314431d530d5d7e3441f20c7977ddcc16",
+      "sha256": "9b52ace9f25b446d295272c35e72dcffd6f25998a5a35c86083483508c6f4a7a",
       "title": "Chapter 3 · Transport Layer（当前 part 1–2）",
       "major": true,
       "images": 1,
@@ -204,7 +204,7 @@
     {
       "path": "CS5222/Tutorial04.html",
       "source": "CS5222/course-notes/Tutorial04.md",
-      "sha256": "8ad18669c96c12cb4035688003f63492337c705117924ce050d07f924dba1c90",
+      "sha256": "6644a37bef4ee3fe9280730ed875f00e7df31e9c410ea7d2872916fcef028d79",
       "title": "Tutorial 4 · File Distribution, BitTorrent and DASH",
       "major": true,
       "images": 1,
@@ -213,7 +213,7 @@
     {
       "path": "CS5222/Tutorial05.html",
       "source": "CS5222/course-notes/Tutorial05.md",
-      "sha256": "10c24c7a2c90191596da46d85dd01263ebb6fcd00a06363a64ee7e5c01dcae54",
+      "sha256": "1b825359525236abd831532713254e57ca214a2b7e1760af39272f4ecf979b14",
       "title": "Tutorial 5 · Demultiplexing, Checksums and Reliable Transfer",
       "major": true,
       "images": 2,
@@ -223,118 +223,118 @@
   "assets": [
     {
       "path": "CS5222/Assignment01.html",
-      "bytes": 21145,
-      "sha256": "52a4f1c20e9d14208fb9c5698fa556e51dc92b9492d8ad88b24efedba3e7f26d"
+      "bytes": 20922,
+      "sha256": "d787e8e78214458b60dfbcf9c29fc5352ccd52a0e01c5bdded57a14311a57dbe"
     },
     {
       "path": "CS5222/Chapter01.html",
-      "bytes": 30726,
-      "sha256": "bf627aa5e9622db8785ca791cbcb63020f419dc2d8d1d978cb0b368942fb8811"
+      "bytes": 30450,
+      "sha256": "ecd37faf884f39e749c3246255fbbc1a6ff2658e965dc2c1c57d13237b2e58e1"
     },
     {
       "path": "CS5222/Chapter02.html",
-      "bytes": 36592,
-      "sha256": "058113d6599b9969bb4374cb13219df79e00d675ed11f315917884b3c9b5f763"
+      "bytes": 36202,
+      "sha256": "d33c01620303b0957a05f500bbfc9c8cf3d341bac91ece54402714499b42ba19"
     },
     {
       "path": "CS5222/Chapter03.html",
-      "bytes": 21919,
-      "sha256": "65bf74254700f13fbb833712589fb9df043a7415bf92b2014f5606bbb8fd8236"
+      "bytes": 21764,
+      "sha256": "e44f213fa9a257b5be110e99bdff768cc13814487d598dc1d259d40240aa9c25"
     },
     {
       "path": "CS5222/ResearchReportGuide.html",
-      "bytes": 13466,
-      "sha256": "0a5579284a4468634d51c2bc4f201909f1fb1de4a4b630a973d2b76048c6518a"
+      "bytes": 13006,
+      "sha256": "ef97810a20d150dd1adac7594cebd5b11bcd63cd0fe993fb21777aef34ff128e"
     },
     {
       "path": "CS5222/Tutorial01.html",
-      "bytes": 12890,
-      "sha256": "554cca39f70135a6f7a7617fb481fc8703999144023b0da350700fb0459fe6a1"
+      "bytes": 12794,
+      "sha256": "4368e8f177afc31eb84de0b8fb1fad7cca51958c6f643002c1d0f8de4b98addc"
     },
     {
       "path": "CS5222/Tutorial02.html",
-      "bytes": 13685,
-      "sha256": "2ef43d69a4c469782cc37646e9957c477104559d4d9437bd41368bb555fd2a68"
+      "bytes": 13494,
+      "sha256": "79c6044872bbc4ff630e0c5d9765cedb3d25d8420ede52d4ee6eb23bc204445b"
     },
     {
       "path": "CS5222/Tutorial03.html",
-      "bytes": 13424,
-      "sha256": "35a4bb20e8be73e9df841940a387798d4b79b076a86cb185cdd1c3e8c7a3591c"
+      "bytes": 13277,
+      "sha256": "4a7cc80964655844a1563fcbf417833363cccd6e4f0f028248cf446416645d3d"
     },
     {
       "path": "CS5222/Tutorial04.html",
-      "bytes": 11438,
-      "sha256": "0f970bbcb9e5b49f9c0906ae4fce3ef04fdb55d01796ea29f6d55bae7c6010ff"
+      "bytes": 11359,
+      "sha256": "37302f579d9be02ab13557cac401f064205000cc8ad107fd6a68b9725fe0e636"
     },
     {
       "path": "CS5222/Tutorial05.html",
-      "bytes": 10296,
-      "sha256": "7e803608fec854a40d999121bfdd81793b28d072b48198cd1943bff56c9bc56d"
+      "bytes": 10129,
+      "sha256": "928e2e1b88db8b4145dd5c98c5706b170348a1fd04d28d73f8e5457325e69816"
     },
     {
       "path": "CS5222/index.html",
       "bytes": 4162,
-      "sha256": "1147406ad674e998788c5410827adbd49bc758d718fe04df20cce34b85bf94f1"
+      "sha256": "19495982d4f860cdcce2eb2bf5e0795181e0c2a72daaa28c8a1f490be240bc4f"
     },
     {
       "path": "CS5489/Assignment01.html",
-      "bytes": 29611,
-      "sha256": "4f0bf83e680543ca09e3b5f2230b62ad255a76e3fd4a12681147d2348a39aa6a"
+      "bytes": 28905,
+      "sha256": "b5d41f8961cde857506ec93f8a06418f73f782f6eafa5937a971e87b87a63264"
     },
     {
       "path": "CS5489/Assignment02.html",
-      "bytes": 21531,
-      "sha256": "72097458f0349c5a10be05c2a3d136863d8ebf4207079eb735727a0522c08e6c"
+      "bytes": 21314,
+      "sha256": "18d36afefe7b2a6e1d920b81d2717946c46bee0a07cee569128e8447a781f5f1"
     },
     {
       "path": "CS5489/Lecture01.html",
-      "bytes": 33725,
-      "sha256": "cb9725b2e4fda1973cbf6ffad1099b2343ab248de3aa23a836740dab74ea3f2c"
+      "bytes": 33619,
+      "sha256": "90acb4bc61d6003d61dda76be8da5384ab0b8735e94cada9b0edacbe6cf0c4f9"
     },
     {
       "path": "CS5489/Lecture02.html",
-      "bytes": 67091,
-      "sha256": "3416607b68d00697bb444c4faffca8484204af2e3b9d5e80da8420a6635c1691"
+      "bytes": 66518,
+      "sha256": "f88e14af713f7a8b5131d045485d562f0e925faa4b69c61ca78fbfff4e51b36a"
     },
     {
       "path": "CS5489/Lecture03.html",
-      "bytes": 41285,
-      "sha256": "ffc0ce7da60fecad87b202ef3b7b72e0440c9bca063d0a11cfd17584b4522299"
+      "bytes": 40977,
+      "sha256": "2d8e18afdd9aa1dd4910b1fda6a0d48a76bc1a5461a875eb39af43eacf6a149d"
     },
     {
       "path": "CS5489/Lecture04.html",
-      "bytes": 33025,
-      "sha256": "4123d3b3686dcc1fbed2e860dde1e5829ece8477d3dd82def95b79abd8956a27"
+      "bytes": 32675,
+      "sha256": "d161b944f348306d44877c462fba549d699957cca657cd8bf583f8b06a21c70e"
     },
     {
       "path": "CS5489/Lecture05.html",
-      "bytes": 27814,
-      "sha256": "837e26c0d8c1402a2bbb5675f3bcbbd80da6d8c15e3d0aebd7e71a00fa45bfa6"
+      "bytes": 27454,
+      "sha256": "1b72795a8b0d342da194b36242bec93a27ae1fe3aac80ac931f07f8888902e85"
     },
     {
       "path": "CS5489/Tutorial01.html",
-      "bytes": 60609,
-      "sha256": "681f4f0cdba3757b2a75edd8cc2d3621c1fafdae706426286aecbe5ca26af7b3"
+      "bytes": 60462,
+      "sha256": "fed6dac1e6f6250e00c6ded2badf8b13a128c8bac59246d67974b37160d135c5"
     },
     {
       "path": "CS5489/Tutorial02.html",
-      "bytes": 169324,
-      "sha256": "72b69de85e0e5a0642b3da83f5c073af337a7c590cc8e2b46a8987caae40bd7d"
+      "bytes": 168988,
+      "sha256": "a0ac5af2a637de5ea40840555b60c268514a39a7b5662723d3db57cb217c2516"
     },
     {
       "path": "CS5489/Tutorial03.html",
-      "bytes": 98647,
-      "sha256": "bd607ea4e047c38431fec1ee70eebaf090869d11d33d455cb2ed78dc0f12e0b5"
+      "bytes": 98410,
+      "sha256": "57cc39185955b9e6822d8728d44dda28b0fa7f2035f61d896e489f7f6d586de0"
     },
     {
       "path": "CS5489/Tutorial04.html",
-      "bytes": 87353,
-      "sha256": "7d7a11f6cce43d99cf4cd718204536b97b4d781cde6e0d9c70aef4bd9c3eaf08"
+      "bytes": 87132,
+      "sha256": "4b53c5a0bf12f1d4bc635eeff06974f86f8111453a77d9d06f91e3dd39abdeba"
     },
     {
       "path": "CS5489/index.html",
       "bytes": 4369,
-      "sha256": "eb6e1006e2bdbe2029ad177a232b12917d92a0dcda6164ea12ad685ebb35bf0d"
+      "sha256": "762e973e995c0509edd90dcebf495dd87e3549ca359c8e8e3d163a3786d16275"
     },
     {
       "path": "assets/003d8c59f07f557d.png",
@@ -848,23 +848,23 @@
     },
     {
       "path": "foundations/MathForML.html",
-      "bytes": 83700,
-      "sha256": "0a7a24d58b407c5339b6b5deca7c5eda03e61f9363951edf2dd9402563800720"
+      "bytes": 83319,
+      "sha256": "3174b3a2567c06f6634d8959838e4cc4a8172e749784903298d179eee4b1ef24"
     },
     {
       "path": "foundations/NetworkBasics.html",
-      "bytes": 13413,
-      "sha256": "1400b5cb954c6f8911891a83e05d34a0d3e07243e46b92b03a02badaf8fea29e"
+      "bytes": 13371,
+      "sha256": "d8339c935d33d79aa3870eb69e5d10449897173d950fd118dcbe195364a5474b"
     },
     {
       "path": "foundations/SourceEvidence.html",
-      "bytes": 7401,
-      "sha256": "51f5910a6d70d6e72262fa67bebb94a8380e7ab3471bfcaa5a4a17fb81c3b63b"
+      "bytes": 6957,
+      "sha256": "7eb1cfb6042d81671bff797cd267899f829ceb74b4deddb9f28de7b336511aa2"
     },
     {
       "path": "index.html",
       "bytes": 5793,
-      "sha256": "82c13e8cbee553fbfa05f565fc9fcb397aca51a0fda9e05a01aae1fe787d7c27"
+      "sha256": "615c5e6027bddbe8b6971ff4da28914ccb2345f533c37708f47fdafb2f458397"
     },
     {
       "path": "notes.css",
@@ -873,26 +873,26 @@
     },
     {
       "path": "pdf/CS5222-A4.pdf",
-      "bytes": 14038239,
-      "sha256": "d37b298d31d2add1a1bed01bb9a706afefb6dce5309c4ac3b593610e47611f5b"
+      "bytes": 13992720,
+      "sha256": "a053ac49f591efc77b3b7901feddb65336f7f227b50c0a3b83575d13852a7cc6"
     },
     {
       "path": "pdf/CS5489-A4.pdf",
-      "bytes": 17347280,
-      "sha256": "050cb32f0bc9048db0f0233be7e5c32aebbfdb5f71870d66182d7152a68cb9cd"
+      "bytes": 17293464,
+      "sha256": "c9581dfbcac46886dc85551d09997bf616a5ecb5aeacf2b62a141f70527bd342"
     },
     {
       "path": "pdf/Foundations-A4.pdf",
-      "bytes": 4477912,
-      "sha256": "43a24c66814bfd27fd48003f2056beb4e3bc63bf4aa40f982fe76110008540f1"
+      "bytes": 4454880,
+      "sha256": "db36b4098acf4071513e99b9a6788bed298ec32e74ea4afed0320d9c17fdc263"
     }
   ],
   "pdfs": [
     {
       "path": "pdf/CS5489-A4.pdf",
-      "pages": 151,
-      "sha256": "050cb32f0bc9048db0f0233be7e5c32aebbfdb5f71870d66182d7152a68cb9cd",
-      "source_sha256": "9cf0d2731a27683d59b743245b7f4720251901b5f18de3e525f59b41c7e023f0",
+      "pages": 150,
+      "sha256": "c9581dfbcac46886dc85551d09997bf616a5ecb5aeacf2b62a141f70527bd342",
+      "source_sha256": "2e36e498dfd6a31735c046368aa32b7b59b1094e8eac9f77b6077b94900ee432",
       "removed_local_links": 40,
       "rewritten_links": 56,
       "content_streams_and_geometry_unchanged": true
@@ -900,8 +900,8 @@
     {
       "path": "pdf/CS5222-A4.pdf",
       "pages": 84,
-      "sha256": "d37b298d31d2add1a1bed01bb9a706afefb6dce5309c4ac3b593610e47611f5b",
-      "source_sha256": "eb91c3401aa5bd27ceb320416b0047fd6dcac8b2078e751f2eae8a6952c175ad",
+      "sha256": "a053ac49f591efc77b3b7901feddb65336f7f227b50c0a3b83575d13852a7cc6",
+      "source_sha256": "c6e92dcfdeecabebd489c808bae9b45ee538c0203e8c36456d05873a3b82e320",
       "removed_local_links": 41,
       "rewritten_links": 35,
       "content_streams_and_geometry_unchanged": true
@@ -909,8 +909,8 @@
     {
       "path": "pdf/Foundations-A4.pdf",
       "pages": 43,
-      "sha256": "43a24c66814bfd27fd48003f2056beb4e3bc63bf4aa40f982fe76110008540f1",
-      "source_sha256": "48bf1d566aa6e3873bc873d1a59b3b2421470177593e6cb706d08b1c82008521",
+      "sha256": "db36b4098acf4071513e99b9a6788bed298ec32e74ea4afed0320d9c17fdc263",
+      "source_sha256": "8477ae28135fe4f67c95e10e9640df099a48beab2434875210a9927ab0e25f85",
       "removed_local_links": 25,
       "rewritten_links": 65,
       "content_streams_and_geometry_unchanged": true
@@ -1187,7 +1187,7 @@
     },
     {
       "document": "foundations/SourceEvidence.html",
-      "label": "原source-manifest"
+      "label": "来源清单"
     },
     {
       "document": "foundations/SourceEvidence.html",

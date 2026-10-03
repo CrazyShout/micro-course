@@ -1,8 +1,8 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Chapter 2 · Application Layer｜让两端的程序真正说上话 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="chapter-2-application-layer">Chapter 2 · Application Layer｜让两端的程序真正说上话</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=33">A4 打印版 · 第 33–45 页</a>　图可点击放大。</p>
 <p><a href="index.html">课程目录</a> · <a href="Chapter01.html">上一章</a> · <a href="Tutorial03.html">Tutorial 3</a> · <a href="Assignment01.html">Assignment 1</a> · <a href="ResearchReportGuide.html">Research Report</a></p>
 <p>上一章知道消息可以穿过网络，这一章把镜头移到两端：浏览器怎样开口要网页，邮件怎样送到邮箱，名字怎样换成地址，多个用户怎样互相传文件，视频为什么可以边下边播。最后亲手让两个本机程序交换一句话。</p>
-<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整Chapter2（107页）</span>，保持 <strong>应用原则 → HTTP → 邮件 → DNS → P2P → 视频/CDN → socket</strong> 的实际正文顺序。三个part副本按内容去重。早期目录列FTP，但当前完整文件没有独立FTP教学段，后半目录已改为视频/CDN；本文不把历史FTP资料补成当前已讲章节。课件来源为Kurose/Ross、Man Hon Cheung修改，原图版权保留。</p>
-<p><strong>可选基础：</strong> <a href="../foundations/NetworkBasics.html#messages">报文与字节</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。运行Python先读<a href="../CS5489/Lecture01.html#functions-classes">Lecture1的函数与文件</a>；不用为网络另抄一套Python基础。</p>
+<p>依据当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">完整Chapter2（107页）</span>，保持 <strong>应用原则 → HTTP → 邮件 → DNS → P2P → 视频/CDN → socket</strong> 的实际正文顺序。早期目录列有FTP，但当前完整文件未提供独立FTP教学段，后半目录为视频/CDN。课件来源为Kurose/Ross、Man Hon Cheung修改，原图版权保留。</p>
+<p><strong>可选基础：</strong> <a href="../foundations/NetworkBasics.html#messages">报文与字节</a>、<a href="../foundations/NetworkBasics.html#timeline">时间轴</a>。运行Python先读<a href="../CS5489/Lecture01.html#functions-classes">Lecture1的函数与文件</a>，按需要复习即可。</p>
 <div class="toc">
 <ul>
 <li><a href="#chapter-2-application-layer">Chapter 2 · Application Layer｜让两端的程序真正说上话</a><ul>
@@ -78,7 +78,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>当前任务是优先级的主要依据。历史样题、复习笔记不等于本学期完整考试说明；没有据此声称某节“不考”。</p>
+<p>优先级依据当前课件与配套任务；考试范围以教师公布的要求为准。</p>
 <p><a id="processes"></a></p>
 <h2 id="1-applications-processes-and-sockets">1. Applications, processes and sockets｜先找到真正对话的双方</h2>
 <p>P3–4列出Web、邮件、游戏、会议、视频等应用，它们通常运行于端系统，开发一个网络应用不需要重新编写沿途每台路由器。进程（process）是运行中的程序；一个主机能同时有多个进程，因此只写主机IP不够，还需端口等传输端点信息。</p>
@@ -96,7 +96,7 @@
 <p><strong>English:</strong> Reliability, ordering, latency, throughput and security are different service properties. UDP's minimal service lets applications choose additional mechanisms, but does not remove responsibility for congestion and reliability design.</p>
 <p><a id="http"></a></p>
 <h2 id="3-web-and-httphtml">3. Web and HTTP｜拿到HTML不等于拿齐整页</h2>
-<p>P19先分base HTML和referenced objects：HTML告诉浏览器还需要哪些图片、脚本等，每个对象有URL。URL不只是主机名，还包含路径、可能的协议方案、端口等。本章和Tutorial使用传统HTTP/1.x over TCP模型；不能把“HTTP必然使用TCP”推广到HTTP/3，后者基于QUIC。<a href="https://www.rfc-editor.org/rfc/rfc9114">RFC9114</a> 这里只澄清适用范围，不扩成新考纲。</p>
+<p>P19先分base HTML和referenced objects：HTML告诉浏览器还需要哪些图片、脚本等，每个对象有URL。URL不只是主机名，还包含路径、可能的协议方案、端口等。本章和Tutorial使用传统HTTP/1.x over TCP模型；不能把“HTTP必然使用TCP”推广到HTTP/3，后者基于QUIC。<a href="https://www.rfc-editor.org/rfc/rfc9114">RFC9114</a> </p>
 <p>浏览器是HTTP客户端，Web服务器应请求返回资源（P20）。HTTP无状态是说核心请求语义不要求服务器记住先前请求，不等于TCP连接没有状态，也不等于网站不能存购物车；cookie等机制随后会补上会话关联。</p>
 <h3 id="_1">连接可以复用，请求是否并行还要另问</h3>
 <p>Non-persistent HTTP：每个对象新建TCP连接。简化为握手1RTT、请求到首个响应1RTT，再加对象发送时间；忽略DNS等其他部分时 <span class="arithmatex">\(2RTT+L/R\)</span>。它不是包含TLS、慢启动、服务处理的全现实上网公式。</p>
@@ -172,7 +172,7 @@
 </table></div>
 <p>P66–67的查询/响应共用结构：ID匹配事务；flags说明请求/回答、是否希望递归、是否支持递归、是否权威等；counts说明后续questions、answers、authority、additional的数量。附加区可以携带相关地址，减少后续查询，但不是任意附加记录都自动可信。</p>
 <p>P68新公司例子：向注册商登记域和权威服务器，父区设置委派NS，必要时有glue地址；在自己权威区添加www的地址记录。课件同页混用<code>networkuptopia</code>/<code>networkutopia</code>且www与apex不一致，是拼写/名称示意问题；真正配置时它们是不同DNS名字，必须统一，不能指望解析器猜出来。</p>
-<p>P69的DDoS、缓存投毒与反射放大用来理解可靠性/信任边界。原“Not successful to date”属于旧课件时代性断言，本文不把它当今天已验证事实。缓存降低某些上游访问压力，但不能证明DNS不可能遭攻击。</p>
+<p>P69的DDoS、缓存投毒与反射放大用来理解可靠性/信任边界。原“Not successful to date”描述的是旧课件编写时的情况。缓存降低某些上游访问压力，但不能证明DNS不可能遭攻击。</p>
 <p><strong>English:</strong> Recursive resolution delegates completion; iterative resolution returns referrals. DNS records have distinct types and TTLs; a non-authoritative cached answer is not automatically an incorrect answer.</p>
 <h2 id="10-p2p-file-distribution">10. P2P file distribution｜新加入的人也可以带来上传能力</h2>
 <p>P71–75先给理想模型：服务器有F bit文件，需分发到N个peer，服务器上传u_s bit/s，peer i上传uᵢ、下载dᵢ，核心网络不额外限速，<span class="arithmatex">\(d_{min}=\min_i d_i\)</span>。</p>
@@ -191,7 +191,7 @@
 </details>
 <h2 id="11-bittorrent">11. BitTorrent｜先找邻居，再交换稀缺块</h2>
 <p>P76–80中torrent是交换同一文件分块的peer集合，tracker帮助发现参与者，不必亲自发送全部文件。peer加入时无块，逐渐下载并向别人上传；成员离开/加入称churn。</p>
-<p>请求块采用rarest-first，优先扩散目前邻居中少见的块，降低最后只缺同一块的风险。发送方面，课堂用“偏向近期给自己较高上传速率的四个伙伴，每10秒重评、每30秒随机尝试一个新伙伴”的tit-for-tat/optimistic unchoking例子。这里的4/10/30是所述算法版本参数，不是所有客户端永恒不变的网络协议定律。随机试新伙伴避免只锁在既有关系里。</p>
+<p>请求块采用rarest-first，优先扩散目前邻居中少见的块，降低最后只缺同一块的风险。发送方面，课堂用“偏向近期给自己较高上传速率的四个伙伴，每10秒重评、每30秒随机尝试一个新伙伴”的tit-for-tat/optimistic unchoking例子。这里的4/10/30属于课件所述算法版本，客户端实现可能采用不同参数。随机试新伙伴避免只锁在既有关系里。</p>
 <p>原P76的<code>256Kb chunks</code>是图中文字，实际分块长度随torrent选择，b/B也需辨别；理解单位见基础页，不要求把这个旧示例当标准固定块长。</p>
 <h2 id="12-video-dash-and-cdn">12. Video, DASH and CDN｜边下边播，需要的不只是平均带宽</h2>
 <p>P82–84先解释视频由连续图像组成；空间冗余可压缩同一帧重复信息，时间冗余利用帧间变化。不同编码码率对应不同质量/数据量，但码率不是用户网络吞吐。“4Mbps视频”指播放每秒需要约4Mbit编码数据，而不是网络必然提供4Mbps。</p>
@@ -211,7 +211,7 @@ python labs/socket_demo.py --transport udp --role client --port 12000 --message 
 # TCP只需把两边的udp同时改成tcp。
 python labs/socket_demo.py --self-test
 </code></pre>
-<p>TCP没有消息边界：本例规定每条文本以换行结束，<code>sendall</code>发送全部bytes，接收循环直到换行，不能假设一次recv(1024)一定收到整句。UDP保留报文边界，但要保证例题报文在接收缓冲范围内。不要把课堂的一次recv小示范当成任意长度程序的通用实现。</p>
+<p>TCP没有消息边界：本例规定每条文本以换行结束，<code>sendall</code>发送全部bytes，接收循环直到换行，不能假设一次recv(1024)一定收到整句。UDP保留报文边界，但要保证例题报文在接收缓冲范围内。</p>
 <p>本轮loopback执行记录见 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">socket-self-test.json</span>，包括UDP、TCP和超过一次读取大小的TCP消息。它验证本机接口与消息分帧，不测量跨互联网可靠性或时延。</p>
 <p><strong>独立任务 / Try:</strong> 将客户端文字改成<code>course practice</code>，两种协议各运行一次；再解释TCP为什么有监听与连接两个socket。 / Run both transports with this message, then explain the two server-side TCP sockets.</p>
 <details>
@@ -224,7 +224,7 @@ python labs/socket_demo.py --self-test
 <p>英文自测：<strong>Explain why persistent HTTP does not necessarily imply pipelining. / 为什么持久HTTP不等于流水线？</strong> 关键答：复用的是连接，流水线另决定是否在上一响应完成前发后续请求。 / Persistence reuses a connection; pipelining additionally overlaps outstanding requests.</p>
 <p><a id="class-qa"></a></p>
 <h2 id="qa">课堂 Q&amp;A：先说课堂答案，再补适用情境</h2>
-<p>新到<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Q&amp;A_cha2学生版</span>共7页，S2–7有六题。以下为依据本章机制整理的答案，不冒称学生版另附教师解答。题干条件与英文选项要一起读。</p>
+<p>新到<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Q&amp;A_cha2学生版</span>共7页，S2–7有六题。以下答案根据本章机制整理；学生版未附教师解答。题干条件与英文选项要一起读。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -374,4 +374,4 @@ python labs/socket_demo.py --self-test
 </tr>
 </tbody>
 </table></div>
-<p>part1对应完整1–22，part2对应23–65，part3对应66–107；内容核对忽略明确的页脚重编号。课件列出的旧RFC/客户端与数字保留为原例，现代边界澄清不宣称教师另外讲过。未下载的FTP正文或后续章节在覆盖中标记缺失，不用历史资料充数。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>part1对应完整1–22，part2对应23–65，part3对应66–107；内容核对忽略明确的页脚重编号。课件中的旧RFC、客户端与数字按原例保留；协议版本差异在正文就近说明。FTP独立正文和后续未下载章节列为待补材料。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

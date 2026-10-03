@@ -2,7 +2,7 @@
 
 本稿是 AI 编写的串讲与教学例题，来源通过 CARDS 关联到原课件页/单元。卡片范围表示复习入口，不表示一节短课穷尽了这些卡片的所有细节。PREREQ 是概念先修；BRIDGE 解释联系。题答的 ` || ` 分隔中文与英文。
 
-@@ ml01 | 学习的对象：从短信到可检验的预测 | From messages to testable predictions
+@@ ml01 | 机器学习入门：让短信过滤器学会判断 | Machine learning: teaching a message filter to classify
 CARDS: M001,M002,M003,M004,M327,M328
 PREREQ:
 GOAL: 能把一个预测任务写成特征、标签、参数、超参数与训练—验证—测试流程，并识别信息泄漏。
@@ -18,10 +18,10 @@ PRACTICE_Q: 200 条短信按 160/20/20 划分。要学习词的权重、从两�
 HINT: 把“拟合数值”“比较设置”“最后检验”分别对应到三组。 || Match fitting values, choosing settings, and final evaluation to the three splits.
 PRACTICE_A: 160 条训练拟合权重；20 条验证选平滑强度；最后 20 条测试只用于评价已选流程。每个候选的词表等预处理也只从训练组学习。 || Use 160 training messages for fitting, 20 validation messages for smoothing selection, and the final 20 for evaluation. Fit each candidate’s vocabulary and preprocessing using training data only.
 TRANSFER_Q: 另一位同学不读测试标签，却先用全部 200 条短信建立词表，再按 160/20/20 训练与评价。指出泄漏位置，并写出修正后的先后顺序。 || A student builds the vocabulary from all 200 messages without reading test labels, then trains and evaluates on the split. Identify the leakage and give the corrected order.
-TRANSFER_A: 词表已看到验证和测试文本的分布。先划分；只用 160 条训练文本拟合词表和模型；用固定词表变换验证、测试文本；验证选方案，测试评价。这里采用普通归纳评估，特殊传导设置须另行声明。 || Vocabulary fitting has already used validation and test distributions. Split first; fit vocabulary and models on training text; transform other splits with that fixed vocabulary; select on validation and evaluate on test. This is the ordinary inductive protocol; a transductive setting must be declared separately.
+TRANSFER_A: 词表已看到验证和测试文本的分布。先划分；只用 160 条训练文本拟合词表和模型；用固定词表变换验证、测试文本；验证选方案，测试评价。 || Vocabulary fitting has already used validation and test distributions. Split first; fit vocabulary and models on training text; transform other splits with that fixed vocabulary; select on validation and evaluate on test.
 BRIDGE: 下一步先把这条流程写成能够从干净状态运行的程序，之后再讨论模型公式。
 
-@@ ml02 | 让代码忠实执行你的想法 | Python and reproducible notebooks
+@@ ml02 | Python入门：把数因数写成程序 | Python basics: turn divisor counting into a program
 CARDS: M007,M008,M009,M010,M011,M012,M013,M014,M015,M016,M017,M018,M019,M020,M334,M335,M336,M337
 PREREQ: ml01
 GOAL: 能逐行跟踪一个含循环、判断和 return 的函数，并在干净 Notebook 中独立复现。
@@ -67,7 +67,7 @@ TRANSFER_Q: 在重启后的 Notebook 中调用 count_factors(7)，应先运行�
 TRANSFER_A: 先运行函数定义单元，再运行调用；7 没有符合条件的因数，因此返回 0。改为 print 后屏幕仍显示 0，但没有 return 的函数返回 None，所以 y 是 None。 || Run the function-definition cell before the call. Seven has no eligible divisors, so it returns zero. Replacing return with print displays zero but makes the function return None; y is None.
 BRIDGE: 列表适合组织对象，机器学习计算则需要具有明确形状的数组。
 
-@@ ml03 | 先看形状，再看矩阵公式 | Shapes before matrix formulas
+@@ ml03 | NumPy数组：一行一个样本，一次算出全部分数 | NumPy arrays: compute sample scores with explicit shapes
 CARDS: M021,M022,M023,M024,M025,M026,M027,M028,M029,M030,M031,M032,M033,M034,M329,M330,M035,M036
 PREREQ: ml02
 GOAL: 能把每行样本的加权求和写成矩阵乘法，并逐步检查预测与残差的形状。
@@ -79,7 +79,7 @@ axis=0 的均值把样本轴压掉，得到每个特征的均值；axis=1 则得
 
 把 Tutorial 1 的绘图任务也放在这里：对每个 n=2,…,100，计算不含 1 和 n 的正因数个数 f(n)。散点图用 (n,f(n))，一个点对应一个整数；直方图对 f(n) 分组，一个柱的高度表示有多少整数具有该计数。例如 12 的非平凡因数为 2、3、4、6，因此散点含 (12,4)，直方图中“4 个因数”这一组多计一个。因为一共有 99 个整数，各箱频数之和应为 99。
 
-另一个绘图练习给出形状 (120,2) 的数组，每行就是一个二维点。`mydata[:,0]` 取全部横坐标，`mydata[:,1]` 取全部纵坐标，再交给 scatter。这里要学的是“数组的行怎样对应观察对象”，不需要先读其他文件才能理解问题。
+另一个绘图练习给出形状 (120,2) 的数组，每行就是一个二维点。`mydata[:,0]` 取全部横坐标，`mydata[:,1]` 取全部纵坐标，再交给 scatter。这里将数组的每一行对应到图上的一个观察点。
 SYMBOLS: X | 数据矩阵，N×d；w | 权重向量，d；Xw | 预测，N；X^T X | d×d 特征内积矩阵
 RECAP_EN: Matrix notation packages scalar operations. With samples in rows, X has shape N by d and Xw contains N predictions. Broadcasting compatibility does not guarantee the intended meaning.
 WORKED_Q: X 的两行为 (1,2)、(3,4)，w=(2,-1)，标签 y=(1,1)。求 Xw、预测减标签的残差，并给出形状。 || X has rows (1,2),(3,4), w=(2,-1), and labels y=(1,1). Compute Xw and prediction-minus-label residuals, giving each shape.
@@ -91,7 +91,7 @@ TRANSFER_Q: 三条样本的预测被存为形状 (3,1)，标签为 (3,)。直接
 TRANSFER_A: 广播将 (3,) 视为末轴有 3 个数，和三行的 (3,1) 组合出 (3,3)。应先把双方统一为 (3,) 或都为 (3,1)，再相减并检查形状；这样每个预测只减自己的标签。 || Broadcasting combines three rows with three columns, producing (3,3). Convert both to (3,) or both to (3,1) before subtraction, then assert equal shapes so each prediction subtracts its own label.
 BRIDGE: 内积不仅用于预测，也能衡量方向对齐程度；这就连接到投影、正交化和后来的 PCA。
 
-@@ ml04 | 投影：把一个向量拆成已有部分和新信息 | Projection and orthogonalization
+@@ ml04 | 投影与Gram–Schmidt：去掉已有方向，留下新信息 | Projection and Gram–Schmidt: separating independent directions
 CARDS: M037,M038,M039,M040,M041
 PREREQ: ml03
 GOAL: 能解释 Gram–Schmidt 每次减掉什么，并手算两维例子。
@@ -110,13 +110,13 @@ TRANSFER_Q: 对v₁=(1,1)、v₂=(2,2)正交归一化。独立算第二余量，
 TRANSFER_A: e₁=(1,1)/√2，e₁ᵀv₂=2√2，投影=(2,2)，余量为0。两向量线性相关，不能除以零归一化；只提供一个独立方向。 || The first unit vector is (1,1)/√2. Projection coefficient 2√2 reproduces v₂, leaving zero residual. Only one independent direction exists; do not normalize zero.
 BRIDGE: 投影最小化剩余距离的思想会在最小二乘和 PCA 中再次出现。
 
-@@ ml05 | 贝叶斯公式就是重新数一遍可能的人群 | Bayes through concrete counts
+@@ ml05 | Bayes公式：看到free后，垃圾短信有多大可能？ | Bayes’ rule: how likely is spam after observing “free”?
 CARDS: M042,M043,M044,M045,M046,M047,M048,M049
 PREREQ: ml01
 GOAL: 能从人数表推回条件概率与后验公式。
 EXPLAIN: P(free|spam) 问的是“已经知道是垃圾短信，其中多少有 free”；P(spam|free) 问的是“已经看到 free，其中多少是垃圾”。它们筛选的分母人群不同，不能交换。
 
-把 free 想成一道筛子：垃圾短信会留下，正常短信也可能留下。“free pizza” 可能只是同学请客，关键词还没资格当法官。先用各类原有比例乘各自通过筛子的比例，再看留下的短信中每类占多少；下面的完整例题只把这次计数算一遍。
+把 free 想成一道筛子：垃圾短信会留下，正常短信也可能留下。“free pizza”也可能只是同学请客的正常短信。先用各类原有比例乘各自通过筛子的比例，再看留下的短信中每类占多少；下面的完整例题只把这次计数算一遍。
 
 把人数换成比例就是 $P(c\mid x)=P(x\mid c)P(c)/\sum_k P(x\mid k)P(k)$，分母须大于零。先验像筛选前的底数，似然决定每类留下多少，后验才是筛选后的占比。连续特征将似然换成密度；密度可以大于 1，区间下的面积才是概率。
 SYMBOLS: $P(c)$ | 先验 prior；$P(x\mid c)$ | 似然 likelihood；$P(x)$ | 证据 evidence；$P(c\mid x)$ | 后验 posterior
@@ -131,7 +131,7 @@ TRANSFER_Q: 若垃圾先验为 0.2，两类中 free 出现概率都为 0.6，看
 TRANSFER_A: 分子为 0.2×0.6=0.12，分母为 0.12+0.8×0.6=0.60，后验仍为 0.2。两类同样容易产生该证据，所以它不改变先验优势比。 || The numerator is 0.12 and denominator 0.60, so the posterior remains 0.2. Equal class-conditional probabilities leave the prior odds unchanged.
 BRIDGE: 概率表通常未知，下一节用训练样本估计它们。
 
-@@ ml06 | MLE：选择最能解释已见数据的参数 | Maximum likelihood and generative classification
+@@ ml06 | 最大似然估计：从花朵记录估计概率与分布 | Maximum likelihood: estimate probabilities and distributions from flower records
 CARDS: M050,M051,M052,M053,M054,M055,M056,M057,M058,M059,M060
 PREREQ: ml05
 GOAL: 能从独立伯努利观测写出似然、求出 MLE，并检查内部解与边界；高斯估计见补充单元。
@@ -152,7 +152,7 @@ TRANSFER_Q: 四次观测全部成功。写出似然并求 MLE；为什么这里�
 TRANSFER_A: L=p⁴，在 0≤p≤1 上随 p 增大，最大值在边界 p=1。log L=4 log p 在内部的导数 4/p 不为零；内部驻点条件不包括边界最优。估计 p=1 不证明未来永不失败。 || L=p⁴ increases on [0,1], so the maximum is at the boundary p=1. The interior log derivative 4/p never vanishes; an interior stationary-point condition does not cover boundary optima. The estimate does not prove future failures impossible.
 BRIDGE: 多特征数据还需要说明特征之间如何一起变化，这决定使用对角还是完整协方差。
 
-@@ ml07 | 协方差：椭圆的方向也是信息 | Gaussian models and covariance
+@@ ml07 | 高斯分类：用两项测量辨认鸢尾花 | Gaussian classification: identify an iris from two measurements
 CARDS: M061,M062,M063,M064,M065,M066,M067,M068,M069,M070,M071,M072,M073,M074
 PREREQ: ml03,ml06
 GOAL: 能把一个新样本代入两类高斯模型，依次算距离、体积项和先验分数，解释预测为何随先验或方差变化。
@@ -191,7 +191,7 @@ TRANSFER_Q: 独立做：x=(2,0)，均值仍为 A：(0,0)、B：(4,0)，先验恢
 TRANSFER_A: A：q=1、行列式 4、s≈−1.8863。B：q=4/16=0.25、行列式 16、s=−0.6931−1.3863−0.125≈−2.2044，仍选 A。B 的距离项较有利，却被更大的体积项抵消。只比 q 会错选 B；不能把“分布更宽容”理解成“所有点都更可能”。 || A has q=1, determinant 4, and score −1.8863. B has q=0.25, determinant 16, and score −0.6931−1.3863−0.125≈−2.2044, so A still wins. B's smaller distance penalty is outweighed by its volume penalty. Comparing only q would incorrectly choose B; broadening a density cannot make every point more likely.
 BRIDGE: 对文本词频而言，高斯未必是合适的观测模型；先决定“出现”还是“出现次数”。
 
-@@ ml08 | 同一条短信，为什么有不同的 NB 模型 | Text representation and naive Bayes
+@@ ml08 | 文本朴素贝叶斯：记录词的出现，还是出现次数？ | Text naive Bayes: word presence or word counts?
 CARDS: M075,M076,M077,M078,M079,M080,M081,M082,M083,M084,M085,M086,M087,M088,M089,M331,M332,M333
 PREREQ: ml02,ml06
 GOAL: 能从数据表示选择 Bernoulli 或 Multinomial NB，并算出平滑概率。
@@ -210,7 +210,7 @@ TRANSFER_Q: 某类词表只有 free、meeting，词元计数为 (3,1)，alpha=1�
 TRANSFER_A: 概率为 (4/6,2/6)=(2/3,1/3)；似然为 (2/3)²(1/3)⁰=4/9。Multinomial 记录次数；零次的次数项为 1。Bernoulli 是另一个“有/无”表示与模型，不能混搭。 || Probabilities are (2/3,1/3) and the likelihood is (2/3)²(1/3)⁰=4/9. A zero count contributes one here. Bernoulli uses a different presence/absence representation and model; its absence factor cannot be mixed into this likelihood.
 BRIDGE: 当每个词的出现次数被视为独立计数，Poisson NB 提供第三种建模思路。
 
-@@ ml09 | Poisson NB：把次数变成证据 | Count evidence with Poisson NB
+@@ ml09 | Poisson朴素贝叶斯：用每篇文档的词计数分类 | Poisson naive Bayes: classify documents from word counts
 CARDS: M108,M109,M110,M111,M112,M113,M114,M115,M116,M117,M118
 PREREQ: ml08
 GOAL: 能从 Poisson 概率写出类分数，并解释文档长度与独立性假设。
@@ -229,7 +229,7 @@ TRANSFER_Q: 单特征 Poisson 模型中，两类先验相等，计数均值分�
 TRANSFER_A: 略去共同的 log 先验后，分数为 -1 和 -10，支持均值 1 的类别。若错删负 lambda 项，就会把这两类误判为平局。 || Omitting the common log prior gives scores -1 and -10, favoring rate 1. Dropping the negative-rate term incorrectly creates a tie.
 BRIDGE: 前面先建模“数据怎样生成”；下一节直接建模“给定数据属于哪类”。
 
-@@ ml10 | 逻辑回归：分数、概率、损失怎样连起来 | Logistic regression from score to update
+@@ ml10 | 逻辑回归：从分类分数到概率，再到梯度更新 | Logistic regression: from scores to probabilities and gradient updates
 CARDS: M119,M120,M121,M122,M123,M124,M125,M126,M127,M128,M129,M130,M131,M132
 PREREQ: ml03,ml06
 GOAL: 能说出一次参数更新为什么朝这个方向，并手算梯度。
@@ -250,7 +250,7 @@ TRANSFER_Q: x=2、t=1、初始 w=b=0、eta=0.1，无正则，同时训练权重�
 TRANSFER_A: 旧参数给 p=0.5。权重梯度 (p-t)x=-1，偏置梯度 p-t=-0.5；两者都用旧参数计算。一起更新得 w=0.1、b=0.05，新分数 z=0.1×2+0.05=0.25，不是固定偏置版本的 0.2。 || The old parameters give p=0.5. The weight gradient (p-t)x is -1 and the bias gradient p-t is -0.5, both evaluated before updating. The new parameters are w=0.1 and b=0.05, giving z=0.1×2+0.05=0.25 rather than the fixed-bias value 0.2.
 BRIDGE: 梯度能拟合一个模型；选择模型和推广到多类别，还需要交叉验证与 softmax。
 
-@@ ml11 | 模型选择与多类别概率 | Cross-validation and multiclass probabilities
+@@ ml11 | 模型选择与多类分类：交叉验证和softmax | Model selection and multiclass classification: cross-validation and softmax
 CARDS: M133,M134,M135,M136,M137,M138,M139,M140,M141
 PREREQ: ml10
 GOAL: 能按相同折比较超参数并检查预处理泄漏；多类别 softmax 用独立补充单元练习。
@@ -264,12 +264,12 @@ WORKED_Q: 设置 A 的三折验证准确率为 (0.82,0.86,0.84)，B 为 (0.90,0.
 WORKED_A: A 总和 2.52，均分 0.84；B 总和 2.43，均分 0.81，选择 A。每折词表和模型都仅在该折训练部分拟合，验证部分只评分。选完后在开发数据重新拟合，再做保留测试。 || A averages 2.52/3=0.84; B averages 2.43/3=0.81, so choose A. Fit vocabulary and model within each training fold and only score its validation fold. Refit on development data after selection, then evaluate the untouched test set.
 PRACTICE_Q: 同样规则下，A=(0.8,0.8,0.8)，B=(0.9,0.7,0.7)。先求和，再选均分较大的设置。 || Under the same rule, A=(0.8,0.8,0.8) and B=(0.9,0.7,0.7). Sum the scores and select the larger mean.
 HINT: 最高的一折不能替代平均；每组三个分数都要计入。 || Use all three scores rather than the highest single fold.
-PRACTICE_A: A=2.4/3=0.8；B=2.3/3≈0.7667，选择 A。这个选择规则不证明它在所有未来数据上都更好。 || A averages 0.8 and B about 0.7667, so choose A; this does not guarantee better performance on every future dataset.
+PRACTICE_A: A=2.4/3=0.8；B=2.3/3≈0.7667，选择 A。 || A averages 0.8 and B about 0.7667, so choose A.
 TRANSFER_Q: A 的平均分 0.84 来自在每折内拟合缩放；B 的 0.85 来自先用全部开发数据拟合缩放、再三折验证。可以直接选 B 吗？写出公平重比的流程。 || A scores 0.84 with scaling fitted inside each fold; B scores 0.85 after scaling all development data before cross-validation. May B be selected directly? Give a fair comparison procedure.
 TRANSFER_A: 不能，B 的验证折已影响缩放统计。固定相同折；对每个候选、每折只用训练部分拟合缩放和模型，再变换并评分验证部分；重新比较均分。测试集不参与这次修正和选择。 || No. B’s validation folds influenced scaling. Fix identical folds; fit scaling and model only on each training portion, transform and score its validation portion, then compare the recomputed means. Keep the test set out of this correction and selection.
 BRIDGE: 逻辑回归惩罚概率判断，SVM 则把“离边界多远”放到学习目标里。
 
-@@ ml12 | SVM：先看距离，再看优化式 | Margins and soft-margin SVM
+@@ ml12 | SVM间隔：在两类样本之间留出余量 | SVM margins: leave room between the classes
 CARDS: M143,M144,M145,M146,M154,M155,M156,M159,M160,M161,M162,M163,M164
 PREREQ: ml04,ml10
 GOAL: 能用几何距离解释间隔，并判断松弛变量的含义。
@@ -288,7 +288,7 @@ TRANSFER_Q: 分界面 w=2、b=0，点 x=3 到边界的距离是多少？把 w、
 TRANSFER_A: 原距离 |2×3|/|2|=3；缩放后 |20×3|/|20|=3。原分数 6 变为 60，但边界和距离不变。硬间隔的 1/||w|| 还要求采用 y f≥1 的规范化表示。 || The distances are |6|/2=3 and |60|/20=3. Scores change, but the boundary and distance do not. The hard-margin expression 1/||w|| additionally uses the canonical y f≥1 scaling.
 BRIDGE: 原始问题看 w 与 b；对偶从样本贡献出发，解释哪些点真正支撑边界。
 
-@@ ml13 | 对偶与 KKT：给约束配上价格 | Duality, multipliers, and support vectors
+@@ ml13 | SVM对偶与KKT：从间隔约束求出分类器 | The SVM dual and KKT conditions: solve the margin-constrained problem
 CARDS: M147,M148,M149,M150,M151,M152,M153,M157,M158
 PREREQ: ml12
 GOAL: 能逐项求拉格朗日函数的导数、求两点硬间隔乘子，并正确使用互补松弛。
@@ -314,7 +314,7 @@ TRANSFER_Q: 从一般 L=½||w||²+Σᵢαᵢ[1−yᵢ(wᵀxᵢ+b)] 独立写出 
 TRANSFER_A: ∂L/∂w=w−Σᵢαᵢyᵢxᵢ=0，故 w=Σᵢαᵢyᵢxᵢ；∂L/∂b=−Σᵢαᵢyᵢ=0。因 αᵢhᵢ=0，hᵢ<0 必使 αᵢ=0；逆向不成立，因为 αᵢ=0、hᵢ=0 也满足条件。 || The derivatives are w−Σᵢαᵢyᵢxᵢ=0 and −Σᵢαᵢyᵢ=0. Hence w is the weighted sample sum. Complementary slackness forces αᵢ=0 when hᵢ<0, but αᵢ=0 permits either an inactive or an active constraint.
 BRIDGE: 对偶只通过样本内积计算，这为核方法提供了入口。
 
-@@ ml14 | 核：换一种比较样本的方式 | Kernels as implicit feature comparisons
+@@ ml14 | 核方法：换一种特征表示，让线性分类器处理曲线 | Kernel methods: use a new feature representation for nonlinear boundaries
 CARDS: M165,M166,M167,M168,M169,M170,M171,M172
 PREREQ: ml03,ml13
 GOAL: 能通过显式特征映射验证二次核；RBF 与超参数区别见补充单元。
@@ -333,7 +333,7 @@ TRANSFER_Q: 将映射错误地写成 ψ(a,b)=(a²,ab,b²)。对 x=z=(1,1)，比�
 TRANSFER_A: 错误映射得 1+1+1=3，目标核为 (1+1)²=4。展开 (ac+bd)² 有 2abcd 交叉项，因此两个向量的中间坐标各需要 √2，乘起来才是系数 2。 || The incorrect map gives 3 versus the target kernel value 4. The expansion has cross-term 2abcd, so each mapped middle coordinate needs √2 to produce the factor 2.
 BRIDGE: 模型看到的几何结构来自特征表示，因此缩放和编码也是模型的一部分。
 
-@@ ml15 | 特征与评估：别让表示偷偷改变问题 | Features, scale, and fair comparison
+@@ ml15 | 特征预处理：尺度、类别编码与信息损失 | Feature preprocessing: scale, category encoding and information loss
 CARDS: M173,M174,M175,M176,M177,M178,M179,M180,M181,M182
 PREREQ: ml11,ml14
 GOAL: 能用训练统计完成特征缩放，解释尺度含义，并识别预处理泄漏。
@@ -352,7 +352,7 @@ TRANSFER_Q: 训练特征为 (2,4,6)，新测试值 8。正确按训练范围映�
 TRANSFER_A: 训练范围 [2,6] 给 4→0、8→2。加入测试后范围变 [2,8]，给 4→−1/3、8→1。测试数据已改变训练样本的表示和随后的模型；应固定训练变换。 || Training range [2,6] gives 0 and 2. Including the test value changes the range to [2,8], giving −1/3 and 1. Test data has changed the training representation and thus the model; keep the training-fitted transform fixed.
 BRIDGE: 将这一流程落实到短信作业，比先尝试很多复杂模型更容易定位问题。
 
-@@ ml16 | 从基线到可解释的短信实验 | A reproducible assignment workflow
+@@ ml16 | 短信分类实验：从混淆矩阵找到改进方向 | SMS classification experiments: use the confusion matrix to guide improvements
 CARDS: M091,M092,M093,M094,M095,M096,M099
 PREREQ: ml08,ml11
 GOAL: 能从混淆矩阵计算 precision、recall、balanced accuracy，并用错误类型选择下一步检查。
@@ -360,7 +360,7 @@ EXPLAIN: 作业先拆为数据、特征、训练、选择、评价、交付六�
 
 混淆矩阵把“错了”细分为哪一类被判成哪一类。Recall 看该真实类别中找回多少；precision 看预测为该类的结果中多少正确。Balanced accuracy 对各类 recall 做算术平均，使多数类不能仅靠数量掩盖少数类失败。
 
-错误分析应回到具体短信：是否分词错误、否定词缺失、稀有词未覆盖、内容本就模糊？提出可检验改动，而不是只抄一个更高分。提交要求和评分细节见网页“课程信息”中的 Assignment 1 说明，并以最新 Canvas 原 Notebook 为准；这里的小例子不是代做实验或报告实际成绩。
+错误分析应回到具体短信：是否分词错误、否定词缺失、稀有词未覆盖、内容本就模糊？提出可检验改动，而不是只抄一个更高分。提交要求和评分细节见网页“课程信息”中的 Assignment 1 说明，并以最新 Canvas 原 Notebook 为准。
 RECAP_EN: Build a complete baseline before optimizing components. Use per-class errors to formulate testable improvements and preserve the distinction between validation choices and final evaluation.
 WORKED_Q: 二分类垃圾邮件任务：TP=6、FN=4、FP=2、TN=8，垃圾为正类。计算精确率、召回率和两类 balanced accuracy。 || For spam-positive binary classification with TP=6,FN=4,FP=2,TN=8, compute precision, recall, and two-class balanced accuracy.
 WORKED_A: 拦下 8 条中 6 条真垃圾，precision=6/(6+2)=0.75；10 条真垃圾找回 6 条，recall=6/(6+4)=0.6。正常类召回率=8/(8+2)=0.8；balanced accuracy=(0.6+0.8)/2=0.7。 || Precision is 6/8=0.75; spam recall is 6/10=0.6. Legitimate recall is 8/10=0.8, so balanced accuracy is (0.6+0.8)/2=0.7.
@@ -371,7 +371,7 @@ TRANSFER_Q: 数据有 10 条垃圾、90 条正常。模型一律预测正常。�
 TRANSFER_A: TP=0、FN=10、FP=0、TN=90。accuracy=90/100=0.9；两类召回率为 0 与 1，balanced accuracy=0.5。先检查漏掉的垃圾、类别不平衡和阈值；90% 总准确率不能说明过滤器有效。 || TP=0,FN=10,FP=0,TN=90. Accuracy is 0.9 but balanced accuracy is (0+1)/2=0.5. Inspect missed spam, imbalance, and the decision threshold; 90% overall accuracy does not establish useful filtering.
 BRIDGE: QE 需要从实验与公式上升到“为什么、何时成立、何时失败”的解释。
 
-@@ ml17 | QE 口述：把模型讲成可追问的论证 | Explaining assumptions and decisions
+@@ ml17 | 解释分类决策：模型概率与错误代价 | Explain a classification decision: model probabilities and error costs
 CARDS: M101,M102,M103,M104,M105,M106
 PREREQ: ml07,ml08,ml10,ml16
 GOAL: 能说明文本模型的表示与假设，并在一个未指定方法的情境中选择模型、计算后验、按错误代价决策，再回答英文追问。
@@ -387,10 +387,10 @@ PRACTICE_Q: 改成 Bernoulli NB，输入改为每个词是否出现。补完四�
 HINT: 提到有/无表示、条件独立、先验与出现和缺失项、假设可能不成立。 || Mention binary representation, conditional independence, prior plus presence and absence terms, and a limitation.
 PRACTICE_A: “I classify messages using word-presence indicators. Given a class, the indicators are modeled as independent Bernoulli variables. I add the log prior and the log probabilities of both present and absent words. Correlated words can violate the assumption and produce overconfident predictions.” 不要求逐字背诵，四个意思一致即可。 || I classify messages using word-presence indicators. Given a class, the indicators are modeled as independent Bernoulli variables. I add the log prior and the log probabilities of both present and absent words. Correlated words can violate the assumption and produce overconfident predictions. Equivalent wording is acceptable.
 TRANSFER_Q: 独立情境题：一个短信过滤器只保存 free 是否出现，不保存出现次数。请在已学的生成式文本基线中选一个合适模型，说明表示。教学总体中垃圾占 20%，垃圾与正常短信含 free 的概率分别为 0.8、0.1；一条新短信含 free。先求垃圾后验，再决定是否拦截：误拦正常短信损失 9，放过垃圾损失 1，判断正确损失 0。假定所给概率适用于当前总体。最后用英文回答：① Would repeating “free” three times change this model's input? ② If the false-positive cost rises, must the posterior change? || A filter stores only whether free occurs, not its count. Choose a suitable generative text baseline from those studied and state the representation. In a teaching population, 20% of messages are spam; free appears in 0.8 of spam and 0.1 of legitimate messages. A new message contains free. Find its spam posterior and decide whether to block it: a false block costs 9, missed spam costs 1, and correct decisions cost zero. Assume these probabilities apply to the current population. Then answer in English: (1) Would repeating “free” three times change this model's input? (2) If the false-positive cost rises, must the posterior change?
-TRANSFER_A: 合格回答抓住三件事：① 用有/无特征 x=1，Bernoulli NB 是合适的基线；这里只有一个词，多词时才需要额外的类内条件独立假设。② 垃圾贡献 0.2×0.8=0.16，正常贡献 0.8×0.1=0.08，后验 p=2/3。③ 拦截的期望损失为 9×(1−p)=3，放行是 1×p=2/3，因此放行。模型觉得“较像垃圾”，不等于值得冒险把导师的免费披萨通知也拦了。英文追问可答：“No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.” 必须区分表示、概率和行动，不要求逐字背。 || Three required points: (1) Use the binary feature x=1 and Bernoulli NB as a suitable baseline; with one feature, no additional multi-feature independence assumption is needed. (2) Contributions are 0.16 and 0.08, giving spam posterior p=2/3. (3) Blocking costs 9(1−p)=3 in expectation, versus p=2/3 for allowing it, so allow it. More likely spam need not mean blocking is the best action. Follow-ups: “No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.” Assess representation, probability, and action separately; equivalent wording is fine.
+TRANSFER_A: ① 用有/无特征 x=1，Bernoulli NB 是合适的基线；这里只有一个词，多词时才需要额外的类内条件独立假设。② 垃圾贡献 0.2×0.8=0.16，正常贡献 0.8×0.1=0.08，后验 p=2/3。③ 拦截的期望损失为 9×(1−p)=3，放行是 1×p=2/3，因此放行。模型觉得“较像垃圾”，不等于值得冒险把导师的免费披萨通知也拦了。英文追问可答：“No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.” || (1) Use the binary feature x=1 and Bernoulli NB as a suitable baseline; with one feature, no additional multi-feature independence assumption is needed. (2) Contributions are 0.16 and 0.08, giving spam posterior p=2/3. (3) Blocking costs 9(1−p)=3 in expectation, versus p=2/3 for allowing it, so allow it. More likely spam need not mean blocking is the best action. Follow-ups: “No. The binary indicator stays one; repetition is discarded.” “No. Changing costs changes the decision rule, not the posterior, when the data and probability model stay fixed.”
 BRIDGE: 后续 Extra Resources 可用于预习新模型；始终将它们映射回任务、假设、目标与验证这四个问题。
 
-@@ ml18 | k-NN：先用附近的例子回答 | Nearest-neighbor reasoning
+@@ ml18 | k近邻：让相似样本参与分类 | k-nearest neighbours: classify from similar examples
 CARDS: M183,M184,M185,M186
 PREREQ: ml03,ml15
 GOAL: 能手算多数投票，并解释为什么尺度会改变邻居。
@@ -400,14 +400,14 @@ k 小时边界更受个别样本影响；k 大时更平滑，却可能抹掉小�
 RECAP_EN: k-NN predicts from nearby training examples. The metric, feature scale, neighborhood size, and voting rule jointly determine the result.
 WORKED_Q: 最近三点标签 A、B、B，距离 0.1、1、1。普通投票与 1/距离加权各选什么？ || The nearest labels are A,B,B at distances 0.1,1,1. Compare ordinary and inverse-distance voting.
 WORKED_A: 普通投票 B 为两票，选 B；加权时 A 为 10，B 总共 2，选 A。 || Ordinary voting chooses B by two votes to one. Inverse-distance voting gives A weight 10 and B total weight 2, choosing A.
-PRACTICE_Q: 若三点距离都相等，两种规则还会不同吗？ || Would the two rules differ if all three distances were equal and nonzero?
+PRACTICE_Q: 若三点距离都相等且非零，两种规则还会不同吗？ || Would the two rules differ if all three distances were equal and nonzero?
 HINT: 每张票被乘上同一个系数。 || Every vote receives the same multiplier.
 PRACTICE_A: 这个例子都选 B。 || Both choose B in this example.
 TRANSFER_Q: 查询点 (0,0)，A 类邻居 (0.1,2)，B 类邻居 (1,0)；普通欧氏 1-NN 先选谁？若只把第一坐标单位改成原来的 10 倍，查询和邻居同时换单位、不标准化，又选谁？ || For query (0,0), neighbor A=(0.1,2) and B=(1,0), which class does Euclidean 1-NN choose? If the first coordinate is multiplied by 10 for all points without standardization, which is chosen?
 TRANSFER_A: 原平方距离 A=0.01+4=4.01，B=1，选 B。改单位后 A=(1,2)、B=(10,0)，平方距离为 5 与 100，改选 A。只是单位变化就改变了邻居，因此尺度必须作为模型规则的一部分。 || Squared distances are 4.01 and 1, so choose B. After rescaling, they are 5 and 100, so choose A. A unit change alone alters the prediction unless scaling is handled as part of the model.
 BRIDGE: k-NN 直接查例子；回归则用参数概括输入与连续输出的关系。
 
-@@ ml19 | 最小二乘：从每个误差推到正规方程 | Least squares without skipping the derivative
+@@ ml19 | 线性回归：从房价残差到最小二乘与正则化 | Linear regression: from price residuals to least squares and regularization
 CHAPTER: lecture-4
 CARDS: M187,M188,M189,M190,M191,M192,M193,M194,M195,M196,M197,M198,M199,M200,M201,M202,M338
 PREREQ: ml03,ml04,ml10
@@ -448,7 +448,7 @@ TRANSFER_Q: 只有 N=4 个点，其中 I=2 个内点，每次从中无放回取 
 TRANSFER_A: 单次为 C(2,2)/C(4,2)=1/6，而非 1/4。K 次失败为 (5/6)^K；K=3 约 0.5787，K=4 约 0.4823，所以最少 4 次。独立近似的使用条件会改变答案。 || Single-trial probability is C(2,2)/C(4,2)=1/6. Failure after K independent trials is (5/6)^K: about 0.5787 at K=3 and 0.4823 at K=4. Thus four trials are needed, illustrating why sampling assumptions matter.
 BRIDGE: 聚类同样用距离，但没有标签告诉我们哪条预测对错。
 
-@@ ml21 | k-means：分组与代表点为什么交替更新 | Why k-means alternates
+@@ ml21 | k-means聚类：交替分组与更新中心 | k-means clustering: alternate assignments and center updates
 CARDS: M211,M212,M213,M214,M215,M216
 PREREQ: ml03,ml19
 GOAL: 能执行k-means的一次分配与均值更新，检查目标下降，并说明不保证全局最优。
@@ -469,7 +469,7 @@ TRANSFER_Q: 每次迭代损失都下降，为什么仍要尝试多个初始化�
 TRANSFER_A: 不同起点可进入不同局部解；单次下降只比较同一轨迹的前后，不比较所有可能分组。 || Different starts can reach different local solutions. Monotonic descent compares successive iterates, not all possible clusterings.
 BRIDGE: 点在两组边缘时，硬分配太绝对；GMM 用责任度表示软归属。
 
-@@ ml22 | EM：先估计归属，再重估模型 | Soft clustering and EM
+@@ ml22 | 高斯混合与EM：估计零件的来源和尺寸分布 | Gaussian mixtures and EM: estimate component membership and distributions
 CARDS: M217,M218,M219,M220,M221,M222,M223,M224,M225,M226
 PREREQ: ml07,ml21
 GOAL: 能在固定方差的一维双高斯模型中完成一次 E 步和 M 步，更新责任度、混合权重和均值。
@@ -485,10 +485,10 @@ PRACTICE_Q: 把数据和初始均值都改成 (0,4)，固定方差改为 4、混
 HINT: 每列责任度相加；均值用“责任度×观测”之和除该列总和。 || Sum responsibilities down each component column; divide its weighted observation sum by that count.
 PRACTICE_A: N₁=N₂=1，权重仍各 1/2；μ₁=0×0.8808+4×0.1192≈0.4768，μ₂≈3.5232。所有长度放大两倍，均值更新也放大两倍。 || Both effective counts are 1 and weights 1/2. Means become approximately 0.4768 and 3.5232. Doubling all lengths doubles the updated means.
 TRANSFER_Q: 两个观测仍为 (0,2)，初始均值 (0,2)、固定方差 1，但先验混合权重改成 (3/4,1/4)。令 a=exp(−2)≈0.135335。两点对成分 1 的责任度分别为 3/(3+a) 与 3a/(3a+1)。独立算出两点责任度、有效样本数、新权重及两均值。 || Keep observations and initial means (0,2), fixed variance 1, but change initial weights to (3/4,1/4). With a=exp(−2)≈0.135335, component-1 responsibilities are 3/(3+a) and 3a/(3a+1). Compute responsibilities, effective counts, new weights and both means.
-TRANSFER_A: 责任度约为 (0.9568,0.0432)、(0.2888,0.7112)。N₁≈1.2456、N₂≈0.7544；新权重约 (0.6228,0.3772)。μ₁≈2×0.2888/1.2456≈0.4637，μ₂≈2×0.7112/0.7544≈1.8856（按未舍入值约 1.8856）。每个点跨成分和为 1；跨点的列和是有效样本数，不必为 1。 || Responsibilities are approximately (0.9568,0.0432) and (0.2888,0.7112). Counts are 1.2456 and 0.7544, giving weights (0.6228,0.3772). Means are about 0.4637 and 1.8856. Each observation’s row sums to one; a component’s column sum is its effective count and need not equal one.
+TRANSFER_A: 责任度约为 (0.9568,0.0432)、(0.2888,0.7112)。N₁≈1.2456、N₂≈0.7544；新权重约 (0.6228,0.3772)。μ₁≈2×0.2888/1.2456≈0.4637，μ₂≈2×0.7112/0.7544≈1.8856。每个点跨成分和为 1；跨点的列和是有效样本数，不必为 1。 || Responsibilities are approximately (0.9568,0.0432) and (0.2888,0.7112). Counts are 1.2456 and 0.7544, giving weights (0.6228,0.3772). Means are about 0.4637 and 1.8856. Each observation’s row sums to one; a component’s column sum is its effective count and need not equal one.
 BRIDGE: 聚类找组，PCA 找能保留主要变化的坐标方向；两者都不直接等于分类目标。
 
-@@ ml23 | PCA：用少数方向保留数据的变化 | PCA, projection, and SVD
+@@ ml23 | PCA降维：主方向、投影坐标与重构 | PCA: principal directions, projected scores and reconstruction
 CARDS: M227,M228,M229,M230,M231,M232,M233,M234,M235,M236,M237,M238,M239,M240
 PREREQ: ml04,ml19
 GOAL: 能解释中心化、最大方差方向和低秩重构之间的联系。
@@ -507,7 +507,7 @@ TRANSFER_Q: 二维训练数据的协方差为 diag(9,1)。若第二特征由米�
 TRANSFER_A: 第二特征乘 1000，方差乘 1000²，得到 diag(9,1000000)。原先第一轴方差最大，换单位后第二轴最大。单位会改变未标准化 PCA 的优化问题；是否标准化要结合变量含义。 || The second variance multiplies by 1000², giving diag(9,1000000). The selected direction changes from the first axis to the second. Units change the unstandardized PCA objective; choose standardization according to feature meaning.
 BRIDGE: PCA 通过线性投影提取特征；神经网络通过多层可学习变换得到更丰富的表示。
 
-@@ ml24 | 反向传播：沿计算图分配责任 | Backpropagation through a computation graph
+@@ ml24 | 反向传播：沿计算图求导，再更新参数 | Backpropagation: differentiate through the graph, then update parameters
 CHAPTER: lecture-5
 CARDS: M241,M242,M243,M244,M245,M246,M247,M248,M249,M250,M251,M252,M253,M254
 PREREQ: ml03,ml10
@@ -527,7 +527,7 @@ TRANSFER_Q: 令预测 q=wx，损失 L=½(q−y)²，x=2、y=3、w=1。独立画�
 TRANSFER_A: 前向 q=2、残差 −1、L=0.5。反向 dL/dq=−1，dq/dw=2，故 dL/dw=−2。更新 w=1−0.1×(−2)=1.2；新 q=2.4，新损失 0.18。前向求值、反向求导、更新参数是三个动作。 || Forward: q=2, residual −1, loss 0.5. Backward: dL/dq=−1 and dq/dw=2, giving dL/dw=−2. Update w to 1.2; then q=2.4 and loss=0.18. Evaluation, differentiation, and parameter updates are separate operations.
 BRIDGE: CNN 在局部空间位置共享同一组参数，把图像结构融入网络。
 
-@@ ml25 | CNN：同一个小检测器在图上滑动 | Convolution, shape, and receptive field
+@@ ml25 | 卷积神经网络：滑动窗口、共享参数与输出尺寸 | Convolutional networks: sliding windows, shared weights and output shapes
 CARDS: M255,M256,M257,M258,M259,M260,M261,M262,M263,M264
 PREREQ: ml24
 GOAL: 能从窗口位置数推输出尺寸、从共享滤波器数推参数量；滑动内积见补充单元。
@@ -550,7 +550,7 @@ BRIDGE: 网络结构定义能表示什么；优化与训练模式决定如何学
 CHAPTER: lecture-5
 CARDS: M265,M266,M267,M268,M269,M270,M271,M272,M273,M274,M275,M276
 PREREQ: ml24
-GOAL: 能计算 inverted dropout 的保留值与期望，并区分训练模式和评估模式。
+GOAL: 能区分epoch与更新步、解释优化器状态；选读部分练习inverted dropout的期望及训练/评估模式。
 EXPLAIN: mini-batch SGD 每步用一部分样本估计梯度；一个 epoch 表示看完一遍训练集，不等于一次更新。Momentum 累积方向，Adam 还维护梯度及平方梯度的移动平均，并做初期偏差修正。它们改变更新规则，不会自动消除数据泄漏或错误标签。
 
 正则化控制学习偏好。Inverted dropout 以保留概率 q>0 留下激活，保留时除以 q，使这一激活的期望不变；经过后续非线性，整网输出的期望不一定不变。评估时不再随机丢弃。常见 BatchNorm 训练时按通道汇集批内统计，评估时用运行统计；LayerNorm 通常对每个样本/token 的指定特征维归一化，不依赖其他样本的批统计。
@@ -566,7 +566,7 @@ TRANSFER_Q: 固定网络权重，输入激活恒为 2，q=0.5；训练 dropout �
 TRANSFER_A: 训练输出先为 4 或 0，各概率 1/2，平方后期望 (16+0)/2=8。评估输出为 2²=4。非线性使两者不同，所以不能推广；固定权重仍随机时也应先检查模式和随机增强。 || Training produces 4 or 0 equally, so expected squared output is 8. Evaluation gives 2²=4. Nonlinearity breaks the inference; repeated randomness with fixed weights also calls for checking mode and augmentation.
 BRIDGE: 视觉任务的输出与评价标准不同，不能只按网络名称判断方法优劣。
 
-@@ ml27 | 视觉任务：输出决定损失与评价 | Vision tasks and evaluation
+@@ ml27 | 视觉任务：分类、检测、分割与图像恢复 | Vision tasks: classification, detection, segmentation and restoration
 CARDS: M277,M278,M279,M280,M281,M282,M283,M284
 PREREQ: ml25,ml26
 GOAL: 能根据问题选择图像类别、检测框、语义像素或实例像素输出，并解释输出中丢失的信息。
@@ -585,7 +585,7 @@ TRANSFER_Q: 两个人的像素连成同一片 person 区域。需求改为“分
 TRANSFER_A: 不能，类别标签没有逐实例归属。需要实例分割或其他可靠的对象分离信息；同一语义掩码可以对应不同实例划分。不能把连通区域个数直接当成人数。 || No. Class labels omit instance ownership. Instance segmentation or other reliable separation is needed; the same semantic mask can admit different object partitions. Connected-component count need not equal person count.
 BRIDGE: 恢复试图解释观测，生成模型则尝试从随机变量采样新的数据。
 
-@@ ml28 | 生成模型：采样不等于计算密度 | GANs and diffusion models
+@@ ml28 | 生成模型：GAN训练与扩散加噪 | Generative models: GAN training and diffusion noising
 CARDS: M285,M286,M287,M288,M289,M290,M291,M292,M293,M294
 PREREQ: ml06,ml24,ml26
 GOAL: 能逐项计算标准高斯扩散的前向加噪，并区分训练中已知噪声与生成时预测噪声。
@@ -604,7 +604,7 @@ TRANSFER_Q: 训练时 a=0.25、x0=4、采样 ε=−2。算出 xt；生成时若�
 TRANSFER_A: xt=0.5×4+√0.75×(−2)=2−√3≈0.2679。一个方程不能唯一确定两个未知量；生成时依靠从数据学到的去噪相关预测与采样过程，不是持有真实噪声后直接相减。 || xt=2−√3≈0.2679. One equation does not uniquely determine both unknowns. Generation uses a denoising-related prediction learned from data and a sampling procedure, not access to the true noise of an unseen clean image.
 BRIDGE: Transformer 的注意力是一种信息组合运算，可用于判别或生成，并不由任务名称决定。
 
-@@ ml29 | 注意力：每个位置向其他位置取信息 | Attention, dimensions, and robustness
+@@ ml29 | ViT与注意力：图像块怎样交换信息 | ViT and attention: how image patches exchange information
 CARDS: M295,M296,M297,M298,M299,M300,M301,M302
 PREREQ: ml03,ml11,ml24
 GOAL: 能区分 query/key/value，手算注意力加权，并核对矩阵维度。
@@ -623,7 +623,7 @@ TRANSFER_Q: 一个 query 的缩放后分数为 (0,ln 3)，对应标量 values=(2
 TRANSFER_A: 指数权重 (1,3)，归一化 (1/4,3/4)。输出 0.25×2+0.75×10=8；只换 values 后为 0.25×10+0.75×2=4。query/key 决定取信息的比例，value 决定被混合的内容。 || Weights normalize to (1/4,3/4), giving output 8. Swapping only values gives 4. Queries and keys determine mixing proportions; values determine the mixed content.
 BRIDGE: 进入往年综合题时，先识别需要哪条知识链，再开始推导。
 
-@@ ml30 | 综合题诊所：拆条件、补中间式、找反例 | A clinic for historical derivations
+@@ ml30 | 往年综合题：梯度、概率、代数与信号 | Historical problems: gradients, probability, algebra and signals
 CARDS: M303,M304,M305,M306,M307,M308,M309,M310,M311,M312,M313,M314,M315,M316,M317,M318,M319,M320,M321,M322,M323,M324,M325,M326
 PREREQ: ml04,ml06,ml19,ml24
 RELATED: ml13,ml23,ml25
@@ -641,9 +641,9 @@ HINT: 先用 exp(0)=1 算内部值，最后乘外层 2q。 || Use exp(0)=1 for t
 PRACTICE_A: q=0，q_u=1，q_v=−2；因为 2q=0，L 的梯度为 (0,0)。内部导数不为零不代表外层梯度不为零。 || q=0,q_u=1,q_v=−2. Because 2q=0, the loss gradient is (0,0). Nonzero inner derivatives need not give a nonzero final gradient.
 TRANSFER_Q: 同一 L 在 u=1、v=0 时，独立求 L、L_u、L_v。给精确形式并用 exp(−1)≈0.367879 检查。 || For the same L at u=1,v=0, independently compute L,L_u,L_v, giving exact forms and a check using exp(−1)≈0.367879.
 TRANSFER_A: q=1，L=1；q_u=1，q_v=1−2/e；故 L_u=2，L_v=2−4/e≈0.52848。先求内部量再求外部量，可避免漏乘 2q。 || q=1 and L=1. q_u=1 and q_v=1−2/e, giving L_u=2 and L_v=2−4/e≈0.52848. Evaluate inner quantities before the outer derivative to avoid omitting 2q.
-BRIDGE: 复习顺序是先讲通一条推导，再拆成几张检索卡，最后用未见变式检查能否迁移。
+BRIDGE: 讲通一条推导后，用关联卡片回忆关键步骤，再独立处理改变条件的题目。
 
-@@ ml31 | 回归树与集成：几位估价师怎样一起工作 | Regression trees and ensembles
+@@ ml31 | 回归树与集成：分组估价、森林平均和逐轮修正 | Regression trees and ensembles: leaf estimates, forest averages and boosting
 CARDS: M339-M341
 PREREQ: ml19,ml20
 GOAL: 能手算平方误差树的叶预测与切分代价，解释森林平均和梯度提升的不同，并核对一次残差更新。

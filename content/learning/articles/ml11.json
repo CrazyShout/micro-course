@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml11",
   "title": {
-    "zh": "两个分类器都说自己更好，该信哪次成绩？",
-    "en": "Which score should decide between two classifiers?"
+    "zh": "模型选择与多类分类：交叉验证和softmax",
+    "en": "Model selection and multiclass classification: cross-validation and softmax"
   },
   "minutes": "15–20",
   "lede": {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "权重从训练数据学习，正则化 C 等设置需要比较选择。在本课所用实现中，C 越大通常对应较弱正则化，但具体系数约定不能脱离库的目标函数。选 C 的目的，是找到在未参与拟合的数据上表现合理的流程，而不是把训练答案记得最熟。\n\nLecture3a 单元 65 展示 C 对结果有影响，68–69 随即给出交叉验证。先保留最终测试集；其余开发数据再轮流分成训练折和验证折。这里“全部数据重新拟合”指选择所用的开发数据，不是连保留测试标签一起吃进去。"
+          "text": "权重从训练数据学习，正则化 C 等设置需要比较选择。在本课所用实现中，C 越大通常对应较弱正则化，但具体系数约定不能脱离库的目标函数。选 C 的目的，是找到在未参与拟合的数据上表现合理的流程，而不是把训练答案记得最熟。\n\nLecture3a 单元 65 展示 C 对结果有影响，68–69 随即给出交叉验证。先保留最终测试集；其余开发数据再轮流分成训练折和验证折。这里“全部数据重新拟合”指选择所用的开发数据，保留测试集仍不参与拟合。"
         }
       ]
     },
@@ -95,7 +95,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "Lecture3a 单元 74–90 转向多类。有一种办法训练 K 个 one-vs-rest 分类器，各问“是不是这一类”；另一种为每类打分 $z_k$，用 $p_k=e^{z_k}/\\sum_j e^{z_j}$ 联合归一化，这叫 softmax。后者各类在同一个分布里竞争，概率和为 1；多个二元任务的训练目标与它不同。\n\n数值上先减共同最大分数再取 exp，可以避免溢出，概率比不变。one-hot 标签只有真实类位置为 1，交叉熵因此只留下真实类概率的负对数。这个支线用下面小专题完成手算；它没有把本节验证题变成已经检验了多类实现能力。"
+          "text": "Lecture3a 单元 74–90 转向多类。有一种办法训练 K 个 one-vs-rest 分类器，各问“是不是这一类”；另一种为每类打分 $z_k$，用 $p_k=e^{z_k}/\\sum_j e^{z_j}$ 联合归一化，这叫 softmax。后者各类在同一个分布里竞争，概率和为 1；多个二元任务的训练目标与它不同。\n\n数值上先减共同最大分数再取 exp，可以避免溢出，概率比不变。one-hot 标签只有真实类位置为 1，交叉熵因此只留下真实类概率的负对数。下面的小专题练习softmax的归一化与交叉熵计算。"
         },
         {
           "type": "figure",
@@ -119,7 +119,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "回到老师的 iris 示例，你应能指出哪部分拟合权重、哪部分选 C，以及从二分类到多分类改了什么。讲解拟合系数时也要检查类别编码和尺度：二分类中其他输入固定，正系数提高正类 logit，但它不证明因果关系；多类 softmax 更不能只看一个系数而忽略其他类的竞争。\n\n首轮回忆先守住交叉验证与防泄漏，做完再进入多类概率专题。这样既能解释选择，也不把所有课程细节塞进一次复习。"
+          "text": "回到老师的 iris 示例，你应能指出哪部分拟合权重、哪部分选 C，以及从二分类到多分类改了什么。讲解拟合系数时也要检查类别编码和尺度：二分类中其他输入固定，正系数提高正类 logit，但它不证明因果关系；多类 softmax 更不能只看一个系数而忽略其他类的竞争。\n\n首轮回忆先守住交叉验证与防泄漏，做完再进入多类概率专题。"
         },
         {
           "type": "recap"
@@ -138,7 +138,7 @@
       "name": "推理桥接与手算 / Teaching derivation and hand calculation",
       "locator": "ml11",
       "kind": "derived",
-      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+      "note": "根据原课整理的验证流程、均分比较与softmax手算。 / Validation procedures, mean-score comparisons and softmax calculations based on the lecture."
     }
   ],
   "objective_map": [

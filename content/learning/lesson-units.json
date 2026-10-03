@@ -52,25 +52,25 @@
           "name": "Lecture1b.ipynb",
           "locator": "cell 20-49",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M023. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M023。 / Related concepts and examples; linked cards: CS5489-M023."
         },
         {
           "name": "Lecture1b.ipynb",
           "locator": "cell 57-83",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M026. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M026。 / Related concepts and examples; linked cards: CS5489-M026."
         },
         {
           "name": "Lecture1b.ipynb",
           "locator": "cell 72-83",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M027. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M027。 / Related concepts and examples; linked cards: CS5489-M027."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml03#axis-means",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -129,31 +129,31 @@
           "name": "Lecture2a.ipynb",
           "locator": "cell 18-26",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M054, CS5489-M056. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M054, CS5489-M056。 / Related concepts and examples; linked cards: CS5489-M054, CS5489-M056."
         },
         {
           "name": "Lecture2a.ipynb",
           "locator": "cell 23-26",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M055. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M055。 / Related concepts and examples; linked cards: CS5489-M055."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 44",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M056. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M056。 / Related concepts and examples; linked cards: CS5489-M056."
         },
         {
           "name": "Lecture2a.ipynb",
           "locator": "cell 26",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M057. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M057。 / Related concepts and examples; linked cards: CS5489-M057."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml06#gaussian-mle",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -211,25 +211,25 @@
           "name": "Lecture3a.ipynb",
           "locator": "cell 86-91",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M137. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M137。 / Related concepts and examples; linked cards: CS5489-M137."
         },
         {
           "name": "Lecture3a.ipynb",
           "locator": "cell 86-89",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M138. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M138。 / Related concepts and examples; linked cards: CS5489-M138."
         },
         {
           "name": "Lecture3a.ipynb",
           "locator": "cell 90-91",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M139. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M139。 / Related concepts and examples; linked cards: CS5489-M139."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml11#softmax",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -263,7 +263,7 @@
       },
       "hint": {
         "zh": "计算1−(−0.2)。",
-        "en": "Use this hint: Compute 1−(−0.2)."
+        "en": "Subtract −0.2 from 1."
       },
       "practice_a": {
         "zh": "ξ=1.2；负带标签分数表示分错。",
@@ -287,31 +287,31 @@
           "name": "Lecture3b.ipynb",
           "locator": "cell 49-54",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M154. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M154。 / Related concepts and examples; linked cards: CS5489-M154."
         },
         {
           "name": "SVM.pdf",
           "locator": "page 3",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M154, CS5489-M156. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M154, CS5489-M156。 / Related concepts and examples; linked cards: CS5489-M154, CS5489-M156."
         },
         {
           "name": "Lecture3b.ipynb",
           "locator": "cell 50-54",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M155. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M155。 / Related concepts and examples; linked cards: CS5489-M155."
         },
         {
           "name": "Lecture3b.ipynb",
           "locator": "cell 54,58",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M156. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M156。 / Related concepts and examples; linked cards: CS5489-M156."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml12#slack",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -369,25 +369,25 @@
           "name": "Lecture3b.ipynb",
           "locator": "cell 101-112",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M168. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M168。 / Related concepts and examples; linked cards: CS5489-M168."
         },
         {
           "name": "Lecture3b.ipynb",
           "locator": "cell 101-104",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M169. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M169。 / Related concepts and examples; linked cards: CS5489-M169."
         },
         {
           "name": "Lecture3b.ipynb",
           "locator": "cell 113-118",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M170. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M170。 / Related concepts and examples; linked cards: CS5489-M170."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml14#rbf-scale",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -404,8 +404,8 @@
         "en": "Derive a decision threshold from expected action costs."
       },
       "explain": {
-        "zh": "p为垃圾后验，误封正常代价C_FP、漏掉垃圾代价C_FN，正确动作代价0。预测垃圾损失C_FP(1−p)，预测正常损失C_FN p；选择前者当p>C_FP/(C_FP+C_FN)。这假定p可作为决策概率使用。",
-        "en": "With spam probability p and zero cost for correct actions, spam prediction costs C_FP(1−p), while normal prediction costs C_FN p. Choose spam above C_FP/(C_FP+C_FN), assuming p is suitable for decision-making."
+        "zh": "p为垃圾后验，误封正常代价C_FP、漏掉垃圾代价C_FN均非负且和为正，正确动作代价0。预测垃圾损失C_FP(1−p)，预测正常损失C_FN p；选择前者当p>C_FP/(C_FP+C_FN)。这假定p可作为决策概率使用。",
+        "en": "Let p be the spam posterior, with nonnegative costs C_FP and C_FN whose sum is positive, and zero cost for correct actions. Predicting spam costs C_FP(1−p), while predicting normal costs C_FN p. Choose spam when p>C_FP/(C_FP+C_FN), assuming p is suitable for decision-making."
       },
       "worked_q": {
         "zh": "C_FP=9,C_FN=1，求阈值。",
@@ -444,25 +444,25 @@
           "name": "Lecture2a.ipynb",
           "locator": "cell 32-41",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M102. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M102。 / Related concepts and examples; linked cards: CS5489-M102."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 3,25-28",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M103. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M103。 / Related concepts and examples; linked cards: CS5489-M103."
         },
         {
           "name": "naive_bayes.html",
           "locator": "section 1.9",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M103. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M103。 / Related concepts and examples; linked cards: CS5489-M103."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml17#cost-threshold",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -492,7 +492,7 @@
       },
       "practice_q": {
         "zh": "XᵀX=5、Xᵀy=10、lambda=5，求w。",
-        "en": "Use 5,10,and lambda=5."
+        "en": "Find w for XᵀX=5, Xᵀy=10 and lambda=5."
       },
       "hint": {
         "zh": "先加左边系数。",
@@ -520,25 +520,25 @@
           "name": "Lecture5.2.pdf",
           "locator": "page 3-6",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M194. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M194。 / Related concepts and examples; linked cards: CS5489-M194."
         },
         {
           "name": "Lecture5.2.pdf",
           "locator": "page 4-7,17",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M195. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M195。 / Related concepts and examples; linked cards: CS5489-M195."
         },
         {
           "name": "Lecture5.2.pdf",
           "locator": "page 15-16",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M197. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M197。 / Related concepts and examples; linked cards: CS5489-M197."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml19#ridge",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     },
@@ -656,25 +656,25 @@
           "name": "Lecture6.1.pdf",
           "locator": "page 5-7",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M203. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M203。 / Related concepts and examples; linked cards: CS5489-M203."
         },
         {
           "name": "Lecture6.1.pdf",
           "locator": "page 23-26",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M209. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M209。 / Related concepts and examples; linked cards: CS5489-M209."
         },
         {
           "name": "Lecture6.1.pdf",
           "locator": "page 24",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M210. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M210。 / Related concepts and examples; linked cards: CS5489-M210."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml20#loss-comparison",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     },
@@ -750,7 +750,7 @@
       },
       "worked_q": {
         "zh": "μ=(1,1)、v=(1,0)、x=(4,3)，求得分与重构。",
-        "en": "Use μ=(1,1),v=(1,0),x=(4,3)."
+        "en": "For μ=(1,1), v=(1,0) and x=(4,3), find the projected score and reconstruction."
       },
       "worked_a": {
         "zh": "中心化(3,2)，z=3，重构(4,1)；残差(0,2)，平方误差4。",
@@ -786,31 +786,31 @@
           "name": "Lecture8.1.pdf",
           "locator": "page 9-12,17-18",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M231. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M231。 / Related concepts and examples; linked cards: CS5489-M231."
         },
         {
           "name": "Lecture8.1.pdf",
           "locator": "page 17-18,28-30",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M233. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M233。 / Related concepts and examples; linked cards: CS5489-M233."
         },
         {
           "name": "Lecture8.1.pdf",
           "locator": "page 11,23",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M237. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M237。 / Related concepts and examples; linked cards: CS5489-M237."
         },
         {
           "name": "Lecture6.1.pdf",
           "locator": "page 34",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M237. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M237。 / Related concepts and examples; linked cards: CS5489-M237."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml23#pca-reconstruction",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     },
@@ -826,25 +826,25 @@
           "name": "Lecture8.2.pdf",
           "locator": "page 6-13",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Lecture8.2.pdf",
           "locator": "page 10-13",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Lecture8.2.pdf",
           "locator": "page 10-13,20",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml23#kernel-pca-center-and-scale",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -910,7 +910,7 @@
       },
       "worked_a": {
         "zh": "结果为：(1−2,2−3)=(−1,−1)。",
-        "en": "The result is Output (−1,−1)."
+        "en": "The output is (1−2,2−3)=(−1,−1)."
       },
       "practice_q": {
         "zh": "输入(2,0,3,1)、核(1,2)，求输出。",
@@ -922,7 +922,7 @@
       },
       "practice_a": {
         "zh": "结果为：(2+0,0+6,3+2)=(2,6,5)。",
-        "en": "The result is Output (2,6,5)."
+        "en": "The output is (2+0,0+6,3+2)=(2,6,5)."
       },
       "transfer_q": {
         "zh": "同输入(2,0,3,1)，若按翻核后再做valid运算，结果多少？为何与上一题不同？",
@@ -942,25 +942,25 @@
           "name": "Lecture9.2.pdf",
           "locator": "page 17-25",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M255. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M255。 / Related concepts and examples; linked cards: CS5489-M255."
         },
         {
           "name": "Lecture9.2.pdf",
           "locator": "page 38-45",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M262. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M262。 / Related concepts and examples; linked cards: CS5489-M262."
         },
         {
           "name": "Lecture9.2.pdf",
           "locator": "page 20-25,32-39",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M263. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M263。 / Related concepts and examples; linked cards: CS5489-M263."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml25#sliding-products",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -977,8 +977,8 @@
         "en": "Compute MSE and state what it does not measure."
       },
       "explain": {
-        "zh": "MSE是各像素平方误差的平均；比较压缩还要说明码率、数值范围和感知/任务要求。\n\n术语边界：MSE是平方误差均值，不一定是满足三角不等式的距离度量。一维数值0、1、2给出MSE(0,2)=4，但MSE(0,1)+MSE(1,2)=2；对应RMSE为绝对差，满足2≤1+1。不要把课件把MSE称作metric的措辞机械背下。",
-        "en": "MSE averages squared pixel errors; compression comparisons additionally need bitrate, numeric range and perceptual/task requirements.\n\nTerminology boundary: MSE need not be a metric. Scalars 0, 1, 2 give MSE(0,2)=4 but MSE(0,1)+MSE(1,2)=2, violating the triangle inequality. The corresponding RMSE is absolute difference and satisfies 2≤1+1. Do not inherit the source slide’s inaccurate metric label."
+        "zh": "MSE是各像素平方误差的平均；比较压缩还要说明码率、数值范围和感知/任务要求。\n\n术语边界：MSE是平方误差均值，不一定是满足三角不等式的距离度量。一维数值0、1、2给出MSE(0,2)=4，但MSE(0,1)+MSE(1,2)=2；对应RMSE为绝对差，满足2≤1+1。课件中的metric在这里应理解为评价指标，而非严格的数学距离。",
+        "en": "MSE averages squared pixel errors; compression comparisons additionally need bitrate, numeric range and perceptual/task requirements.\n\nTerminology boundary: MSE need not be a metric. Scalars 0, 1, 2 give MSE(0,2)=4 but MSE(0,1)+MSE(1,2)=2, violating the triangle inequality. The corresponding RMSE is absolute difference and satisfies 2≤1+1. Here the slide’s word “metric” means an evaluation measure, not a mathematical distance metric."
       },
       "worked_q": {
         "zh": "真值(0,2)，预测A=(1,1)、B=(0,0)，求MSE。",
@@ -1017,19 +1017,19 @@
           "name": "Lecture11.2.pdf",
           "locator": "page 20-23",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M282. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M282。 / Related concepts and examples; linked cards: CS5489-M282."
         },
         {
           "name": "Lecture11.2.pdf",
           "locator": "page 31-44",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M283. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M283。 / Related concepts and examples; linked cards: CS5489-M283."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml27#reconstruction-mse",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1088,31 +1088,31 @@
           "name": "Lecture12.1.pdf",
           "locator": "page 11-15",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M286. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M286。 / Related concepts and examples; linked cards: CS5489-M286."
         },
         {
           "name": "Lecture12.1.pdf",
           "locator": "page 13-15",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M287. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M287。 / Related concepts and examples; linked cards: CS5489-M287."
         },
         {
           "name": "Lecture12.1.pdf",
           "locator": "page 13-15,19-20",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M288. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M288。 / Related concepts and examples; linked cards: CS5489-M288."
         },
         {
           "name": "Lecture12.1.pdf",
           "locator": "page 19-26",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M289. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M289。 / Related concepts and examples; linked cards: CS5489-M289."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml28#gan-roles",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1170,31 +1170,31 @@
           "name": "Lecture12.2.pdf",
           "locator": "page 13-15",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M297. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M297。 / Related concepts and examples; linked cards: CS5489-M297."
         },
         {
           "name": "1706.03762",
           "locator": "section 3.2",
-          "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M297. Explanations are adapted for this unit; additional variants are authored separately."
+          "kind": "reference",
+          "note": "相关概念与例题；关联卡片 CS5489-M297。 / Related concepts and examples; linked cards: CS5489-M297."
         },
         {
           "name": "Lecture12.2.pdf",
           "locator": "page 13",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M298. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M298。 / Related concepts and examples; linked cards: CS5489-M298."
         },
         {
           "name": "Lecture12.2.pdf",
           "locator": "page 14-18",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M299. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M299。 / Related concepts and examples; linked cards: CS5489-M299."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml29#attention-shapes",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1211,7 +1211,7 @@
         "en": "Count which users are active, distinguish exactly k from exceeding capacity, and solve a five-user example independently."
       },
       "explain": {
-        "zh": "三位同学 A、B、C 坐在咖啡店，用 Wi-Fi 上传文件。没上传时喝咖啡，上传时抢带宽——咖啡可以续杯，链路容量不会自动续杯。只看某个随机时刻：每人以 p=0.2 的概率活跃，且三人相互独立；活跃者各需 300 kbps，共享的瓶颈链路容量是 600 kbps。忽略协议开销，把它当作课堂的简化需求模型，不是在模拟 Wi-Fi 的全部机制。\n\n用 1 表示上传、0 表示休息，按 A、B、C 的顺序列出全部状态：\n```text\n000             0 people / 0 人\n100 010 001     1 person / 1 人\n110 101 011     2 people / 2 人\n111             3 people / 3 人\n```\n八种状态并不等可能！例如 110 的概率是 0.2×0.2×0.8=0.032，而 000 的概率是 0.8³=0.512。“独立”让我们把三个人的概率相乘；互不相容的不同状态则把概率相加。\n\n令 K 为活跃人数。恰好两人有 110、101、011 三种，因此要乘 3；不是把 0.2² 算完就收工。一般地，$\\binom{N}{k}$ 只是在数：N 人中选出哪 k 人活跃，有多少种选法？于是 $P(K=k)=\\binom{N}{k}p^k(1-p)^{N-k}$。这叫二项分布，要求各人独立、活跃概率相同；这里不要求你先背阶乘公式。\n\n若链路最多承受 c 人，超过容量就是 K>c，要把 k=c+1 到 N 的概率加起来；恰好 c 人仍不算超额。这个概率描述瞬时需求超额，不直接给出排队时延或丢包率。若三人总是一起点上传，各人仍可有 0.2 的活跃概率，但三人同时上传的概率会是 0.2，不再是 0.2³：同一个放假铃声，不会尊重“独立假设”。",
+        "zh": "三位同学 A、B、C 坐在咖啡店，用 Wi-Fi 上传文件。没上传时喝咖啡，上传时抢带宽——咖啡可以续杯，链路容量不会自动续杯。只看某个随机时刻：每人以 p=0.2 的概率活跃，且三人相互独立；活跃者各需 300 kbps，共享的瓶颈链路容量是 600 kbps。忽略协议开销，把它当作课堂的简化需求模型，不是在模拟 Wi-Fi 的全部机制。\n\n用 1 表示上传、0 表示休息，按 A、B、C 的顺序列出全部状态：\n```text\n000             0 people / 0 人\n100 010 001     1 person / 1 人\n110 101 011     2 people / 2 人\n111             3 people / 3 人\n```\n八种状态并不等可能！例如 110 的概率是 0.2×0.2×0.8=0.032，而 000 的概率是 0.8³=0.512。“独立”让我们把三个人的概率相乘；互不相容的不同状态则把概率相加。\n\n令 K 为活跃人数。恰好两人有 110、101、011 三种，因此要乘 3；还需要计入另一人不活跃的概率。一般地，$\\binom{N}{k}$ 只是在数：N 人中选出哪 k 人活跃，有多少种选法？于是 $P(K=k)=\\binom{N}{k}p^k(1-p)^{N-k}$。这叫二项分布，要求各人独立、活跃概率相同；这里不要求你先背阶乘公式。\n\n若链路最多承受 c 人，超过容量就是 K>c，要把 k=c+1 到 N 的概率加起来；恰好 c 人仍不算超额。这个概率描述瞬时需求超额，不直接给出排队时延或丢包率。若三人总是一起点上传，各人仍可有 0.2 的活跃概率，但三人同时上传的概率会是 0.2，不再是 0.2³：同一个放假铃声，不会尊重“独立假设”。",
         "en": "Three students A, B and C upload files over café Wi-Fi. While idle they drink coffee; while active they need bandwidth. Coffee gets refills; link capacity does not. At a randomly chosen instant, each is active with probability p=0.2, independently of the others. Each active user needs 300 kbps and the shared bottleneck has capacity 600 kbps. Ignore protocol overhead: this is a simplified demand model, not a full Wi-Fi simulation.\n\nWrite 1 for uploading and 0 for idle, in A, B, C order. All eight states are:\n```text\n000             0 active\n100 010 001     1 active\n110 101 011     2 active\n111             3 active\n```\nThese states are NOT equally likely. State 110 has probability 0.2×0.2×0.8=0.032, whereas 000 has probability 0.8³=0.512. Independence lets us multiply probabilities across users; mutually exclusive states are added.\n\nLet K count active users. Exactly two means 110, 101 or 011, so multiply by three; 0.2² alone is not the answer. In general, $\\binom{N}{k}$ counts the ways to choose which k of N users are active. Thus $P(K=k)=\\binom{N}{k}p^k(1-p)^{N-k}$. This is the binomial model: independent users with the same activity probability. You do not need to memorize a factorial formula first.\n\nIf capacity supports c active users, excess demand means K>c: add probabilities from k=c+1 to N. Exactly c users do not exceed capacity. This instantaneous demand probability does not directly give queueing delay or loss rate. If all three always upload together, each may still be active with probability 0.2, but all-active probability is 0.2 rather than 0.2³. A shared break-time bell does not respect our independence assumption."
       },
       "worked_q": {
@@ -1231,8 +1231,8 @@
         "en": "Only one user now fits. Excess demand includes both two and three active users. Exactly two has three states, each including the idle user’s factor 0.75."
       },
       "practice_a": {
-        "zh": "恰好两人：3×0.25²×0.75=0.140625。超额：P(K>1)=P(K=2)+P(K=3)=0.140625+0.25³=0.15625，即 15.625%。别漏掉三人全上传：最挤的那一桌也要算进去。",
-        "en": "Exactly two: 3×0.25²×0.75=0.140625. Excess demand: P(K>1)=P(K=2)+P(K=3)=0.140625+0.25³=0.15625, or 15.625%. Do not omit all three uploading—the busiest table still counts."
+        "zh": "恰好两人：3×0.25²×0.75=0.140625。超额：P(K>1)=P(K=2)+P(K=3)=0.140625+0.25³=0.15625，即 15.625%。超额事件包含三人全活跃的情况。",
+        "en": "Exactly two: 3×0.25²×0.75=0.140625. Excess demand: P(K>1)=P(K=2)+P(K=3)=0.140625+0.25³=0.15625, or 15.625%. Excess demand also includes all three users being active."
       },
       "transfer_q": {
         "zh": "又来了两位同学：现在共 5 名独立用户，每人活跃概率 0.2、活跃时需 300 kbps，链路恢复到 600 kbps。独立求恰好两人活跃、需求超过容量的概率，并说明各自要数哪些状态。可以用计算器，但先写出要加的项。",
@@ -1258,7 +1258,7 @@
           "name": "tutorial-1_semA2026.pdf; tutorial-1-solution_semA2026.pptx",
           "locator": "Q4(c); solution slide 10",
           "kind": "course",
-          "note": "N078 的 120 人恰好 n 人题，与 N020 的超过容量题对照；不移动原卡归属。 Compares exactly n users with a capacity tail; original card placement is retained."
+          "note": "N078的120人恰好n人题，与N020的超过容量题对照。 / Compares exactly n active users with a capacity-tail event."
         },
         {
           "name": "Teaching enumeration and numerical variants / 枚举与数值变式",
@@ -1322,25 +1322,25 @@
           "name": "cs5222_cha1_2026_student.pptx",
           "locator": "slide 53-54",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N037. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N037。 / Related concepts and examples; linked cards: CS5222-N037."
         },
         {
           "name": "cs5222_cha1_2026_student.pptx",
           "locator": "slide 55",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N038. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N038。 / Related concepts and examples; linked cards: CS5222-N038."
         },
         {
           "name": "cs5222_cha1_2026_student.pptx",
           "locator": "slide 45-55",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N039. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N039。 / Related concepts and examples; linked cards: CS5222-N039."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net04#shared-bottleneck",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1361,7 +1361,7 @@
         "en": "SMTP RCPT TO specifies envelope recipients; To inside DATA is a message header. They can differ, and server acceptance does not prove human reading."
       },
       "worked_q": {
-        "zh": "RCPT TO:<b@example.test>，DATA中的To为c@example.test。仅据这些记录，服务器接受的投递目标是谁？",
+        "zh": "RCPT TO:<b@example.test>，DATA中的To为c@example.test。仅据这些记录，信封指定的投递目标是谁？",
         "en": "RCPT TO names b@example.test while To in DATA names c@example.test. Which envelope target is evidenced?"
       },
       "worked_a": {
@@ -1398,31 +1398,31 @@
           "name": "cs5222_cha2_2026_student_part2.pptx",
           "locator": "slide 20",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N113. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N113。 / Related concepts and examples; linked cards: CS5222-N113."
         },
         {
           "name": "cs5222_cha2_2026_student_part2.pptx",
           "locator": "slide 20,23",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N114. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N114。 / Related concepts and examples; linked cards: CS5222-N114."
         },
         {
           "name": "cs5222_cha2_2026_student_part2.pptx",
           "locator": "slide 19-23",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N119. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N119。 / Related concepts and examples; linked cards: CS5222-N119."
         },
         {
           "name": "rfc5321.html",
           "locator": "section 4.1.1.4",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N119. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N119。 / Related concepts and examples; linked cards: CS5222-N119."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net08#mail-envelope",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1480,31 +1480,31 @@
           "name": "cs5222_cha2_2025_student.pptx",
           "locator": "slide 95,102-105",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N145. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N145。 / Related concepts and examples; linked cards: CS5222-N145."
         },
         {
           "name": "cs5222_cha2_2025_student.pptx",
           "locator": "slide 98-105",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N146. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N146。 / Related concepts and examples; linked cards: CS5222-N146."
         },
         {
           "name": "cs5222_cha2_2025_student.pptx",
           "locator": "slide 102-105",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N147. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N147。 / Related concepts and examples; linked cards: CS5222-N147."
         },
         {
           "name": "2024_cs5222_programming_assignment.pdf",
           "locator": "page 2-6",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N147. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N147。 / Related concepts and examples; linked cards: CS5222-N147."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net12#tcp-framing",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     },
@@ -1565,13 +1565,13 @@
           "name": "RFC 2308 · Negative Caching of DNS Queries",
           "locator": "sections 2.1, 3",
           "kind": "reference",
-          "note": "协议依据：否定回答的authority可包含SOA；不是本学期新增范围声明。 / Protocol support for SOA in negative-answer authority sections, not a claim about current assessment scope."
+          "note": "协议依据：否定回答的authority可包含SOA记录。 / Protocol support for SOA records in the authority section of negative answers."
         },
         {
           "name": "cs5222_cha2_2026_student_part2.pptx",
           "locator": "slide 41",
           "kind": "course",
-          "note": "当前Canvas的DNS缓存与TTL机制；未声明修改配置会即时清空远端缓存。 / Current Canvas caching/TTL mechanism; configuration changes do not instantly flush remote caches."
+          "note": "当前Canvas的DNS缓存与TTL机制。 / Current Canvas DNS caching and TTL mechanisms."
         },
         {
           "name": "Original DNS referral and delegation examples / 原创DNS转介与委派例题",
@@ -1715,8 +1715,8 @@
         "en": "Compute ideal stop-and-wait utilization and throughput with consistent units."
       },
       "explain": {
-        "zh": "无丢包、ACK发送时间忽略，一次循环为L/R+RTT；有效发送占L/R，因此U=(L/R)/(L/R+RTT)，吞吐量U R。",
-        "en": "With no loss and negligible ACK serialization, a cycle is L/R+RTT. Utilization is (L/R)/(L/R+RTT), and throughput U R."
+        "zh": "设L为包长（bit），R为链路速率（bit/s），RTT为往返传播时间（s）。忽略丢包、处理、排队与ACK发送时间时，一次循环为L/R+RTT；有效发送占L/R，因此U=(L/R)/(L/R+RTT)，吞吐量为U R。",
+        "en": "Let L be packet length in bits, R the link rate in bit/s, and RTT the round-trip propagation time in seconds. Ignore loss, processing, queueing and ACK serialization. A cycle then takes L/R+RTT; utilization is U=(L/R)/(L/R+RTT), and throughput is U R."
       },
       "worked_q": {
         "zh": "R=1Gbps、L=8000bit、RTT=30ms，计算。",
@@ -1756,19 +1756,19 @@
           "name": "cs5222_cha3_2025_student.pptx",
           "locator": "slide 45-46",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N159, CS5222-N160. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N159, CS5222-N160。 / Related concepts and examples; linked cards: CS5222-N159, CS5222-N160."
         },
         {
           "name": "cs5222_cha3_2025_student.pptx",
           "locator": "slide 47-50",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N161. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N161。 / Related concepts and examples; linked cards: CS5222-N161."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net13#stop-wait-rate",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1790,7 +1790,7 @@
       },
       "worked_q": {
         "zh": "cwnd=12kB、rwnd=8kB、在途5kB，还能发多少？",
-        "en": "Use windows 12 and 8 kB with 5 kB outstanding."
+        "en": "For cwnd=12 kB, rwnd=8 kB and 5 kB outstanding, how much additional data may be sent?"
       },
       "worked_a": {
         "zh": "结果为：min(12,8)−5=3kB。",
@@ -1825,19 +1825,19 @@
           "name": "cs5222_cha3_2025_student.pptx",
           "locator": "slide 81-82,103",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N174. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N174。 / Related concepts and examples; linked cards: CS5222-N174."
         },
         {
           "name": "cs5222_cha3_2025_student.pptx",
           "locator": "slide 103-104",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N175. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N175。 / Related concepts and examples; linked cards: CS5222-N175."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net14#window-budget",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -1896,19 +1896,19 @@
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 23",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N189. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N189。 / Related concepts and examples; linked cards: CS5222-N189."
         },
         {
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 23-25",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N190. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N190。 / Related concepts and examples; linked cards: CS5222-N190."
         },
         {
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 24-26",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N191. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N191。 / Related concepts and examples; linked cards: CS5222-N191."
         },
         {
           "name": "cs5222_cha4_2025_student.pptx",
@@ -1976,25 +1976,25 @@
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 5-8,13-14",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N185. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N185。 / Related concepts and examples; linked cards: CS5222-N185."
         },
         {
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 15-16,48",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N186. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N186。 / Related concepts and examples; linked cards: CS5222-N186."
         },
         {
           "name": "cs5222_cha4_2025_student.pptx",
           "locator": "slide 16,48",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N187. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N187。 / Related concepts and examples; linked cards: CS5222-N187."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net16#longest-prefix",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2028,7 +2028,7 @@
       },
       "hint": {
         "zh": "重新计算5+4，不保留旧和。",
-        "en": "Use this hint: Recompute 5+4."
+        "en": "Add the new costs: 5+4."
       },
       "practice_a": {
         "zh": "A为8、B为9，改选A。",
@@ -2053,31 +2053,31 @@
           "name": "cs5222_cha5_2025_student.pptx",
           "locator": "slide 9-13,19-23",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N203. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N203。 / Related concepts and examples; linked cards: CS5222-N203."
         },
         {
           "name": "cs5222_cha5_2025_student.pptx",
           "locator": "slide 19-23",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N207. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N207。 / Related concepts and examples; linked cards: CS5222-N207."
         },
         {
           "name": "cs5222_cha5_2025_student.pptx",
           "locator": "slide 19-20",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N208. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N208。 / Related concepts and examples; linked cards: CS5222-N208."
         },
         {
           "name": "cs5222_cha5_2025_student.pptx",
           "locator": "slide 26-28",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N209. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N209。 / Related concepts and examples; linked cards: CS5222-N209."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net17#distance-vector",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2135,25 +2135,25 @@
           "name": "cs5222_cha6_2025_student_part1.pptx",
           "locator": "slide 11-14",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N219. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N219。 / Related concepts and examples; linked cards: CS5222-N219."
         },
         {
           "name": "cs5222_cha6_2025_student_part1.pptx",
           "locator": "slide 12",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N220, CS5222-N221. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N220, CS5222-N221。 / Related concepts and examples; linked cards: CS5222-N220, CS5222-N221."
         },
         {
           "name": "tutorial-11.pdf",
           "locator": "page 1",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N221. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N221。 / Related concepts and examples; linked cards: CS5222-N221."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net18#even-parity",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     },
@@ -2168,7 +2168,7 @@
         "en": "Compute idle, success and collision probabilities and check their sum."
       },
       "explain": {
-        "zh": "N个积压节点独立以p在槽首发送，槽内容一包，多包必碰撞。本模型空闲(1−p)^N；成功Np(1−p)^(N−1)；碰撞是余下概率。",
+        "zh": "N个积压节点独立以概率p在槽首发送；每槽可容纳一个完整分组，两个及以上节点同时发送即碰撞。本模型空闲概率为(1−p)^N，成功概率为Np(1−p)^(N−1)，碰撞概率是余下部分。",
         "en": "Assume N backlogged independent nodes transmitting with probability p at slot start, one packet per slot and all simultaneous transmissions collide. Idle=(1−p)^N; success=Np(1−p)^(N−1); collision is the remainder."
       },
       "worked_q": {
@@ -2209,19 +2209,19 @@
           "name": "cs5222_cha6_2025_student_part1.pptx",
           "locator": "slide 18-24",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N226. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N226。 / Related concepts and examples; linked cards: CS5222-N226."
         },
         {
           "name": "cs5222_cha6_2025_student_part1.pptx",
           "locator": "slide 25-27",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5222-N228, CS5222-N230. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5222-N228, CS5222-N230。 / Related concepts and examples; linked cards: CS5222-N228, CS5222-N230."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "net18#slotted-aloha",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2280,25 +2280,25 @@
           "name": "Assignment1-Doc.ipynb",
           "locator": "cell 3",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M094, CS5489-M095, CS5489-M096, CS5489-M099. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M094, CS5489-M095, CS5489-M096, CS5489-M099。 / Related concepts and examples; linked cards: CS5489-M094, CS5489-M095, CS5489-M096, CS5489-M099."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 61-71",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M094. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M094。 / Related concepts and examples; linked cards: CS5489-M094."
         },
         {
           "name": "common_pitfalls.html",
           "locator": "section Data leakage",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M095. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M095。 / Related concepts and examples; linked cards: CS5489-M095."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml16#baseline-pipeline",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2356,31 +2356,31 @@
           "name": "Lecture10.1.pdf",
           "locator": "page 4-8",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M265. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M265。 / Related concepts and examples; linked cards: CS5489-M265."
         },
         {
           "name": "Lecture10.2.pdf",
           "locator": "page 33",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M265. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M265。 / Related concepts and examples; linked cards: CS5489-M265."
         },
         {
           "name": "Lecture10.1.pdf",
           "locator": "page 9-17",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M266. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M266。 / Related concepts and examples; linked cards: CS5489-M266."
         },
         {
           "name": "Lecture10.1.pdf",
           "locator": "page 23-24",
           "kind": "historical",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M268. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M268。 / Related concepts and examples; linked cards: CS5489-M268."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml26#training-steps",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2439,31 +2439,31 @@
           "name": "Lecture2b.ipynb",
           "locator": "cell 72-74",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M079. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M079。 / Related concepts and examples; linked cards: CS5489-M079."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 72-73",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M080. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M080。 / Related concepts and examples; linked cards: CS5489-M080."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 72,80-81",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M081. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M081。 / Related concepts and examples; linked cards: CS5489-M081."
         },
         {
           "name": "Lecture2b.ipynb",
           "locator": "cell 80-81",
           "kind": "course",
-          "note": "Support for the referenced concept or worked case, linked from CS5489-M082. Explanations are adapted for this unit; additional variants are authored separately."
+          "note": "相关概念与例题；关联卡片 CS5489-M082。 / Related concepts and examples; linked cards: CS5489-M082."
         },
         {
           "name": "Teaching adaptation and practice variants / 教学改写与练习变式",
           "locator": "ml08#bernoulli-presence",
           "kind": "derived",
-          "note": "Author-written explanations and additional practice/transfer variants use the cited definitions. Worked cases may adapt the cited material; this label does not claim every numerical example is original."
+          "note": "基于所列材料的补充讲解与练习变式。 / Supplementary explanations and practice variants based on the listed sources."
         }
       ]
     }
@@ -2520,13 +2520,13 @@
           "name": "Lecture1a.ipynb",
           "locator": "cells 137–143, 146–147",
           "kind": "course",
-          "note": "已核对类、实例调用及继承代码；cell138把实例方法写成class method的注释未沿用。 / Checked class, instance-call and inheritance code; the misleading class-method comment in cell138 is not repeated."
+          "note": "类、实例调用与继承代码；cell138的class method注释应理解为此处的实例方法。 / Classes, instance calls and inheritance; cell138 uses the label class method for what is an instance method here."
         },
         {
           "name": "原创对象状态追踪例题 / Original object-state tracing exercise",
           "locator": "ml02#objects-and-inheritance",
           "kind": "derived",
-          "note": "两类计数器是原创教学代码，所有调用已独立执行；仅讨论单继承。 / Both counter classes are original teaching code, executed independently; this example uses single inheritance only."
+          "note": "两个计数器类用于练习单继承和实例状态追踪。 / Two counter classes illustrate single inheritance and instance-state tracing."
         }
       ]
     }
@@ -2676,19 +2676,19 @@
           "name": "Home_Assignments_1.pdf",
           "locator": "page 2",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_1.pdf",
           "locator": "page 2-3",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#entropy-and-information",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -2712,7 +2712,7 @@
         "en": "Both marginal entropies are1 bit; the two-state joint entropy is1. Given Y, X is certain, so conditional entropy0 and mutual information1. The chain rule reads1=1+0."
       },
       "practice_q": {
-        "zh": "X、Y改为独立公平硬币，四个组合各1/4。補出H(X,Y)、H(X|Y)与互信息。",
+        "zh": "X、Y改为独立公平硬币，四个组合各1/4。补出H(X,Y)、H(X|Y)与互信息。",
         "en": "Now X, Y are independent fair coins, with four equiprobable pairs. Complete joint entropy, conditional entropy and mutual information."
       },
       "hint": {
@@ -2742,19 +2742,19 @@
           "name": "Home_Assignments_1.pdf",
           "locator": "page 2",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_1.pdf",
           "locator": "page 3-5",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#laplace-mle-from-deviations",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -2808,19 +2808,19 @@
           "name": "Home_Assignments_1.pdf",
           "locator": "page 3-4",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_1.pdf",
           "locator": "page 6-8",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#conditional-gaussian-update",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -2841,7 +2841,7 @@
       },
       "worked_a": {
         "zh": "均值0.5×2=1；方差1−0.5²=0.75。仍是有散布的N(1,0.75)，不是B恒等于1。",
-        "en": "Mean1, variance0.75 give N(1,0.75); B remains uncertain rather than fixed at1."
+        "en": "The conditional mean is 1 and the variance is 0.75, giving N(1,0.75). B remains uncertain rather than being fixed at 1."
       },
       "practice_q": {
         "zh": "同一模型观察A=−2。哪些量改变、哪些不变？",
@@ -2853,7 +2853,7 @@
       },
       "practice_a": {
         "zh": "条件均值变为−1，条件方差仍0.75。",
-        "en": "The conditional mean becomes−1; variance stays0.75."
+        "en": "The conditional mean becomes −1; the variance remains 0.75."
       },
       "transfer_q": {
         "zh": "一般二元高斯均值(10,20)，方差分别4、9，交叉协方差3。观察A=12，独立算B的条件均值和方差；若交叉协方差改为0呢？",
@@ -2861,7 +2861,7 @@
       },
       "transfer_a": {
         "zh": "均值20+(3/4)(12−10)=21.5；方差9−3×(1/4)×3=6.75。交叉协方差0时均值仍20、方差仍9：联合高斯中的不相关坐标独立，但此结论不能推广到所有分布。",
-        "en": "Mean21.5 and variance6.75. With zero cross-covariance they stay20 and9: uncorrelated jointly Gaussian coordinates are independent, a property not shared by arbitrary distributions."
+        "en": "The mean is 20+(3/4)(12−10)=21.5 and the variance is 9−3×(1/4)×3=6.75. With zero cross-covariance they remain 20 and 9. Uncorrelated jointly Gaussian coordinates are independent; this conclusion does not hold for arbitrary distributions."
       }
     },
     {
@@ -2874,19 +2874,19 @@
           "name": "Home_Assignments_3.pdf",
           "locator": "page 1",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_3.pdf",
           "locator": "page 2-4",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#rank-nullspace-and-solutions",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -2907,7 +2907,7 @@
       },
       "worked_a": {
         "zh": "第二列是第一列2倍，rank=1。Az=0等价z₁+2z₂=0，故z=(−2t,t)，零空间维数1。解为x=(3−2t,t)，无限多个；若y=(3,7)，第二式要求2x₁+4x₂=7，和第一式的两倍6冲突，所以无解。",
-        "en": "Rank is1 because column2 is twice column1. Null vectors are(−2t, t), so nullity1. Solutions are(3−2t, t). For y=(3,7), the second equation contradicts twice the first, so none exist."
+        "en": "The rank is 1 because column 2 is twice column 1. Null vectors have the form (−2t,t), so the nullity is 1. All solutions are (3−2t,t). For y=(3,7), the second equation contradicts twice the first, so no solution exists."
       },
       "practice_q": {
         "zh": "A=[[1],[2]]只有一个未知数，分别判断y=(3,6)与(3,7)，并求秩/零空间维数。",
@@ -2919,7 +2919,7 @@
       },
       "practice_a": {
         "zh": "rank=1、N=1，所以nullity=0。y=(3,6)唯一解x=3；y=(3,7)无解。高矩阵可以零空间为零，但不能覆盖全部输出。",
-        "en": "Rank1 and N1 give nullity0. The first target has unique solution x=3; the second is inconsistent. A tall matrix can have zero nullspace yet miss outputs."
+        "en": "The rank is 1 and there is one unknown, so the nullity is 0. The first target has the unique solution x=3; the second is inconsistent. A tall matrix can have zero nullspace yet fail to reach some output vectors."
       },
       "transfer_q": {
         "zh": "A=[[1,0,0],[0,0,0]]是2×3宽矩阵。独立求rank/nullity；分别判断y=(1,1)和(1,0)，写出有解时的全部解。",
@@ -2927,7 +2927,7 @@
       },
       "transfer_a": {
         "zh": "rank=1，nullity=3−1=2。第二行永远输出0，因此(1,1)无解；(1,0)有x=(1,s,t)，s、t任意。未知数多只保证自由方向存在，不保证任意右端都匹配。",
-        "en": "Rank1, nullity2. The second output is always0, so(1,1) is impossible; for(1,0), solutions are(1, s, t). More unknowns guarantee free directions, not universal consistency."
+        "en": "The rank is 1 and the nullity is 2. The second output is always 0, so y=(1,1) is impossible. For y=(1,0), every vector (1,s,t) is a solution. More unknowns guarantee free directions, but do not guarantee consistency for every right-hand side."
       }
     },
     {
@@ -2941,31 +2941,31 @@
           "name": "Home_Assignments_4.pdf",
           "locator": "page 1",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_4.pdf",
           "locator": "page 1-2",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_4.pdf",
           "locator": "page 2-4",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Lecture8.1.pdf",
           "locator": "page 14-16",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#adjoint-gram-and-pca",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -2986,7 +2986,7 @@
       },
       "worked_a": {
         "zh": "v*=(1,−i)，v*v=1+(−i)i=2；Av=(3,i)，v*Av=3+1=4，商为2。但Av不等于2v，所以v不是特征向量，商不是特征值；A的特征值仍为3、1。",
-        "en": "Conjugate row(1,−i) gives norm squared2 and v*Av=4, so quotient2. But Av≠2v: v is not an eigenvector. The eigenvalues remain3 and1."
+        "en": "The conjugate row is (1,−i), giving v*v=2 and v*Av=4, so the quotient is 2. But Av≠2v, so v is not an eigenvector. A has eigenvalues 3 and 1."
       },
       "practice_q": {
         "zh": "协方差diag(5,2)，单位方向v=(3/5,4/5)。求投影方差并与第一轴比较。",
@@ -3020,31 +3020,31 @@
           "name": "Home_Assignments_4.pdf",
           "locator": "page 1,3",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_4.pdf",
           "locator": "page 4,7",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_4.pdf",
           "locator": "page 1-2,4",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_4.pdf",
           "locator": "page 5,8",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#linear-systems-impulses-convolution",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -3098,19 +3098,19 @@
           "name": "Home_Assignments_4.pdf",
           "locator": "page 2",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Home_Assignments_Solutions_4.pdf",
           "locator": "page 5-6",
           "kind": "historical",
-          "note": "Historical source for the linked definition or derivation; the small worked and transfer numbers here are teaching adaptations, not a claim about current Canvas scope."
+          "note": "历史定义或推导依据；小型数值题为教学改编。 / Historical definitions or derivations; the small numerical exercises are teaching adaptations."
         },
         {
           "name": "Original bridge examples / 原创衔接例子",
           "locator": "ml30#dtft-convolution-product",
           "kind": "derived",
-          "note": "Explicit small examples computed from the stated definitions; no new exam-scope claim."
+          "note": "按所列定义编写的小型算例。 / Small examples based on the stated definitions."
         }
       ],
       "title": {
@@ -3167,7 +3167,7 @@
         "en": "Derive a correction target from the loss and check the update sign."
       },
       "explain": {
-        "zh": "对$L=\\tfrac12(F-y)^2$，正梯度是F−y，负梯度是y−F。学习器拟合负梯度r时用$F_{new}=F+\\eta h$；若拟合正梯度g，则用减号。先前模型固定后才拟合本轮修正；具体XGBoost还包括树结构正则、二阶信息等，不能把这个小例当完整实现。",
+        "zh": "对$L=\\tfrac12(F-y)^2$，正梯度是F−y，负梯度是y−F。学习器拟合负梯度r时用$F_{new}=F+\\eta h$；若拟合正梯度g，则用减号。先固定前几轮的模型，再拟合本轮修正。XGBoost在此基础上还利用树结构正则、二阶信息等机制。",
         "en": "For $L=\\tfrac12(F-y)^2$, the gradient is F−y. Fit its negative and add the learner, or fit the positive gradient and subtract it. XGBoost also uses tree regularization and second-order information; this is a teaching update, not its full implementation."
       },
       "worked_q": {

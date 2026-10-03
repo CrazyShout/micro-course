@@ -221,8 +221,10 @@ def main():
         own=[c for c in cards.values() if c['course']==course]
         npreview=sum(c['source_status']=='historical_preview' for c in own)
         assert intro['counts']=={'total':len(own),'current_support':len(own)-npreview,'historical_preview':npreview,'lessons':manifest['courses'][course]['lessons']}
-        scope=next(s for s in intro['sections'] if s['title_en']=='Current scope and historical preview')
-        assert re.search(r'\b'+str(len(own)-npreview)+r'\b',scope['body_en']) and re.search(r'\b'+str(npreview)+r'\b',scope['body_en'])
+        scope=next(s for s in intro['sections'] if s['title_en']=='Current material and historical preview')
+        # Exact counts are validated above; prose now describes the teaching scope.
+        assert all(term in scope['body_en'] for term in ['Current materials', 'Extra Resources', 'QE'])
+        assert 'historical' in scope['body_en'].lower()
         assert intro['guide_url'].endswith('guide.html?course='+course)
         assert 'id="'+course+'"' in (site/'guide.html').read_text()
     for course,counts in manifest['courses'].items():

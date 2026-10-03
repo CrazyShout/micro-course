@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml28",
   "title": {
-    "zh": "从随机数出发，怎样画出一张像样的新图？",
-    "en": "How can random numbers become a plausible new image?"
+    "zh": "生成模型：GAN训练与扩散加噪",
+    "en": "Generative models: GAN training and diffusion noising"
   },
   "minutes": "15–20",
   "lede": {
@@ -34,7 +34,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "GAN 的判别器 D 区分真实样本与 $G(z)$，生成器 G 则调整生成过程，让生成样本更像真实来源。更新 D 时固定 G，更新 G 时固定 D 的参数，但仍沿 D 的计算关系给 G 传梯度。双方改变彼此面对的数据与目标，因此不是两个互不相关的固定损失都按下降就万事大吉。\n\n历史第 13 页写的是 minimax 形式；下面既有专题使用常见非饱和生成器损失 $-\\log D(G(z))$，二者不能直接当作同一公式。先分清谁在更新，再讨论梯度与模式坍塌。"
+          "text": "GAN 的判别器 D 区分真实样本与 $G(z)$，生成器 G 则调整生成过程，让生成样本更像真实来源。更新 D 时固定 G，更新 G 时固定 D 的参数，但仍沿 D 的计算关系给 G 传梯度。双方改变彼此面对的数据与目标，因此不是两个互不相关的固定损失都按下降就万事大吉。\n\n历史第 13 页写的是 minimax 形式；下面的专题使用常见非饱和生成器损失 $-\\log D(G(z))$，二者不能直接当作同一公式。先分清谁在更新，再讨论梯度与模式坍塌。"
         },
         {
           "type": "unit",
@@ -176,7 +176,7 @@
       "name": "原创串讲与已有教学练习 / Authored explanation and existing teaching exercises",
       "locator": "ml28 · worked / practice / transfer",
       "kind": "derived",
-      "note": "串讲场景与小算例用于教学，不冒充课程实验结果；题答沿用已有作者源。"
+      "note": "生成过程串讲与标量加噪算例为补充教学例。"
     }
   ]
 }

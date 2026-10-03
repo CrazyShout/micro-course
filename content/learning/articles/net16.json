@@ -1,12 +1,12 @@
 {
   "lesson_id": "net16",
   "title": {
-    "zh": "一个IP地址，怎样告诉路由器该往哪走？",
-    "en": "Addressing, forwarding, and fragmentation"
+    "zh": "IP地址与转发：前缀范围、最长匹配和分片",
+    "en": "IP addressing and forwarding: prefixes, longest matches and fragmentation"
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "网络管理员给接口一个地址192.0.2.130/26。这个斜杠不是装饰：它决定哪些地址在同一范围。先把地址拆成固定部分与可变部分，再看路由器如何选出口和处理过大的包。",
+    "zh": "网络管理员给接口一个地址192.0.2.130/26。/26说明前26位固定，由此确定地址范围。先把地址拆成固定部分与可变部分，再看路由器如何选出口和处理过大的包。",
     "en": "An interface receives 192.0.2.130/26. Understand its fixed and variable bits before choosing a forwarding entry or handling a datagram that exceeds a link’s size limit. This is historical preparation."
   },
   "sections": [
@@ -126,7 +126,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net16 worked/practice/transfer",
       "kind": "derived",
-      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+      "note": "普通IPv4子网、最长匹配与分片的补充教学练习，属于历史预习。"
     },
     {
       "name": "RFC 8200",

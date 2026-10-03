@@ -4,32 +4,32 @@ CS5222 · Bilingual computer networking cards
 
 [课程微课](https://crazyshout.github.io/micro-course/?course=CS5222) · [牌组介绍](https://crazyshout.github.io/micro-course/guide.html?course=CS5222)
 
-## 这套牌组用来做什么 / Purpose
+## 这套牌组怎样配合学习 / Learning with this deck
 
-280 张双语卡与 20 节连续微课围绕“一次网页访问”串联网络机制，服务于英语课程学习、计算题和机制解释训练。既记术语，也追踪分组、比特、ACK、窗口和路由状态，帮助后续 QE 准备建立联系。 概念微课先交代具体任务，逐步引出方法与公式；Tutorial 和 Assignment 按原题讲解；卡片题干须独立给出条件，依赖图形的题把图放在正面。
+通过网页访问、文件传输等情境理解网络，再用双语卡片复习术语、计算与机制。整讲讲义按老师Chapter顺序展开，微课跟踪分组、比特、ACK、窗口与路由状态，帮助你把各层联系起来。
 
-These 280 bilingual cards and 20 micro-lessons connect networking mechanisms through a web-request storyline. They train terminology, calculations, and explanations by tracing packets, bits, acknowledgments, windows, and routing state, supporting later QE preparation. Concept lessons establish a concrete task before introducing methods and formulas; Tutorial and Assignment activities follow their original questions. Card prompts supply their own conditions, with required figures on the front.
+Learn networking through web requests and file transfers, then review terminology, calculations and mechanisms with bilingual cards. Notes follow the instructor’s chapters; micro-lessons trace packets, bits, ACKs, windows and routing state to connect the layers.
 
-## 当前内容与往年预习 / Current scope and historical preview
+## 当前课程与历史预习 / Current material and historical preview
 
-178张Canvas/配套卡覆盖Chapter1–2、Chapter3当前part1–2、Tutorial1–5与Assignment1相关任务。102张历史卡保留传输后续、网络/链路等预习；TCP完整连接管理和拥塞控制仍待新材料。
+当前材料包括Chapter1–2、Chapter3的part1–2、Tutorial1–5和Assignment1。Extra Resources保留后续传输、网络层与链路层等历史预习；完整连接管理与拥塞控制仍待当前课件。QE范围以学校要求为准。
 
-178 Canvas/support cards cover Chapters 1–2, available Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1 tasks. 102 historical cards retain later transport, network and link material. Complete connection management and congestion-control coverage remains unconfirmed.
+Current materials include Chapters 1–2, Chapter 3 parts 1–2, Tutorials 1–5 and Assignment 1. Extra Resources contains historical material on later transport, network and link-layer topics. Full connection management and congestion control await current slides; the school defines QE scope.
 
-## 怎样使用题目与图示 / How to use problems and diagrams
+## 从哪里开始 / Getting started
 
-先看“这一遍的重点”，画路径或事件时间轴，统一单位并定义首位、末位或整批完成。图题先看原图，再独立作答；同节其余卡片可在相应补课后分次练。网页卡片用于预览，正式复习在 Markji 按卡号查找，进度不互通。改变一个条件重算，并用英文解释理由。
+从对应Chapter的讲义或微课开始，画出路径或事件时间轴，再做配套Tutorial。文末列出少量首轮卡，按卡号在Markji查找。网页用于阅读和预览，正式复习在Markji完成，两边进度独立。
 
-Start with “This pass”. Draw the path or event timeline, normalize units and define first-bit, last-bit or batch completion. Read question figures before solving; study the other cards after the relevant supplements. Web cards are previews; use the IDs in Markji for formal review, whose progress is separate. Change one condition, recalculate and explain the reason in English.
+Start with the chapter notes or a micro-lesson, draw the path or event timeline, then attempt its tutorial. Find the small first-pass card set in Markji by ID. The website supports reading and previews; formal review happens in Markji, with separate progress.
 
-## 课程信息移至网页 / Course guidance lives on the website
+## 课程安排在哪里看 / Where to find course information
 
-学习顺序、资料范围、评分、提交文件和运行提醒已集中到微课网站的“课程信息”栏目。牌组用于复习课程概念、公式、推导、技术方法和练习题。
+评分、截止日期、提交清单与研究报告要求在网站的“课程信息”栏。卡片中的来源与微课链接帮助你回查协议约定、原图和计算过程。
 
-Study sequence, material scope, grading, submission files, and setup notes are collected in the website’s Course information section. This deck is for concepts, formulas, derivations, technical methods, and practice problems.
+Find grading, deadlines, submission checklists and research-report requirements in Course information. Card sources and lesson links help recover protocol assumptions, figures and calculations.
 
-## 按需补基础与独立练习 / Optional foundations and practice
+## 怎样答计算与机制题 / Answering calculation and mechanism questions
 
-微课开头提供可跳过的基础短课；重点主题用完整示范、补步骤、换条件题逐步练习。多主题课的补充训练默认折叠。自己记录不懂或答错的地方，再在 Markji 复习；网页不新增错题本或复习排程。课程全景可展开覆盖与独立练习清单，编程和抓包须实际动手验证。
+读清图、单位和完成事件，再动笔计算。回答机制题时说明谁发送什么、接收后怎样改变状态。改一个条件重算，并尝试用英文解释；遇到bit/byte、二进制或概率困难，可就近打开基础补课。
 
-Optional primers at the start of relevant lessons can be skipped. Focused sequences use a worked example, a guided step and an independent variation; secondary skills are folded. Keep your own notes and review in Markji. The site adds no error notebook or review scheduler. The overview maps goals to independent tasks; coding and packet inspection require actual hands-on work.
+Read the figure, units and completion event before calculating. For mechanisms, explain who sends what and how receipt changes state. Recalculate after changing a condition, then explain in English. Use nearby foundation links for bits/bytes, binary or probability.

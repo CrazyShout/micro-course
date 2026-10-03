@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml12",
   "title": {
-    "zh": "两类点都分对了，哪条线更稳妥？",
-    "en": "Which separating line leaves more room?"
+    "zh": "SVM间隔：在两类样本之间留出余量",
+    "en": "SVM margins: leave room between the classes"
   },
   "minutes": "15–20",
   "lede": {
@@ -118,7 +118,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "Lecture3b 单元 32–36 固定尺度并写硬间隔，49–58 再加入松弛。C 大在上述目标约定下更重视违约惩罚，它不是优化器的学习率，也不保证泛化更好；仍需交叉验证。SVM 分数主要用于判别，若要当概率使用，需要另行校准与检验。\n\n后续对偶课会问哪些样本真正影响边界、如何换一种变量求解；现在先把“哪个距离、采用何种规范、允许何种违约”讲清。软间隔细节通过既有专题和卡片检索检查，不把一题缩放计算冒称成完整 SVM 实现验证。"
+          "text": "Lecture3b 单元 32–36 固定尺度并写硬间隔，49–58 再加入松弛。C 大在上述目标约定下更重视违约惩罚，它不是优化器的学习率，也不保证泛化更好；仍需交叉验证。SVM 分数主要用于判别，若要当概率使用，需要另行校准与检验。\n\n后续对偶课会问哪些样本真正影响边界、如何换一种变量求解；现在先把“哪个距离、采用何种规范、允许何种违约”讲清。软间隔专题进一步练习如何由分数判断松弛量。"
         },
         {
           "type": "recap"
@@ -137,7 +137,7 @@
       "name": "推理桥接与手算 / Teaching derivation and hand calculation",
       "locator": "ml12",
       "kind": "derived",
-      "note": "依据原课组织推导，练习复用主稿；小例不代表实际模型成绩。 / Source-based explanatory derivation with existing exercises, not measured performance."
+      "note": "根据原课补充的距离、缩放与两点硬间隔手算。 / Supplementary distance, rescaling and two-point hard-margin calculations based on the lecture."
     }
   ],
   "objective_map": [

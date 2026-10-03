@@ -81,7 +81,7 @@
     ],
     "after_practice": [],
     "note": {
-      "zh": "卡少但彼此紧密相连：先画投影，再手算两步，最后用 E 的形状、正交性与列空间检查结果。零残差是“没有新方向”，不是硬除一次试试。",
+      "zh": "卡少但彼此紧密相连：先画投影，再手算两步，最后用 E 的形状、正交性与列空间检查结果。零残差表示没有新的独立方向，无法归一化。",
       "en": "These five cards form one chain: draw a projection, calculate two steps, then check shape, orthogonality and column space. A zero residual means no new direction is available."
     }
   },
@@ -99,7 +99,7 @@
       "CS5489-M049"
     ],
     "note": {
-      "zh": "先用人数表分清“谁里面的比例”，再写贝叶斯公式和条件独立。密度、期望及三类分布不急着一起装进脑袋，进入 MLE 前再补。",
+      "zh": "先用人数表分清“谁里面的比例”，再写贝叶斯公式和条件独立。密度、期望及三类分布可在进入MLE前补充。",
       "en": "Start with counts and the population being conditioned on, then write Bayes and conditional independence. Return to densities, moments and distribution families before MLE."
     }
   },
@@ -333,8 +333,8 @@
       "CS5489-M096"
     ],
     "note": {
-      "zh": "先亲手填混淆矩阵、算各类召回率，再建立一个能复现的基线。复杂特征等基线跑通后才加；错误分析要拿真实短信说话，不凭想象替模型写检讨。",
-      "en": "Fill a confusion matrix, calculate class recalls and build a reproducible baseline. Add complex features after the baseline runs; support error explanations with actual messages, not an imagined confession from the model."
+      "zh": "先亲手填混淆矩阵、算各类召回率，再建立一个能复现的基线。复杂特征等基线跑通后才加；结合实际错分短信提出改进假设。",
+      "en": "Fill a confusion matrix, calculate class recalls and build a reproducible baseline. Add complex features after the baseline runs; use actual misclassified messages to propose improvements."
     }
   },
   "ml17": {
@@ -467,7 +467,7 @@
       "CS5489-M240"
     ],
     "note": {
-      "zh": "先中心化、选方向、投影和重构，再解释保留方差不等于预测最好。SVD、重根唯一性与核 PCA 分别读对应补充后进入，不在第一遍挤成一团。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "zh": "先中心化、选方向、投影和重构，再解释保留方差不等于预测最好。SVD、重根唯一性与核 PCA 分别读对应补充后进入。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
       "en": "Center, choose directions, project and reconstruct; explain why retained variance need not maximize prediction quality. Study SVD, repeated-eigenvalue uniqueness and kernel PCA in later focused passes. This is historical preview, not confirmed current Canvas/QE scope."
     }
   },
@@ -491,8 +491,8 @@
       "CS5489-M253"
     ],
     "note": {
-      "zh": "当前Lecture5先掌握前向、反向、参数更新与批量梯度，再回Assignment2。M254等未迁移原卡仍按历史补充阅读。",
-      "en": "Current Lecture 5 supports forward/backward computation, updates and batch gradients. Apply these to Assignment 2; unpromoted cards such as M254 remain historical supplements."
+      "zh": "当前Lecture5先掌握前向、反向、参数更新与批量梯度，再回Assignment2。M254等历史补充卡可在第二遍阅读。",
+      "en": "Current Lecture 5 supports forward/backward computation, updates and batch gradients. Apply these to Assignment 2; historical supplements such as M254 can be studied on a later pass."
     }
   },
   "ml25": {
@@ -511,8 +511,8 @@
       "CS5489-M264"
     ],
     "note": {
-      "zh": "先拿小窗口滑一次，数输出位置和共享参数；“共享”不是每个位置另请一个检测员。池化、感受野与严格的离散卷积，读对应例题后再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
-      "en": "Slide one small window and count output positions and shared parameters; each position does not hire its own detector. Study pooling, receptive fields and mathematical convolution after their examples. This is historical preview, not confirmed current Canvas/QE scope."
+      "zh": "先拿小窗口滑一次，数输出位置和共享参数，理解各位置如何复用同一组权重。池化、感受野与严格的离散卷积，读对应例题后再做。 本节为往年预习，不代表已确认的 Canvas/QE 范围。",
+      "en": "Slide one small window and count output positions and shared parameters and explain how positions reuse the same weights. Study pooling, receptive fields and mathematical convolution after their examples. This is historical preview, not confirmed current Canvas/QE scope."
     }
   },
   "ml26": {
@@ -671,8 +671,8 @@
       "CS5222-N098"
     ],
     "note": {
-      "zh": "先理解固定预留与临时共享：食堂座位够平均人数，不代表大家能同时坐下。二项概率 N020 先看“三人状态→组合数”补课；互联结构和章末辨错随后进入。",
-      "en": "Compare fixed reservation with shared capacity: seats for average attendance need not seat everyone at once. Read the three-user-to-binomial bridge before N020; defer interconnection structure and chapter checks."
+      "zh": "先理解固定预留与临时共享：平均需求小于容量，不保证所有人同时上传时也够用。二项概率 N020 先看“三人状态→组合数”补课；互联结构和章末辨错随后进入。",
+      "en": "Compare fixed reservation with shared capacity: low average demand does not guarantee enough capacity for everyone to upload simultaneously. Read the three-user-to-binomial bridge before N020; defer interconnection structure and chapter checks."
     }
   },
   "net03": {
@@ -777,7 +777,7 @@
       "CS5222-N110"
     ],
     "note": {
-      "zh": "先画一次连接、一次请求和缓存命中的时间线。多对象并发/流水线、请求首部、方法与 Cookie 分组进入，别把不同 HTTP 模型的 RTT 混成一锅。",
+      "zh": "先画一次连接、一次请求和缓存命中的时间线。多对象并发/流水线、请求首部、方法与 Cookie 分组进入，分别按各自HTTP模型计算RTT。",
       "en": "First draw one connection, request and cache hit. Add concurrent/pipelined objects, request headers, methods and cookies in separate groups, keeping each HTTP timing model explicit."
     }
   },
@@ -914,8 +914,8 @@
       "CS5222-N165"
     ],
     "note": {
-      "zh": "当前Chapter3先用丢包说明ACK、序号、定时器，再比较GBN/SR。校验和、利用率各留一轮；未迁移的序号空间深化仍为历史补充。",
-      "en": "Current Chapter 3 uses loss to motivate ACKs, sequence numbers and timers, then GBN/SR. Study checksums and utilization separately; unpromoted sequence-space details remain historical."
+      "zh": "当前Chapter3先用丢包说明ACK、序号、定时器，再比较GBN/SR。校验和、利用率各留一轮；更深入的序号空间讨论仍为历史补充。",
+      "en": "Current Chapter 3 uses loss to motivate ACKs, sequence numbers and timers, then GBN/SR. Study checksums and utilization separately; more detailed sequence-space discussions remain historical supplements."
     }
   },
   "net14": {
@@ -1071,8 +1071,8 @@
       "CS5222-N257"
     ],
     "note": {
-      "zh": "首轮仍做交换机两题。N231–N233已与本期Tutorial3核对并移入当前Chapter2，其余历史题按回链分主题学习。",
-      "en": "Start with the two switch questions. N231–N233 now match current Tutorial 3 in Chapter 2; study the remaining historical topics separately."
+      "zh": "首轮做交换机两题。N231–N238分别对应当前Tutorial3–5，按Chapter2/3活动入口练习；其他历史题按各自主题学习。",
+      "en": "Start with the two switch questions. N231–N238 correspond to current Tutorials 3–5 in Chapters 2 and 3; study the other historical questions by topic."
     }
   },
   "net20": {

@@ -16,9 +16,9 @@ Lecture 5, Tutorial 4 and the Assignment 2 study guide are now included. Existin
 
 ### Assignment 2：提交与评分要求 / Assignment 2: submission and marks
 
-原Notebook第3单元规定Section 1为40分、Section 2为60分。提交带全部输出的完成版.ipynb及其导出PDF，填姓名和EID，将两份文件压成一个ZIP上传Canvas。原文注明每天迟交扣25分，但下载文件未给具体截止时间；以当前Canvas为准。网页指南是方法说明，不是已完成的个人提交。
+原Notebook第3单元规定Section 1为40分、Section 2为60分。提交带全部输出的完成版.ipynb及其导出PDF，填姓名和EID，将两份文件压成一个ZIP上传Canvas。原文注明每天迟交扣25分，但下载文件未给具体截止时间；以当前Canvas为准。
 
-Cell 3 assigns 40 marks to Section 1 and 60 to Section 2. Submit the completed notebook with all outputs and its exported PDF, fill in your name/EID, and upload one ZIP containing both files to Canvas. The file states a penalty of 25 marks per late day but gives no specific deadline; check current Canvas. The web guide is a study aid, not a completed personal submission.
+Cell 3 assigns 40 marks to Section 1 and 60 to Section 2. Submit the completed notebook with all outputs and its exported PDF, fill in your name/EID, and upload one ZIP containing both files to Canvas. The file states a penalty of 25 marks per late day but gives no specific deadline; check current Canvas.
 
 材料快照 / Material snapshot: 2026-10-03 · ID: CS5489-A2-SUBMISSION
 
@@ -99,9 +99,9 @@ The course notebook uses `multi_class='multinomial'`. The LogisticRegression doc
 
 ### Tutorial 2：模板中的 alpha 未给出数学定义 / Tutorial 2: alpha has no specified formula
 
-当前 PoissonNB 模板包含 alpha 参数，但没有规定它对应的平滑公式。实现时应明确写出采用的参数化和取值，不把自己的补充方案当作教师已给定的公式。平滑的数学含义见 M115 及对应微课。
+当前 PoissonNB 模板包含 alpha 参数，但没有规定它对应的平滑公式。实现时写明所采用的平滑公式、参数含义和取值。平滑的数学含义见 M115 及对应微课。
 
-The supplied PoissonNB template includes alpha without defining its smoothing formula. Document the chosen parameterization and values instead of presenting an added convention as an instructor-specified formula. Card M115 and its lesson explain the mathematical concept.
+The supplied PoissonNB template includes alpha without defining its smoothing formula. Document the smoothing formula, parameter meanings and values you choose. Card M115 and its lesson explain the mathematical concept.
 
 材料快照 / Material snapshot: 2026-09-15 · ID: CS5489-TUTORIAL2-ALPHA
 
@@ -174,9 +174,9 @@ Explain how you encountered the technology, what problem motivated it, how it wo
 
 ### 反思日志与 GenAI 使用说明 / Reflection log and GenAI disclosure
 
-回答学到了什么、最难部分是什么、GenAI 如何帮助或妨碍理解、怎样验证输出、下次会如何改进。要求注明 GenAI 使用，并核实事实、参考文献和生成图示。研究过程中保留一手来源和具体验证记录，让反思描述真实学习，而非事后编造过程。
+回答学到了什么、最难部分是什么、GenAI 如何帮助或妨碍理解、怎样验证输出、下次会如何改进。要求注明 GenAI 使用，并核实事实、参考文献和生成图示。研究过程中保留一手来源和具体验证记录，用一次具体经历说明遇到了什么问题、怎样核验和修正。
 
-Address what you learned, the hardest part, how GenAI helped or hindered understanding, how you verified its output, and what you would change next time. The brief requires acknowledgment of GenAI use and verification of facts, references and generated figures. Keep primary sources and concrete verification notes while working so the reflection records actual learning rather than a reconstructed story.
+Address what you learned, the hardest part, how GenAI helped or hindered understanding, how you verified its output, and what you would change next time. The brief requires acknowledgment of GenAI use and verification of facts, references and generated figures. Keep primary sources and concrete verification notes while working and use a specific experience to explain the problem, how you checked it and what you corrected.
 
 材料快照 / Material snapshot: 2026-09-15 · ID: CS5222-N092
 

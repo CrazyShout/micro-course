@@ -19,7 +19,7 @@ START: 把数组想成一张小表：两行是两条短信，两列是“free �
 STEP1: 设两行为 (1,2)、(3,4)，权重为 (2,-1)。第一条短信得分是 1×2−2=0，第二条是 3×2−4=2。 || Rows (1,2) and (3,4), weighted by (2,-1), produce scores 0 and 2.
 STEP2: `X @ w` 把这两次同样的计算一起做完：输入形状 (2,2)，权重 (2,)，输出 (2,)。一个输出对应一个样本。 || Matrix multiplication batches the two calculations. A (2,2) matrix times a (2,) vector returns one score per row.
 STEP3: 绘图也要先认清“一个点是什么”。散点图保留每对坐标；直方图把数值分组计数。Tutorial 1 的因数图就在练这个区别。 || A scatter plot retains coordinate pairs; a histogram counts values in bins. The divisor exercise practices this distinction.
-TRAP: 行列不是装饰。把列向量和一维数组相减，可能产生所有样本的两两差，而不是每条样本自己的误差。 || Shape changes meaning: a column minus a one-dimensional array can produce pairwise differences instead of matched errors.
+TRAP: 数组的行列形状会影响运算。把列向量和一维数组相减，可能产生所有样本的两两差，而不是每条样本自己的误差。 || Shape changes meaning: a column minus a one-dimensional array can produce pairwise differences instead of matched errors.
 
 @@ ml04
 START: 想象把一支斜向箭头照到水平地面上。影子表示“沿水平方向能解释多少”，箭头尖到影子尖的竖直部分是剩余信息。这个垂直投影的直觉会贯穿最小二乘和 PCA。 || Project a tilted arrow onto a horizontal line. Its shadow is the horizontal component; the perpendicular remainder is what that direction cannot explain.
@@ -96,7 +96,7 @@ START: 一条直线分不开“靠近原点”和“远离原点”的点，但�
 STEP1: 对二维 x，加入 x₁²、x₁x₂、x₂²，相当于给每条样本增加“组合测量”。 || Squared and cross-product features add new measurements to each sample.
 STEP2: 若算法只需要新特征之间的内积，就可直接计算这个内积，而不显式保存所有新坐标。 || If only feature inner products are needed, compute them without explicitly storing every new coordinate.
 STEP3: 例如二次核先算原内积 11，再平方得 121；下面会逐项验证它与显式映射完全相同。 || A quadratic kernel squares an inner product of 11 to get 121; the formal example verifies the explicit map.
-TRAP: 相似度不是越花哨越好。合法核要满足半正定条件，模型仍需验证，数据规模仍会带来计算成本。 || A valid kernel needs positive semidefiniteness, and kernel models still need validation and computation.
+TRAP: 合法核要满足半正定条件，模型仍需验证，数据规模仍会带来计算成本。 || A valid kernel needs positive semidefiniteness, and kernel models still need validation and computation.
 
 @@ ml15
 START: 比较两个邻居，一个人的身高差 0.1 米，收入差 1,000 元。若直接把两项数值平方相加，收入几乎完全决定“距离”，只是因为单位不同。 || A height difference of 0.1 meters and an income difference of 1,000 currency units have incomparable raw scales. Units can dominate distance.
@@ -229,7 +229,7 @@ START: 把一个包想成一列进入长桥的小车。把整列车放上桥要�
 STEP1: 包长 L 比特，速率 R 比特/秒。L/R 是把所有比特送入链路的时间。 || L/R is the time needed to inject all L bits at rate R.
 STEP2: 链路长 d，信号速度 s。d/s 是某个已发出比特到另一端的传播时间。 || d/s is the travel time of an already transmitted bit.
 STEP3: 若发送需 6 ms、传播需 5 ms，首位约 5 ms 到达，末位在 11 ms 到达；不是每一位各再加一次 6 ms。 || With 6 ms serialization and 5 ms propagation, the first bit arrives around 5 ms and the last at 11 ms.
-TRAP: 车队类比只帮助区分时间，不表示信号真是一辆辆有间距的汽车。计算仍按题目的比特模型。 || The convoy is an analogy; use the stated bit-transmission model for calculations.
+TRAP: 包长改变发送时间，距离改变传播时间；减小包长不会让信号传播得更快。 || Packet length affects serialization time, while distance affects propagation time. A shorter packet does not make the signal travel faster.
 
 @@ net04
 START: 三段水管串联，中间最细的一段限制长期出水速度；再把其他两段加粗，出水也未必变快。网络瓶颈有类似的容量限制。 || In a series of pipes, the narrowest section limits sustained flow. Increasing capacity elsewhere may not improve throughput.

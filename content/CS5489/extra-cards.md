@@ -25,8 +25,8 @@ A_ZH: 保存带标签的训练样本。对新样本计算距离，选最近的 k
 @@ M184 | x01-neighbors | worked | XKNN:8-16
 Q_EN: The three nearest labels are A, B, B. What does ordinary 3-NN predict, and can distance weighting change it?
 Q_ZH: 最近三个样本的标签是 A、B、B，普通 3-NN 预测什么？距离加权会改变结果吗？
-A_EN: Ordinary 3-NN predicts B by two votes to one. With weights 10, 1, 1 respectively, A receives weight 10 and B receives 2, so weighted voting predicts A. This added example shows that the weighting convention is part of the model. Choose it using validation data rather than selecting whichever rule fixes one test mistake.
-A_ZH: 普通 3-NN 以两票对一票预测 B。若三个权重依次为 10、1、1，则 A 总权重为 10，B 为 2，加权投票会预测 A。这个补充例子说明权重规则也是模型的一部分，应通过验证集选择，不能为了修正某个测试错误临时换规则。
+A_EN: Ordinary 3-NN predicts B by two votes to one. With weights 10, 1, 1 respectively, A receives weight 10 and B receives 2, so weighted voting predicts A.
+A_ZH: 普通 3-NN 以两票对一票预测 B。若三个权重依次为 10、1、1，则 A 总权重为 10，B 为 2，加权投票会预测 A。
 
 @@ M185 | x01-neighbors | check | XKNN:12-17
 Q_EN: Why do scaling and the choice of k matter for k-NN?
@@ -37,8 +37,8 @@ A_ZH: 欧氏距离会平方各坐标差，因此数值尺度大的特征可能�
 @@ M186 | x01-neighbors | check | XKNN:17; XKREF:1-NN Convergence Proof
 Q_EN: Does keeping k=1 guarantee Bayes-optimal prediction as the dataset grows?
 Q_ZH: 数据越来越多时，固定 k=1 能保证达到贝叶斯最优吗？
-A_EN: No. Suppose features carry no label information and independent labels are A with probability 0.7 and B with 0.3. The Bayes rule always predicts A, with error 0.3. A single neighbor supplies another independent label, giving error 2(0.7)(0.3)=0.42, even with more data. This added counterexample qualifies the historical slide's broad convergence statement.
-A_ZH: 不能。假设特征不含标签信息，各样本标签独立，以 0.7 概率为 A、0.3 概率为 B。贝叶斯规则总预测 A，错误率为 0.3。单个近邻提供另一个独立标签，错误率为 2(0.7)(0.3)=0.42，增加数据也不改变这一点。这个补充反例限定了旧课件较宽泛的收敛表述。
+A_EN: No. Suppose features carry no label information and independent labels are A with probability 0.7 and B with 0.3. The Bayes rule always predicts A, with error 0.3. A single neighbor supplies another independent label, giving error 2(0.7)(0.3)=0.42, even with more data.
+A_ZH: 不能。假设特征不含标签信息，各样本标签独立，以 0.7 概率为 A、0.3 概率为 B。贝叶斯规则总预测 A，错误率为 0.3。单个近邻提供另一个独立标签，错误率为 2(0.7)(0.3)=0.42，增加数据也不改变这一点。
 
 @@ M193 | x02-regression | learn | XR1:22-24
 Q_EN: Under what noise model does OLS coincide with maximum likelihood?
@@ -97,8 +97,8 @@ A_ZH: 惯性是样本到所属中心的平方距离之和。不同初始中心�
 @@ M216 | x04-clustering | check | XCL:23,35
 Q_EN: Does ordinary k-means require every cluster to contain the same number of points?
 Q_ZH: 普通 k-means 是否强制每个簇包含相同数量的样本？
-A_EN: No. Its objective has no equal-size constraint. Euclidean nearest-center assignments favor certain compact geometries, but cluster populations may differ greatly. Equal mixture weights and shared spherical covariance help explain a connection with Gaussian mixtures; they must not be confused with an enforced equal count. This corrects the historical slide's loose wording.
-A_ZH: 不强制，目标函数中没有等大小约束。欧氏最近中心分配偏好某些紧凑形状，但各簇样本数仍可相差很大。相等混合权重和共享球形协方差可用于解释它与高斯混合的联系，却不等于强制各簇人数相同。这纠正了旧课件中不够严格的表述。
+A_EN: No. Its objective has no equal-size constraint. Euclidean nearest-center assignments favor certain compact geometries, but cluster populations may differ greatly. Equal mixture weights and shared spherical covariance help explain a connection with Gaussian mixtures; they must not be confused with an enforced equal count.
+A_ZH: 不强制，目标函数中没有等大小约束。欧氏最近中心分配偏好某些紧凑形状，但各簇样本数仍可相差很大。相等混合权重和共享球形协方差可用于解释它与高斯混合的联系，却不等于强制各簇人数相同。
 
 @@ M217 | x04-clustering | learn | XCL:25-28
 Q_EN: What is a Gaussian mixture model?
@@ -127,8 +127,8 @@ A_ZH: 共有n个观测，固定责任度 $r_{ik}=P(z_i=k\mid x_i)$。令 $N_k=\s
 @@ M221 | x04-clustering | learn | XCL:30,33
 Q_EN: How is a GMM covariance updated, and why can unrestricted fitting become unstable?
 Q_ZH: GMM 如何更新协方差？为什么无限制拟合可能不稳定？
-A_EN: With fixed responsibilities r and $N_k=\sum_i r_{ik}>0$, use the newly updated mean in $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$. It averages weighted deviation outer products. An unrestricted mixture component can collapse onto a point as its covariance tends to zero, making likelihood unbounded. Covariance floors or constraints help prevent this; diagonal covariance only reduces parameter count.
-A_ZH: 固定责任度r，且 $N_k=\sum_i r_{ik}>0$，用新均值计算 $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$，即对偏差外积作加权平均。无约束混合成分可塌缩到某点、协方差趋零，使似然无界增长。协方差下限或约束可防止这种退化；仅改为对角形式主要是减少参数。
+A_EN: With fixed responsibilities r and $N_k=\sum_i r_{ik}>0$, use the newly updated mean in $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$. It averages weighted deviation outer products. An unrestricted mixture component can collapse onto a point as its covariance tends to zero, making likelihood unbounded. Covariance floors or constraints help prevent this; diagonal covariance reduces parameter count but still permits variances to collapse to zero.
+A_ZH: 固定责任度r，且 $N_k=\sum_i r_{ik}>0$，用新均值计算 $\Sigma_k=\sum_i r_{ik}(x_i-\mu_k)(x_i-\mu_k)^T/N_k$，即对偏差外积作加权平均。无约束混合成分可塌缩到某点、协方差趋零，使似然无界增长。协方差下限或约束可防止这种退化；改为对角协方差可以减少参数，但仍允许方差趋零。
 
 @@ M222 | x04-clustering | learn | XEM:12-15
 Q_EN: What do the E-step and M-step optimize in general EM?
@@ -247,8 +247,8 @@ A_ZH: 设 $K_ca=\lambda_Ka$、$a^Ta=1$，$\phi_c(x_i)$ 为中心化特征向量�
 @@ M254 | x06-networks | check | XNN:38-39; XREG:39-48
 Q_EN: Why is fitting a tiny training subset useful for debugging a neural network?
 Q_ZH: 为什么让神经网络拟合一个很小的训练子集，有助于调试？
-A_EN: With a capable model and weak regularization, failure to fit a tiny clean subset can expose label, shape, loss or gradient bugs. Success checks basic optimization, not generalization. Afterwards restore the actual split and regularization. A small train–validation gap alone does not prove underfitting; both scores and the task's attainable error matter.
-A_ZH: 对有足够容量、正则化较弱的模型，若连很小的干净子集都拟合不了，可能暴露标签、形状、损失或梯度错误。拟合成功只检查基础优化，不证明泛化；之后应恢复正式划分与正则化。训练和验证差距小也不能单独证明欠拟合，还要看两者水平和任务可达到的误差。
+A_EN: With a capable model and weak regularization, failure to fit a tiny clean subset can expose label, shape, loss or gradient bugs. Success checks basic optimization, not generalization. Afterwards restore the actual split and regularization.
+A_ZH: 对有足够容量、正则化较弱的模型，若连很小的干净子集都拟合不了，可能暴露标签、形状、损失或梯度错误。拟合成功只检查基础优化，不证明泛化；之后应恢复正式划分与正则化。
 
 @@ M255 | x07-cnn | learn | XCNN:17-25
 Q_EN: What does a convolutional filter compute at one image location?
@@ -319,8 +319,8 @@ A_ZH: 加 L2 损失会把与 w 成比例的项并入梯度，随后被 Adam 的�
 @@ M270 | x08-training | check | XREG:34
 Q_EN: What does fan-in mean in He initialization for an ordinary convolution?
 Q_ZH: 普通卷积采用 He 初始化时，fan-in 指什么？
-A_EN: For a kH-by-kW filter with Cin input channels, fan-in is $k_Hk_WC_{\rm in}$, not just Cin. A common zero-mean Gaussian initialization for ReLU has variance $2/\text{fan-in}$. The goal is to manage activation/gradient scale. Identically initialized hidden units can remain symmetric; biases alone may still legitimately start at zero.
-A_ZH: 对 kH×kW 的核、Cin 个输入通道，fan-in 是 $k_Hk_WC_{\rm in}$，不只是 Cin。用于 ReLU 的一种常见零均值高斯初始化，其方差为 $2/\text{fan-in}$，目的是控制激活与梯度尺度。隐藏单元完全相同地初始化可能保持对称，但偏置本身仍可以合理地初始化为零。
+A_EN: For a kH-by-kW filter with Cin input channels, fan-in is $k_Hk_WC_{\rm in}$, not just Cin. A common zero-mean Gaussian initialization for ReLU has variance $2/\text{fan-in}$. The goal is to manage activation/gradient scale.
+A_ZH: 对 kH×kW 的核、Cin 个输入通道，fan-in 是 $k_Hk_WC_{\rm in}$，不只是 Cin。用于 ReLU 的一种常见零均值高斯初始化，其方差为 $2/\text{fan-in}$，目的是控制激活与梯度尺度。
 
 @@ M271 | x08-training | learn | XREG:15-19
 Q_EN: In inverted dropout, should surviving activations be divided by the drop probability or keep probability?
@@ -361,14 +361,14 @@ A_ZH: 分类预测图像级类别；检测增加目标位置，常用边界框�
 @@ M278 | x09-vision | learn | XVIS:23-27
 Q_EN: What changed from R-CNN to Fast R-CNN and Faster R-CNN?
 Q_ZH: R-CNN、Fast R-CNN 到 Faster R-CNN 的主要变化是什么？
-A_EN: R-CNN processes proposed regions separately. Fast R-CNN shares image feature computation and extracts region features from a shared map. Faster R-CNN adds a learned region-proposal network. This separates two questions: where candidate regions come from and how feature computation is shared. It is a historical architectural progression, not a current speed ranking.
-A_ZH: R-CNN 分别处理候选区域；Fast R-CNN 共享整图特征计算，再从共享特征图中提取区域特征；Faster R-CNN 加入可学习的区域建议网络。应区分候选区域如何产生，以及特征计算如何共享。这是历史架构演进，不是当前模型速度排名。
+A_EN: R-CNN processes proposed regions separately. Fast R-CNN shares image feature computation and extracts region features from a shared map. Faster R-CNN adds a learned region-proposal network. This separates two questions: where candidate regions come from and how feature computation is shared.
+A_ZH: R-CNN 分别处理候选区域；Fast R-CNN 共享整图特征计算，再从共享特征图中提取区域特征；Faster R-CNN 加入可学习的区域建议网络。应区分候选区域如何产生，以及特征计算如何共享。
 
 @@ M279 | x09-vision | learn | XVIS:11-12
 Q_EN: What is a residual connection, and why must its tensor dimensions match?
 Q_ZH: 什么是残差连接？为什么相加的张量维度必须匹配？
-A_EN: A residual block predicts a change F(x) and forms $y=x+F(x)$. The identity path provides a direct information/gradient route. If dimensions differ, use a specified projection or other compatible transformation. The connection aids optimization but does not guarantee that any deeper network will improve validation performance.
-A_ZH: 残差块预测变化 F(x)，并形成 $y=x+F(x)$。恒等路径提供直接的信息和梯度通道。维度不同时，需要明确的投影或其他兼容变换。残差连接有助于优化，但不能保证任意更深网络都会提高验证性能。
+A_EN: A residual block predicts a change F(x) and forms $y=x+F(x)$. The identity path provides a direct information/gradient route. If dimensions differ, use a specified projection or other compatible transformation.
+A_ZH: 残差块预测变化 F(x)，并形成 $y=x+F(x)$。恒等路径提供直接的信息和梯度通道。维度不同时，需要明确的投影或其他兼容变换。
 
 @@ M280 | x09-vision | learn | XVIS:31-35
 Q_EN: Why is a segmentation model's output structurally different from a classifier's output?
@@ -391,8 +391,8 @@ A_ZH: 例如 $R+\lambda D$ 的率失真目标，在预期编码成本 R 与重�
 @@ M283 | x09-vision | check | XLOW:31-44
 Q_EN: Why can two reconstructions with similar MSE look perceptually different?
 Q_ZH: 为什么两个重构的 MSE 接近，视觉感受却可能不同？
-A_EN: MSE averages squared scalar errors and forgets their spatial arrangement. Errors (1,1,1,1) and (2,0,0,0) both give MSE 1, although one is spread out and the other localized. Perceived structure and texture can therefore differ; SSIM or learned feature losses assess other properties. MSE itself does not satisfy the triangle inequality and is not a distance metric. A score ranking alone does not replace viewing the reconstruction.
-A_ZH: MSE平均各标量的平方误差，会丢失误差的空间排列。误差(1,1,1,1)与(2,0,0,0)的MSE均为1，但前者分散、后者集中，所以结构和纹理感受可能不同；SSIM或学习特征损失强调其他属性。MSE本身不满足三角不等式，不是距离度量；指标排名不能替代查看重构图。
+A_EN: MSE averages squared scalar errors and forgets their spatial arrangement. Errors (1,1,1,1) and (2,0,0,0) both give MSE 1, although one is spread out and the other localized. Perceived structure and texture can therefore differ; SSIM or learned feature losses assess other properties.  A score ranking alone does not replace viewing the reconstruction.
+A_ZH: MSE平均各标量的平方误差，会丢失误差的空间排列。误差(1,1,1,1)与(2,0,0,0)的MSE均为1，但前者分散、后者集中，所以结构和纹理感受可能不同；SSIM或学习特征损失强调其他属性。指标排名不能替代查看重构图。
 
 @@ M284 | x09-vision | check | XVIS:37-40
 Q_EN: What can repeated reuse of a fixed test set hide when comparing vision models?
@@ -409,8 +409,8 @@ A_ZH: 隐式生成器把简单随机输入 z 转成 $x=G_\theta(z)$，即使难�
 @@ M286 | x10-generative | learn | XGEN:11-15
 Q_EN: What are the two roles in a GAN?
 Q_ZH: GAN 中的两个模型分别承担什么角色？
-A_EN: The generator maps noise to synthetic data. The discriminator learns to distinguish real training examples from generated ones. Training alternates their updates, so each model changes the learning problem faced by the other. The discriminator's “real” score is a training signal, not a general certificate of factual truth or sample quality.
-A_ZH: 生成器把噪声映射成合成数据，判别器学习区分真实训练样本与生成样本。训练交替更新两者，每个模型都会改变另一方面对的学习问题。判别器的“真实”分数是训练信号，不是对事实真实性或样本质量的通用保证。
+A_EN: The generator maps noise to synthetic data. The discriminator learns to distinguish real training examples from generated ones. Training alternates their updates, so each model changes the learning problem faced by the other.
+A_ZH: 生成器把噪声映射成合成数据，判别器学习区分真实训练样本与生成样本。训练交替更新两者，每个模型都会改变另一方面对的学习问题。
 
 @@ M287 | x10-generative | learn | XGEN:13-15
 Q_EN: Write the original GAN minimax objective with its optimization directions.
@@ -445,8 +445,8 @@ A_ZH: 定义 $\bar\alpha_t=\prod_{s=1}^t(1-\beta_s)$，重新采样 $\epsilon\si
 @@ M292 | x10-generative | check | XGEN:37-39; XDDPM:2-3
 Q_EN: Is the reverse conditional $q(x_{t-1}\mid x_t)$ exactly Gaussian merely because forward diffusion adds Gaussian noise?
 Q_ZH: 正向扩散加入高斯噪声，是否就意味着反向条件分布 $q(x_{t-1}\mid x_t)$ 精确为高斯？
-A_EN: No. The data distribution need not be Gaussian. In DDPM, the tractable posterior conditioned on both x_t and x_0 is Gaussian, while the reverse model conditioned only on x_t is a learned Gaussian approximation/parameterization. Noise prediction with time input trains its mean-related parameters. This corrects the historical slide's overly broad joint-Gaussian justification.
-A_ZH: 不能，数据分布本身未必是高斯。DDPM 中同时给定 x_t 和 x_0 的可计算后验是高斯；仅给定 x_t 的反向模型，则采用学习到的高斯近似或参数化。带时间输入的噪声预测用于学习其均值相关参数。这纠正了旧课件中过于宽泛的“联合高斯”理由。
+A_EN: No. The data distribution need not be Gaussian. In DDPM, the tractable posterior conditioned on both x_t and x_0 is Gaussian, while the reverse model conditioned only on x_t is a learned Gaussian approximation/parameterization. Noise prediction with time input trains its mean-related parameters.
+A_ZH: 不能，数据分布本身未必是高斯。DDPM 中同时给定 x_t 和 x_0 的可计算后验是高斯；仅给定 x_t 的反向模型，则采用学习到的高斯近似或参数化。带时间输入的噪声预测用于学习其均值相关参数。
 
 @@ M293 | x10-generative | learn | XGEN:38-42
 Q_EN: What happens during DDPM sampling after the noise predictor has been trained?
@@ -475,8 +475,8 @@ A_ZH: 仅根据内容执行自注意力，并不能表示图像块来自哪里�
 @@ M297 | x11-transformers | learn | XATT:13-15; XATREF:3.2
 Q_EN: State scaled dot-product attention and give consistent matrix dimensions.
 Q_ZH: 写出缩放点积注意力，并给出一致的矩阵维度。
-A_EN: For n tokens with feature width D, use $Q=XW_Q$, $K=XW_K$, $V=XW_V$, where $W_Q,W_K$ are D-by-d_k and $W_V$ is D-by-d_v. Then $A=\operatorname{softmax}(QK^T/\sqrt{d_k})$ is n-by-n and AV is n-by-d_v. Softmax acts across keys for each query. This fixes the historical slide's token-dimension projection matrices.
-A_ZH: 对 n 个、特征宽度为 D 的 token，取 $Q=XW_Q$、$K=XW_K$、$V=XW_V$，其中 $W_Q,W_K$ 为 D 行 d_k 列，$W_V$ 为 D 行 d_v 列。于是 $A=\operatorname{softmax}(QK^T/\sqrt{d_k})$ 为 n 阶矩阵，AV 为 n 行 d_v 列。Softmax 对每个 query 的各 key 归一化，这修正了旧课件按 token 维度写投影矩阵的问题。
+A_EN: For n tokens with feature width D, use $Q=XW_Q$, $K=XW_K$, $V=XW_V$, where $W_Q,W_K$ are D-by-d_k and $W_V$ is D-by-d_v. Then $A=\operatorname{softmax}(QK^T/\sqrt{d_k})$ is n-by-n and AV is n-by-d_v. Softmax acts across keys for each query.
+A_ZH: 对 n 个、特征宽度为 D 的 token，取 $Q=XW_Q$、$K=XW_K$、$V=XW_V$，其中 $W_Q,W_K$ 为 D 行 d_k 列，$W_V$ 为 D 行 d_v 列。于是 $A=\operatorname{softmax}(QK^T/\sqrt{d_k})$ 为 n 阶矩阵，AV 为 n 行 d_v 列。Softmax 对每个 query 的各 key 归一化。
 
 @@ M298 | x11-transformers | worked | XATT:13
 Q_EN: One attention query has scaled scores (ln 3,0), where ln is the natural logarithm, and scalar values (2,10). What is its output?
@@ -613,8 +613,8 @@ A_ZH: 增量delta后的目标为 $\frac12\|r+\delta x_k\|^2$，导数为 $x_k^Tr
 @@ M320 | x12-problems | historical | XHA3:2-3; XHA3S:6-8
 Q_EN: Why can the nonnegative-slack constraints be omitted in squared-slack SVM?
 Q_ZH: 平方松弛惩罚 SVM 中，为什么可以省略松弛变量非负约束？
-A_EN: Suppose a feasible point has $\xi_i<0$ under $y_if(x_i)\ge1-\xi_i$. Replacing xi by zero makes the margin constraint weaker and reduces $C\xi_i^2$ for C>0. Therefore no optimum needs negative slack. This argument is specific to the stated objective and constraint; do not remove constraints from other formulations without checking.
-A_ZH: 若某可行点在 $y_if(x_i)\ge1-\xi_i$ 下满足 $\xi_i<0$，把 xi 换成零会放宽间隔约束，并在 C>0 时降低 $C\xi_i^2$。因此最优解无需负松弛量。该论证依赖此目标与约束，不能不加检查地删除其他模型的约束。
+A_EN: Suppose a feasible point has $\xi_i<0$ under $y_if(x_i)\ge1-\xi_i$. Replacing xi by zero makes the margin constraint weaker and reduces $C\xi_i^2$ for C>0. Therefore no optimum needs negative slack.
+A_ZH: 若某可行点在 $y_if(x_i)\ge1-\xi_i$ 下满足 $\xi_i<0$，把 xi 换成零会放宽间隔约束，并在 C>0 时降低 $C\xi_i^2$。因此最优解无需负松弛量。
 
 @@ M321 | x12-problems | historical | XHA3:3; XHA3S:6-8
 Q_EN: Use squared-slack SVM objective $\frac12\|w\|^2+C\sum_i\xi_i^2$, C>0, with $y_i(w^Tx_i+b)\ge1-\xi_i$ and labels $y_i\in\{-1,1\}$. How does its dual differ from linear-slack SVM?

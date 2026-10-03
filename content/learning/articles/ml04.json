@@ -1,8 +1,8 @@
 {
   "lesson_id": "ml04",
   "title": {
-    "zh": "三个向量，有多少方向是真的新信息？",
-    "en": "Which parts of a vector add a new direction?"
+    "zh": "投影与Gram–Schmidt：去掉已有方向，留下新信息",
+    "en": "Projection and Gram–Schmidt: separating independent directions"
   },
   "minutes": "12–18",
   "lede": {
@@ -20,7 +20,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "一组向量正交，指不同列内积为 0；归一，指每列长度为 1。两件事合起来才是 orthonormal。把 (1,0) 与 (1,1) 各自缩成单位长度，不会改变夹角，所以仅除以长度无法解决“方向重叠”。\n\n想象先保留一条方向 u，再处理另一条 v。我们要找 v 在 u 方向上已经包含多少，减掉这部分，剩下的才是新方向。图中的影子帮助看这种分解；它是向量几何，不代表实际光线投射。"
+          "text": "一组向量正交，指不同列内积为 0；归一，指每列长度为 1。两件事合起来才是 orthonormal。把 (1,0) 与 (1,1) 各自缩成单位长度，不会改变夹角，所以仅除以长度无法解决“方向重叠”。\n\n想象先保留一条方向 u，再处理另一条 v。我们要找 v 在 u 方向上已经包含多少，减掉这部分，剩下的才是新方向。图中的影子表示沿u的投影，另一部分与u垂直。"
         },
         {
           "type": "figure",
@@ -42,7 +42,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "投影沿 u，所以写成 $au$；a 是待求的一个数，u 必须非零。余量 $r=v-au$ 应与 u 垂直，即 $u^Tr=0$。代入得到 $u^Tv-a(u^Tu)=0$，因此 $a=(u^Tv)/(u^Tu)$，投影为 $P_u(v)=au$。\n\n分母不是装饰：它校正 u 本身的长度。只有 u 已经是单位向量、$u^Tu=1$ 时，才可直接用 $(u^Tv)u$。若 u=(2,0)，忘分母就像借了一把刻度加倍的尺子还照原数读；箭头方向没错，影子长度却会错。"
+          "text": "投影沿 u，所以写成 $au$；a 是待求的一个数，u 必须非零。余量 $r=v-au$ 应与 u 垂直，即 $u^Tr=0$。代入得到 $u^Tv-a(u^Tu)=0$，因此 $a=(u^Tv)/(u^Tu)$，投影为 $P_u(v)=au$。\n\n分母校正u本身的长度。只有 u 已经是单位向量、$u^Tu=1$ 时，才可直接用 $(u^Tv)u$。把u的长度变成两倍，分子变为两倍、分母变为四倍，因此系数a减半；再乘变长的u，实际投影保持不变。"
         }
       ]
     },
@@ -98,7 +98,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "如果余量为零，新列已经能由已有列表示，没有新的独立方向。此时不是“长度很小，硬除一下就好”，而是不能再产生一根合法的单位新方向。若任务要求输入列线性无关，程序应清楚报告失败；若任务是提取任意输入的基，可另设计跳过相关列的策略，别默默混用接口。"
+          "text": "如果余量为零，新列已经能由已有列表示，没有新的独立方向。零向量无法再归一化为一个新方向。若任务要求输入列线性无关，程序应清楚报告失败；若任务是提取任意输入的基，可另设计跳过相关列的策略；两种任务的返回要求不同。"
         },
         {
           "type": "exercise",
@@ -132,7 +132,7 @@
       "name": "串讲与配套教学例 / Teaching synthesis",
       "locator": "ml04",
       "kind": "derived",
-      "note": "依据已列原材料重组解释；例题引用既有主稿，补充场景与数值不是教师原话或实测成绩。 / Editorial explanation and teaching examples; not verbatim instruction or measured results."
+      "note": "依据原课的投影推导、手算和列空间检查补充。 / Supplementary projection derivations, hand calculations and column-span checks."
     }
   ],
   "objective_map": [

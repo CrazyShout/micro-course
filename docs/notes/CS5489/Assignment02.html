@@ -1,8 +1,8 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 2 · Backpropagation and Optimization · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="assignment-2-backpropagation-and-optimization">Assignment 2 · Backpropagation and Optimization</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=146">A4 打印版 · 第 146–151 页</a></p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 2 · Backpropagation and Optimization · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><h1 id="assignment-2-backpropagation-and-optimization">Assignment 2 · Backpropagation and Optimization</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=145">A4 打印版 · 第 145–150 页</a></p>
 <h2 id="_1">看懂每一块接口，再把梯度接起来</h2>
 <p><a href="Lecture05.html">Lecture 5</a> · <a href="index.html">课程目录</a> · <a href="../foundations/MathForML.html#batch-gradients">批量梯度基础</a></p>
-<p>本作业有两条任务线：Section 1补齐NumPy网络的反向传播，Section 2观察不同优化器如何走过几种二维函数。前者检查“梯度是否算对”，后者检查“有了梯度后怎样更新”。先区分两者，调学习率才不会变成给坏掉的计算器换电池。</p>
-<p>依据<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment2.ipynb</span>（76单元，下文A）及<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">MLP Primer</span>（4页，下文P）。本文提供推导、接口和调试方法，不是已经完成训练的作业Notebook，也不报告未运行的葡萄酒成绩。教师模板与数据保持原样。</p>
+<p>本作业有两条任务线：Section 1补齐NumPy网络的反向传播，Section 2观察不同优化器如何走过几种二维函数。前者检查“梯度是否算对”，后者检查“有了梯度后怎样更新”。梯度方向算错时，单纯调整学习率无法修正它，因此要先检查求导，再比较优化器。</p>
+<p>依据<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Assignment2.ipynb</span>（76单元，下文A）及<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">MLP Primer</span>（4页，下文P）。本文提供推导、接口和调试方法，训练与轨迹实验按原任务自行完成。</p>
 <p><strong>按需补课：</strong> <a href="../foundations/MathForML.html#powers-logs">指数与对数</a>、<a href="../foundations/MathForML.html#derivatives">导数</a>、<a href="../foundations/MathForML.html#batch-gradients">矩阵梯度与广播</a>。先会对一个小批量检查形状，再读完整网络。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -52,7 +52,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>评分比例、打包和身份字段回原任务及<a href="https://crazyshout.github.io/micro-course/notices.html">课程信息栏</a>。下载文件没有给出具体截止日期，不能根据编号猜日期。</p>
+<p>评分比例、打包和身份字段回原任务及<a href="https://crazyshout.github.io/micro-course/notices.html">课程信息栏</a>。下载文件未注明截止日期，以Canvas为准。</p>
 <div class="toc">
 <ul>
 <li><a href="#assignment-2-backpropagation-and-optimization">Assignment 2 · Backpropagation and Optimization</a><ul>
@@ -109,7 +109,7 @@ G_H=G_ZW^T.\]</div>
 <p>共享指数收到所有位置的贡献：</p>
 <div class="arithmatex">\[\frac{\partial L}{\partial n}=\sum_{i,j}(G_H)_{ij}
 \frac{\partial\phi(U_{ij},n)}{\partial n}.\]</div>
-<p>计算正区时先用mask选出正数，再调用power/log；不要依靠<code>np.where</code>隐藏另一分支中的非法log，因为两侧表达式可能都先被求值。原模板对n投影到至少1.01，且该层权重/指数分别有硬编码步长0.0005/0.001；指南必须指出这与外部learning_rate参数并不完全一致。</p>
+<p>计算正区时先用mask选出正数，再调用power/log；不要依靠<code>np.where</code>隐藏另一分支中的非法log，因为两侧表达式可能都先被求值。原模板对n投影到至少1.01，且该层权重/指数分别有硬编码步长0.0005/0.001；这两个硬编码步长没有跟随外部learning_rate一起变化。</p>
 <p><strong>跟做 / Worked：</strong> u=2、n=2、上游导数3。输出4；对u的损失导数为3×4=12，对n为<span class="arithmatex">\(3\times4\ln2\approx8.3178\)</span>。 / Output 4, input gradient 12, exponent gradient about 8.3178.</p>
 <p><strong>变式 / Transfer：</strong> u=0.5、n=2、上游导数3，两个梯度的符号？ / Determine both gradient signs.</p>
 <details>
@@ -120,8 +120,8 @@ G_H=G_ZW^T.\]</div>
 <p>调试顺序：核对层形状；检查一个样本；再检查两个样本的平均与偏置；最后逐项核验有限差分。对某参数<span class="arithmatex">\(\theta_k\)</span>，用中心差分</p>
 <div class="arithmatex">\[g_k^{FD}=\frac{L(\theta+\varepsilon e_k)-L(\theta-\varepsilon e_k)}{2\varepsilon}\]</div>
 <p>与解析梯度比较。double精度取例如<span class="arithmatex">\(\varepsilon=10^{-6}\)</span>，避开激活拐点；正则项、平均方式、输入和随机状态要完全相同。先算梯度后更新，差分时不训练。有限差分通过是局部数值证据，不是证明所有代码分支永远正确。</p>
-<p>原数据<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Wine CSV</span>有1599行、11个输入字段，quality≥6映射1，否则0；855条映射为1。原外部划分为test_size=0.25、random_state=1。正确性指南不替你填入未实际取得的训练或测试准确率。老师说约70%以上可作调试参考，不是保证或替代检查。</p>
-<p>A11先对全数据fit_transform，A15才划分。作为严格实验应先划分，在训练集拟合MinMaxScaler，再用同一变换处理验证/测试。说明这是对原示范流程的修正，不能把测试统计当免费信息。<a href="https://scikit-learn.org/stable/common_pitfalls.html#data-leakage">scikit-learn官方说明</a>（核对2026-10-02）</p>
+<p>原数据<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Wine CSV</span>有1599行、11个输入字段，quality≥6映射1，否则0；855条映射为1。原外部划分为test_size=0.25、random_state=1。原题提到的约70%以上可作调试参考；实际训练与测试准确率应由你的运行结果计算。</p>
+<p>A11先对全数据fit_transform，A15才划分。作为严格实验应先划分，在训练集拟合MinMaxScaler，再用同一变换处理验证/测试。这样可以避免测试集统计影响训练阶段的缩放。<a href="https://scikit-learn.org/stable/common_pitfalls.html#data-leakage">scikit-learn官方说明</a>（核对2026-10-02）</p>
 <p>与sklearn MLPClassifier比较时记下架构、激活、正则、批量、训练轮数与种子；两者设定并不完全相同，所以差异不能自动归因于反传错误。先让一个很小的训练子集能被拟合，再看完整划分，是实用排错步骤。</p>
 <p><a id="optimizers"></a></p>
 <h2 id="6">6. 五种优化器：同一条梯度，不同的走法</h2>
@@ -162,7 +162,7 @@ G_H=G_ZW^T.\]</div>
 </tr>
 </tbody>
 </table></div>
-<p>这里AdaGrad的epsilon在根号内，沿用A48；有些库放根号外，它们不是逐数值完全相同的实现。已有卡片采用另一常见约定时，应说明差别，不静默换公式。</p>
+<p>这里AdaGrad的epsilon在根号内，沿用A48；有些库放根号外，它们不是逐数值完全相同的实现。部分已有卡片采用根号外的约定；对照时先看epsilon的位置。</p>
 <p>Adam沿原A52：</p>
 <div class="arithmatex">\[m_t=\beta_1m_{t-1}+(1-\beta_1)\tilde g_t,\quad
 v_t=\beta_2v_{t-1}+(1-\beta_2)\tilde g_t^2,\]</div>
@@ -170,7 +170,7 @@ v_t=\beta_2v_{t-1}+(1-\beta_2)\tilde g_t^2,\]</div>
 \theta_{t+1}=\theta_t-\eta\hat m_t/(\sqrt{\hat v_t+\epsilon}).\]</div>
 <p>第一个t不能取0，否则偏差修正分母为0。v是梯度平方的滑动平均，不是减去均值后的方差。原小标题写Adaptive Momentum Estimation，常用全称是Adaptive Moment Estimation；“best of all worlds”应当作宣传式概括，不能当任何任务都最好的定理。</p>
 <p><strong>一步手算 / Worked：</strong> 一维二次函数<span class="arithmatex">\(f(\theta)=\theta^2\)</span>，θ=2，η=0.1。GD的梯度4，更新θ=1.6；若上一动量v=0.2、γ=0.9，则新v=0.58，新θ=1.42。 / Distinguish the velocity state from the gradient and the parameter.</p>
-<p>Nesterov在A45–46用于理解“向前看一点再求梯度”，题目明确不要求实现；RMSProp/AdaDelta在A50仅作提及，不擅自扩成新必做任务。</p>
+<p>Nesterov在A45–46用于理解“向前看一点再求梯度”，题目不要求实现；RMSProp/AdaDelta在A50仅作简要介绍。</p>
 <p><a id="experiments"></a></p>
 <h2 id="7">7. 原题的函数与图该怎样比较</h2>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
@@ -258,11 +258,11 @@ v_t=\beta_2v_{t-1}+(1-\beta_2)\tilde g_t^2,\]</div>
 </tr>
 </tbody>
 </table></div>
-<p>凸性定义另核对<a href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxslides.pdf">Boyd与Vandenberghe讲义</a>第3.2页（PDF第46页）。原文件不改；纠错是帮助理解，不能伪称教师已发布勘误。</p>
+<p>凸性定义另核对<a href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxslides.pdf">Boyd与Vandenberghe讲义</a>第3.2页（PDF第46页）。上表为根据原公式和代码整理的勘误说明。</p>
 <h2 id="9">9. 完成前如何自查</h2>
-<p>能解释每层输入、输出和梯度形状；平均、正则和偏置一致；更新前保存反传所需权重；自定义激活只对正数取log；预测输出与原接口吻合；随机状态与数据划分记录；所有训练成绩和轨迹来自实际运行。若还没运行，就写“待运行”，不要先填一个看着顺眼的70%。</p>
+<p>能解释每层输入、输出和梯度形状；平均、正则和偏置一致；更新前保存反传所需权重；自定义激活只对正数取log；预测输出与原接口吻合；随机状态与数据划分记录；所有训练成绩和轨迹来自实际运行。尚未运行的实验标为“待运行”。</p>
 <p><strong>English self-check:</strong> Explain where the batch averaging occurs, why a shared exponent receives a summed gradient, how leakage is prevented, and which variables were held fixed in an optimizer comparison.</p>
-<p>首轮复习沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M248">M248前向/反向/更新</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M251">M251批量梯度</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M266">M266动量</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M268">M268 Adam</a>。可学习指数先在本文手算，暂不额外加卡。</p>
+<p>首轮复习沿用<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M248">M248前向/反向/更新</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M251">M251批量梯度</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M266">M266动量</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M268">M268 Adam</a>。可学习指数配合§4的手算例子复习。</p>
 <h2 id="_2">来源覆盖索引</h2>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>

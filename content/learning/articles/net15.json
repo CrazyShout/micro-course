@@ -1,8 +1,8 @@
 {
   "lesson_id": "net15",
   "title": {
-    "zh": "没人告诉发送者带宽多少，它怎样边发边试？",
-    "en": "Congestion windows and feedback"
+    "zh": "TCP拥塞控制：慢启动、拥塞避免与丢包反馈",
+    "en": "TCP congestion control: slow start, congestion avoidance and loss feedback"
   },
   "minutes": "15–20",
   "lede": {
@@ -58,7 +58,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "三次重复ACK可能说明后续段仍在通过，但前面有缺口；超时则更久没得到足够进展。经典Tahoe在丢失后回到慢启动，Reno可在三次重复ACK后进入快速重传与快速恢复；超时反应更强。不能只看“丢包”二字就画同样的下降。\n\n完整Reno的快速恢复会暂时用ssthresh加三个MSS膨胀窗口，反映可能已经离开网络的后续段；新ACK与进一步重复ACK还会触发状态变化。本页下面的独立题明确省略这段细节，直接指定事件后起点，所以其数字不能冒充完整Reno事件表。"
+          "text": "三次重复ACK可能说明后续段仍在通过，但前面有缺口；超时则更久没得到足够进展。经典Tahoe在丢失后回到慢启动，Reno可在三次重复ACK后进入快速重传与快速恢复；超时反应更强。不能只看“丢包”二字就画同样的下降。\n\n完整Reno的快速恢复会暂时用ssthresh加三个MSS膨胀窗口，反映可能已经离开网络的后续段；新ACK与进一步重复ACK还会触发状态变化。下面的独立题省略快速恢复细节，直接给定事件后的窗口起点，按题设规则计算即可。"
         },
         {
           "type": "figure",
@@ -118,7 +118,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net15 worked/practice/transfer",
       "kind": "derived",
-      "note": "明确协议与数学假设的教学变式；历史资料不是本学期已确认范围或当前实现测试。"
+      "note": "按明示窗口更新规则编写的教学算例，属于历史预习。"
     },
     {
       "name": "RFC 3168",

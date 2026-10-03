@@ -6,8 +6,8 @@
   },
   "minutes": "15–20",
   "lede": {
-    "zh": "服务器最初有一份文件，十个客户端都还没有。所有人都要拿到完整副本：是让服务器发十遍，还是让已拿到部分内容的人接着帮忙？本节现在对应 Chapter 2 的当前完整课件；再从分发接到视频播放与真正收发字节。",
-    "en": "One server initially has a file; ten empty clients need it. Should the server send every copy, or can clients help redistribute pieces? This lesson now aligns with current Chapter 2 and connects distribution to streaming and sockets."
+    "zh": "服务器最初有一份文件，十个客户端都还没有。所有人都要拿到完整副本：是让服务器发十遍，还是让已拿到部分内容的人接着帮忙？本节对应Chapter 2完整课件；再从分发接到视频播放与真正收发字节。",
+    "en": "One server initially has a file; ten empty clients need it. Should the server send every copy, or can clients help redistribute pieces? This lesson follows Chapter 2 and connects distribution to streaming and sockets."
   },
   "sections": [
     {
@@ -57,7 +57,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "这里的秒数是理想下界，不承诺真实系统恰好达到。节点离线、块稀缺、请求调度、重复上传和协议开销都可能让实际更慢。课件用于说明扩展方式，不是所有现实P2P都胜过所有客户端—服务器实现的定理。\n\n先提高每个客户端的上传能力，观察总上传那一项怎样变；随后再次提高，检查最大值是否已经换成最慢下载。瓶颈不听“我都升级三倍了”的抱怨，它只按剩下的最紧约束办事。"
+          "text": "这里的秒数是理想下界，不承诺真实系统恰好达到。节点离线、块稀缺、请求调度、重复上传和协议开销都可能让实际更慢。课件用于说明扩展方式，不是所有现实P2P都胜过所有客户端—服务器实现的定理。\n\n先提高每个客户端的上传能力，观察总上传那一项怎样变；随后再次提高，检查最大值是否已经换成最慢下载。当最慢下载成为瓶颈，继续增加上传能力也无法缩短这一下载时间。"
         },
         {
           "type": "exercise",
@@ -95,7 +95,7 @@
       "blocks": [
         {
           "type": "prose",
-          "text": "当前socket例子让客户端发一行文字，服务器转成大写再回传。实现时TCP给有序字节流，一次send不保证对应一次recv；一次接收可能半条、几条，或几条加半条。应用要约定编码、长度前缀或分隔符、最大长度，并保存未完成尾部。UDP保留数据报边界，但丢失等行为仍需处理。\n\n因此分发下界和可运行消息协议是两项能力：会算理想秒数不等于实现已验证。补充保留消息定界、DNS区段、视频和BitTorrent细节；本页主要机制已由当前Canvas确认；附带的2024编程任务仍是历史补充。首轮先巩固三项容量约束，再按专题推进。"
+          "text": "当前socket例子让客户端发一行文字，服务器转成大写再回传。实现时TCP给有序字节流，一次send不保证对应一次recv；一次接收可能半条、几条，或几条加半条。应用要约定编码、长度前缀或分隔符、最大长度，并保存未完成尾部。UDP保留数据报边界，但丢失等行为仍需处理。\n\n分发公式给出容量限制，消息定界则让程序正确识别收到的内容。下方专题继续讲消息定界；2024编程任务作为历史实践补充。首轮先巩固三项容量约束，再按专题推进。"
         },
         {
           "type": "unit",
@@ -135,7 +135,7 @@
     {
       "name": "cs5222_cha2_2026_student.pptx / part3.pptx",
       "locator": "full slides 69–107; part3 slides 1–42",
-      "note": "全文107页与历史版规范化文字及媒体一致，已核对当期Canvas身份；保持Python3与模型边界说明。",
+      "note": "当前完整课件及part3：P2P分发、视频与socket示例。正文补充Python3写法与模型适用条件。",
       "kind": "course"
     },
     {
@@ -154,7 +154,7 @@
       "name": "Teaching synthesis / 教学串讲与变式",
       "locator": "net12 worked/practice/transfer",
       "kind": "derived",
-      "note": "原资料任务与教学变式分别标明；数值不能冒充实测或本学期未下载任务。"
+      "note": "分发下界的数值练习与消息定界解释为补充教学材料。"
     }
   ],
   "objective_map": [

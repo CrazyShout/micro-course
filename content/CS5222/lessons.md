@@ -2,7 +2,7 @@
 
 本稿的主线是“一次网页访问经过哪些机制”。串讲与数值变式为 AI 教学补充；来源通过 CARDS 关联到原课件。历史内容维持 Extra Resources 标记。题答的 ` || ` 分隔中文与英文。
 
-@@ net01 | 从一次网页访问认清网络里的角色 | The actors in a web request
+@@ net01 | 互联网与协议：一次网页请求经过哪些设备？ | The Internet and protocols: trace a web request
 CARDS: N001,N002,N003,N004,N005,N006,N007,N008,N009,N010,N011,N012
 PREREQ:
 GOAL: 能在主机、接入网、路由器与链路图上追踪一条消息。
@@ -40,7 +40,7 @@ TRANSFER_Q: 同一 2 Mbps 链路上 12 个用户因直播同时活跃，每人�
 TRANSFER_A: 总需求 3000 kbps，超出 1000 kbps。容量只能送出 2000 kbps，持续超额使队列增长或丢包；这次活动相关，不能把独立低活跃概率当保证。 || Demand is 3000 kbps, exceeding capacity by 1000. Sustained excess grows queues or causes drops; correlated activity invalidates any guarantee based on independent low activity.
 BRIDGE: 接下来区分“把包送上链路”和“包沿链路传播”，再画完整时延。
 
-@@ net03 | 时延：数清第一个比特和最后一个比特 | Serialization, propagation, and pipelines
+@@ net03 | 网络时延：发完一包、收到一包与流水线 | Network delay: serialization, propagation and packet pipelines
 CARDS: N025,N026,N027,N028,N029,N030,N031,N032
 PREREQ: net02
 GOAL: 能用时间轴推出单包与多包到达时间，避免死套公式。
@@ -56,12 +56,12 @@ WORKED_Q: 1500 byte，2 Mbps，1000 km，传播速度 2×10^8 m/s，末位何时
 WORKED_A: 包长 12000 bit，发送时间 6 ms；距离 10^6 m，传播 5 ms；末位 11 ms 到达，首位约 5 ms 到达，忽略处理与排队。 || Serialization takes 6 ms and propagation 5 ms. The last bit arrives after 11 ms and the first after about 5 ms, ignoring processing and queueing.
 PRACTICE_Q: 三条等速链路、四个包，每包发送需 2 ms，忽略其余时延，总时间多少？ || Four packets cross three equal-rate links, taking 2 ms per packet per link. Ignoring other delays, find completion time.
 HINT: 先算第一包，然后数后面三个到达间隔。 || Compute the first packet's arrival, then three additional arrival intervals.
-PRACTICE_A: 先画发送时段：第一包在三条链路依次占 0–2、2–4、4–6 ms，于 6 ms 到达。第二、三、四包每隔 2 ms 到达，为 8、10、12 ms。总 12 ms；三个路由阶段可处理不同包，不能算成 3×4×2=24 ms。 || Packet 1 uses successive links during 0–2,2–4,4–6 ms, arriving at 6. Packets 2,3,4 then arrive at 8,10,12 ms. Different packets occupy different links concurrently, so total time is 12 rather than 24 ms.
+PRACTICE_A: 先画发送时段：第一包在三条链路依次占 0–2、2–4、4–6 ms，于 6 ms 到达。第二、三、四包每隔 2 ms 到达，为 8、10、12 ms。总 12 ms；三条链路可同时传输不同包，不能算成 3×4×2=24 ms。 || Packet 1 uses successive links during 0–2,2–4,4–6 ms, arriving at 6. Packets 2,3,4 then arrive at 8,10,12 ms. Different packets occupy different links concurrently, so total time is 12 rather than 24 ms.
 TRANSFER_Q: 单链路包长 1500 byte、速率 2 Mbps、距离 1000 km、传播速度 2×10^8 m/s，忽略处理排队。只将包长减半，独立算首位与末位到达时间，并解释哪项不变。 || For one link with packet length 1500 bytes, rate 2 Mbps, distance 1000 km and propagation speed 2×10^8 m/s, ignore processing and queues. Halve only the packet length and compute first- and last-bit arrival times.
 TRANSFER_A: 首位约仍在 d/s 到达；末位的发送部分减半，传播部分不变。本例末位变为 3+5=8 ms。 || First-bit arrival stays about d/s. Last-bit serialization halves while propagation is unchanged, giving 8 ms in the worked example.
 BRIDGE: 时延描述等多久；吞吐量描述持续交付多快，排队把二者联系起来。
 
-@@ net04 | 容量、吞吐量和排队为什么不能混用 | Capacity, throughput, and queueing
+@@ net04 | 吞吐量与排队：平均负载相同，等待为何不同？ | Throughput and queueing: why equal average loads can produce different waits
 CARDS: N033,N034,N035,N036,N037,N038,N039,N040
 PREREQ: net03
 GOAL: 能计算输入负载并由到达事件解释排队；瓶颈与共享吞吐量见补充单元。
@@ -80,7 +80,7 @@ TRANSFER_Q: 每包发送 1 ms，队列初始为空，每 8 ms 重复一次四包
 TRANSFER_A: 两种每 8 ms 都需服务 4 ms，rho=0.5。A 四包各等 0，平均 0；B 等待 0、1、2、3 ms，平均 1.5 ms。相同负载不等于相同排队。 || Both require 4 ms service per 8 ms, giving rho=0.5. A has zero waiting; B waits 0,1,2,3 ms, averaging 1.5 ms. Equal load does not imply equal delay.
 BRIDGE: 要说明开销和协议功能来自哪里，需要分层与封装。
 
-@@ net05 | 分层：每层首部回答一个不同的问题 | Layering and encapsulation
+@@ net05 | 分层与封装：一份应用数据怎样经过网络 | Layering and encapsulation: follow application data through the network
 CARDS: N041,N042,N043,N044,N045,N046,N047,N048,N049,N050,N051
 PREREQ: net01
 GOAL: 能按应用—传输—网络—链路的封装顺序追踪消息，并计算载荷与首部开销。
@@ -181,7 +181,7 @@ PREREQ: net02,net03,net04
 GOAL: 能独立列出网络数值题的单位、路径、完成事件和忽略项。
 EXPLAIN: 每题先写四行：图中几条链路、包或报文多大、从哪个时刻到哪个事件、忽略了哪些项。再把 byte 转 bit、km 转 m，最后才选公式。链路数和路由器数通常差一；每个分组完整到达与整段文件全部到达也不是同一事件。
 
-切包题先求首包经过所有链路的时间，再数后续包到达间隔。若有不等速链路、首部、交叉流量或处理延迟，应按具体时间轴重新分析，不能继续套最简等速式。图题的正面给出原图或按原条件重绘的示意，题干同时写清必要条件；不要只记选项字母。
+切包题先求首包经过所有链路的时间，再数后续包到达间隔。若有不等速链路、首部、交叉流量或处理延迟，应按具体时间轴重新分析，不能继续套最简等速式。图题中先读原图、单位和初始状态，再按事件计算。
 
 Traceroute 表中的时间是各次探测的往返观测。不同探测可能经历不同排队或返回路径，星号也可能只是未及时收到 ICMP 回复。计算之前先识别每列真正测量的对象。
 RECAP_EN: Define path, units, completion event, and ignored costs before calculating. A correct formula with the wrong event or units still answers the wrong question.
@@ -202,7 +202,7 @@ EXPLAIN: 解释网络问题可以按“现象—可能机制—区分证据—�
 
 研究报告从具体问题出发，阅读原始论文的设定、方法、实验和限制，说明证据支持了什么。课件中的理想模型用来理解机制；真实抓包和实验用来判断具体系统。两者需要对照，不能把模拟条件、旧协议实现或历史统计直接当当前系统事实。
 
-英文口述先定义指标，再说明机制，给一个例子并加适用条件。当前报告的页数、格式与提交要求请看网页“课程信息”中的研究报告说明；这里提供方法练习，不猜测教师尚未发布的安排。
+英文口述先定义指标，再说明机制，给一个例子并加适用条件。当前报告的页数、格式与提交要求请看网页“课程信息”中的研究报告说明。
 RECAP_EN: Define the metric, explain a mechanism, identify discriminating evidence, and state the scope of the conclusion. A model or measurement answers only the question its assumptions support.
 WORKED_Q: 一次网页访问用了 2 秒。用三句英文写：能观察到什么、还不能断言什么、接下来要拆分测量什么。 || A page load took two seconds. Write three English sentences stating the observation, an unsupported causal claim, and the measurements needed next.
 WORKED_A: 示范：“The measured page-load time is two seconds. This observation alone does not show that insufficient bandwidth caused the delay. I would separate DNS, connection setup, server waiting time, and body transfer under a stated cache condition.” 三句分别是观测、边界、检验。 || The measured page-load time is two seconds. This observation alone does not show that insufficient bandwidth caused the delay. I would separate DNS, connection setup, server waiting time, and body transfer under a stated cache condition.
@@ -210,7 +210,7 @@ PRACTICE_Q: 访问同一资源：冷缓存测到 200 ms，热缓存 80 ms，但�
 HINT: 先报告观察差异，再区分缓存作用与其他变化，最后提出控制和重复。 || Report the difference, separate cache effects from other changes, and propose controls and repetition.
 PRACTICE_A: “The warm run was 120 ms faster. This does not yet prove that caching alone caused the improvement. I would control the resource, network and server conditions, record cache hits or revalidation, and repeat both conditions.” || The warm run was 120 ms faster. This does not yet prove that caching alone caused the improvement. I would control the resource, network and server conditions, record cache hits or revalidation, and repeat both conditions.
 TRANSFER_Q: 替代路径只在夜里测一次，比白天测的原路径快。独立用三句英文解释为何不能保证改路由后普遍更好，并给一个更公平的比较方案。 || An alternative route measured once at night beats the original route measured during daytime. Explain in three English sentences why this does not guarantee a general improvement and propose a fairer comparison.
-TRANSFER_A: 可答：“The observations confound route choice with time and load. Moving traffic can also change congestion, so the result need not generalize. I would compare repeated measurements under matched time, traffic and endpoint conditions, report variation, and state the routing-policy assumptions.” 评分看混杂因素、负载变化、可比较方案三个要点。 || The observations confound route choice with time and load. Moving traffic can also change congestion, so the result need not generalize. I would compare repeated measurements under matched time, traffic and endpoint conditions, report variation, and state the routing-policy assumptions.
+TRANSFER_A: 可答：“The observations confound route choice with time and load. Moving traffic can also change congestion, so the result need not generalize. I would compare repeated measurements under matched time, traffic and endpoint conditions, report variation, and state the routing-policy assumptions.” 这个回答区分了时间混杂、改路由后的负载变化和可比较的测量方案。 || The observations confound route choice with time and load. Moving traffic can also change congestion, so the result need not generalize. I would compare repeated measurements under matched time, traffic and endpoint conditions, report variation, and state the routing-policy assumptions.
 BRIDGE: 后续预习从应用扩展到可靠传输、IP、路由与链路层，再回到完整网页访问。
 
 @@ net12 | P2P 与 socket：资源共享也需要消息边界 | Distribution capacity and socket framing
@@ -274,7 +274,7 @@ TRANSFER_Q: 已连续收到字节 0–535，后来收到 900–1000；再收到 
 TRANSFER_A: 收到 900–1000 后仍缺 536，ACK536；补齐 536–899 后，已缓存后段接上，连续范围变 0–1000，所以 ACK1001。ACK 看连续前缀，不仅看最近段的终点。 || The first gap remains 536 after the out-of-order segment, so ACK536. Filling 536–899 connects the buffered tail, making the contiguous prefix end at 1000, hence ACK1001.
 BRIDGE: 接收者装得下，不代表网络送得动；接下来解释拥塞窗口怎样变化。
 
-@@ net15 | 拥塞控制：试探可用容量，响应拥塞 | Congestion windows and feedback
+@@ net15 | TCP拥塞控制：慢启动、拥塞避免与丢包反馈 | TCP congestion control: slow start, congestion avoidance and loss feedback
 CARDS: N178,N179,N180,N181,N182,N183,N184
 PREREQ: net04,net14
 GOAL: 能在明确的理想 TCP 教学模型中追踪慢启动、加性增长与丢包后的窗口变化。
@@ -293,7 +293,7 @@ TRANSFER_Q: cwnd=8 MSS 时发生丢包。按此题简化模型，三次重复 AC
 TRANSFER_A: 重复 ACK 路径为 4,5,6,7；超时路径为 1,2,4,5。二者恢复阶段不同。这里只验证题设更新规则，不能把省略快速恢复的数字套到任意真实 TCP 实现。 || Duplicate-ACK recovery gives 4,5,6,7; timeout recovery gives 1,2,4,5. These follow the stated simplified rules and should not be imposed on arbitrary TCP implementations.
 BRIDGE: 端到端传输依赖 IP 跨网转发，下一节解释地址、前缀与分片。
 
-@@ net16 | IP：前缀决定下一跳，MTU 决定装多大 | Addressing, forwarding, and fragmentation
+@@ net16 | IP地址与转发：前缀范围、最长匹配和分片 | IP addressing and forwarding: prefixes, longest matches and fragmentation
 CARDS: N185,N186,N187,N188,N189,N190,N191,N192,N193,N194,N195,N196,N197,N198,N199,N200,N201,N202,N284,N285
 PREREQ: net03,net05
 GOAL: 能由二进制前缀计算普通 IPv4 子网范围和可用主机数；转发与分片分别练习。
@@ -312,7 +312,7 @@ TRANSFER_Q: 一个普通 IPv4 子网需至少50台主机，候选 /26 与 /27 �
 TRANSFER_A: /27 只有2⁵−2=30个可用，/26有2⁶−2=62个，因此选/26。77落在64–127块，网络192.0.2.64、广播192.0.2.127。/31和/32等特殊规则不在本题假设内。 || /27 has 30 usable hosts and /26 has 62, so choose /26. The containing block is .64–.127: network 192.0.2.64 and broadcast 192.0.2.127. Special /31 and /32 conventions are outside this exercise.
 BRIDGE: 转发表从哪里来，需要路由算法与自治系统政策来解释。
 
-@@ net17 | 路由：局部下一步怎样形成整条路径 | Shortest paths and routing policy
+@@ net17 | 路由：最短路径、距离向量与自治系统策略 | Routing: shortest paths, distance vectors and inter-domain policy
 CARDS: N203,N204,N205,N206,N207,N208,N209,N210,N211,N212,N213,N214,N215,N216
 PREREQ: net16
 GOAL: 能逐步执行非负边权Dijkstra并在边代价变化后更新路径；距离向量见补充单元。
@@ -331,7 +331,7 @@ TRANSFER_Q: 无向边 AB=2、AC=3、BD=1、CD=1、BC=4。从A独立求到D的最
 TRANSFER_A: 原先经B到D为3，经C为4，选A–B–D：距离3、下一跳B、D前驱B。修改后经B为7，经C仍4，选A–C–D：距离4、下一跳C、前驱C。路径必须随边权更新，不能沿用旧答案。 || Initially A–B–D costs 3 versus 4 via C, so next hop and D’s predecessor are B. After the change, via B costs 7 while A–C–D costs 4; both next hop and predecessor become C. Recompute when edge weights change.
 BRIDGE: 选好下一跳后，还要在本段链路交付帧并处理共享介质与错误。
 
-@@ net18 | 链路层：发现错误与争用信道是两类问题 | Error detection and shared-medium access
+@@ net18 | 链路层：CRC检错与共享介质接入 | The link layer: CRC error detection and shared-medium access
 CARDS: N217,N218,N219,N220,N221,N222,N223,N224,N225,N226,N227,N228,N229,N230,N282,N283
 PREREQ: net02,net05
 GOAL: 能用XOR长除法构造并检查CRC码字；偶校验和ALOHA使用独立练习单元。
@@ -350,7 +350,7 @@ TRANSFER_Q: 数据101、生成式1011，独立计算CRC码字。若传输时最�
 TRANSFER_A: 101000 XOR 101100=000100，余数100，码字101100。末位翻转得到101101；除以1011余数001，所以检出。余数0只表示没有检出，并不证明所有可能错误都不存在。 || The division 101000 XOR 101100 leaves remainder 100, giving codeword 101100. Flipping its last bit gives 101101 and remainder 001, so the error is detected. A zero remainder would mean no detected error, not proof of no possible error.
 BRIDGE: 历史教程把这些机制组合起来，下一节练习先辨认事件和状态，再读数字。
 
-@@ net19 | 往年教程：把状态画出来再答题 | Historical protocol and calculation clinic
+@@ net19 | 交换机自学习与历史综合题 | Switch learning and historical networking problems
 CHAPTER: extra-resources
 CARDS: N231,N232,N233,N234,N235,N236,N237,N238,N239,N240,N241,N242,N243,N244,N245,N246,N247,N248,N249,N250,N251,N252,N253,N254,N255,N256,N257,N258,N259
 PREREQ: net07,net09,net13,net15,net16,net17,net18
@@ -380,7 +380,7 @@ EXPLAIN: 在 IPv4 以太网、用 DHCP 获取配置、缓存为空、访问远�
 
 DNS 返回网站地址后，主机向远端网站建立 TCP 连接，再交换 HTTP 请求与响应；若网关 MAC 已缓存，便不必重复 ARP。第一跳帧发给网关，而 IP 目的仍是网站主机。每经过路由器，链路帧重新组织；无 NAT 等改写时，IP 目的仍指向最终主机。先想清“最终找谁”和“这一步交给谁”，就不会混淆两种地址。
 
-抓包先区分帧、IP 数据报、TCP 载荷与应用消息。HTTP 请求到响应的间隔还含服务器处理等成本，不能直接叫纯网络 RTT；TCP 的 ACK 时间样本也可能含接收端延迟确认，重传还会造成配对歧义。旧 SSL/TLS 字段按实际版本解释。编程项目需另测消息定界、部分接收与断连；这里的教学链条不代表已经运行了真实实验。
+抓包先区分帧、IP 数据报、TCP 载荷与应用消息。HTTP 请求到响应的间隔还含服务器处理等成本，不能直接叫纯网络 RTT；TCP 的 ACK 时间样本也可能含接收端延迟确认，重传还会造成配对歧义。旧 SSL/TLS 字段按实际版本解释。编程项目需另测消息定界、部分接收与断连。
 RECAP_EN: A complete fetch combines configuration, local next-hop resolution, DNS, transport setup, and application exchange. Link-layer destinations change hop by hop, while end-to-end roles remain distinct.
 WORKED_Q: IPv4以太网主机刚启动，配置和缓存均为空；使用远端DNS和远端HTTP网站，经默认网关、无NAT。用简化协议顺序说明怎样从启动走到网页响应，特别指出DNS查询也需要下一跳MAC。 || An IPv4 Ethernet host starts with no configuration or caches. It uses remote DNS and HTTP servers through a default gateway, without NAT. Outline the simplified sequence from startup to response, including the next-hop MAC needed for DNS.
 WORKED_A: 先DHCP获得IP/掩码/网关/DNS配置；因DNS在远端，ARP解析本LAN网关MAC，再发送DNS查询并获得网站IP。随后向网站建立TCP，再发HTTP请求并收响应。首跳帧目的为网关MAC，IP目的分别是DNS或网站服务器；每跳更换链路封装。 || DHCP supplies IP, mask, gateway and DNS configuration. ARP resolves the gateway MAC before remote DNS queries; DNS yields the website IP. Then establish TCP and exchange HTTP. First-hop frame destination is the gateway MAC while IP destination names DNS or web server; link framing changes at each hop.

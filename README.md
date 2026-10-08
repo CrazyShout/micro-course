@@ -1,6 +1,6 @@
 # Micro Course · CS5489 & CS5222
 
-[整讲讲义与 A4 打印版](https://crazyshout.github.io/micro-course/notes/) · [打开学习网站](https://crazyshout.github.io/micro-course/) · [部署状态](https://github.com/CrazyShout/micro-course/actions/workflows/pages.yml)
+[整讲讲义与 A4 打印版](https://github.com/CrazyShout/CityU-StudyNotes) · [打开学习网站](https://crazyshout.github.io/micro-course/) · [部署状态](https://github.com/CrazyShout/micro-course/actions/workflows/pages.yml)
 
 课程按老师的 Lecture / Chapter 组织：本讲导读、知识微课、配套 Tutorial、关联 Assignment 和回顾。先从 [CS5489 Lecture 2](https://crazyshout.github.io/micro-course/?course=CS5489&chapter=lecture-2) 或 [CS5222 Chapter 1](https://crazyshout.github.io/micro-course/?course=CS5222&chapter=chapter-1) 开始。
 
@@ -10,7 +10,7 @@ ML07 从课堂鸢尾花辨认任务逐步引出高斯分类；NET02 从多人上
 
 ## 整讲讲义
 
-[讲义目录](https://crazyshout.github.io/micro-course/notes/)按课程与 Lecture / Chapter 排列，包含 21 份主要学习文档、数学与网络基础、来源说明，以及三册 A4 PDF。Tutorial 显示代码和已经执行的结果；在线阅读不运行代码。基础专题保留往返入口，每篇链接到 PDF 对应页码。
+[讲义目录](https://github.com/CrazyShout/CityU-StudyNotes)按课程与 Lecture / Chapter 排列，包含 21 份主要学习文档、数学与网络基础、来源说明，以及三册 A4 PDF。Tutorial 显示代码和已经执行的结果；在线阅读不运行代码。基础专题保留往返入口，每篇链接到 PDF 对应页码。
 
 公开 HTML 从相同 Markdown / Notebook 主稿生成。三册 PDF 保留已验证的内容和分页，公开版移除本机文件链接，已发布讲义与跨册链接改为在线地址。完整 Canvas 课件、教材、原始数据、个人作业和本地验证记录不上传。
 
@@ -40,7 +40,7 @@ python3 tools/validate_site.py docs
 git diff --check
 ```
 
-检查差异后只提交本轮文件，再推送 `main`。导出会替换工具管理的 `docs/`，不要直接修改生成页面。讲义导出由主工作区 `scripts/export_course_notes.py` 完成，需使用已配置的 course-notes Python 环境；发布验证包含 `tools/validate_public_notes.py`。只发布选定学习内容与相关资源；完整原课件、API 状态、密钥及本机路径不公开。GitHub Actions 核对资源与关联后发布 `docs/`。
+检查差异后只提交本轮文件，再推送 `main`。导出会替换工具管理的 `docs/`，不要直接修改生成页面。整讲讲义和A4已迁到[独立协作仓库](https://github.com/CrazyShout/CityU-StudyNotes)，本仓库不再生成或发布`notes/`；微课与卡片继续维护。只发布选定学习内容与相关资源；完整原课件、API 状态、密钥及本机路径不公开。GitHub Actions 核对资源与关联后发布 `docs/`。
 
 ## 本地预览
 

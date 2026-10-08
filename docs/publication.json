@@ -44,7 +44,7 @@
   "course_notes": {
     "major_documents": 21,
     "reading_documents": 24,
-    "pdf_pages": 277
+    "pdf_pages": 286
   },
   "article_lessons": [
     "ml01",
@@ -647,118 +647,118 @@
     },
     {
       "path": "notes/CS5222/Assignment01.html",
-      "bytes": 20922,
-      "sha256": "d787e8e78214458b60dfbcf9c29fc5352ccd52a0e01c5bdded57a14311a57dbe"
+      "bytes": 21030,
+      "sha256": "879a942cfaa5a986139f19c34e373f5adf8fc7312acc5728597d37ba348eb8e4"
     },
     {
       "path": "notes/CS5222/Chapter01.html",
-      "bytes": 30450,
-      "sha256": "ecd37faf884f39e749c3246255fbbc1a6ff2658e965dc2c1c57d13237b2e58e1"
+      "bytes": 32659,
+      "sha256": "ecffed2bec264a3284a0efbefeedc28a8b4a743cdc90e779ae1ecb88791ec24e"
     },
     {
       "path": "notes/CS5222/Chapter02.html",
-      "bytes": 36202,
-      "sha256": "d33c01620303b0957a05f500bbfc9c8cf3d341bac91ece54402714499b42ba19"
+      "bytes": 39270,
+      "sha256": "4507fc29e7df582e912ad851db8b24c4d3ec4f722855094600f78fee3516165c"
     },
     {
       "path": "notes/CS5222/Chapter03.html",
-      "bytes": 21764,
-      "sha256": "e44f213fa9a257b5be110e99bdff768cc13814487d598dc1d259d40240aa9c25"
+      "bytes": 23391,
+      "sha256": "c9b999a7cb069b239cfcab449061a4c3585ce1c6174fcf55d6351ac0698e3ab2"
     },
     {
       "path": "notes/CS5222/ResearchReportGuide.html",
-      "bytes": 13006,
-      "sha256": "ef97810a20d150dd1adac7594cebd5b11bcd63cd0fe993fb21777aef34ff128e"
+      "bytes": 12982,
+      "sha256": "975c09ef5965c757b4d1bf0c892f5285cb7c1896d2fd9a2e57de495e08ed94ac"
     },
     {
       "path": "notes/CS5222/Tutorial01.html",
-      "bytes": 12794,
-      "sha256": "4368e8f177afc31eb84de0b8fb1fad7cca51958c6f643002c1d0f8de4b98addc"
+      "bytes": 12937,
+      "sha256": "fa38d4ac7c623144d5852fde96763dc3b5f6861d70b1167e5145d50dc41bae44"
     },
     {
       "path": "notes/CS5222/Tutorial02.html",
-      "bytes": 13494,
-      "sha256": "79c6044872bbc4ff630e0c5d9765cedb3d25d8420ede52d4ee6eb23bc204445b"
+      "bytes": 13630,
+      "sha256": "3c525ec8338c43e4a646a9590ecac12adb422900f92f393dcf38332022ed9491"
     },
     {
       "path": "notes/CS5222/Tutorial03.html",
-      "bytes": 13277,
-      "sha256": "4a7cc80964655844a1563fcbf417833363cccd6e4f0f028248cf446416645d3d"
+      "bytes": 13488,
+      "sha256": "7ec4cf094780c8f76dd75f0e0158667d99eca62be0000aa43fa1aab3076f8768"
     },
     {
       "path": "notes/CS5222/Tutorial04.html",
-      "bytes": 11359,
-      "sha256": "37302f579d9be02ab13557cac401f064205000cc8ad107fd6a68b9725fe0e636"
+      "bytes": 11836,
+      "sha256": "2fcda9ceeab37782a097e77455c51c3a4485759c12e8714c06e27eeb20b1ce89"
     },
     {
       "path": "notes/CS5222/Tutorial05.html",
-      "bytes": 10129,
-      "sha256": "928e2e1b88db8b4145dd5c98c5706b170348a1fd04d28d73f8e5457325e69816"
+      "bytes": 10294,
+      "sha256": "f33f7fcaa4a1840ee35e94daddf65475ddd1e6c5e54d0e2800c9d2f45339cad0"
     },
     {
       "path": "notes/CS5222/index.html",
-      "bytes": 4162,
-      "sha256": "19495982d4f860cdcce2eb2bf5e0795181e0c2a72daaa28c8a1f490be240bc4f"
+      "bytes": 4081,
+      "sha256": "2004fffff5c46456596e5232d69f5714283b89f479d67537134abae5d7398389"
     },
     {
       "path": "notes/CS5489/Assignment01.html",
-      "bytes": 28905,
-      "sha256": "b5d41f8961cde857506ec93f8a06418f73f782f6eafa5937a971e87b87a63264"
+      "bytes": 30273,
+      "sha256": "0124403067e5aae9ac3da936d8f350d1b8d27bbea58e9188db5a8c28d224c981"
     },
     {
       "path": "notes/CS5489/Assignment02.html",
-      "bytes": 21314,
-      "sha256": "18d36afefe7b2a6e1d920b81d2717946c46bee0a07cee569128e8447a781f5f1"
+      "bytes": 22474,
+      "sha256": "ee05eedf8ffb3adc4f762e28b9a83534303ecf4e2951ff3807642d8bc21ac3f5"
     },
     {
       "path": "notes/CS5489/Lecture01.html",
-      "bytes": 33619,
-      "sha256": "90acb4bc61d6003d61dda76be8da5384ab0b8735e94cada9b0edacbe6cf0c4f9"
+      "bytes": 35322,
+      "sha256": "aa517756fdd59e2c3d5c1223df249d535efedba785e3cb1ed97a2a304b3c08a3"
     },
     {
       "path": "notes/CS5489/Lecture02.html",
-      "bytes": 66518,
-      "sha256": "f88e14af713f7a8b5131d045485d562f0e925faa4b69c61ca78fbfff4e51b36a"
+      "bytes": 69296,
+      "sha256": "e50788a00654d3ad62a6a7b175983db1d1e7155e83db4b95adfae7a29c384e84"
     },
     {
       "path": "notes/CS5489/Lecture03.html",
-      "bytes": 40977,
-      "sha256": "2d8e18afdd9aa1dd4910b1fda6a0d48a76bc1a5461a875eb39af43eacf6a149d"
+      "bytes": 45020,
+      "sha256": "66966f828aa0ce3cbf16a9b4b41949d597db29bab0543c403e79db80d26a0304"
     },
     {
       "path": "notes/CS5489/Lecture04.html",
-      "bytes": 32675,
-      "sha256": "d161b944f348306d44877c462fba549d699957cca657cd8bf583f8b06a21c70e"
+      "bytes": 39307,
+      "sha256": "677b82fd8619b65b3398f9c53e6041a889ad969c3422d3bcf67eed515197a0aa"
     },
     {
       "path": "notes/CS5489/Lecture05.html",
-      "bytes": 27454,
-      "sha256": "1b72795a8b0d342da194b36242bec93a27ae1fe3aac80ac931f07f8888902e85"
+      "bytes": 32050,
+      "sha256": "b99e61b11f1b15d428d199cfa298c1f617dab4008e92b4031c2484b68a8087c4"
     },
     {
       "path": "notes/CS5489/Tutorial01.html",
-      "bytes": 60462,
-      "sha256": "fed6dac1e6f6250e00c6ded2badf8b13a128c8bac59246d67974b37160d135c5"
+      "bytes": 60906,
+      "sha256": "5da971b55ae9fa2bca37082d16a665c609cdce3be482a85b67ab6d6e8078b742"
     },
     {
       "path": "notes/CS5489/Tutorial02.html",
-      "bytes": 168988,
-      "sha256": "a0ac5af2a637de5ea40840555b60c268514a39a7b5662723d3db57cb217c2516"
+      "bytes": 169980,
+      "sha256": "9ce7cd9af38ccadcf164097251f90021778330793ceaa8838c767a7ba32942e0"
     },
     {
       "path": "notes/CS5489/Tutorial03.html",
-      "bytes": 98410,
-      "sha256": "57cc39185955b9e6822d8728d44dda28b0fa7f2035f61d896e489f7f6d586de0"
+      "bytes": 98656,
+      "sha256": "02ee4ae22ba5a2a910bad378650a214dbb2ef8aeeedbbf679090bc12d20f1c25"
     },
     {
       "path": "notes/CS5489/Tutorial04.html",
-      "bytes": 87132,
-      "sha256": "4b53c5a0bf12f1d4bc635eeff06974f86f8111453a77d9d06f91e3dd39abdeba"
+      "bytes": 87964,
+      "sha256": "9ec8128a3f673d36e8400b3e1fee31d495350c887a158d9c5ccaa41e3605f505"
     },
     {
       "path": "notes/CS5489/index.html",
-      "bytes": 4369,
-      "sha256": "762e973e995c0509edd90dcebf495dd87e3549ca359c8e8e3d163a3786d16275"
+      "bytes": 4232,
+      "sha256": "50ae6d623e338e16ec48c45b45c264ed4c3e3a32152794a470460435f8fded16"
     },
     {
       "path": "notes/assets/003d8c59f07f557d.png",
@@ -1272,48 +1272,48 @@
     },
     {
       "path": "notes/foundations/MathForML.html",
-      "bytes": 83319,
-      "sha256": "3174b3a2567c06f6634d8959838e4cc4a8172e749784903298d179eee4b1ef24"
+      "bytes": 83241,
+      "sha256": "527b8d53f9297dc726e960c8545150fe1801e1d84f66b35499a7a88bb1fdeaca"
     },
     {
       "path": "notes/foundations/NetworkBasics.html",
-      "bytes": 13371,
-      "sha256": "d8339c935d33d79aa3870eb69e5d10449897173d950fd118dcbe195364a5474b"
+      "bytes": 13349,
+      "sha256": "886526a1d2bc086c8cdcc9d7a4921bba33cfbc012fbbdc645c170a0dd6086eaa"
     },
     {
       "path": "notes/foundations/SourceEvidence.html",
-      "bytes": 6957,
-      "sha256": "7eb1cfb6042d81671bff797cd267899f829ceb74b4deddb9f28de7b336511aa2"
+      "bytes": 6939,
+      "sha256": "7020a7ff6503afb27ea67e03158fb2a2e364824d80978d0bc18e09cf473b9261"
     },
     {
       "path": "notes/index.html",
-      "bytes": 5793,
-      "sha256": "615c5e6027bddbe8b6971ff4da28914ccb2345f533c37708f47fdafb2f458397"
+      "bytes": 5546,
+      "sha256": "5fb17dda5b4ba74e5f2fa08e0ae357c4d166b543a68d59759afc80e5a5cd01e6"
     },
     {
       "path": "notes/manifest.json",
-      "bytes": 38081,
-      "sha256": "9dfc40725b6fee98059a5da9c4ade448997b1fbf5c945332544330ca6b810fac"
+      "bytes": 38033,
+      "sha256": "d130967530f46c5f0d43df4b18598ce841ecf70933026c197e6c32a4d622d9b3"
     },
     {
       "path": "notes/notes.css",
-      "bytes": 7462,
-      "sha256": "24af03328a053e14b7a7447e10d7f1fede50872f8ad3712731405a689a68b9e3"
+      "bytes": 7551,
+      "sha256": "54ace574f941cd2e97fe54e714b49faaeafef2ee1e107c2d4940bf7d6be068c0"
     },
     {
       "path": "notes/pdf/CS5222-A4.pdf",
-      "bytes": 13992720,
-      "sha256": "a053ac49f591efc77b3b7901feddb65336f7f227b50c0a3b83575d13852a7cc6"
+      "bytes": 14150062,
+      "sha256": "455e9773e9ed9a8d3e2435cf9ba6c9e70a35bf3958b4de89098282f0ea920c2c"
     },
     {
       "path": "notes/pdf/CS5489-A4.pdf",
-      "bytes": 17293464,
-      "sha256": "c9581dfbcac46886dc85551d09997bf616a5ecb5aeacf2b62a141f70527bd342"
+      "bytes": 17754109,
+      "sha256": "4d47800b2cae6995c21a6c0561bd21b35d97995125c8df67475428b88b57d5eb"
     },
     {
       "path": "notes/pdf/Foundations-A4.pdf",
-      "bytes": 4454880,
-      "sha256": "db36b4098acf4071513e99b9a6788bed298ec32e74ea4afed0320d9c17fdc263"
+      "bytes": 4452606,
+      "sha256": "17bf0ce7db530d7e2d1fce3405505304b1c9e61a715c331bfd7b8e512728477e"
     },
     {
       "path": "notices-data.js",

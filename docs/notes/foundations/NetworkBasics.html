@@ -36,7 +36,7 @@
 <p><a id="units"></a></p>
 <h2 id="1-bit-byte-and-rate">1. Bit, byte and rate｜仓库有多少货，和每秒搬多少货，是两件事</h2>
 <p>bit（比特）是一个二进制位，可取0或1。byte（字节）通常是8 bit，本课程采用8位字节。大写B与小写b不能省略：1500 B=12000 bit；文件大小是数量，2 Mbps是每秒2000000 bit的速率。</p>
-<p>本课程网络速率用十进制：k=10³，M=10⁶，G=10⁹。时间中milli是千分之一（ms=10⁻³s），micro是百万分之一（µs=10⁻⁶s）；Mbps中的大写M和ms中的小写m方向相反。KiB、MiB才明确表示1024、1024²字节；不要在题目只说Mbps时擅自换成1024。</p>
+<p>本课程网络速率用十进制：k=10³，M=10⁶，G=10⁹。时间中milli是千分之一（ms=10⁻³s），micro是百万分之一（µs=10⁻⁶s）；Mbps中的大写M和ms中的小写m方向相反。KiB、MiB才明确表示1024、1024²字节；题目中的Mbps按十进制换算。</p>
 <div class="arithmatex">\[\text{发送时间}=\frac{\text{数据量(bit)}}{\text{速率(bit/s)}}.\]</div>
 <p><strong>完整算例 / Worked example:</strong> 1500 B、R=2 Mbps。先换 <span class="arithmatex">\(L=1500\times8=12000\)</span> bit，再算 <span class="arithmatex">\(L/R=12000/(2\times10^6)=0.006\)</span> s=6 ms。单位“bit÷bit/s”最后剩s，是一个自带报警器：如果还剩米或字节，通常哪里没对齐。</p>
 <p>传播是另一件事。距离d=1000 km=10⁶m，速度s=2×10⁸m/s，<span class="arithmatex">\(d/s=0.005\)</span>s=5ms。提高链路发送速率R不等于让电磁信号速度s跟着翻倍。</p>
@@ -45,7 +45,7 @@
 <p><strong>变式 / Transfer:</strong> 1000 B以10 Mbps发送，链路2000 km、传播速度2×10⁸m/s，忽略其他时延，整包到达要多久？ / Send 1000 B at 10 Mbps over 2000 km at propagation speed 2×10⁸ m/s. Ignore other delays and find complete-packet arrival time.</p>
 <details>
 <summary>答案 / Answer</summary>
-<p>发送0.8ms，传播10ms，总10.8ms。 / Transmission is 0.8 ms, propagation is 10 ms, total 10.8 ms. 不是“1000/10=100秒”，因为B与Mbps不同单位。</p>
+<p>发送0.8ms，传播10ms，总10.8ms。 / Transmission is 0.8 ms, propagation is 10 ms, total 10.8 ms. 计算前先把B换成bit、Mbps换成bit/s。</p>
 </details>
 <p><strong>English:</strong> A byte contains eight bits. Convert all quantities before dividing; link rate and propagation speed describe different processes.</p>
 <p>返回：<a href="../CS5222/Chapter01.html#delay">Chapter1：时延</a> · <a href="../CS5222/Tutorial02.html">Tutorial2</a> · <a href="../CS5222/Assignment01.html#p6">Assignment1 P6</a></p>
@@ -154,4 +154,4 @@ Connection: close\r\n
 <p><strong>English:</strong> Name the event before calculating its time. Pipelining overlaps work on different links; store-and-forward still requires each individual packet to arrive completely.</p>
 <p>返回：<a href="../CS5222/Chapter01.html#switching">Chapter1：存储转发</a> · <a href="../CS5222/Tutorial01.html#q1">Tutorial1 Q1</a> · <a href="../CS5222/Assignment01.html#p31">Assignment1 P31</a></p>
 <h2 id="_1">来源与复算</h2>
-<p>这些先修概念直接服务当前Chapter1 pp25–26、45–48、63–65，Chapter2进程、HTTP与socket，以及当前Tutorial/Assignment。可按对应课程中的需要选读。示意图与数值由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 生成，结果在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">复算记录</span>。组合概率另见<a href="MathForML.html#combinations">MathForML §6</a>。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>这些先修概念直接服务当前Chapter1 pp25–26、45–48、63–65，Chapter2进程、HTTP与socket，以及当前Tutorial/Assignment。可按对应课程中的需要选读。示意图与数值由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 生成，结果在<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">复算记录</span>。组合概率另见<a href="MathForML.html#combinations">MathForML §6</a>。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

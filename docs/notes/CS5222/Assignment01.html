@@ -1,8 +1,8 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="assignment-1-chapters-1-and-2">Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=57">A4 打印版 · 第 57–67 页</a>　图可点击放大。</p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="assignment-1-chapters-1-and-2">Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=72">A4 打印版 · 第 72–82 页</a>　图可点击放大。</p>
 <p><a href="index.html">课程目录</a> · <a href="Chapter01.html">Chapter1</a> · <a href="Chapter02.html">Chapter2</a> · <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原任务（4页）</span></p>
 <p>本讲义提供P6、P31、P17的纸笔推导及Zoom资料核查方法。当前未提供教师解答，以下推导与资料分析供学习参考。截止日期、提交格式和手续回查原任务及<a href="https://crazyshout.github.io/micro-course/notices.html">课程信息栏</a>。</p>
 <p>基础可选：<a href="../foundations/NetworkBasics.html">单位与时间轴</a>、<a href="../foundations/NetworkBasics.html#messages">报文字段</a>。当前四题都属于核心任务；P6难点是首/末位事件，P31是跨链路重叠，P17是跨会话状态，Zoom是产品情境与来源边界。理解难度均为中等。</p>
-<div class="toc">
+<details class="reading-toc"><summary>本页目录 / Contents</summary><div class="toc">
 <ul>
 <li><a href="#assignment-1-chapters-1-and-2">Assignment 1 · Chapters 1 and 2｜计算、事务与技术证据</a><ul>
 <li><a href="#p6-transmission-and-propagation">P6. Transmission and propagation｜最后一位刚出发，第一位可能已经到达</a></li>
@@ -25,7 +25,7 @@
 </ul>
 </li>
 </ul>
-</div>
+</div></details>
 <p><a id="p6"></a></p>
 <h2 id="p6-transmission-and-propagation">P6. Transmission and propagation｜最后一位刚出发，第一位可能已经到达</h2>
 <p><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/8dce74637beb8fd4.png" rel="noopener" target="_blank"><img alt="Original Assignment1 P6" decoding="async" height="1450" loading="lazy" src="../assets/8dce74637beb8fd4.png" width="1025"/></a></p>
@@ -213,9 +213,9 @@ S: +OK signing off
 </tr>
 </tbody>
 </table></div>
-<p>这不是说一台普通笔记本每次入会同时跑这三项。若教师将题意限定为<strong>原生客户端自身的媒体/控制三种协议</strong>，应按该范围补充特定版本的技术资料，而不能把SIP/H.323互通项冒充原生路径。公开端口表只能证明传输端口用途，不能单独证明RTP/SRTP等内部封装；作答时应注明所选客户端与部署情境。</p>
+<p>这不是说一台普通笔记本每次入会同时跑这三项。若教师将题意限定为<strong>原生客户端自身的媒体/控制三种协议</strong>，应按该范围补充特定版本的技术资料，而不能把SIP/H.323互通项代替原生客户端路径的说明。公开端口表只能证明传输端口用途，不能单独证明RTP/SRTP等内部封装；作答时应注明所选客户端与部署情境。</p>
 <h3 id="b-architecture">b. 架构 / Architecture</h3>
-<p>普通多人云会议主要由云服务协调与转发，按课程分类主要是client-server：各客户端向服务基础设施连接，云处理参与者发现、会话与媒体分发。<strong>这是基于官方云连接/回退说明的架构归纳</strong>，不宣称所有Zoom部署都是纯同一种拓扑。<a href="https://library.zoom.com/advanced-enterprise-services/zoom-mesh/zoom-mesh-explainer">Zoom Mesh官方说明</a></p>
+<p>普通多人云会议主要由云服务协调与转发，按课程分类主要是client-server：各客户端向服务基础设施连接，云处理参与者发现、会话与媒体分发。<strong>这是基于官方云连接/回退说明的架构归纳</strong>，具体部署也可能包含下面介绍的P2P或Mesh连接。<a href="https://library.zoom.com/advanced-enterprise-services/zoom-mesh/zoom-mesh-explainer">Zoom Mesh官方说明</a></p>
 <p><strong>English:</strong> Ordinary multi-participant cloud meetings are primarily client-server in the course's sense; clients rely on Zoom infrastructure for coordination and media distribution.</p>
 <p>明确例外：官方允许同一局域网的两人会议在符合设置条件时用peer-to-peer；加入第三人等情况会使用云。<a href="https://support.zoom.com/hc/en/article?id=zm_kb&amp;sysparm_article=KB0067877">两人P2P说明</a> 企业启用Zoom Mesh时，局域网内可由parent客户端给child分发视频；这是有云协调的混合机制，不能拿来证明普通多人课堂始终直接连接老师。</p>
 <h3 id="c-transport">c. 传输 / Transport</h3>
@@ -228,4 +228,4 @@ S: +OK signing off
 <p>每个判断写成“结论 → 明确情境 → 机制 → 官方来源及查阅日期”。区分产品支持、当前默认与本机实测三种证据。原题是应用课程知识的调查题，不应把一段不知年份的博客当软件永久架构。</p>
 <h2 id="_2">覆盖、复算与验收</h2>
 <p>原PDF p1的P6(a–g)、p2的P31(a–e)及原拓扑、p3的P17(a–c)及“写到事务结束”要求、p4的Zoom(a–d)全部对应。数值和分包图由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算；原题未给邮件正文，事务中使用占位说明。</p>
-<p>完成前检查：每个速率/长度有单位，每段延迟不多算漏算；POP3包含两封邮件与成功结束；Zoom区分客户端/部署并注明来源时间。再回到<a href="../../cards.html#CS5222-N260">已有N260–N263</a>复习对应知识。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>完成前检查：每个速率/长度有单位，每段延迟不多算漏算；POP3包含两封邮件与成功结束；Zoom区分客户端/部署并注明来源时间。再回到<a href="../../cards.html#CS5222-N260">已有N260–N263</a>复习对应知识。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

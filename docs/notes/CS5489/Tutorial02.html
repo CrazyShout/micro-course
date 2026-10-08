@@ -1,8 +1,8 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 2 · Text Document Classification with Naive Bayes · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
-<h1 id="tutorial-2-text-document-classification-with-naive-bayes">Tutorial 2 · Text Document Classification with Naive Bayes</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=47">A4 打印版 · 第 47–73 页</a>　图可点击放大。</p>
+<h1 id="tutorial-2-text-document-classification-with-naive-bayes">Tutorial 2 · Text Document Classification with Naive Bayes</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=88">A4 打印版 · 第 88–114 页</a>　图可点击放大。</p>
 <h2 id="_1">按老师原任务，跑通新闻分类并解释结果</h2>
 <p><a href="Lecture02.html">先读 Lecture 2</a> · <a href="Assignment01.html">Assignment 1 指南</a> · <a href="index.html">运行说明</a></p>
-<p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial2v2.ipynb</span>（下文T，cell从1开始，不是In[n]）；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">dataAG.json</span>。以下代码与解答为按原任务编写的参考实现。</p>
+<p>主要来源：<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">Tutorial2v2.ipynb</span>（单元从原文件第一个开始计数，包括文字与代码）；<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">dataAG.json</span>。以下代码与解答为按原任务编写的参考实现。</p>
 <p>老师的顺序是：认识AGNews → 建词向量 → Bernoulli NB → Multinomial NB → 看错分 → 改平滑/词表 → 实现Poisson NB。每步先解释要解决什么，再看代码与输出。默认从头运行全部代码，独立尝试题写在Markdown中，不影响运行。</p>
 <p><strong>结果口径 / Result scope：</strong> 本教程遵循课堂任务，多次查看同一份给定test的表现，用于练习与探索。它已参与模型/参数比较，不能被称为最终独立泛化估计。下方结果由代码计算，固定种子42。</p>
 </section>
@@ -20,42 +20,42 @@
 </thead>
 <tbody>
 <tr>
-<td>数据与词向量 T4–12</td>
+<td>数据与词向量 Tutorial2v2，第4–12个单元</td>
 <td>核心必会</td>
 <td>中：文档、词、矩阵轴</td>
 <td>能建立固定词表并避免泄漏</td>
 <td>Lecture §12–13</td>
 </tr>
 <tr>
-<td>Bernoulli NB T13–16</td>
+<td>Bernoulli NB Tutorial2v2，第13–16个单元</td>
 <td>核心必会</td>
 <td>中：出现/未出现</td>
 <td>会训练、计算指标、解释词概率</td>
 <td>§14–16</td>
 </tr>
 <tr>
-<td>Multinomial NB T17–20</td>
+<td>Multinomial NB Tutorial2v2，第17–20个单元</td>
 <td>核心必会</td>
 <td>中：计数与TF-IDF</td>
 <td>会比较表示，解释参数含义</td>
 <td>§17–18</td>
 </tr>
 <tr>
-<td>错分 T21–24</td>
+<td>错分 Tutorial2v2，第21–24个单元</td>
 <td>核心必会</td>
 <td>中：观察不等于原因</td>
 <td>会提出可核验解释</td>
 <td>§9、19</td>
 </tr>
 <tr>
-<td>两种参数实验 T25–28</td>
+<td>两种参数实验 Tutorial2v2，第25–28个单元</td>
 <td>核心必会</td>
 <td>中：受控比较</td>
 <td>会画曲线、说明比较条件</td>
 <td>§13、15、17</td>
 </tr>
 <tr>
-<td>Poisson NB T29–35</td>
+<td>Poisson NB Tutorial2v2，第29–35个单元</td>
 <td>核心必会</td>
 <td>高：换CCD仍保留Bayes外框</td>
 <td>会估计、算log分数并归一化</td>
@@ -135,9 +135,9 @@ Data: dataAG.json | SHA256: 6fc06494ec6a66501f4db2e0c9710e32db6c88a6a0ca8ff59db3
 </section>
 <section id="cell-5">
 <h2 id="1-load-and-inspect-data">1. Load and inspect data｜先数清楚，再训练</h2>
-<p><strong>原任务 / Task（T4–9）：</strong> 载入dataAG.json，检查训练/测试规模和四类标签，查看文本。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第4–9个单元）：</strong> 载入dataAG.json，检查训练/测试规模和四类标签，查看文本。<br/>
 <strong>English:</strong> Load dataAG.json, inspect split sizes and class counts, and examine the text records.</p>
-<p>一条字典是一篇新闻，text是字符串、label是0到3的已有标签。下面仅显示各类计数和一条截短样本，完整数据留在原文件。T6写2034/1353，但本次给定文件实际为2000/1000；以读到的文件为准，差异明确保留。</p>
+<p>一条字典是一篇新闻，text是字符串、label是0到3的已有标签。下面仅显示各类计数和一条截短样本，完整数据留在原文件。Tutorial2v2，第6个单元写2034/1353，但本次给定文件实际为2000/1000；以读到的文件为准，差异明确保留。</p>
 </section>
 <section id="cell-6">
 <div class="code-input"><div class="cell-label">In [2]</div><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">AGNEWS_PATH</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
@@ -231,7 +231,7 @@ Blank text rows: 0
 </section>
 <section id="cell-8">
 <h2 id="2-build-document-vectors">2. Build document vectors｜把词表当成一把固定的尺子</h2>
-<p><strong>原任务 / Task（T10–12）：</strong> 从训练文本建词表，再转换两份数据，自己选择词表大小。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第10–12个单元）：</strong> 从训练文本建词表，再转换两份数据，自己选择词表大小。<br/>
 <strong>English:</strong> Build a vocabulary from training documents and transform both splits using that vocabulary.</p>
 <p>默认最多1000词，沿课堂例子使用英文停用词、默认小写化。fit_transform只作用于train；test只transform。test中独有的词会被忽略。下面先保留原始整数计数：Bernoulli会二值化，Poisson也需要这些计数；不要稍后用TF-IDF覆盖count_train这个变量。</p>
 </section>
@@ -337,7 +337,7 @@ All-zero feature rows, train / test: 2 2
 </section>
 <section id="cell-11">
 <h2 id="3-bernoulli-naive-bayes">3. Bernoulli Naive Bayes｜先问有没有，不问重复几次</h2>
-<p><strong>原任务 / Task（T13–16）：</strong> 训练Bernoulli NB、报告测试accuracy，并查看每类高概率词。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第13–16个单元）：</strong> 训练Bernoulli NB、报告测试accuracy，并查看每类高概率词。<br/>
 <strong>English:</strong> Train Bernoulli NB, report test accuracy and inspect high-probability words for each class.</p>
 <p>用alpha=1作本次默认值；这不是老师规定的最优参数。BernoulliNB的binarize=0.0把正计数变成1。其文档得分同时考虑出现与未出现；先回看<a href="Lecture02.html#bernoulli">Lecture §14–15</a>中的手算，理解为什么分母是<span class="arithmatex">\(N_c+2\alpha\)</span>。</p>
 </section>
@@ -631,9 +631,11 @@ One posterior vector: [4.800e-03 9.817e-01 1.000e-04 1.340e-02]
 <strong>English answer:</strong> No. The binary presence vector stays the same.</p>
 </section>
 <section id="cell-14">
-<h3 id="31-bernoulli-parameter-comparisont13">3.1 Bernoulli parameter comparison｜补齐原T13的参数尝试</h3>
-<p>原T13不只要求报告一次accuracy，也要求尝试alpha、max_features等参数。下面保留同一数据划分：先固定词表1000，只改alpha；再固定alpha=1，只改词表上限。两个小表分别回答一个问题，不把它们称为联合搜索。这里沿用课堂要求比较给定test，属于探索，不能把最高值当成独立最终成绩。</p>
-<p><strong>English:</strong> Original task T13 also asks you to try parameter settings. Compare one factor at a time: alpha with the fixed 1000-word cap, then vocabulary size with alpha=1. These classroom test comparisons are exploratory, not an unbiased final evaluation. The vocabulary is fitted only on training text in every run.</p>
+<p><a id="31-bernoulli-parameter-comparisont13"></a></p>
+<h3 id="31-bernoulli-parameter-comparison">3.1 Bernoulli parameter comparison｜比较平滑与词表规模</h3>
+<p>老师还要求尝试alpha和max_features。保持同一数据划分：第一组固定词表上限1000，只改alpha；第二组固定alpha=1，只改词表上限。分别观察平滑与表示规模怎样影响结果。</p>
+<p>来源：Tutorial2v2，第13个单元。</p>
+<p><strong>English:</strong> Vary alpha with a fixed 1000-word cap, then vary the vocabulary cap with alpha fixed at 1. Fit each vocabulary on training text only. These are two separate one-factor sweeps.</p>
 </section>
 <section id="cell-15">
 <div class="code-input"><div class="cell-label">In [5]</div><div class="highlight"><pre><span></span><span class="n">bnb_parameter_rows</span> <span class="o">=</span> <span class="p">[]</span>
@@ -847,12 +849,12 @@ One posterior vector: [4.800e-03 9.817e-01 1.000e-04 1.340e-02]
 </div></div>
 </section>
 <section id="cell-16">
-<p><strong>如何解释 / Interpretation：</strong> 先在Vary=alpha的行内比较，再在Vary=vocabulary的行内比较；实际词表列也要核对。相同默认设置出现两次，是核验两条流程一致，而不是两次独立实验。即使某个配置更高，也只能说明本次表示、划分和网格中的比较结果。</p>
-<p><strong>English:</strong> Compare within each one-factor sweep and report the actual vocabulary size. The duplicated default setting checks consistency; it is not an independent replication. A higher value applies to this dataset, split and tested grid, not to every document-classification problem.</p>
+<p><strong>如何解释 / Interpretation：</strong> 在Vary=alpha的行内比较平滑，再在Vary=vocabulary的行内比较词表规模。同时查看实际词表列：上限不一定就是最终词数。默认设置在两组中重复出现，用来核对两条流程是否一致，不算两次独立实验。</p>
+<p><strong>English:</strong> Compare settings within each sweep and report the actual vocabulary size. The repeated default setting checks consistency between the two paths.</p>
 </section>
 <section id="cell-17">
 <h2 id="4-multinomial-naive-bayes-model">4. Multinomial Naive Bayes model｜让非负权重进入另一个模型</h2>
-<p><strong>原任务 / Task（T17–20）：</strong> 使用TF-IDF表示训练Multinomial NB，比较表现，并查看各类高权重词。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第17–20个单元）：</strong> 使用TF-IDF表示训练Multinomial NB，比较表现，并查看各类高权重词。<br/>
 <strong>English:</strong> Train Multinomial NB on TF-IDF features, compare accuracy, and inspect the learned word parameters.</p>
 <p>沿Lecture2b cell91设置norm="l1"，并显式保留默认smooth_idf=True。IDF只从train拟合。非零文档变换后各项和为1；全零文档仍为0。TF-IDF是非负分数权重，不是Poisson整数计数，也不应硬套阶乘形式的整数多项式PMF。</p>
 <p>此处从Bernoulli/count换到Multinomial/TF-IDF，<strong>同时改变了模型与表示</strong>。可以比较两条完整流程，但不能把差异全归因于“分类器更好”。相关数学见<a href="Lecture02.html#tfidf">Lecture §17–18</a>。</p>
@@ -1131,7 +1133,7 @@ Bernoulli difference (percentage points): 0.0
 </table></div></details></div>
 </section>
 <section id="cell-19">
-<p><strong>检查 / Check：</strong> Multinomial各词参数在每个类别内和为1；Bernoulli每词是一个独立二元试验，其出现率无需跨词相加为1。这里高参数值对应累计特征质量，输入为TF-IDF时不应称为原始词次数。</p>
+<p><strong>检查 / Check：</strong> Multinomial各词参数在每个类别内和为1；Bernoulli每词是一个独立二元试验，其出现率无需跨词相加为1。这里输入是TF-IDF，高参数值说明该词在同类文档中累积的TF-IDF权重较大；这些小数权重与原始出现次数不同。</p>
 <p><strong>English takeaway:</strong> The comparison is between complete representation–model pipelines. TF-IDF must reuse training IDF, and fractional weights are a practical model input rather than literal integer counts.</p>
 </section>
 <section id="cell-20">
@@ -1147,7 +1149,7 @@ Bernoulli presence-probability sums (not constrained to one): [13.29 11.79 15.05
 </section>
 <section id="cell-21">
 <h2 id="5-misclassified-documents">5. Misclassified documents｜分错了什么？哪些解释只是猜想？</h2>
-<p><strong>原任务 / Task（T21–24）：</strong> 查看错分新闻，并给出可能的原因。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第21–24个单元）：</strong> 查看错分新闻，并给出可能的原因。<br/>
 <strong>English:</strong> Inspect misclassified documents and suggest plausible reasons.</p>
 <p>先看混淆矩阵：行是真实类别，列是预测类别，每行总数应等于该类test文档数。再看MNB流程前3条错分，记录索引、真值、预测、短文本和模型后验。错误类别可能语义接近、文本包含多类词、关键词被截断、表示丢失关系，或者标签本身值得核查；这些都要由具体证据支持。</p>
 </section>
@@ -1207,8 +1209,8 @@ Retained words: designed, launch, launched, million, press, pressure, set, year
 </section>
 <section id="cell-23">
 <p><strong>怎样写答案 / How to explain:</strong> “这条新闻被预测为Business，我在原文看到商业词汇”是观察；“如果保留某个短语就一定能修正”是待验证假设。可以先查词表是否保留该词，再用只改变表示的对照实验检验解释。</p>
-<p>改变预处理若使用了这些test错分作为灵感，这份test已提供开发反馈。还可以查看准确率分母和类间错误分布，避免只背一个总分。</p>
-<p><strong>English takeaway:</strong> Describe the observed error first, then separate plausible explanations from verified causes. Inspecting held-out errors to redesign a model makes those data part of development.</p>
+<p>把错分按真实类别和预测类别分组，看看模型主要混淆了哪些主题。如何为正式评价另留数据，见§9。</p>
+<p><strong>English takeaway:</strong> Describe the observed error first, then separate plausible explanations from verified causes. Group errors by true and predicted class to identify recurring confusions.</p>
 <p><strong>本次固定样本的读法 / Reading the current examples：</strong>
 - Index 1描述飓风造成的保险损失，原标签Business、预测World，仅保留4个词。灾害事件与经济损失共用同一短文，可以提出“主题边界与词表截断影响判断”的假设；尚未用受控实验验证。
 - Index 3讨论消费者信心和就业，原标签World、预测Business。经济主题词使这个预测值得理解，但不能只凭主题印象把原标签改掉。
@@ -1217,9 +1219,9 @@ Retained words: designed, launch, launched, million, press, pressure, set, year
 </section>
 <section id="cell-24">
 <h2 id="6-effect-of-smoothingalpha">6. Effect of smoothing｜只改alpha，画一条能解释的曲线</h2>
-<p><strong>原任务 / Task（T25–26）：</strong> 用Multinomial TF-IDF模型画accuracy随alpha变化，并找本次网格中的最好值。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第25–26个单元）：</strong> 用Multinomial TF-IDF模型画accuracy随alpha变化，并找本次网格中的最好值。<br/>
 <strong>English:</strong> Plot Multinomial TF-IDF accuracy against alpha and identify the best tested setting.</p>
-<p>固定划分、词表和TF-IDF变换，仅改变alpha。横轴使用对数刻度，因为候选跨了两个数量级；纵轴为accuracy。表里同时保留训练表现，帮助检查拟合与测试不一定同步。这里的“最好”严格限于给定网格和这份课堂test。</p>
+<p>固定划分、词表和TF-IDF变换，仅改变alpha。横轴使用对数刻度，因为候选跨了两个数量级；纵轴为accuracy。表里同时保留训练表现，帮助检查拟合与测试不一定同步。记录候选范围和对应最高点，便于复查曲线。</p>
 </section>
 <section id="cell-25">
 <div class="code-input"><div class="cell-label">In [9]</div><div class="highlight"><pre><span></span><span class="n">alpha_rows</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1314,7 +1316,7 @@ Retained words: designed, launch, launched, million, press, pressure, set, year
 </section>
 <section id="cell-27">
 <h2 id="7-effect-of-vocabulary-size">7. Effect of vocabulary size｜更多词，真的提供更多有效证据吗？</h2>
-<p><strong>原任务 / Task（T27–28）：</strong> 画accuracy随词表上限变化，并找当前网格中的最好值。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第27–28个单元）：</strong> 画accuracy随词表上限变化，并找当前网格中的最好值。<br/>
 <strong>English:</strong> Plot accuracy against vocabulary limit and identify the best tested limit.</p>
 <p>为单独观察词表，这一组将alpha固定为默认1，<strong>不继承上一组用test挑出的best_alpha</strong>。每个上限都仅从train重建词表与IDF，再应用到test。请求上限和实际大小一起报告；各词表坐标不同，因此每次都要重新拟合模型。</p>
 </section>
@@ -1416,29 +1418,33 @@ Retained words: designed, launch, launched, million, press, pressure, set, year
 </pre></div>
 </section>
 <section id="cell-29">
-<p><strong>结果边界 / Interpretation boundary:</strong> 新词可能增加有用线索，也可能增加稀疏、噪声或估计不稳。一次网格中最高的点不是所有词表的全局最优，更不是独立测试成绩。两条单变量曲线也不是alpha与词表规模的联合搜索。</p>
-<p><strong>English takeaway:</strong> Report the actual vocabulary size and fixed settings. Separate one-factor experiments from joint tuning, and avoid treating the selected test score as unbiased final performance.</p>
+<p><strong>怎样读曲线 / Reading the curve:</strong> 增加词表可能保留更多主题线索，也会引入稀有词。结合实际词数观察准确率是上升、持平还是下降，并与默认1000词的结果比较。这一组固定alpha，因此两条曲线分别展示单因素变化，没有测试所有alpha与词表上限的组合。</p>
+<p><strong>English:</strong> Compare each point with the default 1000-word cap and inspect the actual vocabulary size. Alpha is fixed here; the two curves do not form a joint parameter search.</p>
 </section>
 <section id="cell-30">
 <h2 id="8-poisson-naive-bayes">8. Poisson Naive Bayes｜外框不变，换掉词计数的分布</h2>
-<p><strong>原任务 / Task（T29–35）：</strong> 用Poisson分布建模每类、每词的计数，按老师给的接口实现分类器，再与前两种流程比较。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第29–35个单元）：</strong> 用Poisson分布建模每类、每词的计数，按老师给的接口实现分类器，再与前两种流程比较。<br/>
 <strong>English:</strong> Implement Poisson NB for raw word counts using the provided class interface, then compare it with the previous pipelines.</p>
 <h3 id="81-log">8.1 参数估计与log分数</h3>
-<p>给定类别c，特征<span class="arithmatex">\(x_j\)</span>是每篇文档中词j的<strong>非负整数计数</strong>。原模型把每篇文档当一次相同暴露量的观察：</p>
+<p>给定类别c，特征<span class="arithmatex">\(x_j\)</span>是每篇文档中词j的<strong>非负整数计数</strong>。模型把一篇文档作为一次计数观察，估计“这个词在该类的一篇文档里平均出现几次”：</p>
 <div class="arithmatex">\[p(x_j\mid c)=e^{-\mu_{j,c}}\frac{\mu_{j,c}^{x_j}}{x_j!},
 \qquad
 \hat\mu^{MLE}_{j,c}=\frac{T_{j,c}}{N_c}.\]</div>
-<p><span class="arithmatex">\(T_{j,c}\)</span>是该类所有文档的词j计数之和；<span class="arithmatex">\(N_c\)</span>是该类文档数。这里<span class="arithmatex">\(\mu\)</span>不要求跨词和为1，分母不是全类的总词数。原模型没有给每篇文档单独的长度曝光量；长度变化较大时这会成为需要讨论的假设。</p>
+<p><span class="arithmatex">\(T_{j,c}\)</span>是该类所有文档的词j计数之和；<span class="arithmatex">\(N_c\)</span>是该类文档数。这里<span class="arithmatex">\(\mu\)</span>不要求跨词和为1，分母不是全类的总词数。这里没有按各篇文档长度单独调整平均次数；如果文章长短差别很大，这个假设可能不合适。</p>
 <p>对正率求导可得到MLE：与<span class="arithmatex">\(\mu\)</span>有关的log似然是<span class="arithmatex">\(T\log\mu-N_c\mu\)</span>，导数<span class="arithmatex">\(T/\mu-N_c=0\)</span>。T=0时最大值在边界<span class="arithmatex">\(\mu=0\)</span>，不是除以零得到的内点解。</p>
-<p>文档的log CCD为：</p>
+<p>各词在给定类别下的对数概率相加，得到整篇文档的对数似然：</p>
 <div class="arithmatex">\[\log p(\mathbf{x}\mid c)=
 \sum_j[x_j\log\mu_{j,c}-\mu_{j,c}-\log(x_j!)].
 \]</div>
-<p>加上<span class="arithmatex">\(\log p(c)\)</span>得到log joint，再用<a href="Lecture02.html#log-scores">Lecture §7</a>的logsumexp归一化。阶乘项对同一文档的所有类相同，选类别时可消去；参考实现保留它，以便与scipy的logpmf逐项校验。</p>
+<p>加上类别的对数先验<span class="arithmatex">\(\log p(c)\)</span>后，便可比较各类得分；需要后验概率时，再用<a href="Lecture02.html#log-scores">Lecture §7</a>的logsumexp归一化。阶乘项对同一文档的所有类相同，选类别时可消去；参考实现保留它，以便与scipy的logpmf逐项校验。</p>
 <h3 id="82-alpha">8.2 模板未定义的alpha：明确采用一个补充约定</h3>
-<p>T32的构造器有alpha，却没有给出平滑公式。这里对alpha&gt;0明确选用：</p>
+<p>分类器接口提供了alpha参数，但教师模板没有指定平滑公式（Tutorial2v2，第32个单元）。这里对alpha&gt;0明确选用：</p>
 <div class="arithmatex">\[\hat\mu_{j,c}=\frac{T_{j,c}+\alpha}{N_c+\alpha}.\]</div>
-<p>这是对每个率加Gamma(shape=alpha, rate=alpha)先验后取<strong>后验均值</strong>的额外约定。分子增加伪事件，分母增加伪曝光量；它不是MAP公式，也不是从模板中“读出来”的唯一答案。alpha=0在本实现中特别定义为无平滑MLE，不称为一个合法Gamma(0,0)先验。</p>
+<p>分子在观察到的总次数上加alpha，分母在文档数上也加alpha。可以先把它理解成加入一份“平均每篇出现1次”的先验信息，alpha控制这份信息的权重。本实现将alpha=0定义为不平滑。</p>
+<details>
+<summary>选读：这个平滑公式的概率依据</summary>
+<p>当alpha&gt;0，给每个率使用Gamma(shape=alpha, rate=alpha)先验，观察数据后取后验均值，就得到上式。它是本参考实现明确选用的补充约定，教师模板只提供alpha接口，没有指定该公式。后验均值与MAP是不同估计；alpha=0采用MLE分支，不解释为Gamma(0,0)先验。</p>
+</details>
 <p><strong>教学手算 / Worked:</strong> 某词在同类4篇文档计数[0,0,0,0]。MLE=0；alpha=1时，按上述约定，后验均值=(0+1)/(4+1)=0.2。<br/>
 <strong>English worked example:</strong> A word has counts [0,0,0,0] in four same-class documents. Its MLE rate is 0; with alpha=1, the specified posterior-mean rate is (0+1)/(4+1)=0.2. The zero MLE would assign zero probability to every positive future count.</p>
 <p><strong>你来试：</strong> 同类4篇计数[0,1,0,3]，alpha=1，按上述约定求MLE与平滑率。<br/>
@@ -1574,7 +1580,7 @@ All tiny numerical, normalization and label checks passed.
 </section>
 <section id="cell-34">
 <h3 id="84-test-the-count-model">8.4 在原始新闻计数上运行 / Test the count model</h3>
-<p><strong>原任务 / Task（T33–35）：</strong> 在数据集上测试Poisson NB，比较它是否适合文档。<br/>
+<p><strong>原任务 / Task（Tutorial2v2，第33–35个单元）：</strong> 在数据集上测试Poisson NB，比较它是否适合文档。<br/>
 <strong>English:</strong> Test Poisson NB on the dataset, compare the pipelines and discuss its suitability for documents.</p>
 <p>这里使用默认1000词的原始count_train/count_test，alpha=1；Poisson模型需要整数计数。各类词率无需和为1，因为它们是每文档的计数均值。</p>
 </section>
@@ -1724,7 +1730,7 @@ English answer: Test text influenced the representation. Leakage can involve unl
 <p>对应中文：为何词表/IDF只从训练数据拟合？三个模型的平滑分母为何不同？为何这次扫test得到的最高分不是独立最终成绩？</p>
 <p>最低合格要点 / Minimum answer points：
 1. 中文：词表和IDF会学习输入分布，因此也必须留在训练部分。English: Vocabulary and IDF learn from input data and must be fitted within the training split.
-2. 中文：Bernoulli对每词的两种结果平滑；Multinomial对词表中的V种结果平滑；这里Poisson的额外约定向事件数和曝光量分别加alpha。English: Bernoulli smooths two feature outcomes; multinomial smooths V token outcomes; the stated Poisson convention adds alpha to the event count and exposure.
+2. 中文：Bernoulli对每词的两种结果平滑；Multinomial对词表中的V种结果平滑；这里Poisson的额外约定向总词次数和文档数分别加alpha。English: Bernoulli smooths two feature outcomes; multinomial smooths V token outcomes; the stated Poisson convention adds alpha to the total word count and document count.
 3. 中文：test表现参与了模型和参数选择，已提供开发反馈。English: The test scores influenced model and parameter selection, so they are development feedback rather than an untouched final evaluation.</p>
 <p>关联微课：<a href="https://crazyshout.github.io/micro-course/?lesson=ml08">文本NB</a>、<a href="https://crazyshout.github.io/micro-course/?lesson=ml09">Poisson NB</a>。
 现有卡：<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M078">M078稀疏表示</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M110">M110调参比较</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M112">M112 Poisson率</a>、<a href="https://crazyshout.github.io/micro-course/cards.html#CS5489-M115">M115平滑解释</a>。长实现仍需完整重做，不只背卡片输出。</p>
@@ -1738,50 +1744,50 @@ English answer: Test text influenced the representation. Leakage can involve unl
 </thead>
 <tbody>
 <tr>
-<td>T1–4</td>
-<td>开头、§0；T1为空白/导言，设置与路径</td>
+<td>Tutorial2v2，第1–4个单元</td>
+<td>开头、§0；Tutorial2v2，第1个单元为空白/导言，设置与路径</td>
 </tr>
 <tr>
-<td>T5–9</td>
+<td>Tutorial2v2，第5–9个单元</td>
 <td>§1 数据、规模、类别和文本</td>
 </tr>
 <tr>
-<td>T10–12</td>
+<td>Tutorial2v2，第10–12个单元</td>
 <td>§2 固定词表与矩阵</td>
 </tr>
 <tr>
-<td>T13–16</td>
+<td>Tutorial2v2，第13–16个单元</td>
 <td>§3 Bernoulli、前10词及alpha/词表的单因素比较</td>
 </tr>
 <tr>
-<td>T17–20</td>
+<td>Tutorial2v2，第17–20个单元</td>
 <td>§4 Multinomial TF-IDF与前10词</td>
 </tr>
 <tr>
-<td>T21–24</td>
+<td>Tutorial2v2，第21–24个单元</td>
 <td>§5 错分检查；填空题由解释框架和实测样本承接</td>
 </tr>
 <tr>
-<td>T25–26</td>
+<td>Tutorial2v2，第25–26个单元</td>
 <td>§6 alpha曲线</td>
 </tr>
 <tr>
-<td>T27–28</td>
+<td>Tutorial2v2，第27–28个单元</td>
 <td>§7 词表曲线</td>
 </tr>
 <tr>
-<td>T29–32</td>
+<td>Tutorial2v2，第29–32个单元</td>
 <td>§8.1–8.3 公式、约定、实现和手算检查</td>
 </tr>
 <tr>
-<td>T33–35</td>
+<td>Tutorial2v2，第33–35个单元</td>
 <td>§8.4 数据测试与模型讨论</td>
 </tr>
 <tr>
-<td>T36</td>
+<td>Tutorial2v2，第36个单元</td>
 <td>空单元，无独立教学内容</td>
 </tr>
 </tbody>
 </table></div>
 <p>参考原理以老师材料和<a href="Lecture02.html">Lecture02</a>为主。库行为另核对<a href="https://scikit-learn.org/stable/modules/naive_bayes.html">scikit-learn NB</a>、<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html">TF-IDF参数</a>。Poisson补充的Gamma后验均值沿用已核对的M115说明，不是模板定义的公式。</p>
-</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

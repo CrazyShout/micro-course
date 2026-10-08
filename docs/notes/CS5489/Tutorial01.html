@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 1 · From Python loops to orthonormal vectors · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
-<h1 id="tutorial-1-from-python-loops-to-orthonormal-vectors">Tutorial 1 · From Python loops to orthonormal vectors</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=14">A4 打印版 · 第 14–24 页</a>　图可点击放大。</p>
+<h1 id="tutorial-1-from-python-loops-to-orthonormal-vectors">Tutorial 1 · From Python loops to orthonormal vectors</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=77">A4 打印版 · 第 77–87 页</a>　图可点击放大。</p>
 <h2 id="_1">从变量变化，走到能验证的程序</h2>
 <p><a href="Lecture01.html">Lecture 1</a> · <a href="../foundations/MathForML.html#projection">数学补课</a> · <a href="index.html">课程目录</a></p>
 <p>依据当前<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial1</span>的47个单元编写；单元号从1起算，不是In[n]。本文件是可运行参考讲解，例题答案是整理者实现。原课的Colab挂盘改为本地文件路径，练习输出写入独立目录。</p>
@@ -15,31 +15,31 @@
 </thead>
 <tbody>
 <tr>
-<td>T1–13 Notebook与变量</td>
+<td>Tutorial1，第1–13个单元 Notebook与变量</td>
 <td>核心必会</td>
 <td>低，执行顺序</td>
 <td>能从干净内核复现；当前原任务</td>
 </tr>
 <tr>
-<td>T14–25 因子与图</td>
+<td>Tutorial1，第14–25个单元 因子与图</td>
 <td>核心必会</td>
 <td>中，循环范围和两种横轴</td>
 <td>能独立实现并解释输出</td>
 </tr>
 <tr>
-<td>T26–34 数据文件</td>
+<td>Tutorial1，第26–34个单元 数据文件</td>
 <td>常规掌握</td>
 <td>中，路径与数组轴</td>
 <td>能读取、核对shape、画点</td>
 </tr>
 <tr>
-<td>T35–45 Gram–Schmidt</td>
+<td>Tutorial1，第35–45个单元 Gram–Schmidt</td>
 <td>核心必会</td>
 <td>高，投影与张成空间</td>
 <td>实现并检查正交、长度与空间保持</td>
 </tr>
 <tr>
-<td>T46–47 查帮助</td>
+<td>Tutorial1，第46–47个单元 查帮助</td>
 <td>常规掌握</td>
 <td>低，工具用法</td>
 <td>会查接口而非猜参数</td>
@@ -77,7 +77,7 @@ English: Configure paths here; generated files go to the learning-note output di
 </section>
 <section id="cell-4">
 <h2 id="1-notebook-state">1. Notebook state｜屏幕顺序不等于执行顺序</h2>
-<p><strong>原任务T3–13 / Task:</strong> 运行单元、重复更新变量、重启内核观察状态。 / Run cells, repeat an update, and understand kernel restart.</p>
+<p><strong>原任务Tutorial1，第3–13个单元 / Task:</strong> 运行单元、重复更新变量、重启内核观察状态。 / Run cells, repeat an update, and understand kernel restart.</p>
 <p><code>x=x+1</code>先读取旧x，再算右侧，最后把新值赋给x。以下把三次运行展开，保存清楚的状态轨迹。示例捕获NameError，便于继续观察后续单元。</p>
 </section>
 <section id="cell-5">
@@ -149,7 +149,7 @@ English: Configure paths here; generated files go to the learning-note output di
 </section>
 <section id="cell-7">
 <h2 id="2-count-factors">2. Count factors｜先写人能逐行跟上的版本</h2>
-<p><strong>原任务T14–18 / Task:</strong> 对2到100的每个整数，统计除1和自身之外的正因子数。 / Count positive divisors excluding 1 and n for every integer n from 2 through 100.</p>
+<p><strong>原任务Tutorial1，第14–18个单元 / Task:</strong> 对2到100的每个整数，统计除1和自身之外的正因子数。 / Count positive divisors excluding 1 and n for every integer n from 2 through 100.</p>
 <p>对n=12，逐个试d=2,…,11；<code>n % d == 0</code>表示除后余数为0。2、3、4、6通过，得到4。<code>return</code>应在整个循环结束后执行，不能发现第一个因子就离开。</p>
 </section>
 <section id="cell-8">
@@ -287,8 +287,8 @@ English: The zero bin contains the 25 primes in this range. Histogram counts tot
 </section>
 <section id="cell-13">
 <h2 id="3-load-and-plot-the-supplied-array">3. Load and plot the supplied array｜先核对两根轴</h2>
-<p><strong>原任务T26–34 / Task:</strong> 从原data1.pickle读入mydata，检查shape，画第1列对第2列。 / Load mydata, inspect its shape, and plot column 1 against column 2.</p>
-<p>Pickle可以包含对象重建操作，只读取这份已核对来源的课程文件。参考代码限定其允许重建的NumPy类型；不能把它当成任意未知文件的安全转换器。</p>
+<p><strong>原任务Tutorial1，第26–34个单元 / Task:</strong> 从原data1.pickle读入mydata，检查shape，画第1列对第2列。 / Load mydata, inspect its shape, and plot column 1 against column 2.</p>
+<p>下面读取课程提供的NumPy数组文件。Pickle加载可能执行对象重建操作，因此这里只使用已知来源的课程文件。</p>
 </section>
 <section id="cell-14">
 <div class="code-input"><div class="cell-label">In [6]</div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ArrayOnlyUnpickler</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">Unpickler</span><span class="p">):</span>
@@ -322,9 +322,9 @@ English: The zero bin contains the 25 primes in this range. Histogram counts tot
 <section id="cell-16">
 <p><a id="gram-schmidt"></a></p>
 <h2 id="4-gramschmidt">4. Gram–Schmidt｜拿走已有方向，剩下才是新信息</h2>
-<p><strong>原任务T35–45 / Task:</strong> 输入矩阵V每列是一个向量，返回同一张成空间的正交归一列E。 / Return orthonormal columns spanning the same column space as V.</p>
+<p><strong>原任务Tutorial1，第35–45个单元 / Task:</strong> 输入矩阵V每列是一个向量，返回同一张成空间的正交归一列E。 / Return orthonormal columns spanning the same column space as V.</p>
 <p>先补<a href="../foundations/MathForML.html#projection">长度、投影与张成空间</a>。例如v=(2,1)、u=(1,0)，投影到u方向是(2,0)，相减余下(0,1)。不是把所有向量分别除以长度就能让它们互相垂直。</p>
-<p>对非零u，<span class="arithmatex">\(P_u(v)=(v^Tu)/(u^Tu)\,u\)</span>。原步骤是从第k列减去已有各方向的投影，再归一化。下面存储单位方向q，因此投影简化为<span class="arithmatex">\((q^Tv)q\)</span>。这对应原课的classical Gram–Schmidt；严重病态的数据更适合用Householder QR等数值稳定的方法处理。</p>
+<p>对非零u，<span class="arithmatex">\(P_u(v)=(v^Tu)/(u^Tu)\,u\)</span>。原步骤是从第k列减去已有各方向的投影，再归一化。下面存储单位方向q，因此投影简化为<span class="arithmatex">\((q^Tv)q\)</span>。这对应原课的classical Gram–Schmidt。数值接近线性相关时会更难稳定计算，后面的检查会帮助发现问题；其他QR算法可在二读时学习。</p>
 </section>
 <section id="cell-17">
 <div class="code-input"><div class="cell-label">In [7]</div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">myGS</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
@@ -524,7 +524,7 @@ Span reconstruction error: 1.7227701019713026e-15
 </section>
 <section id="cell-21">
 <h2 id="5-help-and-return">5. Help and return｜最后练一次英文解释</h2>
-<p>原T46–47可用<code>help(myGS)</code>或Jupyter中的<code>myGS?</code>查看接口。调试先读异常最后一行和对应代码位置；重启并从头运行，能排除“旧变量碰巧还在”的情况。</p>
+<p>查询函数用法时，可用<code>help(myGS)</code>或Jupyter中的<code>myGS?</code>查看接口。来源：Tutorial1，第46–47个单元。调试先读异常最后一行和对应代码位置；重启并从头运行，能排除“旧变量碰巧还在”的情况。</p>
 <p><strong>Q / 题：</strong> Why is EᵀE=I not the only check? / 为什么只检查EᵀE=I还不够？
 <strong>A / 答：</strong> An unrelated orthonormal basis can also pass it; check that E reconstructs every original column. / 无关的正交基也能通过，还要检查原列能由E重建。</p>
 <p><a href="Lecture01.html#linear-algebra">回Lecture1</a> · <a href="Lecture02.html">下一讲Lecture2</a> · <a href="https://crazyshout.github.io/micro-course/?lesson=ml04">微课ML04</a>。按课程目录提供的已有卡号巩固，算法仍需独立重写。</p>
@@ -538,33 +538,33 @@ Span reconstruction error: 1.7227701019713026e-15
 </thead>
 <tbody>
 <tr>
-<td>T1–6</td>
+<td>Tutorial1，第1–6个单元</td>
 <td>标题、Setup；身份填空不代填，Colab改为本地路径</td>
 </tr>
 <tr>
-<td>T7–13</td>
+<td>Tutorial1，第7–13个单元</td>
 <td>§1状态轨迹与预期NameError</td>
 </tr>
 <tr>
-<td>T14–18</td>
+<td>Tutorial1，第14–18个单元</td>
 <td>§2因子程序</td>
 </tr>
 <tr>
-<td>T19–25</td>
+<td>Tutorial1，第19–25个单元</td>
 <td>§2两幅原任务图</td>
 </tr>
 <tr>
-<td>T26–34</td>
+<td>Tutorial1，第26–34个单元</td>
 <td>§3数据读取、shape、散点</td>
 </tr>
 <tr>
-<td>T35–45</td>
+<td>Tutorial1，第35–45个单元</td>
 <td>§4投影、实现、原矩阵及三种检查</td>
 </tr>
 <tr>
-<td>T46–47</td>
-<td>§5帮助与收尾；T47为空单元</td>
+<td>Tutorial1，第46–47个单元</td>
+<td>§5帮助与收尾；Tutorial1，第47个单元为空单元</td>
 </tr>
 </tbody>
 </table></div>
-</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

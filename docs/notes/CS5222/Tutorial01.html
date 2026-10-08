@@ -1,6 +1,6 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="tutorial-1-switching-circuits-and-sharing">Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=19">A4 打印版 · 第 19–25 页</a>　图可点击放大。</p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚 · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5222</a></nav><h1 id="tutorial-1-switching-circuits-and-sharing">Tutorial 1 · Switching, circuits and sharing｜把链路模型算清楚</h1><p class="document-tools"><a href="../pdf/CS5222-A4.pdf#page=42">A4 打印版 · 第 42–48 页</a>　图可点击放大。</p>
 <p><a href="Chapter01.html#switching">Chapter 1</a> · <a href="index.html">课程目录</a> · <a href="Tutorial02.html">下一份Tutorial</a></p>
-<p>按当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原题PDF（3页）</span> 的Q1–4逐题讲解，并对照 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">教师解答PPT（10页）</span>。下文“教师结论”指该文件；推演、时间表和变式由整理者补充。所有选择题的原选项在原页图中，正文不靠选项猜答案。</p>
+<p>按当前 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原题PDF（3页）</span> 的Q1–4逐题讲解，并对照 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">教师解答PPT（10页）</span>。下文“教师结论”指该文件；推演、时间表和变式由整理者补充。所有选择题的原选项在原页图中，正文给出推理步骤。</p>
 <p><strong>可选先修：</strong> <a href="../foundations/NetworkBasics.html#units">bit/byte与速率</a>、<a href="../foundations/NetworkBasics.html#timeline">流水线时间轴</a>、<a href="../foundations/MathForML.html#combinations">组合概率</a>。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
 <thead>
@@ -16,25 +16,25 @@
 <td>Q1</td>
 <td>核心必会</td>
 <td>中；不同包可以重叠</td>
-<td>画存储转发时间轴；教师解答3–4</td>
+<td>画存储转发时间轴；Tutorial 1教师解答，第3–4张幻灯片</td>
 </tr>
 <tr>
 <td>Q2</td>
 <td>核心必会</td>
 <td>中；每次连接占用哪些边</td>
-<td>给出可行路由与容量上界；教师解答6–7</td>
+<td>给出可行路由与容量上界；Tutorial 1教师解答，第6–7张幻灯片</td>
 </tr>
 <tr>
 <td>Q3</td>
 <td>核心必会</td>
 <td>低；单电路速率</td>
-<td>单位换算与建立时延；教师解答9</td>
+<td>单位换算与建立时延；Tutorial 1教师解答，第9张幻灯片</td>
 </tr>
 <tr>
 <td>Q4</td>
 <td>核心必会</td>
 <td>中；独立与组合数</td>
-<td>容量和人数分布；教师解答10</td>
+<td>容量和人数分布；Tutorial 1教师解答，第10张幻灯片</td>
 </tr>
 </tbody>
 </table></div>
@@ -151,12 +151,12 @@
 <div class="arithmatex">\[P(K=n)=\binom{120}{n}(0.1)^n(0.9)^{120-n},\quad n=0,1,\ldots,120.\]</div>
 <p>对应原选项B（其因子顺序先写0.9）。组合数选出哪些人在发；0.1乘n次、0.9乘其余120−n次。原题没有清楚写独立，教师二项解答隐含这个假设，不能遗漏。</p>
 <p><strong>English answer:</strong> (a)20 users; (b)0.1; (c)choose(120,n)·0.1ⁿ·0.9¹²⁰⁻ⁿ, assuming independent user activity.</p>
-<p>平均活跃人数Np=12并不意味着始终12人；容量20也不保证任何时刻都够用。补充：超额事件为K&gt;20，应该求从21起的尾概率，不是只算K=20或K=21。这是分析边界，不是原题额外要求。</p>
+<p>平均活跃人数Np=12并不意味着始终12人；容量20也不保证任何时刻都够用。补充：超额事件为K&gt;20，应该求从21起的尾概率，不是只算K=20或K=21。超额需求可用同一个人数分布继续计算。</p>
 <p><strong>变式 / Transfer:</strong> 3个独立用户、p=0.1，容量可同时容纳2人，超额概率？ / Three independent users have p=0.1 each; capacity supports two. Find excess-demand probability.</p>
 <details>
 <summary>答案 / Answer</summary>
 <p>三人全活跃，0.1³=0.001。 / All three must be active, giving 0.001.</p>
 </details>
 <h2 id="_1">回查与巩固</h2>
-<p>所有数值与环路逐边占用由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算。原题PDF p1=Q1/Q2引入，p2=Q2/Q3引入，p3=Q3继续/Q4；教师解答1–2背景、3–4Q1、5电路图、6–7Q2、8FDM/TDM、9Q3、10Q4均已对应。</p>
-<p>复习使用<a href="../../cards.html#CS5222-N071">现有Tutorial1卡</a>，首选N071/N072（存储转发）、N076（FDM）、N077（人数与容量），以及<a href="Chapter01.html#qa">Chapter1</a>相关题。学习完应能用英文解释 <em>why</em>，不只记住C/D/B这些选项字母。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+<p>所有数值与环路逐边占用由 <span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">network_examples.py</span> 复算。原题PDF p1=Q1/Q2引入，p2=Q2/Q3引入，p3=Q3继续/Q4；Tutorial 1教师解答，第1–2张幻灯片背景、3–4Q1、5电路图、6–7Q2、8FDM/TDM、9Q3、10Q4均已对应。</p>
+<p>复习使用<a href="../../cards.html#CS5222-N071">现有Tutorial1卡</a>，首选N071/N072（存储转发）、N076（FDM）、N077（人数与容量），以及<a href="Chapter01.html#qa">Chapter1</a>相关题。学习完应能用英文解释 <em>why</em>，不只记住C/D/B这些选项字母。</p><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

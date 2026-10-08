@@ -1,8 +1,8 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="按老师课程顺序整理的双语学习讲义、配套练习与可选基础补课。"><title>Tutorial 4 · Predicting Bike Sharing Usage · 整讲讲义</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css"><link rel="stylesheet" href="../notes.css"></head><body><main><nav aria-label="学习导航"><a href="../index.html">讲义目录</a> · <a href="../../index.html">微课</a> · <a href="../index.html#foundations">基础补课</a> · <a href="../index.html#print">A4 打印版</a> · <a href="index.html">CS5489</a></nav><section id="cell-1">
-<h1 id="tutorial-4-predicting-bike-sharing-usage">Tutorial 4 · Predicting Bike Sharing Usage</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=124">A4 打印版 · 第 124–136 页</a>　图可点击放大。</p>
+<h1 id="tutorial-4-predicting-bike-sharing-usage">Tutorial 4 · Predicting Bike Sharing Usage</h1><p class="document-tools"><a href="../pdf/CS5489-A4.pdf#page=130">A4 打印版 · 第 130–142 页</a>　图可点击放大。</p>
 <h2 id="_1">去年的规律，今年还管用吗？</h2>
 <p><a href="Lecture04.html">Lecture 4</a> · <a href="index.html">课程目录</a> · <a href="../foundations/MathForML.html#rank-pseudoinverse">矩阵与回归基础</a></p>
-<p>老师给出两年的共享单车日记录，希望根据天气、日期类别等信息预测每日租车总量。这份学习笔记按<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial4.ipynb</span>的77个单元展开，T表示原文件从1开始的单元号。数据直接从<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原ZIP</span>读取，无需改动原文件。</p>
+<p>老师给出两年的共享单车日记录，希望根据天气、日期类别等信息预测每日租车总量。这份学习笔记按<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原Tutorial4.ipynb</span>的77个单元展开，单元从原文件第一个开始计数。数据直接从<span class="source-reference" title="原件或本地复核资料；保留出处，未上传完整文件">原ZIP</span>读取，无需改动原文件。</p>
 <p>前半练回归与特征解释，后半的关键问题是：第二年用户变多，旧模型可能系统性低估。给它补上第二年一季度的记录，怎样公平判断调整有没有帮助？</p>
 <p><strong>基础入口（可跳过）：</strong> 不熟数组形状先回<a href="Lecture01.html#arrays">Lecture 1</a>；不熟平方误差、正则项，先读<a href="Lecture04.html">Lecture 4</a>。先理解“输入的一行是一天，输出是当天总量”。</p>
 <div aria-label="可横向滚动的表格 / Horizontally scrollable table" class="table-scroll" role="region" tabindex="0"><table>
@@ -16,31 +16,31 @@
 </thead>
 <tbody>
 <tr>
-<td>T4–28 数据、one-hot、年份划分</td>
+<td>Tutorial4，第4–28个单元 数据、one-hot、年份划分</td>
 <td>核心必会</td>
 <td>中，特征与目标泄漏</td>
 <td>能保留原2011/2012划分，解释删除计数列</td>
 </tr>
 <tr>
-<td>T29–47 基线、OLS、Ridge</td>
+<td>Tutorial4，第29–47个单元 基线、OLS、Ridge</td>
 <td>核心必会</td>
 <td>中，CV与误差单位</td>
 <td>能用训练内部验证选参数并读散点图</td>
 </tr>
 <tr>
-<td>T48–58 LASSO、OMP</td>
+<td>Tutorial4，第48–58个单元 LASSO、OMP</td>
 <td>常规掌握</td>
 <td>中，相关特征与系数含义</td>
 <td>能比较选择结果，不把权重当因果</td>
 </tr>
 <tr>
-<td>T59–64 非线性回归</td>
+<td>Tutorial4，第59–64个单元 非线性回归</td>
 <td>核心必会</td>
 <td>中，公平模型比较</td>
 <td>能固定划分、报告CV和测试各自用途</td>
 </tr>
 <tr>
-<td>T65–76 新年份与三种适应方法</td>
+<td>Tutorial4，第65–76个单元 新年份与三种适应方法</td>
 <td>核心必会</td>
 <td>高，数据角色变化</td>
 <td>能在同一剩余测试集比较四条流程</td>
@@ -85,7 +85,8 @@
 </pre></div>
 </section>
 <section id="cell-4">
-<h2 id="2-load-and-inspectt428">2. Load and inspect｜不要把答案偷偷塞进输入（T4–28）</h2>
+<p><a id="2-load-and-inspectt428"></a></p>
+<h2 id="2-load-and-inspecttutorial4428">2. Load and inspect｜不要把答案偷偷塞进输入（Tutorial4，第4–28个单元）</h2>
 <p><strong>任务 / Task：</strong> 读取日数据，查看字段与分布，把season、mnth、weekday、weathersit做one-hot，预测cnt，按yr划分。 / Load daily records, inspect features, encode four categorical fields, predict cnt, and split by year.</p>
 <p>ZIP同时有hour.csv和day.csv，本题用day.csv。<code>cnt=casual+registered</code>：若把后两列放入X，模型已经看到了答案的两个加数。删除它们不是嫌数据多，是因为预测当天总量时不能先知道当天两类人的完整数量。</p>
 <p>原说明把weekday写成1–7，实际数据是0–6；代码以数据为准。<code>instant</code>仅是记录号；原题删除日期列，但日期仍用于核验顺序。其他预测任务是否使用日期，应根据预测时可获得的信息决定。</p>
@@ -319,13 +320,14 @@ train/test: (365, 34) (366, 34)
 <div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/663548ece0579da1.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 5" decoding="async" height="287" loading="lazy" src="../assets/663548ece0579da1.png" width="987"/></a></div>
 </section>
 <section id="cell-6">
-<p><code>yr</code>保留，因为后面合并新旧年份训练要用；只在2011训练时它全为0，模型无法凭空学出新年份效应。固定天气编码中值4在日数据里没有出现，对应列全0；这让列名稳定，不代表观察到了暴雪样本。天气值、连续特征已按数据说明缩放，不再从全部数据估计新的缩放参数。</p>
+<p><code>yr</code>保留，因为后面合并新旧年份训练要用；只在2011年训练时，这一列全是0，模型没见过它从0变成1，因此学不到这个变化对应的需求差异。固定天气编码中值4在日数据里没有出现，对应列全0；这让列名稳定，不代表观察到了暴雪样本。天气值、连续特征已按数据说明缩放，不再从全部数据估计新的缩放参数。</p>
 <p><strong>自测 / Check：</strong> 保留registered会造成什么？ / What happens if registered remains an input?</p>
 <p>答案 / Answer：它是当天总量的一部分，构成目标泄漏，测试成绩不再代表根据事前信息预测需求。 / It leaks part of the target and invalidates the intended advance-demand prediction.</p>
 </section>
 <section id="cell-7">
-<h2 id="3-a-baseline-and-interpretable-errorst2947">3. A baseline and interpretable errors｜先问模型有没有赢过“每天报同一个数”（T29–47）</h2>
-<p>DummyRegressor只记训练目标的均值或中位数。它很笨，但笨得稳定，可以当对照。MSE单位是“租车次数的平方”；RMSE开方后回到次数，MAE也是次数。原T31文字写MSE，T32实际代码计算RMSE；本笔记同时列出MSE、RMSE、MAE，避免把平方误差与开方后误差混用。</p>
+<p><a id="3-a-baseline-and-interpretable-errorst2947"></a></p>
+<h2 id="3-a-baseline-and-interpretable-errorstutorial42947">3. A baseline and interpretable errors｜先问模型有没有赢过“每天报同一个数”（Tutorial4，第29–47个单元）</h2>
+<p>DummyRegressor只记训练目标的均值或中位数。它很笨，但笨得稳定，可以当对照。MSE单位是“租车次数的平方”；RMSE开方后回到次数，MAE也是次数。原Tutorial4，第31个单元文字写MSE，Tutorial4，第32个单元实际代码计算RMSE；本笔记同时列出MSE、RMSE、MAE，避免把平方误差与开方后误差混用。</p>
 <p><strong>任务 / Task：</strong> 拟合基线、OLS、训练内选alpha的Ridge，并比较误差及预测散点。 / Fit dummy, OLS and CV-selected ridge models, then compare errors and scatter plots.</p>
 </section>
 <section id="cell-8">
@@ -470,12 +472,13 @@ train/test: (365, 34) (366, 34)
 </pre></div>
 </section>
 <section id="cell-10">
-<p>读图先确认横轴！这里沿用老师T32的代码：横轴truth，纵轴prediction。因此低估在对角线<strong>下方</strong>，与T66一致。T34对基线的“x-value predictions”是文字简写，实际横轴仍是真值；读图以轴标签和代码为准。残差定义为真实值减预测值，正均值说明整体低估。</p>
-<p>English: With truth on the horizontal axis and prediction on the vertical axis, underprediction lies below the diagonal. A positive mean residual (truth minus prediction) indicates underprediction. Ridge shrinks coefficients; its test advantage is an empirical question, not a guarantee.</p>
-<p>本次测试RMSE：OLS 2298.93、Ridge 2299.41，二者很接近，OLS略低；不能宣称正则化总会提高测试成绩。与均值基线2829.31相比两者均改善，但第二年的整体低估仍明显。 / OLS slightly outperforms ridge in this run; both improve over the mean baseline, yet year-shift bias remains.</p>
+<p>读图先确认横轴！这里沿用老师Tutorial4，第32个单元的代码：横轴truth，纵轴prediction。因此低估在对角线<strong>下方</strong>，与Tutorial4，第66个单元一致。Tutorial4，第34个单元对基线的“x-value predictions”是文字简写，实际横轴仍是真值；读图以轴标签和代码为准。残差定义为真实值减预测值，正均值说明整体低估。</p>
+<p>English: With truth on the horizontal axis and prediction on the vertical axis, underprediction lies below the diagonal. A positive mean residual (truth minus prediction) indicates underprediction. </p>
+<p>本次测试RMSE：OLS 2298.93、Ridge 2299.41，二者很接近，OLS略低。与均值基线2829.31相比两者均改善，但第二年的整体低估仍明显。 / OLS slightly outperforms ridge in this run; both improve over the mean baseline, yet year-shift bias remains.</p>
 </section>
 <section id="cell-11">
-<h2 id="4-lasso-and-ompt4858">4. LASSO and OMP｜“重要特征”不是一份永久排行榜（T48–58）</h2>
+<p><a id="4-lasso-and-ompt4858"></a></p>
+<h2 id="4-lasso-and-omptutorial44858">4. LASSO and OMP｜“重要特征”不是一份永久排行榜（Tutorial4，第48–58个单元）</h2>
 <p>LASSO让一些权重恰为0；OMP逐次选择能改善残差的方向，再联合拟合已选特征。原题要求试10个特征，这里照做。<code>temp</code>与<code>atemp</code>、月份与季节可能相关，两种方法不必选同一批。</p>
 <p><strong>任务 / Task：</strong> 训练LASSO，按绝对系数排序并解释；用OMP选择10个特征，比较两组选择。 / Fit LASSO, interpret the largest absolute coefficients, and compare its selection with 10-feature OMP.</p>
 </section>
@@ -660,12 +663,13 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 </div></div>
 </section>
 <section id="cell-13">
-<p>比如温度权重为w，温度的归一化值增加0.1、其他输入不变时，预测变化为0.1w；不是增加1°C就变化w。One-hot权重的解释受基线、截距及同组其他类别影响，尤其完整one-hot加截距存在冗余。模型系数描述条件关联，不能说“让星期一变成星期二就必然多骑几辆”。</p>
+<p>比如温度权重为w，温度的归一化值增加0.1、其他输入不变时，预测变化为0.1w；不是增加1°C就变化w。One-hot权重的解释受基线、截距及同组其他类别影响，尤其完整one-hot加截距存在冗余。它描述给定其他输入时模型怎样改预测；实际骑行量还受其他因素影响。</p>
 <p>English: Interpret a coefficient in the feature's encoded units, holding other inputs fixed. Correlated predictors can share or exchange weight; selection does not establish causation.</p>
 <p>本次LASSO选alpha=0.1，有28个非零系数；OMP按题设选10个。温度系数约3091.82、风速−1977.51、湿度−1281.77（均按原缩放单位）。选择不同并不自动说明谁算错，因为目标与稀疏约束不同。 / The fitted LASSO and ten-feature OMP use different sparsity objectives.</p>
 </section>
 <section id="cell-14">
-<h2 id="5-nonlinear-regressiont5964">5. Nonlinear regression｜让比较只改变模型（T59–64）</h2>
+<p><a id="5-nonlinear-regressiont5964"></a></p>
+<h2 id="5-nonlinear-regressiontutorial45964">5. Nonlinear regression｜让比较只改变模型（Tutorial4，第59–64个单元）</h2>
 <p>这里选原Lecture4中的RBF核岭回归与随机森林作两条参考路线。参数网格由本参考实现选定。每条路线用同一2011时间验证折，选定模型后才汇报2012。</p>
 <p><strong>独立尝试 / Try：</strong> 另加一种Lecture4模型，保持划分与误差单位，比较训练验证RMSE。 / Add another Lecture4 model while preserving splits and evaluation units.</p>
 </section>
@@ -903,14 +907,15 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 <div class="output"><a aria-label="打开原尺寸图片 / Open full-size image" href="../assets/b799a176bb25e6ac.png" rel="noopener" target="_blank"><img alt="Executed Tutorial04 figure, cell 15" decoding="async" height="387" loading="lazy" src="../assets/b799a176bb25e6ac.png" width="987"/></a></div>
 </section>
 <section id="cell-16">
-<p>训练得最好不等于跨年最好。树擅长分区间，RBF依靠与训练样本的相似性；面对整体需求变化，两者都可能失效。以当前打印表中的实际结果回答“谁更好”，并区分CV选中的方法与事后测试表里最高的方法。</p>
+<p>训练得最好不等于跨年最好。树擅长分区间，RBF依靠与训练样本的相似性；面对整体需求变化，两者都可能失效。先按2011年的验证结果选模型，再观察它在2012年表现怎样；下面的结果展示了两者可能不同。</p>
 <p>English: Compare the printed scores, and distinguish the CV-selected model from the model that happens to score best on the test table. Flexible functions alone do not solve temporal distribution shift.</p>
 <p>2011时间验证选出LASSO，故后续适应实验固定它。事后2012表中随机森林RMSE最低（2205.32），这一事后排名不用于改变后续已固定的方法。非线性候选没有赢得本次训练内选择。 / LASSO wins the training-only selection; the test-table winner is not used to revise that choice.</p>
 </section>
 <section id="cell-17">
-<h2 id="6-test-set-biast6576">6. Test set bias｜先把新增数据的角色划清楚（T65–76）</h2>
+<p><a id="6-test-set-biast6576"></a></p>
+<h2 id="6-test-set-biastutorial46576">6. Test set bias｜先把新增数据的角色划清楚（Tutorial4，第65–76个单元）</h2>
 <p>画总量随日期变化，再模拟老师给定的情境：2012年1–3月已经结束，其标签现在可用；把它当新训练数据，4–12月仍只作评估。不能一边用一季度调模型，一边把它算进最终测试成绩。</p>
-<p>原T69用第11–13列取月份，容易因编码列顺序改变而选错。这里直接用原表的mnth取相同记录：91天新训练，275天剩余测试。特征本身仍按同一列顺序。</p>
+<p>筛选第二年一季度时，参考实现直接使用原表的mnth月份字段，取得与课堂方案相同的记录：91天新训练，275天剩余测试。特征仍按同一列顺序。来源注：Tutorial4，第69个单元按第11–13列取月份；依赖列位置的写法需核对编码后的列顺序。</p>
 <p><strong>任务 / Task：</strong> 固定一种已选回归方法，比较旧模型、新数据单独重训、合并重训、学习旧模型残差；全部在同一个4–12月测试集评估。 / Compare the original model, new-only retraining, pooled retraining, and residual adaptation on the same April–December holdout.</p>
 </section>
 <section id="cell-18">
@@ -1025,35 +1030,35 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 </thead>
 <tbody>
 <tr>
-<td>T1–3 姓名/任务/初始化</td>
+<td>Tutorial4，第1–3个单元 姓名/任务/初始化</td>
 <td>开头与§1，个人身份不填入公共学习稿</td>
 </tr>
 <tr>
-<td>T4–28 原数据、分布、统计、编码、提取与年份划分</td>
+<td>Tutorial4，第4–28个单元 原数据、分布、统计、编码、提取与年份划分</td>
 <td>§2</td>
 </tr>
 <tr>
-<td>T29–35 Dummy与误差/散点</td>
+<td>Tutorial4，第29–35个单元 Dummy与误差/散点</td>
 <td>§3</td>
 </tr>
 <tr>
-<td>T36–47 OLS/Ridge与解释</td>
+<td>Tutorial4，第36–47个单元 OLS/Ridge与解释</td>
 <td>§3</td>
 </tr>
 <tr>
-<td>T48–58 LASSO/OMP与系数</td>
+<td>Tutorial4，第48–58个单元 LASSO/OMP与系数</td>
 <td>§4</td>
 </tr>
 <tr>
-<td>T59–64 非线性模型</td>
+<td>Tutorial4，第59–64个单元 非线性模型</td>
 <td>§5</td>
 </tr>
 <tr>
-<td>T65–76 趋势及三种再训练</td>
+<td>Tutorial4，第65–76个单元 趋势及三种再训练</td>
 <td>§6</td>
 </tr>
 <tr>
-<td>T77 空单元</td>
+<td>Tutorial4，第77个单元 空单元</td>
 <td>无教学内容</td>
 </tr>
 </tbody>
@@ -1075,4 +1080,4 @@ Shared selections: ['mnth_1', 'mnth_5', 'mnth_6', 'mnth_9', 'season_1', 'season_
 </div>
 <div class="output"><pre>Learning-run results saved; original materials unchanged.
 </pre></div>
-</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-03。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>
+</section><footer><a href="../index.html">返回讲义目录</a> · 教学资料更新于 2026-10-08。<br>Canvas 原件决定课程要求；来源文件名与页码保留供对照，完整原文件请在 Canvas 或本地资料库查看。</footer></main><script src="../../vendor/katex/katex.min.js"></script><script src="../../vendor/katex/contrib/auto-render.min.js"></script><script>renderMathInElement(document.querySelector("main"),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});</script></body></html>

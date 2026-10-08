@@ -1293,7 +1293,7 @@
     {
       "path": "notes/manifest.json",
       "bytes": 38033,
-      "sha256": "d130967530f46c5f0d43df4b18598ce841ecf70933026c197e6c32a4d622d9b3"
+      "sha256": "9893f1c5b336257b554da7121983a7987febcb2b95460b9eac7e5a571f6cd9c1"
     },
     {
       "path": "notes/notes.css",
@@ -1302,18 +1302,18 @@
     },
     {
       "path": "notes/pdf/CS5222-A4.pdf",
-      "bytes": 14150062,
-      "sha256": "455e9773e9ed9a8d3e2435cf9ba6c9e70a35bf3958b4de89098282f0ea920c2c"
+      "bytes": 14150176,
+      "sha256": "92faba0945dd1975d627113c7cb3a245b83fb01fc4b9801d186626a44e4c3a10"
     },
     {
       "path": "notes/pdf/CS5489-A4.pdf",
-      "bytes": 17754109,
-      "sha256": "4d47800b2cae6995c21a6c0561bd21b35d97995125c8df67475428b88b57d5eb"
+      "bytes": 17753776,
+      "sha256": "1be146cabdf5683dccdaa8514d9a0c765a6a4dde7964d0d340d13749651a5a77"
     },
     {
       "path": "notes/pdf/Foundations-A4.pdf",
-      "bytes": 4452606,
-      "sha256": "17bf0ce7db530d7e2d1fce3405505304b1c9e61a715c331bfd7b8e512728477e"
+      "bytes": 4452714,
+      "sha256": "ea1a55e39eabd37b245ead8341645cf17cd5a2df69adea80966100157b0a9bee"
     },
     {
       "path": "notices-data.js",

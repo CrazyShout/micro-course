@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "date": "2026-10-03",
+  "date": "2026-10-08",
   "major_documents": 21,
   "documents": [
     {
@@ -873,26 +873,26 @@
     },
     {
       "path": "pdf/CS5222-A4.pdf",
-      "bytes": 14150062,
-      "sha256": "455e9773e9ed9a8d3e2435cf9ba6c9e70a35bf3958b4de89098282f0ea920c2c"
+      "bytes": 14150176,
+      "sha256": "92faba0945dd1975d627113c7cb3a245b83fb01fc4b9801d186626a44e4c3a10"
     },
     {
       "path": "pdf/CS5489-A4.pdf",
-      "bytes": 17754109,
-      "sha256": "4d47800b2cae6995c21a6c0561bd21b35d97995125c8df67475428b88b57d5eb"
+      "bytes": 17753776,
+      "sha256": "1be146cabdf5683dccdaa8514d9a0c765a6a4dde7964d0d340d13749651a5a77"
     },
     {
       "path": "pdf/Foundations-A4.pdf",
-      "bytes": 4452606,
-      "sha256": "17bf0ce7db530d7e2d1fce3405505304b1c9e61a715c331bfd7b8e512728477e"
+      "bytes": 4452714,
+      "sha256": "ea1a55e39eabd37b245ead8341645cf17cd5a2df69adea80966100157b0a9bee"
     }
   ],
   "pdfs": [
     {
       "path": "pdf/CS5489-A4.pdf",
       "pages": 157,
-      "sha256": "4d47800b2cae6995c21a6c0561bd21b35d97995125c8df67475428b88b57d5eb",
-      "source_sha256": "5514a18d2247f68e03be3778804f88a48b85012e40799ab3ef54b3de1fdb638c",
+      "sha256": "1be146cabdf5683dccdaa8514d9a0c765a6a4dde7964d0d340d13749651a5a77",
+      "source_sha256": "61cf1155e5d9180f42b9548424ae7c7a12f024dcd5ff7dfe780ab48fb846e9e8",
       "removed_local_links": 38,
       "rewritten_links": 57,
       "content_streams_and_geometry_unchanged": true
@@ -900,8 +900,8 @@
     {
       "path": "pdf/CS5222-A4.pdf",
       "pages": 86,
-      "sha256": "455e9773e9ed9a8d3e2435cf9ba6c9e70a35bf3958b4de89098282f0ea920c2c",
-      "source_sha256": "b5416eb3b6e3a225d0a61d8ccd5cc105001e5597f1e16e0b54e8765c547ce60e",
+      "sha256": "92faba0945dd1975d627113c7cb3a245b83fb01fc4b9801d186626a44e4c3a10",
+      "source_sha256": "d1617db2ffad8d7a97780697b4323c4fd74252264ee942234bbdea708c7476e4",
       "removed_local_links": 41,
       "rewritten_links": 35,
       "content_streams_and_geometry_unchanged": true
@@ -909,8 +909,8 @@
     {
       "path": "pdf/Foundations-A4.pdf",
       "pages": 43,
-      "sha256": "17bf0ce7db530d7e2d1fce3405505304b1c9e61a715c331bfd7b8e512728477e",
-      "source_sha256": "c5ba0fce48c43c1e05bc14fe912bea5f5d64b120c59c1c76fa1a7eadef7924b0",
+      "sha256": "ea1a55e39eabd37b245ead8341645cf17cd5a2df69adea80966100157b0a9bee",
+      "source_sha256": "13b02a99c58305ca3cb43cbfdf11788f9ca260fb6f74fe574ffcbad70d268b70",
       "removed_local_links": 25,
       "rewritten_links": 65,
       "content_streams_and_geometry_unchanged": true
